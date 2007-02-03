@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CAS>
+<uima.tcas.Document _content="text"><![CDATA[This is a text document with Dave for analysis]]></uima.tcas.Document>
+<uima.tcas.DocumentAnnotation _indexed="1" _id="8" sofa="1" begin="0" end="46" language="**"/>
+</CAS>

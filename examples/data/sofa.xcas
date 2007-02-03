@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<CAS>
+<uima.cas.Sofa _indexed="0" _id="1" sofaNum="1" sofaID="EnglishDocument" mimeType="text"  sofaString="This is a text document for analysis" />
+</CAS>
