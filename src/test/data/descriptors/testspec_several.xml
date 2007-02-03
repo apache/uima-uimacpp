@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taeDescription
+   xmlns="http://uima.apache.org/resourceSpecifier"
+   >
+   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+<primitive>true</primitive>
+   <annotatorImplementationName>libtest</annotatorImplementationName>
+
+   <analysisEngineMetaData>
+      <name>TestAnnotator</name>
+      <description>Test annotator for dump annotator</description>
+      <version>1.0</version>
+      <vendor>IBM Corporation</vendor>
+
+      <configurationParameters>
+         <configurationParameter>
+            <name>ProcessUnspecifiedTerritories</name>
+            <description></description>
+            <type>Boolean</type>
+            <multiValued>false</multiValued>
+            <mandatory>false</mandatory>
+                     </configurationParameter>
+      </configurationParameters>
+
+      <configurationParameterSettings>
+         <nameValuePair>
+            <name>ProcessUnspecifiedTerritories</name>
+            <value>
+               <boolean>true</boolean>
+            </value>
+         </nameValuePair>
+
+      </configurationParameterSettings>
+
+      <typeSystemDescription>
+         <imports>
+             <import location="tt_typesystem.xml"/>
+         </imports>
+	   <types>
+            <typeDescription>
+               <name>TestDump</name>
+               <description>Created for test reasons</description>
+               <supertypeName>uima.cas.TOP</supertypeName>
+            </typeDescription>
+         </types>
+      </typeSystemDescription>
+
+      <fsIndexes>
+      </fsIndexes>
+
+      <capabilities>
+         <capability>
+            <inputs/>
+
+            <outputs>
+               <type>TestDump</type>
+            </outputs>
+
+            <languagesSupported>
+               <language>en-us</language>
+               <language>ar</language>
+               <language>de</language>
+               <language>en-ca</language>
+               <language>it-it</language>
+            </languagesSupported>
+         </capability>
+      </capabilities>
+
+   </analysisEngineMetaData>
+</taeDescription>
+

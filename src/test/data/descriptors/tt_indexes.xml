@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<fsIndexes>
+    <fsIndexDescription>
+        <label>LemmaIndex</label>
+        <typeName>uima.tt.Lemma</typeName>
+        <kind>set</kind>
+        <keys>
+            <fsIndexKey>
+                <featureName>partOfSpeech</featureName>
+                <comparator>standard</comparator>
+            </fsIndexKey>
+            <fsIndexKey>
+                <featureName>key</featureName>
+                <comparator>standard</comparator>
+            </fsIndexKey>
+            <fsIndexKey>
+                <featureName>morphID</featureName>
+                <comparator>standard</comparator>
+            </fsIndexKey>
+        </keys>
+    </fsIndexDescription>
+    <fsIndexDescription>
+        <label>CanonicalFormIndex</label>
+        <typeName>uima.tt.CanonicalForm</typeName>
+        <kind>set</kind>
+        <keys>
+            <fsIndexKey>
+                <featureName>key</featureName>
+                <comparator>standard</comparator>
+            </fsIndexKey>
+        </keys>
+    </fsIndexDescription>
+    <fsIndexDescription>
+        <label>SynonymIndex</label>
+        <typeName>uima.tt.Synonym</typeName>
+        <kind>set</kind>
+        <keys>
+            <fsIndexKey>
+                <featureName>key</featureName>
+                <comparator>standard</comparator>
+            </fsIndexKey>
+        </keys>
+    </fsIndexDescription>
+    <fsIndexDescription>
+        <label>RelationIndex</label>
+        <typeName>uima.tt.Relation</typeName>
+        <kind>bag</kind>
+    </fsIndexDescription>
+</fsIndexes>
+

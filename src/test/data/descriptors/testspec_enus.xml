@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taeDescription
+   xmlns="http://uima.apache.org/resourceSpecifier" 
+   >
+   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+<primitive>true</primitive>
+   <annotatorImplementationName>libtest</annotatorImplementationName>
+
+   <analysisEngineMetaData>
+      <name>TestAnnotator1</name>
+      <description>Test annotator for dump annotator</description>
+      <version>1.0</version>
+      <vendor>IBM Corporation</vendor>
+
+      <configurationParameters>
+      </configurationParameters>
+
+      <configurationParameterSettings>
+      </configurationParameterSettings>
+
+      <typeSystemDescription>
+         <types>
+             <import location="tt_typesystem.xml"/>
+            <typeDescription>
+               <name>TestDump</name>
+               <description>Created for test reasons</description>
+               <supertypeName>uima.cas.TOP</supertypeName>
+            </typeDescription>
+         </types>
+      </typeSystemDescription>
+
+      <fsIndexes>
+      </fsIndexes>
+
+      <capabilities>
+         <capability>
+            <inputs/>
+
+            <outputs>
+               <type>TestDump</type>
+            </outputs>
+
+            <languagesSupported>
+               <language>en-us</language>
+            </languagesSupported>
+         </capability>
+      </capabilities>
+
+   </analysisEngineMetaData>
+</taeDescription>
+

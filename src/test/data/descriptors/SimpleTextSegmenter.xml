@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!-- For testing only. -->
+
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+<frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+<primitive>true</primitive>
+<annotatorImplementationName>libSimpleTextSegmenter</annotatorImplementationName>
+ 
+<analysisEngineMetaData>
+	<name>Simple Text Segmenter</name>
+	<description>Splits a text document into pieces. The point at which the text is split is determined by SegmentDelimiter configuration parameter which defaults to new line ('\n')</description>
+	<version>1.0</version>
+	<vendor>IBM</vendor>
+	
+	<configurationParameters>
+		<configurationParameter>
+			<name>SegmentDelimiter</name>
+			<description>segment delimiter</description>
+			<type>String</type>
+			<multiValued>false</multiValued>
+			<mandatory>false</mandatory>
+		</configurationParameter>
+	</configurationParameters>
+	<configurationParameterSettings>
+		<nameValuePair>
+			<name>SegmentDelimiter</name>
+			<value>
+				<string>.</string>
+			</value>
+		</nameValuePair>
+	</configurationParameterSettings>
+
+	<typeSystemDescription>
+	  <imports>
+		<import name="org.apache.uima.examples.SourceDocumentInformation"/>
+	  </imports>
+	</typeSystemDescription>
+		
+	<capabilities>
+		<capability>
+			<outputs/>
+		</capability>
+	</capabilities>
+	
+	<operationalProperties>
+		<modifiesCas>false</modifiesCas>
+		<multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+		<outputsNewCASes>true</outputsNewCASes>
+	</operationalProperties>
+	
+</analysisEngineMetaData>
+</analysisEngineDescription>

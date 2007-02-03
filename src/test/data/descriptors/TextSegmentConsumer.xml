@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!-- For testing only. -->
+
+<analysisEngineDescription xmlns="http://uima.apache.org/resourceSpecifier">
+<frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+<primitive>true</primitive>
+<annotatorImplementationName>libTextSegmentConsumer</annotatorImplementationName>
+ 
+<analysisEngineMetaData>
+	<name>Text Segment Consumer</name>
+	<description>Counts number of segments.</description>
+	<version>1.0</version>
+	<vendor>IBM</vendor>
+	
+	<configurationParameters>
+		<configurationParameter>
+			<name>TotalNumberOfSegments</name>
+			<description>total num of segments</description>
+			<type>Integer</type>
+			<multiValued>false</multiValued>
+			<mandatory>false</mandatory>
+		</configurationParameter>
+	</configurationParameters>
+	<configurationParameterSettings>
+		<nameValuePair>
+			<name>TotalNumberOfSegments</name>
+			<value>
+				<integer>3</integer>
+			</value>
+		</nameValuePair>
+	</configurationParameterSettings>
+
+	<typeSystemDescription>
+	  <imports>
+		<import name="org.apache.uima.examples.SourceDocumentInformation"/>
+	  </imports>
+	</typeSystemDescription>
+		
+	<capabilities>
+		<capability>
+			<outputs/>
+		</capability>
+	</capabilities>
+	
+	<operationalProperties>
+		<modifiesCas>false</modifiesCas>
+		<multipleDeploymentAllowed>true</multipleDeploymentAllowed>
+		<!--segmenter>true</segmenter-->
+	</operationalProperties>
+	
+</analysisEngineMetaData>
+</analysisEngineDescription>

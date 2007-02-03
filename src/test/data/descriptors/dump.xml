@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<taeDescription
+   xmlns="http://uima.apache.org/resourceSpecifier"
+   >
+   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+<primitive>true</primitive>
+   <annotatorImplementationName>libdump</annotatorImplementationName>
+
+   <analysisEngineMetaData>
+      <name>AnnotationDumpAnnotator</name>
+      <description>This annotator dumps ANs and TEs of a particular type(range) out to a stream. The stream and the structure of the Output are specified by the user</description>
+      <version>1.0</version>
+      <vendor>IBM Corporation</vendor>
+
+      <configurationParameters>
+         <configurationParameter>
+            <name>OutputFile</name>
+            <description>The name of the file that will contain the dumped TCAS</description>
+            <type>String</type>
+            <multiValued>false</multiValued>
+            <mandatory>true</mandatory>
+                     </configurationParameter>
+
+         <configurationParameter>
+            <name>AppendFile</name>
+            <description>If true, the result of the dump is appended to OutputFile</description>
+            <type>Boolean</type>
+            <multiValued>false</multiValued>
+            <mandatory>true</mandatory>
+                     </configurationParameter>
+
+         <configurationParameter>
+            <name>DumpDocBuffer</name>
+            <description>If true, the content of the document buffer is dumped as well</description>
+            <type>Boolean</type>
+            <multiValued>false</multiValued>
+            <mandatory>true</mandatory>
+                     </configurationParameter>
+
+         <configurationParameter>
+            <name>SaveDocBuffer</name>
+            <description></description>
+            <type>Boolean</type>
+            <multiValued>false</multiValued>
+            <mandatory>true</mandatory>
+                     </configurationParameter>
+
+         <configurationParameter>
+            <name>OutputStyle</name>
+            <description>Determmins the format of the output. Currently, only XML is supported</description>
+            <type>Integer</type>
+            <multiValued>false</multiValued>
+            <mandatory>true</mandatory>
+                     </configurationParameter>
+
+         <configurationParameter>
+            <name>OutputTypes</name>
+            <description>Used to test extraction of multi-valued parameters</description>
+            <type>String</type>
+            <multiValued>true</multiValued>
+            <mandatory>false</mandatory>
+         </configurationParameter>
+
+      </configurationParameters>
+
+      <configurationParameterSettings>
+         <nameValuePair>
+            <name>OutputFile</name>
+            <value>
+               <string>ANDump.xml</string>
+            </value>
+         </nameValuePair>
+         <nameValuePair>
+            <name>AppendFile</name>
+            <value>
+               <boolean>false</boolean>
+            </value>
+         </nameValuePair>
+         <nameValuePair>
+            <name>DumpDocBuffer</name>
+            <value>
+               <boolean>false</boolean>
+            </value>
+         </nameValuePair>
+         <nameValuePair>
+            <name>SaveDocBuffer</name>
+            <value>
+               <boolean>false</boolean>
+            </value>
+         </nameValuePair>
+         <nameValuePair>
+            <name>OutputStyle</name>
+            <value>
+               <integer>0</integer>
+            </value>
+         </nameValuePair>
+         <nameValuePair>
+            <name>OutputTypes</name>
+            <value>
+               <array>
+                  <string>Four</string>
+                  <string>output</string>
+                  <string>type</string>
+                  <string>values</string>
+               </array>
+            </value>
+         </nameValuePair>
+      </configurationParameterSettings>
+
+      <typeSystemDescription>
+         <types/>
+      </typeSystemDescription>
+
+      <fsIndexes>
+      </fsIndexes>
+
+      <capabilities>
+         <capability>
+            <inputs/>
+
+            <outputs/>
+
+            <languagesSupported>
+               <language>x-unspecified</language>
+            </languagesSupported>
+         </capability>
+      </capabilities>
+
+   </analysisEngineMetaData>
+</taeDescription>
+
