@@ -9,7 +9,7 @@ appropriate SDK image and set the UIMACPP_HOME environmental parameter to
 the location of the installed runtime.
 
 There is also a dependency on JNI headers from a Java JDK. The build
-looks for these headers off the JAVA_HOME parameter.
+looks for these headers off the JAVA_INCLUDE parameter.
 
 To replace one or more of the dependent libraries with different
 versions, download and build the component(s) and specify their use
