@@ -17,6 +17,7 @@ else
 fi
 
 export LD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib
+export DYLD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib
 export PATH=$Testbin:$PATH
 
 export UIMACPP_DATAPATH=./data

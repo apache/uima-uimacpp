@@ -56,9 +56,12 @@ endif
 
 # the suffix for shared libraries
 DLL_SUFFIX=so
+SHARED_FLAG=-shared
 UNAME = $(shell uname -s)
 ifeq ($(UNAME), Darwin)
   DLL_SUFFIX=dylib
+  SHARED_FLAG=-dynamiclib
+  EXTRA_LINK_LIBS=-lxerces-c -lapr-1.0 -licui18n -licuuc -licuio -licudata 
 endif
 
 ifeq ($(DEBUG),1)
@@ -80,7 +83,7 @@ CFLAGS=-Wall -x c++ $(BUILD_CFLAGS) $(INCLUDES) $(USER_CFLAGS) \
 	 -Wno-deprecated
 
 ifeq ($(DLL_BUILD),1)
-DLL_LINKFLAGS=-shared
+DLL_LINKFLAGS=$(SHARED_FLAG)
 TARGET_FILE_NAME=$(TARGET_FILE).$(DLL_SUFFIX)
 BIN_LINKFLAGS=
 else
@@ -90,7 +93,7 @@ endif
 
 LINKFLAGS= $(DLL_LINKFLAGS) $(BIN_LINKFLAGS) \
 	 $(USER_LINKFLAGS) $(BUILD_LFLAGS) \
-	 -L$(UIMACPP_HOME)/lib -luima
+	 -L$(UIMACPP_HOME)/lib -luima $(EXTRA_LINK_LIBS)
 
 # compiler to use
 CC=g++

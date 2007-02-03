@@ -27,10 +27,12 @@ ifneq ($(XERCES_HOME),)
 CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-xerces=$(XERCES_HOME)
 endif
 
-ifeq ($(JAVA_HOME),)
-	JAVA_HOME := /opt/IBMJava2-142
+ifeq ($(JAVA_INLCUDE),)
+	JAVA_INCLUDE := /opt/IBMJava2-142/include
+else
+	JAVA_INCLUDE := $(JAVA_HOME)/include
 endif
-CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-jdk=$(JAVA_HOME)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-jdk=$(JAVA_INCLUDE)
 
 AC_FLAGS=CFLAGS="$(CFLAGS)" CXXFLAGS="$(CFLAGS)"
 

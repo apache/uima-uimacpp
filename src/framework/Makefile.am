@@ -15,6 +15,7 @@ clean:
 
 install-data-local:
 if APPLE
+	$(INSTALL) -d $(DESTDIR)$(prefix)/data
 	$(INSTALL) ../../data/resourceSpecifierSchema.xsd $(DESTDIR)$(prefix)/data/resourceSpecifierSchema.xsd
 else
 	$(INSTALL) -D ../../data/resourceSpecifierSchema.xsd $(DESTDIR)$(prefix)/data/resourceSpecifierSchema.xsd

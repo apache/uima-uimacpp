@@ -142,6 +142,7 @@ mkdir "$UIMA_DIR"/include
 mkdir "$UIMA_DIR"/include/uima
 mkdir "$UIMA_DIR"/lib
 mkdir "$UIMA_DIR"/licenses
+mkdir "$UIMA_DIR"/examples
 
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
@@ -161,7 +162,9 @@ cp $CPLR "$UIMA_INSTALLDIR"/data  "$UIMA_DIR"/
 cp -p "$UIMA_INSTALLDIR"/include/uima/* "$UIMA_DIR"/include/uima/
 eval cp $CPLR "$UIMA_INSTALLDIR"/lib/libuima*.$LIBEXT"*"  "$UIMA_DIR"/lib/
 if [ "$UNAME" = "Darwin" ]; then
+  thisDir=`pwd`
   cd "$UIMA_DIR"/lib && ln -s libuima-2.1.dylib  libuima.jnilib
+  cd $thisDir
 fi
 	
 echo copying from "$UIMACPP_HOME/docs"...
@@ -169,7 +172,6 @@ cp -p "$UIMACPP_HOME"/docs/QuickStart.html "$UIMA_DIR"/docs/
 cp -p "$UIMACPP_HOME"/docs/uimadoxytags.tag  "$UIMA_DIR"/docs/
 cp $CPLR "$UIMACPP_HOME"/docs/html "$UIMA_DIR"/docs/
 
-mkdir "$UIMA_DIR"/examples
 cp $CPLR "$UIMACPP_HOME"/examples/* "$UIMA_DIR"/examples/
 
 # copy following file from fvt suite

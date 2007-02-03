@@ -151,7 +151,7 @@ AC_SUBST(UIMACPP_HOME_LIB)
 
 AC_ARG_WITH([jdk], AC_HELP_STRING([--with-jdk],
                                       [use local JDK (uses /opt/IBMJava2-142 by default)]),
-               [UIMA_JDK_INCLUDE="-I$withval/include"
+               [UIMA_JDK_INCLUDE="-I$withval"
                 JDK_TEST_INCLUDE="$UIMA_JDK_INCLUDE"],
                     [UIMA_JDK_INCLUDE="-I/opt/IBMJava2-142/include"
                      JDK_TEST_INCLUDE="-I/opt/IBMJava2-142/include"])
