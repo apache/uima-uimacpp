@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>C++ Enablement for UIMA Components - QuickStart</title>
+</head>
+
+<body>
+<h1>C++ Enablement for UIMA Components - QuickStart</h1>
+
+<h2>What is C++ Enablement for UIMA Components?</h2>
+<p>This component provides transparent interoperability between UIMA C++ analytics
+and the UIMA SDK (Java) platform. Supported components include primitive and
+aggregate annotators and CAS consumers. C++ component descriptors must specify
+  <ul>
+    <code>&lt;frameworkImplementation>com.ibm.uima.cpp&lt;/frameworkImplementation></code>
+  </ul>  
+Before the component's process() method is called, the CAS is serialized into the native environment through the JNI.
+The UIMACPP library provides the C++ annotator writer a virtually identical set of CAS APIs as that provided in the Java SDK.
+</p>
+
+<p>The C++ Enablement layer also provides support for calling UIMA components from native C++ applications.
+</p>
+<p>UIMA compliant annotators can be written in Perl, Python and Tcl using C++ annotators included in this package. For further details see <a href="Perl.html">Perl</a>, <a href="Python.html">Python</a> and <a href="Tcl.html">Tcl</a>.
+</p>
+<p>UIMA C++ Enablement depends on Unicode support from the ICU (see http://www.ibm.com/software/globalization/icu) and XML parsing support from xerces (see http://xml.apache.org/xerces-c/). Another utility library used for platform portability is APR (see http://apr.apache.org/).
+</p>
+
+<p>API documentation for the C++ Enablement layer is available <a href="html/index.html">here</a>.
+</p>
+
+<h2>What's New in Release 1.4.4</h2>
+<li>Re-numbered UIMA C++ version from 6.2.x to match interoperating UIMA SDK version.</li>
+<li>The JNI interface has been integrated into the main UIMACPP library, now
+renamed uima. Because of this change UIMA SDK version 2.0.3 or newer is required for interoperability.</li>
+<li>The "tafsetup" command has been eliminated. UIMA C++ executables and libraries have been reorganized into a simpler directory structure, with less environmental setup required.</li>
+<li>Sample code for native C++ applications are included, as well as documentation for the APIs used to create UIMA applications in C++.</li>
+<li>The COS portability library has been replaced by APR.</li>
+<li>The ICU library redistributed here is now version 3.0.</li>
+<li>Sample code is now included for Sofa data streaming to "file:"</li>
+<li>xcasDriver replaced by a new tool, runAECpp, which is more consistent with runTAE in Java.</li>
+<li>On Windows, nmake files used to build sample code have been replaced by vcproj files.</li>
+<li>The Perltator is now multi-thread enabled on Windows as it was previously on Linux.</li>
+<li>Bug fix: binary blob serialization modified to match UIMA SDK in Java.</li>
+<li>Bug fix: Selected TCAS properly give to Sofa-unaware delegates in a C++ aggregate.</li>
+<li>Bug fix: Indexed FS not covered by a defined index are now output in CAS serialization.</li>
+
+<h2>Supported Platforms</h2>
+<p>Linux® Intel® 32-bit platforms and Windows® 2000, Windows® XP.</p>
+
+<h2>Binary Distribution</h2>
+<p>On Linux the distribution is via an rpm image and is installed in /opt/IBM/uimacpp.
+</p>  
+<p>On Windows the distribution is via a zipfile which contains the SDK tree.
+</p>  
+
+<h2>Source Distribution</h2>
+The source code to build the UIMACPP library is now part of the UIMA project on SourceForge.
+
+<h2>Prerequisites</h2>
+<p>On Linux, gcc >= 3.4.2. A second rpm image is available to work with 3.2.3 <= gcc version < 3.4.</p>
+<p>On Windows, there are separate images for Microsoft Visual Studio versions vc7 and vc8.</p>
+
+<p>The UIMA SDK (Java) version 1.4.4+</p>
+
+<h2>Setting Environment Variables</h2>
+<p>Both the UIMA C++ framework and the users' C++ components are implemented as
+shared libraries and must be available to the native library loader.
+On Linux these directories must be in the LD_LIBRARY_PATH, 
+and on Windows in the system PATH.
+In addition UIMACPP_HOME must be set to the location of the installed runtime.
+</p>
+<h3>On Linux</h3>
+  <ul>
+    <code>export UIMACPP_HOME=/opt/IBM/uimacpp</code><br>
+    <code>export LD_LIBRARY_PATH=$UIMACPP_HOME/lib:$LD_LIBRARY_PATH</code><br>
+    <code>export PATH=$UIMACPP_HOME/bin:$PATH</code>
+  </ul>  
+<h3>On Windows</h3>
+Assuming the zipfile was installed in C:\UIMA
+  <ul>
+    <code>set UIMACPP_HOME=c:\UIMA\uimacpp</code><br>
+    <code>set PATH=%UIMACPP_HOME%\bin;%UIMACPP_HOME%\lib;%PATH%</code>
+  </ul>
+
+<h2>Verifying Your Installation</h2>
+
+<p>To test the installation, copy the examples directory and its subdirectories
+into a writable directory, referred to here as myExamples, and cd to
+myExamples. Make sure the environment variables are set as described above,
+that UIMA_HOME is set to the location of the UIMA SDK, and that its bin
+directory is in the PATH.
+
+<h3>On Linux</h3>
+  <ul>
+    <code>
+      cp -r $UIMACPP_HOME/examples myExamples<br>
+      cd myExamples<br>
+      make -C src -f DaveDetector.mak<br>
+    </code>
+  </ul>  
+<p>The build should create a shared library, DaveDetector.so, which must be placed
+ in the LD_LIBRARY_PATH.<br>
+Note: If you build sample applications this directory must be in the PATH as well.
+</p>
+<ul>
+    <code>
+      export LD_LIBRARY_PATH=`pwd`/src:$LD_LIBRARY_PATH<br>
+      export PATH=`pwd`/src:$PATH
+    </code>
+</ul>
+Run this C++ annotator as follows:
+  <ul>
+    <code>runAECpp descriptors/DaveDetector.xml data/example.txt </code>
+  </ul>  
+<p>
+The runAECpp driver will process the input text file and DaveDetector should find a Dave in it. 
+</p>
+
+<h3>On Windows</h3>
+  <ul>
+    <code>
+    xcopy /SYQI %UIMACPP_HOME%\examples c:\myExamples<br>
+    cd c:\myExamples<br>
+    devenv src\DaveDetector.vcproj /build debug<br>
+    </code>
+  </ul>  
+The build should create a shared library, DaveDetector.dll, which must be
+ placed in the PATH.
+</p>
+<ul>
+    <code>
+      set PATH=%CD%\src;$PATH
+    </code>
+</ul>
+Run this C++ annotator as follows:
+  <ul>
+    <code>runAECpp descriptors\DaveDetector.xml data\examples.txt </code>
+  </ul>  
+</p>
+<p>
+The runAECpp driver will process the input text file and DaveDetector should find a Dave in it. 
+</p>
+<h3>From Java</h3>
+To test the interoperability with UIMA SDK (Java), make sure UIMA_HOME is set to the location of the UIMA SDK, and that its bin directory is in the PATH. Run DaveDetector as follows:
+<h4>On Linux</h4>
+<ul>
+    <code>runTAE.sh descriptors/DaveDetector.xml data</code>
+</ul>  
+<h4>On Windows</h4>
+<ul>
+    <code>runTAE descriptors\DaveDetector.xml data</code>
+</ul>  
+The runTAE driver will process all files in the data directory and DaveDetector should find Daves in some of them.
+<h3>More Examples</h3>
+<p>For further details about how to build and run other examples see
+<a href="../examples/readme.html">C++ Examples</a>
+</p>
+<h2>Message Logging from a C++ Component</h2>
+<p>For formal integration with UIMA applications, a logfile interface is available.
+When a C++ annotator is called from Java, logging messages are integrated into the Java log.
+If the C++ annotator is called from a native C++ application, such as runAECpp,
+a local logfile may be created. The name of the logfile is taken from the 
+the environmental parameter, UIMACPP_LOGFILE, and it is opened "append".
+The default is to disable logging.
+</p>
+<p>Three levels of message logging can be used: Message, Warning and Error.
+When called from Java the UIMA log level is used to control output.
+When called from a C++ application an API is available to set the log level; the default level is Error.
+When called from runAECpp the value of these levels are 0, 1, and 2, respectively.
+</p>
+
+<h2>Developing UIMA C++ Components outside Java</h2>
+<p>
+It is sometimes advantageous to debug C++ components as stand-alone C++ applications.
+The program <CODE>runAECpp</CODE> found under the $UIMACPP_HOME/bin directory is a
+C++ utility that imports one or more XCAS files into CAS objects and for each calls the 
+<CODE>process</CODE> method of the specified UIMA C++ component, optionally
+saving the results as XCAS files.
+</p>
+<p>
+The XCAS is an XML representation of the feature structures and index data of a CAS object. The <CODE>XCasWriterCasConsumer</CODE> is a Java UIMA component that can be run at any point
+in the CPE flow to export the contents of the CAS object to a file in the XCAS format. 
+</p>
+<p>
+To debug using XCAS serialization, use <CODE>XCasWriterCasConsumer</CODE> to dump
+the CAS at the point the C++ component would be called, 
+or even create the XCAS content with an editor.  Use runAECpp to process the XCAS as follows:
+</p>
+<ul>
+<code>runAECpp &lt;UimaCppDescriptor&gt; &lt;InputFileOrDirectory&gt; [&lt;OutputDirectory&gt;] [-x] [-s SofaName] [-l loglevel]</code>
+</ul>
+<ul>
+<li>UimaCppDescriptor is the C++ component descriptor</li>
+<li>InputFileOrDirectory is the name of an input file or a directory containing input files</li>
+<li>If an optional OutputDirectory is specified, the contents of the CAS after processing will be written out with the same names as the input files. Be careful not to specify the directory containing the input files!</li>
+<li>Use the -x option if the input file(s) are in XCAS format. Otherwise, the files are assumed to be text files and are used to create the document text for analysis.</li>
+<li>To support multi-Sofa scenarios where the C++ component is expecting a view of a specific Sofa, the name of the Sofa to use can be provided</li>
+<li>The loglevel for messages can be specified</li>
+</ul>
+<p>Two sample XCAS files are included with the UIMA C++ examples. After building the 
+<CODE>SofaExampleAnnotator</CODE> example as described above for DaveDetector, try:</p>
+<ul>
+<code>
+runAECpp -x descriptors/DaveDetector.xml data/tcas.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -x descriptors/DaveDetector.xml data/sofa.xcas &lt;yourOutputDir&gt; -s EnglishDocument<br>
+runAECpp -x descriptors/SofaExampleAnnotator.xml data/sofa.xcas &lt;yourOutputDir&gt;<br>
+</code>
+</ul>
+<p>For further details about these and other examples see
+<a href="../examples/readme.html">C++ Examples</a>
+</p>
+</body>
+</html>
