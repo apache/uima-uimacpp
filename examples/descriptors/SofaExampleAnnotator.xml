@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+  <primitive>true</primitive>
+<annotatorImplementationName>SofaExampleAnnotator</annotatorImplementationName>
+
+
+<analysisEngineMetaData>
+  <name>Sofa Test Annotator</name>
+  <description>Looks for an English Sofa and creates a German one.</description>
+  <version>1.0</version>
+  <vendor>IBM</vendor>
+
+
+<!--
+  Configuration Parameter Definitions
+-->
+        <configurationParameters/>
+
+<!--
+        Values for the configuration parameters
+-->
+        <configurationParameterSettings/>
+ 
+
+<!--
+        TypeSystem Definition
+-->
+
+  <typeSystemDescription>
+    <types>
+      <typeDescription>
+        <name>sofa.test.CrossAnnotation</name>
+        <description></description>
+        <supertypeName>uima.tcas.Annotation</supertypeName>
+        <features>
+  	<featureDescription>
+  	  <name>otherAnnotation</name>
+  	  <description></description>
+  	  <rangeTypeName>uima.tcas.Annotation</rangeTypeName>
+  	</featureDescription>
+        </features>
+      </typeDescription>
+    </types>
+  </typeSystemDescription>
+
+<!--
+        IndexSystem Definition
+-->
+
+        
+
+<!--
+Capabilities: Inputs, Outputs, and Preconditions
+-->
+  <capabilities>
+    <capability>
+      <inputs/>
+      <outputs>
+        <type allAnnotatorFeatures="true">sofa.test.CrossAnnotation</type>
+      </outputs> 
+      <inputSofas>
+  	<sofaName>EnglishDocument</sofaName>
+      </inputSofas>
+      <outputSofas>
+  	<sofaName>GermanDocument</sofaName>
+      </outputSofas>
+      <languagesSupported>
+        <language>x-unspecified</language>
+      </languagesSupported>
+    </capability>
+  </capabilities>
+
+</analysisEngineMetaData>
+</taeDescription>

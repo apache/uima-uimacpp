@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+  <primitive>true</primitive>
+<annotatorImplementationName>DaveDetector</annotatorImplementationName>
+
+
+<analysisEngineMetaData>
+  <name>Dave Detector</name>
+  <description>Detects Daves in text, and annotates them.</description>
+  <version>1.0</version>
+  <vendor>IBM</vendor>
+
+
+<!--
+  Configuration Parameter Definitions
+-->
+        <configurationParameters>
+            <configurationParameter>
+                <name>DaveString</name>
+                <description>simple string for finding a Dave</description>
+                <type>String</type>
+                <multiValued>false</multiValued>
+                <mandatory>true</mandatory>
+            </configurationParameter>
+        </configurationParameters>
+
+<!--
+        Values for the configuration parameters
+-->
+        <configurationParameterSettings>
+          <nameValuePair>
+            <name>DaveString</name>
+            <value>
+              <string>Dave</string>
+            </value>
+          </nameValuePair>
+        </configurationParameterSettings>
+ 
+
+<!--
+        TypeSystem Definition
+-->
+
+<typeSystemDescription>
+  <types>
+    <typeDescription>
+      <name>org.apache.uima.examples.David</name>
+      <description></description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+      </features>
+    </typeDescription>
+  </types>
+</typeSystemDescription>
+
+
+<!--
+Capabilities: Inputs, Outputs, and Preconditions
+-->
+<capabilities>
+  <capability>
+    <inputs/>
+    <outputs>
+      <type allAnnotatorFeatures="true">org.apache.uima.examples.David</type>
+    </outputs> 
+    <languagesSupported>
+      <language>x-unspecified</language>
+    </languagesSupported>
+  </capability>
+</capabilities>
+
+</analysisEngineMetaData>
+</taeDescription>
+

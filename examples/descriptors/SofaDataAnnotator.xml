@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+  <primitive>true</primitive>
+<annotatorImplementationName>SofaDataAnnotator</annotatorImplementationName>
+<analysisEngineMetaData>
+  <name>Sofa Test Annotator</name>
+  <description>Tokenizes sofa data on whitespace.</description>
+  <version>1.0</version>
+  <vendor>IBM</vendor>
+</analysisEngineMetaData>
+</taeDescription>
+
+
+
