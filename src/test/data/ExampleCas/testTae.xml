@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
+  <primitive>true</primitive>
+<annotatorImplementationName>dummyAnnot</annotatorImplementationName>
+
+
+<analysisEngineMetaData>
+  <name>dummy</name>
+  <description>place holder for type and index definitinons.</description>
+  <version>1.0</version>
+  <vendor>IBM</vendor>
+
+
+<!--
+  Configuration Parameter Definitions
+-->
+        <configurationParameters/>
+
+<!--
+        Values for the configuration parameters
+-->
+        <configurationParameterSettings/>
+ 
+
+<!--
+        TypeSystem Definition
+-->
+
+<typeSystemDescription>
+  <imports>
+    <import location="testTypeSystem.xml"/>
+  </imports>
+</typeSystemDescription>
+
+<!--
+        IndexSystem Definition
+  <imports>
+    <import location="kltIndexes.xml"/>
+  </imports>
+-->
+        
+
+<!--
+Capabilities: Inputs, Outputs, and Preconditions
+-->
+<capabilities>
+  <capability>
+    <inputs/>
+    <outputs/>
+    <languagesSupported/>
+  </capability>
+</capabilities>
+
+</analysisEngineMetaData>
+</taeDescription>
