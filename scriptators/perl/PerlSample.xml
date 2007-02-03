@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
+  <frameworkImplementation>TAF</frameworkImplementation>
+  <primitive>true</primitive>
+<annotatorImplementationName>perltator</annotatorImplementationName>
+
+
+<analysisEngineMetaData>
+  <name>Perl Sample</name>
+  <description>Generic Perl Annotator.</description>
+  <version>1.0</version>
+  <vendor>IBM</vendor>
+
+
+<!--
+  Configuration Parameter Definitions
+-->
+        <configurationParameters>
+            <configurationParameter>
+                <name>DebugLevel</name>
+                <description>Sets the perl annotators debug level</description>
+                <type>Integer</type>
+                <multiValued>false</multiValued>
+                <mandatory>true</mandatory>
+            </configurationParameter>
+            <configurationParameter>
+                <name>SourceFile</name>
+                <description>Perl code to be loaded</description>
+                <type>String</type>
+                <multiValued>false</multiValued>
+                <mandatory>true</mandatory>
+            </configurationParameter>
+            <configurationParameter>
+                <name>matchString</name>
+                <description>Perl regular expression</description>
+                <type>String</type>
+                <multiValued>false</multiValued>
+                <mandatory>true</mandatory>
+            </configurationParameter>
+        </configurationParameters>
+
+<!--
+        Values for the configuration parameters
+-->
+        <configurationParameterSettings>
+          <nameValuePair>
+            <name>SourceFile</name>
+            <value>
+              <string>sample.pl</string>
+            </value>
+          </nameValuePair>
+          <nameValuePair>
+            <name>DebugLevel</name>
+            <value>
+              <integer>100</integer>
+            </value>
+          </nameValuePair>
+          <nameValuePair>
+            <name>matchString</name>
+            <value>
+              <string>Dave|David|human\s+rights</string>
+            </value>
+          </nameValuePair>
+        </configurationParameterSettings>
+ 
+
+<!--
+        TypeSystem Definition
+-->
+
+<typeSystemDescription>
+  <types>
+    <typeDescription>
+      <name>com.ibm.uima.examples.keyword</name>
+      <description></description>
+      <supertypeName>uima.tcas.Annotation</supertypeName>
+      <features>
+      </features>
+    </typeDescription>
+  </types>
+</typeSystemDescription>
+
+
+<!--
+Capabilities: Inputs, Outputs, and Preconditions
+-->
+<capabilities>
+  <capability>
+    <inputs/>
+    <outputs>
+      <type allAnnotatorFeatures="true">com.ibm.uima.examples.keyword</type>
+    </outputs> 
+    <languagesSupported>
+      <language>x-unspecified</language>
+    </languagesSupported>
+  </capability>
+</capabilities>
+
+</analysisEngineMetaData>
+</taeDescription>
