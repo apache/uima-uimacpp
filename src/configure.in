@@ -1,0 +1,179 @@
+
+ # Licensed to the Apache Software Foundation (ASF) under one
+ # or more contributor license agreements.  See the NOTICE file
+ # distributed with this work for additional information
+ # regarding copyright ownership.  The ASF licenses this file
+ # to you under the Apache License, Version 2.0 (the
+ # "License"); you may not use this file except in compliance
+ # with the License.  You may obtain a copy of the License at
+ # 
+ #   http://www.apache.org/licenses/LICENSE-2.0
+ # 
+ # Unless required by applicable law or agreed to in writing,
+ # software distributed under the License is distributed on an
+ # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ # KIND, either express or implied.  See the License for the
+ # specific language governing permissions and limitations
+ # under the License.
+
+AC_INIT(libuima, 2.1)
+AC_CONFIG_SRCDIR(framework/engine.cpp)
+AM_INIT_AUTOMAKE
+
+#[LIB_VERSION=`echo $VERSION | sed -e 's/\.//' -e 's/^\([^.]*\)$/\1.0/'`]
+#LIB_VERSION_MAJOR=`echo $LIB_VERSION | sed 's/\..*//'`
+
+AC_ARG_ENABLE(debuguima,
+[  --enable-debuguima    Turn on debugging],
+[case "${enableval}" in
+  yes) debuguima=true ;;
+  no)  debuguima=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-debuguima) ;;
+esac],[debuguima=false])
+AM_CONDITIONAL([DEBUG_UIMA], [test x$debuguima = xtrue])
+
+
+AC_ARG_ENABLE(debugtest,
+[  --enable-debugtest    Turn on debugging],
+[case "${enableval}" in
+  yes) debugtest=true ;;
+  no)  debugtest=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-debugtest) ;;
+esac],[debugtest=false])
+AM_CONDITIONAL([DEBUG_TEST], [test x$debugtest = xtrue])
+
+
+LIB_VERSION="2.1"
+LIB_VERSION_MAJOR="2"
+LIB_VERSION_MINOR="1"
+AC_SUBST(VERSION)
+AC_SUBST(LIB_VERSION)
+AC_SUBST(LIB_VERSION_MAJOR)
+AC_SUBST(LIB_VERSION_MINOR)
+AC_MSG_RESULT([release $VERSION, library $LIB_VERSION])
+
+AC_PROG_LIBTOOL
+AC_PROG_CXX
+
+AC_C_BIGENDIAN
+
+######################################
+# setup for using default dependencies
+UIMACPP_HOME_INCLUDE="-I$UIMACPP_HOME/include"
+UIMACPP_HOME_LIB="-L$UIMACPP_HOME/lib"
+
+
+#########################################################################
+#
+# check for XercesC
+#
+
+AC_ARG_WITH([xerces], AC_HELP_STRING([--with-xerces],
+                                     [use Xerces C++ Library (uses $UIMACPP_HOME by default)]),
+            [UIMA_XERCES_INCLUDE="-I$withval/include"
+             UIMA_XERCES_LIB="-L$withval/lib -lxerces-c"
+             XERCES_TEST_INCLUDE="$UIMA_XERCES_INCLUDE"
+	     AC_SUBST(UIMA_XERCES_INCLUDE)
+	     AC_SUBST(UIMA_XERCES_LIB)
+	     ],
+                  [XERCES_TEST_INCLUDE="-I$UIMACPP_HOME/include"
+		   UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -lxerces-c"])
+
+CPPFLAGS_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $XERCES_TEST_INCLUDE"
+AC_CHECK_HEADER([xercesc/util/XercesVersion.hpp],
+                [:],
+                [AC_MSG_ERROR([Unable to find Xerces C++ headers])])
+CPPFLAGS="$CPPFLAGS_save"
+
+
+#########################################################################
+#
+# check for APR 
+#
+
+AC_ARG_WITH([apr], AC_HELP_STRING([--with-apr],
+                                     [use APR Library (uses $UIMACPP_HOME by default)]),
+            [APR_VER=`echo $withval/include/apr-* | sed -e 's/.*apr-//'`
+	     UIMA_APR_INCLUDE="-I$withval/include/apr-$APR_VER"
+             UIMA_APR_LIB="-L$withval/lib -lapr-$APR_VER"
+             APR_TEST_INCLUDE="$UIMA_APR_INCLUDE"
+	     AC_SUBST(UIMA_APR_INCLUDE)
+	     AC_SUBST(UIMA_APR_LIB)
+	     ],
+                      [APR_VER=`echo $UIMACPP_HOME/include/apr-* | sed -e 's/.*apr-//'`
+		       APR_TEST_INCLUDE="-I$UIMACPP_HOME/include/apr-$APR_VER"
+		       UIMACPP_HOME_INCLUDE="$UIMACPP_HOME_INCLUDE $APR_TEST_INCLUDE"
+		       UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -lapr-$APR_VER"])
+
+CPPFLAGS_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $APR_TEST_INCLUDE -D_GNU_SOURCE"
+AC_CHECK_HEADER([apr.h],
+                [:],
+                [AC_MSG_ERROR([Unable to find APR Headers])])
+CPPFLAGS="$CPPFLAGS_save"
+
+
+#########################################################################
+#
+# check for ICU
+#
+
+AC_ARG_WITH([icu], AC_HELP_STRING([--with-icu],
+                                      [use ICU Library (uses $UIMACPP_HOME by default)]),
+               [UIMA_ICU_INCLUDE="-I$withval/include"
+                UIMA_ICU_LIB="-L$withval/lib -licui18n -licuuc -licuio -licudata"
+		ICU_TEST_INCLUDE="$UIMA_ICU_INCLUDE"
+		AC_SUBST(UIMA_ICU_INCLUDE)
+		AC_SUBST(UIMA_ICU_LIB)
+		],
+                      [ICU_TEST_INCLUDE="-I$UIMACPP_HOME/include"
+		       UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -licui18n -licuuc -licuio -licudata"])
+
+CPPFLAGS_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $ICU_TEST_INCLUDE"
+AC_CHECK_HEADER([unicode/uversion.h],
+                [:],
+                [AC_MSG_ERROR([Unable to find ICU Headers])])
+CPPFLAGS="$CPPFLAGS_save"
+
+
+####################################
+#Substitute default paths, if needed
+AC_SUBST(UIMACPP_HOME_INCLUDE)
+AC_SUBST(UIMACPP_HOME_LIB)
+
+
+#########################################################################
+#
+# check for Java JDK
+#
+
+AC_ARG_WITH([jdk], AC_HELP_STRING([--with-jdk],
+                                      [use local JDK (uses /opt/IBMJava2-142 by default)]),
+               [UIMA_JDK_INCLUDE="-I$withval/include"
+                JDK_TEST_INCLUDE="$UIMA_JDK_INCLUDE"],
+                    [UIMA_JDK_INCLUDE="-I/opt/IBMJava2-142/include"
+                     JDK_TEST_INCLUDE="-I/opt/IBMJava2-142/include"])
+
+CPPFLAGS_save="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $JDK_TEST_INCLUDE"
+AC_CHECK_HEADER([jni.h],
+                [:],
+                [AC_MSG_ERROR([Unable to find JDK Headers])])
+CPPFLAGS="$CPPFLAGS_save"
+
+AC_SUBST(UIMA_JDK_INCLUDE)
+
+
+#########################################################################
+#
+# setup for link with UIMA lib
+#
+
+UIMA_LIB="-L\$(top_srcdir)/../src/framework -luima"
+AC_SUBST(UIMA_LIB)
+
+AM_CONDITIONAL(APPLE, test x$build_vendor = xapple)
+
+AC_OUTPUT(Makefile framework/Makefile utils/Makefile test/Makefile)

@@ -1,0 +1,40 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "uimacpp", "uimacpp.vcproj", "{70B51CFD-850A-44D1-BF14-A44A1CB27550}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "install", "install.vcproj", "{023122EC-3490-49E1-ABE6-B7D755E757B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9F230EC0-DB18-46AC-BB02-DC1E6974A463} = {9F230EC0-DB18-46AC-BB02-DC1E6974A463}
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550} = {70B51CFD-850A-44D1-BF14-A44A1CB27550}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "runaecpp", "runaecpp.vcproj", "{9F230EC0-DB18-46AC-BB02-DC1E6974A463}"
+	ProjectSection(ProjectDependencies) = postProject
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550} = {70B51CFD-850A-44D1-BF14-A44A1CB27550}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550}.Debug.ActiveCfg = Debug|Win32
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550}.Debug.Build.0 = Debug|Win32
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550}.Release.ActiveCfg = Release|Win32
+		{70B51CFD-850A-44D1-BF14-A44A1CB27550}.Release.Build.0 = Release|Win32
+		{023122EC-3490-49E1-ABE6-B7D755E757B0}.Debug.ActiveCfg = Debug|Win32
+		{023122EC-3490-49E1-ABE6-B7D755E757B0}.Debug.Build.0 = Debug|Win32
+		{023122EC-3490-49E1-ABE6-B7D755E757B0}.Release.ActiveCfg = Release|Win32
+		{023122EC-3490-49E1-ABE6-B7D755E757B0}.Release.Build.0 = Release|Win32
+		{9F230EC0-DB18-46AC-BB02-DC1E6974A463}.Debug.ActiveCfg = Debug|Win32
+		{9F230EC0-DB18-46AC-BB02-DC1E6974A463}.Debug.Build.0 = Debug|Win32
+		{9F230EC0-DB18-46AC-BB02-DC1E6974A463}.Release.ActiveCfg = Release|Win32
+		{9F230EC0-DB18-46AC-BB02-DC1E6974A463}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

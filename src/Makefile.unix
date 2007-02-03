@@ -1,0 +1,79 @@
+# -*- makefile -*-
+# Set the environment variables DEBUGUIMA & DEBUGTEST to build debug library & test routines
+
+#VERBOSE:=--verbose
+BUILD_DIR ?= .
+PWD := $(shell pwd)/..
+
+CONFIGURE_ARGS := --disable-static --prefix=/install --includedir=/install/include/uima
+
+ifneq ($(DEBUGUIMA),)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --enable-debuguima=yes
+endif
+
+ifneq ($(DEBUGTEST),)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --enable-debugtest=yes
+endif
+
+ifneq ($(APR_HOME),)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-apr=$(APR_HOME)
+endif
+
+ifneq ($(ICU_HOME),)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-icu=$(ICU_HOME)
+endif
+
+ifneq ($(XERCES_HOME),)
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-xerces=$(XERCES_HOME)
+endif
+
+ifeq ($(JAVA_HOME),)
+	JAVA_HOME := /opt/IBMJava2-142
+endif
+CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --with-jdk=$(JAVA_HOME)
+
+AC_FLAGS=CFLAGS="$(CFLAGS)" CXXFLAGS="$(CFLAGS)"
+
+.PHONY: all install dist clean distclean
+
+all: $(BUILD_DIR)/Makefile
+	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) all
+
+install: $(BUILD_DIR)/Makefile
+	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) install-strip DESTDIR=$(PWD)
+
+dist: $(BUILD_DIR)/Makefile
+	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) dist
+
+clean: $(BUILD_DIR)/Makefile
+	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) clean
+
+distclean:
+	test ! -f $(BUILD_DIR)/Makefile || $(MAKE) -C $(BUILD_DIR) distclean
+	rm -f Makefile.in aclocal.m4 config.guess config.sub configure depcomp install-sh config.guess config.sub ltmain.sh missing spc-config.h.in
+	rm -rf autom4te.cache doc
+
+depclean:
+	for f in .deps/*.Po .deps/*.Plo ; do echo $$f ; echo '# dummy' > $$f ; done
+	$(MAKE) clean
+
+##########################################
+
+$(BUILD_DIR)/Makefile: $(BUILD_DIR)/Makefile.in $(BUILD_DIR)/configure Makefile
+	mkdir -p $(BUILD_DIR)
+	cd $(BUILD_DIR) && $(AC_FLAGS) ./configure $(CONFIGURE_ARGS)
+
+$(BUILD_DIR)/Makefile.in: $(wildcard Makefile.am*) $(BUILD_DIR)/aclocal.m4 $(BUILD_DIR)/ltmain.sh
+#	cd $(BUILD_DIR) && automake -c -a $(VERBOSE) Makefile
+	cd $(BUILD_DIR) && automake --add-missing
+
+$(BUILD_DIR)/configure: $(BUILD_DIR)/configure.in $(BUILD_DIR)/aclocal.m4 
+	cd $(BUILD_DIR) && autoconf $(VERBOSE)
+#	touch configure
+
+$(BUILD_DIR)/aclocal.m4: $(BUILD_DIR)/configure.in $(BUILD_DIR)/ltmain.sh
+	cd $(BUILD_DIR) && aclocal $(VERBOSE)
+
+$(BUILD_DIR)/config.guess $(BUILD_DIR)/config.sub $(BUILD_DIR)/ltmain.sh:
+	cd $(BUILD_DIR) && libtoolize --automake
+	cd $(BUILD_DIR) && touch AUTHORS NEWS README ChangeLog
