@@ -5,8 +5,14 @@ REM default behavior is to build against uima-cpp SDK image, specified by UIMACP
 REM alternate behavior is to override any or all of the dependent libraries
 
 REM need a Java JRE for the JNI interface
-if "%JAVA_HOME%"==""    set    JAVA_HOME=c:\PROGRA~1\IBM\Java142
-if not exist %JAVA_HOME%\include\jni.h goto nojava
+if "%JAVA_INCLUDE%"=="" (
+ if "%JAVA_HOME%"=="" (
+   echo Error: JAVA_INCLUDE not defined
+   goto end
+  )
+ set JAVA_INCLUDE=%JAVA_HOME%\include
+)
+if not exist %JAVA_INCLUDE%\jni.h goto nojava
 
 REM If UIMACPP_HOME undefined, all dependencies must be defined
 if not "%UIMACPP_HOME%"=="" (
@@ -23,7 +29,13 @@ if not "%UIMACPP_HOME%"=="" (
 )
 
 REM Start project build
-devenv uimacpp.sln /build release
+if "%~1" == "" (
+ set TARGET=release
+) else (
+ set TARGET=%~1
+)
+echo devenv uimacpp.sln /build %TARGET%
+devenv uimacpp.sln /build %TARGET%
 goto end
 
 :noapr
@@ -39,7 +51,7 @@ echo need UIMACPP_HOME or XERCES_HOME to be set
 goto end
 
 :nojava
-echo %JAVA_HOME%\include does not exist or does not contain jni.h
+echo %JAVA_INCLUDE% does not exist or does not contain jni.h
 
 :end
 endlocal

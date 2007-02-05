@@ -4,10 +4,17 @@
 @REM which are include in the SDK
 @REM These may be overridden by setting APR_HOME or ICU_HOME or XERCES_HOME
 
-if "%JAVA_HOME%"=="" (
-echo Error: JAVA_HOME not defined
-) else (
-if not exist "%JAVA_HOME%\include\jni.h" echo Error: failed to find JDK headers in %JAVA_HOME%\include
+if "%JAVA_INCLUDE%"=="" (
+ if "%JAVA_HOME%"=="" (
+   echo Error: JAVA_INCLUDE not defined
+   goto end
+  )
+ set JAVA_INCLUDE=%JAVA_HOME%\include
+)
+
+if not exist "%JAVA_INCLUDE%\jni.h" (
+  echo Error: failed to find JDK headers in %JAVA_INCLUDE%
+  goto end
 )
 
 if "%UIMACPP_HOME%"=="" goto noTAF
