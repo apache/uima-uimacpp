@@ -44,6 +44,13 @@ DEBUG=1
 # build a shared library
 DLL_BUILD=1
 
+#python bug(?) on MacOSX: PyImport_ImportModule() is looking for .so!
+UNAME = $(shell uname -s)
+ifeq ($(UNAME), Darwin)
+  DLL_SUFFIX=dylib
+  USER_XTARGET=$(TARGET_FILE).so
+endif
+
 # include file with generic compiler instructions
 include $(UIMACPP_HOME)/lib/base.mak
 ###################################
@@ -55,6 +62,9 @@ uimapywrap.h:
 	swig -outdir . -c++ -python -external-runtime $@
 
 pythonnator.o: $(SWIGDEPS)
+
+$(USER_XTARGET): $(TARGET_FILE).$(DLL_SUFFIX)
+	ln -s $(TARGET_FILE).$(DLL_SUFFIX) $(USER_XTARGET)
 
 uima_wrap.o: uima_wrap.cxx 
 	$(CC) $(CFLAGS) -c $<

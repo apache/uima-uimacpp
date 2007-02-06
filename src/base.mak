@@ -43,6 +43,7 @@
 #
 # USER_CLFAGS       to specify additional compiler parameters
 # USER_LINKFLAGS    to specify additional linker parameters
+# USER_XTARGET      to specify extra user target to build
 #
 #############################################################################
 
@@ -107,7 +108,7 @@ CC=g++
 .c.o :
 	$(CC) $(CFLAGS) -c $<
 
-all:  $(TARGET_FILE_NAME)
+all:  $(TARGET_FILE_NAME) $(USER_XTARGET)
 
 $(TARGET_FILE_NAME):  $(OBJS)
 	$(CC)  $(OBJS) \
@@ -117,3 +118,4 @@ $(TARGET_FILE_NAME):  $(OBJS)
 clean:
 	-rm -f $(OBJS)
 	-rm -f $(TARGET_FILE_NAME)
+	-rm -f $(USER_XTARGET)
