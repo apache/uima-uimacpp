@@ -3,15 +3,14 @@
 usage() {
 	echo "  Usage: buildsdk targetDirectory"
 	echo "    Builds SDK for distribution."
+	echo     buildsdk must be run from the root of the uimacpp source tree.
 	echo "    The uimacpp project must be built and installed by running"
-    echo "      'make install' in the directory of the uimacpp extract."
+	echo "      'make install' in the directory of the uimacpp source tree."
 	echo "    The doxygen documentation must be built by running buildocs.sh"
-	echo "      in the docs directory of the uimacpp extract."
+	echo "      in the docs directory of the uimacpp source tree."
 	echo "    Requires the following environment variables:"
-	echo "      UIMACPP_HOME - root of extract of uimacpp code."
-	echo "                     Defaults to the current directory."
-	echo "      UIMA_INSTALLDIR - 'install' location of uimacpp build."
-	echo "                        Defaults to UIMACPP_HOME/install"
+	echo "      UIMA_INSTALL - 'install' location of uimacpp build."
+	echo "                     Defaults to ./install"
 	echo "      APR_HOME - root of the APR install."
 	echo "      ICU_HOME - root of the ICU install."
 	echo "      XERCES_HOME - root of the XERCES install."
@@ -70,14 +69,16 @@ fi
 
 echo SDK directory tree will be built in $UIMA_DIR
 
-# set default values if not set
-echo check environment variables and set default values
-if [ "$UIMACPP_HOME" = "" ]; then
-  export UIMACPP_HOME="$PWD"
+UIMACPP_SOURCE=`pwd`
+if [ ! -d "$UIMACPP_SOURCE"/src ]; then
+       echo ERROR: current directory is not root of UIMACPP source tree
+       exit
 fi
 
+# set default values if not set
+
 if [ "$UIMA_INSTALLDIR" = "" ]; then
-	export UIMA_INSTALLDIR=$UIMACPP_HOME/install
+	export UIMA_INSTALLDIR=$UIMACPP_SOURCE/install
 fi
 
 if [[ "$APR_HOME" = "" || "$ICU_HOME" = "" || "$XERCES_HOME" = "" ]]; then
@@ -107,7 +108,7 @@ if [ ! -r "$UIMA_INSTALLDIR"/bin/runAECpp ]; then
 	exit
 fi
 
-if [ ! -r "$UIMACPP_HOME"/docs/html/index.html ]; then
+if [ ! -r "$UIMACPP_SOURCE"/docs/html/index.html ]; then
        echo ERROR: The UIMA C++ doxygen docs are missing.
        echo Build the docs by running
        echo cd docs
@@ -167,18 +168,18 @@ if [ "$UNAME" = "Darwin" ]; then
   cd $thisDir
 fi
 	
-echo copying from "$UIMACPP_HOME/docs"...
-cp -p "$UIMACPP_HOME"/docs/QuickStart.html "$UIMA_DIR"/docs/
-cp -p "$UIMACPP_HOME"/docs/uimadoxytags.tag  "$UIMA_DIR"/docs/
-cp $CPLR "$UIMACPP_HOME"/docs/html "$UIMA_DIR"/docs/
+echo copying from "$UIMACPP_SOURCE/docs"...
+cp -p "$UIMACPP_SOURCE"/docs/QuickStart.html "$UIMA_DIR"/docs/
+cp -p "$UIMACPP_SOURCE"/docs/uimadoxytags.tag  "$UIMA_DIR"/docs/
+cp $CPLR "$UIMACPP_SOURCE"/docs/html "$UIMA_DIR"/docs/
 
-cp $CPLR "$UIMACPP_HOME"/examples/* "$UIMA_DIR"/examples/
+cp $CPLR "$UIMACPP_SOURCE"/examples/* "$UIMA_DIR"/examples/
 
 # copy following file from fvt suite
-cp $CPL "$UIMACPP_HOME"/src/test/src/SofaStreamHandlerFile.cpp "$UIMA_DIR"/examples/src/
-cp $CPL "$UIMACPP_HOME"/src/test/src/SimpleTextSegmenter.cpp "$UIMA_DIR"/examples/src/
+cp $CPL "$UIMACPP_SOURCE"/src/test/src/SofaStreamHandlerFile.cpp "$UIMA_DIR"/examples/src/
+cp $CPL "$UIMACPP_SOURCE"/src/test/src/SimpleTextSegmenter.cpp "$UIMA_DIR"/examples/src/
 
-cp $CPL "$UIMACPP_HOME/src/base.mak" "$UIMA_DIR"/lib/
+cp $CPL "$UIMACPP_SOURCE/src/base.mak" "$UIMA_DIR"/lib/
 	
 echo copying from "$APR_HOME"...
 cp $CPLR  "$APR_HOME"/include/apr-* "$UIMA_DIR"/include/
@@ -196,7 +197,7 @@ cp $CPLR "$XERCES_HOME"/include/xercesc "$UIMA_DIR"/include/
 eval cp $CPLR "$XERCES_HOME"/lib/libxerces-c*.$LIBEXT"*" "$UIMA_DIR"/lib/
 
 echo copying the scriptators...
-SCRIPTATORS_HOME=$UIMACPP_HOME/scriptators
+SCRIPTATORS_HOME=$UIMACPP_SOURCE/scriptators
 cp $CPLR "$SCRIPTATORS_HOME" "$UIMA_DIR"/
 cp -p "$SCRIPTATORS_HOME"/perl/Perl.html "$UIMA_DIR"/docs/
 cp -p "$SCRIPTATORS_HOME"/python/Python.html "$UIMA_DIR"/docs/
