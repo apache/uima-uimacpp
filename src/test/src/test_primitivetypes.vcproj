@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(JAVA_HOME)\include&quot;;&quot;$(JAVA_HOME)\include\win32&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;;..\..\cas;..\..\framework"
 				PreprocessorDefinitions="UIMA_SUPPRESS_TIMING;WIN32;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -32,10 +32,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib uima.lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib uimaD.lib"
 				OutputFile="$(OutDir)/test_primitivetypes.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"
@@ -70,7 +70,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="3"
-				AdditionalIncludeDirectories=".;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(JAVA_HOME)\include&quot;;&quot;$(JAVA_HOME)\include\win32&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;;..\..\cas;..\..\framework"
 				PreprocessorDefinitions="UIMA_SUPPRESS_TIMING;TRACEOFF;NDEBUG;WIN32;_CONSOLE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
@@ -85,7 +85,7 @@
 				AdditionalDependencies="xerces-c_2.lib icuuc.lib uima.lib"
 				OutputFile="$(OutDir)/test_primitivetypes.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Release&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Release&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
 				GenerateDebugInformation="FALSE"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
 				SubSystem="1"
