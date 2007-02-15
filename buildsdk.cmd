@@ -7,25 +7,19 @@ if "%~1" == "" (
 	echo ------
 	echo   Usage: buildsdk targetDirectory [clean]
 	echo     Builds SDK for distribution.
+	echo     buildsdk must be run from the root of the uimacpp source tree.
 	echo     The uimacpp solution must be built and installed by running
-	echo       winmake in the src directory of the uimacpp extract. 
+	echo       winmake in the src directory of the uimacpp source tree. 
 	echo     The doxygen documentation must be built by running the buildocs.cmd
-	echo       in the docs directory of the uimacpp extract.
+	echo       in the docs directory of the uimacpp source tree.
 	echo     Requires the following environment variables:
-	echo       UIMA_INSTALLDIR - "install" location of uimacpp build.
-	echo                      Defaults to the currentdirectory\install
-	echo       UIMA_DOCDIR - location of uimacpp docs.
-	echo                         Defaults to UIMA_INSTALLDIR\..\docs
-	echo       UIMA_EXAMPLESDIR - location of examples.
-	echo                         Defaults to UIMA_INSTALLDIR\..\examples
-	echo       UIMA_SCRIPTATORSDIR - location of perl/python/tcl scriptators.
-	echo                         Defaults to UIMA_INSTALLDIR\..\scriptators
-	echo       UIMA_LICENSEDIR - location of licenses.
-	echo                         Defaults to UIMA_INSTALLDIR\..\license
 	echo       APR_HOME - root of the APR install. Required.
 	echo       ICU_HOME - root of the ICU install. Required.
 	echo       XERCES_HOME - root of the XERCES install. Required.
-    echo       MSVCRT_HOME - directory with required msvc*.dll files
+	echo       MSVCRT_HOME - directory with required msvc*.dll files
+	echo     Optional environment variable:
+	echo       UIMA_INSTALL - 'install' location of uimacpp build.
+	echo                      Defaults to ./install
 	goto error
 )
 
@@ -49,12 +43,13 @@ echo SDK directory tree will be built in %UIMA_DIR%
 echo.
 REM set default values if not set
 ECHO check environment values and set default values
-if "%UIMA_INSTALLDIR%"=="" set UIMA_INSTALLDIR=%CD%\install
-if "%UIMA_DOCDIR%" == "" set UIMA_DOCDIR=%UIMA_INSTALLDIR%\..\docs
-if "%UIMA_EXAMPLESDIR%" == "" set UIMA_EXAMPLESDIR=%UIMA_INSTALLDIR%\..\examples
-if "%UIMA_SCRIPTATORSDIR%" == "" set UIMA_SCRIPTATORSDIR=%UIMA_INSTALLDIR%\..\scriptators
-if "%UIMA_LICENSEDIR%" == "" set UIMA_LICENSEDIR=%UIMA_INSTALLDIR%\..\licenses
-if "%UIMA_TESTSRCDIR%" == "" set UIMA_TESTSRCDIR=%UIMA_INSTALLDIR%\..\src\test\src
+set UIMA_SOURCE=%cd%
+if "%UIMA_INSTALLDIR%"=="" set UIMA_INSTALLDIR=%UIMA_SOURCE%\install
+if "%UIMA_DOCDIR%" == "" set UIMA_DOCDIR=%UIMA_SOURCE%\docs
+if "%UIMA_EXAMPLESDIR%" == "" set UIMA_EXAMPLESDIR=%UIMA_SOURCE%\examples
+if "%UIMA_SCRIPTATORSDIR%" == "" set UIMA_SCRIPTATORSDIR=%UIMA_SOURCE%\scriptators
+if "%UIMA_LICENSEDIR%" == "" set UIMA_LICENSEDIR=%UIMA_SOURCE%\licenses
+if "%UIMA_TESTSRCDIR%" == "" set UIMA_TESTSRCDIR=%UIMA_SOURCE%\src\test\src
 
 REM if not exist "%UIMA_INSTALLDIR%"\bin\runAECpp.exe goto uimaInstallPathInvalid
 if not exist "%UIMA_INSTALLDIR%"\include\uima\api.hpp (
