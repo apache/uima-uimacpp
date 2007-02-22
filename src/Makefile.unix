@@ -5,7 +5,7 @@
 BUILD_DIR ?= .
 PWD := $(shell pwd)/..
 
-CONFIGURE_ARGS := --disable-static --prefix=/install --includedir=/install/include/uima
+CONFIGURE_ARGS := --disable-static --prefix=/install --includedir=/install/include/uima --disable-dependency-tracking
 
 ifneq ($(DEBUGUIMA),)
 CONFIGURE_ARGS := $(CONFIGURE_ARGS)  --enable-debuguima=yes
@@ -43,34 +43,11 @@ dist: $(BUILD_DIR)/Makefile
 	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) dist
 
 clean: $(BUILD_DIR)/Makefile
-	$(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) clean
+	test ! -f $(BUILD_DIR)/Makefile || $(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) clean
 
 distclean:
-	test ! -f $(BUILD_DIR)/Makefile || $(MAKE) -C $(BUILD_DIR) distclean
-	rm -f Makefile.in aclocal.m4 config.guess config.sub configure depcomp install-sh config.guess config.sub ltmain.sh missing spc-config.h.in
-	rm -rf autom4te.cache doc
+	test ! -f $(BUILD_DIR)/Makefile || $(MAKE) -C $(BUILD_DIR) $(MAKE_ARGS) distclean
 
-depclean:
-	for f in .deps/*.Po .deps/*.Plo ; do echo $$f ; echo '# dummy' > $$f ; done
-	$(MAKE) clean
-
-##########################################
-
-$(BUILD_DIR)/Makefile: $(BUILD_DIR)/Makefile.in $(BUILD_DIR)/configure Makefile
+$(BUILD_DIR)/Makefile: $(BUILD_DIR)/Makefile.in $(BUILD_DIR)/configure
 	mkdir -p $(BUILD_DIR)
 	cd $(BUILD_DIR) && $(AC_FLAGS) ./configure $(CONFIGURE_ARGS)
-
-$(BUILD_DIR)/Makefile.in: $(wildcard Makefile.am*) $(BUILD_DIR)/aclocal.m4 $(BUILD_DIR)/ltmain.sh
-#	cd $(BUILD_DIR) && automake -c -a $(VERBOSE) Makefile
-	cd $(BUILD_DIR) && automake --add-missing
-
-$(BUILD_DIR)/configure: $(BUILD_DIR)/configure.in $(BUILD_DIR)/aclocal.m4 
-	cd $(BUILD_DIR) && autoconf $(VERBOSE)
-#	touch configure
-
-$(BUILD_DIR)/aclocal.m4: $(BUILD_DIR)/configure.in $(BUILD_DIR)/ltmain.sh
-	cd $(BUILD_DIR) && aclocal $(VERBOSE)
-
-$(BUILD_DIR)/config.guess $(BUILD_DIR)/config.sub $(BUILD_DIR)/ltmain.sh:
-	cd $(BUILD_DIR) && libtoolize --automake
-	cd $(BUILD_DIR) && touch AUTHORS NEWS README ChangeLog

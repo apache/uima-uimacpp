@@ -6,7 +6,6 @@ include_HEADERS =
 include_HEADERS += uima/*.h
 include_HEADERS += uima/*.hpp
 include_HEADERS += ../cas/uima/*.hpp
-include_HEADERS += ../cas/uima/*.inl
 
 uima_tgt: libuima.la
 
