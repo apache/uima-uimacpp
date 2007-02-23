@@ -72,6 +72,10 @@ mkdir $target_dir/src/framework/uima
 mkdir $target_dir/src/utils
 
 print -u2 "."
+print -u2 "copying from $UIMACPP_SOURCE"
+cp $CPL  $UIMACPP_SOURCE/buildsdk.sh $target_dir/
+
+print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/data"
 cp $CPL  $UIMACPP_SOURCE/data/*.xsd $target_dir/data/
 
@@ -90,8 +94,8 @@ cp $CP $UIMACPP_SOURCE/src/aclocal.m4 $target_dir/src/
 cp $CP $UIMACPP_SOURCE/src/install-sh $target_dir/src/
 cp $CP $UIMACPP_SOURCE/src/config.guess $target_dir/src/
 cp $CP $UIMACPP_SOURCE/src/config.sub $target_dir/src/
+cp $CP $UIMACPP_SOURCE/src/ltmain.sh $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/Makefile.unix $target_dir/src/
-cp $CPL $UIMACPP_SOURCE/src/libtool $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/configure $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/base.mak $target_dir/src/
 
@@ -129,19 +133,16 @@ cp $CPL $UIMACPP_SOURCE/src/utils/*.am $target_dir/src/utils/
 print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/scriptators"
 cp $CPLR $UIMACPP_SOURCE/scriptators $target_dir/
-find $target_dir/scriptators -type d -name .svn -exec rm -rf {} \;
+find $target_dir/scriptators -depth -type d -name .svn -exec rm -rf {} \;
 find $target_dir/scriptators -type f -iname *.vcproj -exec rm -rf {} \;
 find $target_dir/scriptators -type f -name winmake.cmd -exec rm -rf {} \;
-mv $target_dir/scriptators/perl/Perl.html $target_dir/docs/
-mv $target_dir/scriptators/python/Python.html $target_dir/docs/
-mv $target_dir/scriptators/tcl/Tcl.html $target_dir/docs/
 
 print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/test"
 cp $CPLR $UIMACPP_SOURCE/src/test $target_dir/src/
 rm -rf $target_dir/src/test/.libs
 rm -rf $target_dir/src/test/.deps
-find $target_dir/src/test -type d -name .svn -exec rm -rf {} \;
+find $target_dir/src/test -depth -type d -name .svn -exec rm -rf {} \;
 #find $target_dir/src/test -type f -iname *.am -exec rm -rf {} \;
 find $target_dir/src/test -type f -iname *.l? -exec rm -rf {} \;
 find $target_dir/src/test -type f -iname *.o -exec rm -rf {} \;
