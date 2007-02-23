@@ -1,7 +1,7 @@
 #!/bin/ksh
 
 # for now, change versionnumber in line below
-srcName=uimacpp-2.1.0
+srcName=uimacpp-2.1.0-incubating
 
 if [ "$1" = 'TRACE' ]
     then set -vx ;shift
@@ -62,22 +62,24 @@ mkdir $target_dir/src/framework
 mkdir $target_dir/src/framework/uima
 mkdir $target_dir/src/utils
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE"
 cp $CPL  $UIMACPP_SOURCE/buildsdk.sh $target_dir/
+cp $CPL  $UIMACPP_SOURCE/NOTICE $target_dir/
+cp $CPL  $UIMACPP_SOURCE/LICENSE $target_dir/
+cp $CPL  $UIMACPP_SOURCE/RELEASE_NOTES* $target_dir/
+cp $CPL  $UIMACPP_SOURCE/README.4src $target_dir/README
+cp $CPL  $UIMACPP_SOURCE/README.4sdk $target_dir/
+cp $CPL  $UIMACPP_SOURCE/DISCLAIMER $target_dir/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/data"
 cp $CPL  $UIMACPP_SOURCE/data/*.xsd $target_dir/data/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/docs"
 cp $CPL $UIMACPP_SOURCE/docs/uimacppdocs.mak $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/builddocs.sh $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/uimacpp.dox $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/doxyheader.html $target_dir/docs
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src"
 cp $CPL $UIMACPP_SOURCE/src/readme.tobuild $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/Makefile.in $target_dir/src/
@@ -93,13 +95,11 @@ cp $CPL $UIMACPP_SOURCE/src/base.mak $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/configure.in $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/Makefile.am $target_dir/src/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/cas"
 cp $CPL $UIMACPP_SOURCE/src/cas/*.cpp $target_dir/src/cas/
 cp $CPL $UIMACPP_SOURCE/src/cas/uima/*.hpp $target_dir/src/cas/uima/
 cp $CPL $UIMACPP_SOURCE/src/cas/uima/*.inl $target_dir/src/cas/uima/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/framework"
 cp $CPL $UIMACPP_SOURCE/src/framework/*.cpp $target_dir/src/framework/
 cp $CPL $UIMACPP_SOURCE/src/framework/*.in $target_dir/src/framework/
@@ -107,27 +107,22 @@ cp $CPL $UIMACPP_SOURCE/src/framework/uima/*.hpp $target_dir/src/framework/uima/
 cp $CPL $UIMACPP_SOURCE/src/framework/uima/*.h $target_dir/src/framework/uima/
 cp $CPL $UIMACPP_SOURCE/src/framework/*.am $target_dir/src/framework/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/jni"
 cp $CPL $UIMACPP_SOURCE/src/jni/*.cpp $target_dir/src/jni/
 cp $CPL $UIMACPP_SOURCE/src/jni/uima/*.hpp $target_dir/src/jni/uima/
 cp $CPL $UIMACPP_SOURCE/src/jni/uima/*.h $target_dir/src/jni/uima/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/utils"
 cp $CPL $UIMACPP_SOURCE/src/utils/*.cpp $target_dir/src/utils/
 cp $CPL $UIMACPP_SOURCE/src/utils/*.in $target_dir/src/utils/
 cp $CPL $UIMACPP_SOURCE/src/utils/*.am $target_dir/src/utils/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/scriptators"
 cp $CPLR $UIMACPP_SOURCE/scriptators $target_dir/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/examples"
 cp $CPLR $UIMACPP_SOURCE/examples $target_dir/
 
-print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/test"
 cp $CPLR $UIMACPP_SOURCE/src/test $target_dir/src/
 rm -rf $target_dir/src/test/.libs
@@ -135,7 +130,6 @@ rm -rf $target_dir/src/test/.deps
 find $target_dir/src/test -type f -iname '*.l?' -exec rm -f {} \;
 find $target_dir/src/test -type f -iname '*.o' -exec rm -f {} \;
 
-print -u2 "."
 print -u2 "removing unused files from $UIMACPP_SOURCE"
 find $target_dir -depth -type d -name .svn -exec rm -rf {} \;
 find $target_dir -type f -iname '*.sln' -exec rm -f {} \;
@@ -143,7 +137,6 @@ find $target_dir -type f -iname '*.vcproj' -exec rm -f {} \;
 find $target_dir -type f -iname '*.cmd' -exec rm -f {} \;
 find $target_dir -type f -iname '*.bat' -exec rm -f {} \;
 
-print -u2 "."
 print -u2 "DONE ... Source image created in $target_dir"
 
 exit 0

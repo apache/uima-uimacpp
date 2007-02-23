@@ -20,7 +20,12 @@ usage() {
 copylicenses() {
 	echo copying licenses...
 
-	# add copy of Apache SDK licenses at some point
+	# add Apache SDK licenses
+	cp $CPL  $UIMACPP_SOURCE/NOTICE $UIMA_DIR/
+	cp $CPL  $UIMACPP_SOURCE/LICENSE $UIMA_DIR/
+	cp $CPL  $UIMACPP_SOURCE/RELEASE_NOTES* $UIMA_DIR/
+	cp $CPL  $UIMACPP_SOURCE/README.4sdk $UIMA_DIR/README
+	cp $CPL  $UIMACPP_SOURCE/DISCLAIMER $UIMA_DIR/
 
 	mkdir "$UIMA_DIR"/licenses/apr
 	if [ -r "$APR_HOME"/LICENSE ]; then
@@ -175,9 +180,15 @@ cp $CPLR "$UIMACPP_SOURCE"/docs/html "$UIMA_DIR"/docs/
 
 cp $CPLR "$UIMACPP_SOURCE"/examples/* "$UIMA_DIR"/examples/
 
-# copy following file from fvt suite
+# copy following files from fvt suite
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/SofaStreamHandlerFile.cpp "$UIMA_DIR"/examples/src/
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/SimpleTextSegmenter.cpp "$UIMA_DIR"/examples/src/
+cp $CPL "$UIMACPP_SOURCE"/src/test/src/MeetingAnnotator.cpp "$UIMA_DIR"/examples/tutorial/src/
+cp -p "$UIMACPP_SOURCE"/src/test/.libs/libMeetingAnnotator.$LIBEXT "$UIMA_DIR"/examples/tutorial/src/MeetingAnnotator.$LIBEXT
+find $UIMA_DIR/examples -type f -iname '*.sln' -exec rm -f {} \;
+find $UIMA_DIR/examples -type f -iname '*.vcproj' -exec rm -f {} \;
+find $UIMA_DIR/examples -type f -iname '*.cmd' -exec rm -f {} \;
+
 
 cp $CPL "$UIMACPP_SOURCE/src/base.mak" "$UIMA_DIR"/lib/
 	
