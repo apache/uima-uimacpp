@@ -51,6 +51,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleTextSegmenter", "src\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeetingAnnotator", "src\MeetingAnnotator.vcproj", "{0BC37546-5E6B-4383-9984-EF348B9FB966}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextSegmentConsumer", "src\TextSegmentConsumer.vcproj", "{0BC37546-5E6B-4383-9984-EF348B9FB966}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
