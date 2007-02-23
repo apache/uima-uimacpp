@@ -41,8 +41,7 @@ if "%XERCES_HOME%" == "" goto Missing
 echo.
 echo SDK directory tree will be built in %UIMA_DIR%
 echo.
-REM set default values if not set
-ECHO check environment values and set default values
+REM check environment values and set default values
 set UIMA_SOURCE=%cd%
 if "%UIMA_INSTALLDIR%"=="" set UIMA_INSTALLDIR=%UIMA_SOURCE%\install
 if "%UIMA_DOCDIR%" == "" set UIMA_DOCDIR=%UIMA_SOURCE%\docs
@@ -150,6 +149,16 @@ REM copy the following file separately, as it is part of the fvt suite
 xcopy /Q /Y %UIMA_TESTSRCDIR%\SofaStreamHandlerFile.cpp %UIMA_DIR%\examples\src
 xcopy /Q /Y %UIMA_TESTSRCDIR%\SimpleTextSegmenter.cpp %UIMA_DIR%\examples\src
 
+mkdir %UIMA_DIR%\examples\tutorial
+mkdir %UIMA_DIR%\examples\tutorial\descriptors
+mkdir %UIMA_DIR%\examples\tutorial\src
+xcopy /Q /Y %UIMA_EXAMPLESDIR%\tutorial\*.* %UIMA_DIR%\examples\tutorial
+xcopy /Q /Y %UIMA_EXAMPLESDIR%\tutorial\descriptors\*.xml %UIMA_DIR%\examples\tutorial\descriptors
+xcopy /Q /Y %UIMA_EXAMPLESDIR%\tutorial\src\*.vcproj %UIMA_DIR%\examples\tutorial\src
+REM copy the following files from the fvt suite
+xcopy /Q /Y %UIMA_TESTSRCDIR%\MeetingAnnotator.cpp %UIMA_DIR%\examples\tutorial\src
+xcopy /Q /Y %UIMA_TESTSRCDIR%\..\MeetingAnnotator.dll %UIMA_DIR%\examples\tutorial\src
+
 echo.
 echo copying from %APR_HOME%...
 mkdir %UIMA_DIR%\include\apr
@@ -187,7 +196,6 @@ mkdir %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.cpp %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.pl  %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.xml %UIMA_DIR%\scriptators\perl
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\Makefile %UIMA_DIR%\scriptators\perl
 
 echo.
 echo copying Python scriptator...
@@ -196,7 +204,6 @@ mkdir %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.cpp %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.py  %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.xml %UIMA_DIR%\scriptators\python
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\Makefile %UIMA_DIR%\scriptators\python
 
 echo.
 echo copying Tcl scriptator...
@@ -205,12 +212,18 @@ mkdir %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.cpp %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.tcl %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.xml %UIMA_DIR%\scriptators\tcl
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\Makefile %UIMA_DIR%\scriptators\tcl
 
 echo.
 echo copying licenses...
 
-REM add copyof  Apache SDK licences here
+REM copy Apache licences
+xcopy /Q /Y %UIMA_SOURCE%\NOTICE %UIMA_DIR%
+xcopy /Q /Y %UIMA_SOURCE%\LICENSE %UIMA_DIR%
+xcopy /Q /Y %UIMA_SOURCE%\RELEASE_NOTES.* %UIMA_DIR%
+xcopy /Q /Y %UIMA_SOURCE%\README.4sdk %UIMA_DIR%
+ren %UIMA_DIR%\README.4sdk README
+xcopy /Q /Y %UIMA_SOURCE%\DISCLAIMER %UIMA_DIR%
+
 mkdir %UIMA_DIR%\licenses\apr
 xcopy /Q /Y %APR_HOME%\LICENSE* %UIMA_DIR%\licenses\apr
 if not exist %UIMA_DIR%\licenses\icu mkdir %UIMA_DIR%\licenses\icu
