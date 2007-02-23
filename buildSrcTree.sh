@@ -53,14 +53,6 @@ fi
 mkdir $target_dir
 mkdir $target_dir/data
 mkdir $target_dir/docs
-mkdir $target_dir/examples
-mkdir $target_dir/examples/data
-mkdir $target_dir/examples/descriptors
-mkdir $target_dir/examples/src
-mkdir $target_dir/examples/tutorial
-mkdir $target_dir/examples/tutorial/descriptors
-mkdir $target_dir/examples/tutorial/src
-#mkdir $target_dir/scriptators
 mkdir $target_dir/src
 mkdir $target_dir/src/cas
 mkdir $target_dir/src/cas/uima
@@ -68,7 +60,6 @@ mkdir $target_dir/src/jni
 mkdir $target_dir/src/jni/uima
 mkdir $target_dir/src/framework
 mkdir $target_dir/src/framework/uima
-#mkdir $target_dir/src/test
 mkdir $target_dir/src/utils
 
 print -u2 "."
@@ -114,7 +105,6 @@ cp $CPL $UIMACPP_SOURCE/src/framework/*.cpp $target_dir/src/framework/
 cp $CPL $UIMACPP_SOURCE/src/framework/*.in $target_dir/src/framework/
 cp $CPL $UIMACPP_SOURCE/src/framework/uima/*.hpp $target_dir/src/framework/uima/
 cp $CPL $UIMACPP_SOURCE/src/framework/uima/*.h $target_dir/src/framework/uima/
-
 cp $CPL $UIMACPP_SOURCE/src/framework/*.am $target_dir/src/framework/
 
 print -u2 "."
@@ -127,28 +117,31 @@ print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/utils"
 cp $CPL $UIMACPP_SOURCE/src/utils/*.cpp $target_dir/src/utils/
 cp $CPL $UIMACPP_SOURCE/src/utils/*.in $target_dir/src/utils/
-
 cp $CPL $UIMACPP_SOURCE/src/utils/*.am $target_dir/src/utils/
 
 print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/scriptators"
 cp $CPLR $UIMACPP_SOURCE/scriptators $target_dir/
-find $target_dir/scriptators -depth -type d -name .svn -exec rm -rf {} \;
-find $target_dir/scriptators -type f -iname *.vcproj -exec rm -rf {} \;
-find $target_dir/scriptators -type f -name winmake.cmd -exec rm -rf {} \;
+
+print -u2 "."
+print -u2 "copying from $UIMACPP_SOURCE/examples"
+cp $CPLR $UIMACPP_SOURCE/examples $target_dir/
 
 print -u2 "."
 print -u2 "copying from $UIMACPP_SOURCE/src/test"
 cp $CPLR $UIMACPP_SOURCE/src/test $target_dir/src/
 rm -rf $target_dir/src/test/.libs
 rm -rf $target_dir/src/test/.deps
-find $target_dir/src/test -depth -type d -name .svn -exec rm -rf {} \;
-#find $target_dir/src/test -type f -iname *.am -exec rm -rf {} \;
-find $target_dir/src/test -type f -iname *.l? -exec rm -rf {} \;
-find $target_dir/src/test -type f -iname *.o -exec rm -rf {} \;
-find $target_dir/src/test -type f -iname *.bat -exec rm -rf {} \;
-find $target_dir/src/test -type f -iname *.vcproj -exec rm -rf {} \;
-find $target_dir/src/test -type f -name winmake.cmd -exec rm -rf {} \;
+find $target_dir/src/test -type f -iname '*.l?' -exec rm -f {} \;
+find $target_dir/src/test -type f -iname '*.o' -exec rm -f {} \;
+
+print -u2 "."
+print -u2 "removing unused files from $UIMACPP_SOURCE"
+find $target_dir -depth -type d -name .svn -exec rm -rf {} \;
+find $target_dir -type f -iname '*.sln' -exec rm -f {} \;
+find $target_dir -type f -iname '*.vcproj' -exec rm -f {} \;
+find $target_dir -type f -iname '*.cmd' -exec rm -f {} \;
+find $target_dir -type f -iname '*.bat' -exec rm -f {} \;
 
 print -u2 "."
 print -u2 "DONE ... Source image created in $target_dir"
