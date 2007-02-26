@@ -1,60 +1,61 @@
 
-			Apache UIMA (Unstructured Information Management Architecture) v2.1.0
-		   -----------------------------------------------------------------------
+                  Apache UIMA C++ (Unstructured Information Management Architecture) v2.1.0
+                  -------------------------------------------------------------------------
+
+Getting Started
+----------------
+
+Apache UIMA C++ can be used as a standalone framework, but it is primarily intended to be integrated with the Apache UIMA Java framework. Interoperability is enhanced if the uimacpp SDK package is installed directly under the top level directory of the Apache UIMA Java framework. 
+
+For information about the Apache UIMA C++ package go to index.html in the uimacpp/docs directory. For more information about Apache UIMA, go to http://incubator.apache.org/uima/index.html, or to the documentation in the Apache UIMA Java package.
+
 
 Supported Platforms
 --------------------
 
-Apache UIMA requires Java level 1.4; it has been tested with Sun Java SDK v1.4.2 but also with Sun Java SDK v5.0 and v6.0.
-The supported platforms are: Windows, Linux, Solaris, AIX and Mac OS X.  Other platforms and Java (1.4+) implementations
-should work, but have not been significantly tested.
-
-Many of the scripts in the /bin directory invoke Java. They use the value of the environment variable, JAVA_HOME, 
-to locate the Java to use; if it is not set, they invoke "java" expecting to find an appropriate Java in your PATH. 
+Apache UIMA C++ has been tested with the latest levels of gcc on Linux and MacOSX, and with VC7 and VC8 on Windows. Binary distributions are available for selected platforms. The source distribution should build on a wide variety of Unix systems.
 
 
 Environment Variables
 ----------------------
 
-After you have unpacked the Apache UIMA distribution from the package of your choice (e.g. .zip or .gz), 
-you have to do the steps below that UIMA functioning properly.
+There are three environmental variables that need modification for UIMA C++ to function properly.
 
-    * Set JAVA_HOME to the directory of your JRE installation you would like to use for UIMA.  
-    * Set UIMA_HOME to the apache-uima directory of your unpacked Apache UIMA distribution
-    * Append UIMA_HOME/bin to your PATH
-    
-    * Please run the script UIMA_HOME/bin/adjustExamplePaths.bat (or .sh), to update 
-      paths in the examples based on the actual UIMA_HOME directory path. 
-      This script runs a Java program; 
-      you must either have java in your PATH or set the environment variable JAVA_HOME to a 
-      suitable JRE.
+    * UIMACPP_HOME should point to the uimacpp directory of your unpacked Apache UIMA C++
+      distribution. UIMACPP_HOME is used when compiling & linking UIMA C++ components.
+    * Append UIMACPP_HOME/bin to your PATH to pick up the runAECpp test driver
+    * Append UIMACPP_HOME/lib to your LD_LIBRARY_PATH (or DYLD_LIBRARY_PATH on MacOSX)
+      so that the necessary shared libraries can be found.
 
-    Note: The Mac OS X operating system has special procedures for setting up global environment
-    variables; see http://developer.apple.com/qa/qa2001/qa1067.html for how to do this.
-      
-      
+Also note that UIMA C++ annotators are built as shared libraries, so they must be in a directory in the LD_LIBRARY_PATH, DYLD_LIBRARY_PATH or PATH (as appropriate to your platform) as well. An example of this is described in the next section.
+
+For better runtime integration, the Apache UIMA Java SDK utilities and Eclipse run configurations automatically add $UIMA_HOME/uimacpp/lib to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH, and adds $UIMA_HOME/uimacpp/bin to PATH.
+
+
 Verifying Your Installation
 ----------------------------
 
-To test the installation, run the documentAnalyzer.bat (or .sh) file located in the bin subdirectory. 
-This should pop up a "Document Analyzer" window. Set the values displayed in this GUI to as follows:
+The procedure here is to first test that Apache UIMA C++ is installed and operating correctly. If desired, then check if the code is interoperating properly with Apache UIMA Java.
 
-    * Input Directory: UIMA_HOME/examples/data
-    * Output Directory: UIMA_HOME/examples/data/processed
-    * TAE XML Descriptor: UIMA_HOME/examples/descriptors/analysis_engine/PersonTitleAnnotator.xml
+Set up the environment as described above. Go to $UIMACPP_HOME/examples/src in order to build the sample code and add the src directory to the appropriate path.
 
-Replace UIMA_HOME above with the path of your Apache UIMA installation.
+On Linux:
+    * make -f DaveDetector.mak
+    * LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
 
-Next, click the "Run" button, which should, after a brief pause, pop up an "Analyzed Results" window. 
-Double-click on one of the documents to display the analysis results for that document.
+On Windows:
+    * devenv DaveDetector.vcproj /build release
+    * PATH=%PATH%;%CD%
 
+To test the sample code, change back to the $UIMACPP_HOME/examples directory and run:
+    * runAECpp descriptors/DaveDetector.xml data/example.txt
 
-Getting Started
-----------------
+The console should show that a Dave was found.
 
-For an introduction to Apache UIMA and how to use it, please read the documentation 
-located in the docs subdirectory.  A good place to start is the overview_and_setup 
-book's first chapter, which has a brief guide to the documentation.
+To test interoperability, first verify that Apache UIMA Java is working from the current shell, as described in that package, and then use the runAE.sh utility (use runAE on Windows)
+    * runAE.sh descriptors/DaveDetector.xml data/example.txt
+
+For more information about the sample code see $UIMACPP_HOME/examples/readme.html.
 
 
 Disclaimer
