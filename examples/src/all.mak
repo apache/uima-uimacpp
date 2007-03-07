@@ -6,5 +6,8 @@ EXAMPLES = DaveDetector SofaExampleAnnotator SofaStreamHandlerFile SofaDataAnnot
 
 all: $(EXAMPLES)
 
+clean:
+	rm -f *.o *.so *.dylib
+
 $(EXAMPLES):
 	$(MAKE) -f $@.mak
