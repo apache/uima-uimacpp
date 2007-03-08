@@ -62,17 +62,13 @@ public:
   TyErrorId process(CAS & rCas, ResultSpecification const & crResultSpecification) {
     cout << "SofaDataAnnotator: process() begins" << endl;
 
-    /** get the default text sofa */
-    SofaFS textSofa = rCas.getSofa(getAnnotatorContext().mapToSofaID("EnglishDocument"));
-    if (!textSofa.isValid()) {
-      cout << "  No Sofa named EnglishDocument found" << endl;
-      return (TyErrorId)UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS;
-    }
-
     /** get the CAS view of the sofa */
-    CAS * tcas = rCas.getView(textSofa);
+    CAS * tcas = rCas.getView("EnglishDocument");
     /** get the handle to the index repository */
     FSIndexRepository & indexRep = tcas->getIndexRepository();
+
+    /** get the default text sofa */
+    SofaFS textSofa = tcas->getSofa();
 
     /** get the handle to the sofa data stream */
     SofaDataStream * pStream = textSofa.getSofaDataStream();

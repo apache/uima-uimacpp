@@ -97,14 +97,13 @@ int main(int argc, char * argv[]) {
     // Initialize the CAS
     CAS* aCas = pEngine->newCAS();
     for (int jj=0; jj<runTimes; jj++) {
-      //create a text sofa with appropriate name for English->German translator
-      SofaFS engSofa = aCas->createSofa(
-                         pEngine->getAnnotatorContext().mapToSofaID("EnglishDocument"), "text");
+      //create a text view with appropriate name for English->German translator
+      CAS * eTcas = aCas->createView("EnglishDocument");
 
       //and set the Sofa data with the English document
-      engSofa.setLocalSofaData(ustrInputText);
+      eTcas->setSofaDataString(ustrInputText, "text");
+
 // Get pointer to the English text document
-      CAS * eTcas = aCas->getView(engSofa);
       DocumentFS docFS = eTcas->getDocumentAnnotation();
       UnicodeStringRef eText = docFS.getCoveredText();
       //cout << "eng tcas covered text " << eText << endl;
@@ -116,7 +115,7 @@ int main(int argc, char * argv[]) {
 
       if (!runQuiet)
         cout << endl << "Retrieving all annotations for the English document:" << endl;
-      CAS* engTcas = aCas->getView(engSofa);
+      CAS* engTcas = aCas->getView("EnglishDocument");
 
       ANIndex anIdx = engTcas->getAnnotationIndex(
                         engTcas->getTypeSystem().getType("uima.tcas.Annotation"));
@@ -134,8 +133,7 @@ int main(int argc, char * argv[]) {
 
       if (!runQuiet)
         cout << endl << "Retrieving all annotations for the German document:" << endl;
-      CAS* germTcas = aCas->getView(aCas->getSofa(
-                                      pEngine->getAnnotatorContext().mapToSofaID("GermanDocument")));
+      CAS* germTcas = aCas->getView("GermanDocument");
 
       Type crossType  = engTcas->getTypeSystem().getType("sofa.test.CrossAnnotation");
       Feature otherFeat = crossType.getFeatureByBaseName("otherAnnotation");

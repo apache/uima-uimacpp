@@ -77,26 +77,18 @@ public:
     CAS *engTcas, *germTcas;
     UnicodeString delimUS(" ");
     UChar *myLocalSaveState;
-    SofaFS engSofa;
 
     // Look for english document and "translate" to German
     cout << "SofaExampleAnnotator: process() begins" << endl;
 
-    // get English text Sofa and open CAS view
-    engSofa = rCAS.getSofa(getAnnotatorContext().mapToSofaID("EnglishDocument"));
-    if (!engSofa.isValid()) {
-      cout << "  No Sofa named EnglishDocument found" << endl;
-      getAnnotatorContext().getLogger().logError("No Sofa named EnglishDocument found");
-      return (TyErrorId)UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS;
-    }
-    engTcas = rCAS.getView(engSofa);
+    // get English view
+    engTcas = rCAS.getView("EnglishDocument");
     DocumentFS adocFS = engTcas->getDocumentAnnotation();
     UnicodeStringRef aengText = adocFS.getCoveredText();
     cout << "      English Input: " << aengText << endl;
 
     // Create the output German text Sofa and open CAS view
-    SofaFS germSofa = rCAS.createSofa(pAnc->mapToSofaID("GermanDocument"), "text");
-    germTcas = rCAS.getView(germSofa);
+    germTcas = rCAS.createView("GermanDocument");
 
     // Get pointer to the English text document
     DocumentFS docFS = engTcas->getDocumentAnnotation();

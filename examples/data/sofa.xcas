@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <CAS>
 <uima.cas.Sofa _indexed="0" _id="1" sofaNum="1" sofaID="EnglishDocument" mimeType="text"  sofaString="This is a text document for analysis" />
+<uima.tcas.DocumentAnnotation _indexed="1" _id="8" sofa="1" begin="0" end="36" language="**"/>
 </CAS>
