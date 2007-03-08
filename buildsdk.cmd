@@ -154,6 +154,7 @@ xcopy /Q /Y %UIMA_DOCDIR%\html\* %UIMA_DIR%\docs\html
 echo.
 echo copying from %UIMA_EXAMPLESDIR%...
 xcopy /Q /Y %UIMA_EXAMPLESDIR%\*.html %UIMA_DIR%\examples
+xcopy /Q /Y %UIMA_EXAMPLESDIR%\*.cmd %UIMA_DIR%\examples
 mkdir %UIMA_DIR%\examples\data
 xcopy /Q /Y %UIMA_EXAMPLESDIR%\data\* %UIMA_DIR%\examples\data
 mkdir %UIMA_DIR%\examples\descriptors
