@@ -67,12 +67,12 @@ endif
 
 ifeq ($(DEBUG),1)
 # compile flags for debug mode
-BUILD_CFLAGS=-DDEBUG -g -fno-inline -fno-default-inline
+BUILD_CFLAGS=-DDEBUG -g -fno-inline -fno-default-inline -fPIC
 BUILD_LFLAGS=
 else
 # compile flags for ship mode:
 # all optimization on, Multithreaded, dynamic link runtime
-BUILD_CFLAGS=-DNDEBUG -DTRACEOFF -O3
+BUILD_CFLAGS=-DNDEBUG -DTRACEOFF -O3 -fPIC
 BUILD_LFLAGS= -Wl,--strip-debug
 endif 
 

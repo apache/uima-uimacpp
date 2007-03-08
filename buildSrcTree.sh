@@ -63,7 +63,7 @@ if [ "$UNAME" = "Darwin" ]; then
 else
   CP=-pH
   CPL=-pl
-  CPLR=-plr
+  CPLR=-plra
   LIBEXT=so
 fi
 

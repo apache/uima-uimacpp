@@ -165,7 +165,6 @@ mkdir "$UIMA_DIR"/include
 mkdir "$UIMA_DIR"/include/uima
 mkdir "$UIMA_DIR"/lib
 mkdir "$UIMA_DIR"/licenses
-mkdir "$UIMA_DIR"/examples
 
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
@@ -174,7 +173,7 @@ if [ "$UNAME" = "Darwin" ]; then
   LIBEXT=dylib
 else
   CPL=-pl
-  CPLR=-plr
+  CPLR=-plra
   LIBEXT=so
 fi
 
@@ -195,7 +194,7 @@ cp -p "$UIMACPP_SOURCE"/docs/QuickStart.html "$UIMA_DIR"/docs/
 cp -p "$UIMACPP_SOURCE"/docs/uimadoxytags.tag  "$UIMA_DIR"/docs/
 cp $CPLR "$UIMACPP_SOURCE"/docs/html "$UIMA_DIR"/docs/
 
-cp $CPLR "$UIMACPP_SOURCE"/examples/* "$UIMA_DIR"/examples/
+cp $CPLR "$UIMACPP_SOURCE"/examples "$UIMA_DIR"/
 
 # copy following files from fvt suite
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/SofaStreamHandlerFile.cpp "$UIMA_DIR"/examples/src/
