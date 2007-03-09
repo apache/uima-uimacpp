@@ -364,7 +364,10 @@ namespace uima {
         isInitialView = true;
       }
       // get the sofaNum
-      UnicodeString(CAS::FEATURE_BASE_NAME_SOFANUM).extract(ubuff, 256, errorCode);
+      extsz = UnicodeString(CAS::FEATURE_BASE_NAME_SOFANUM).extract(ubuff, 256, errorCode);
+      if (extsz > 256) {
+        cout << "ACK!" << endl;
+      }
       const UChar* aString = attrs.getValue(ubuff);
       int thisSofaNum = atoi(UnicodeStringRef(aString).asUTF8().c_str());
 
