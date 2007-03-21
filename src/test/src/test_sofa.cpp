@@ -124,6 +124,10 @@ int main(int argc, char * argv[]) /*
 //TODO?   gerTcas->setDocumentText("das bier ist gut");
     gerTcas->setDocumentText(UnicodeString("das bier ist gut"));
 
+    // test getView()->getDocumentAnnotation()->getCoveredText()
+    AnnotationFS gerDocAnn = cas->getView("GermanDocument")->getDocumentAnnotation();
+    ASSERT_OR_THROWEXCEPTION(0==gerDocAnn.getCoveredText().compare("das bier ist gut"));   
+
 
 // Test Multiple Sofas across XCAS serialization
     outputStream.open("temp.xcas");
@@ -187,6 +191,10 @@ int main(int argc, char * argv[]) /*
     AnnotationFS gerAnnot = gerTcas->createAnnotation(crossType, 0, 3);
     gerAnnot.setFeatureValue(otherFeat, engAnnot);
     gerTcas->getIndexRepository().addFS(gerAnnot);
+
+    // test getView()->getDocumentAnnotation()->getCoveredText()
+    gerDocAnn = cas->getView("GermanDocument")->getDocumentAnnotation();
+    ASSERT_OR_THROWEXCEPTION(0==gerDocAnn.getCoveredText().compare("das bier ist gut"));   
 
     // Test that the annotations are in separate index spaces, and that Sofas are indexed
     FSIterator sofaIter = cas->getSofaIterator();

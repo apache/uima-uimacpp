@@ -101,6 +101,11 @@ public:
   TyErrorId process(CAS & cas, ResultSpecification const & crResultSpecification) {
     cout  << "SimpleTextSegmenter: process()" << endl;
 
+	cout << endl << "Test custom index..............." << endl;
+	FSIndex featureIndex = cas.getIndexRepository().getIndex("TestIndex"); 
+	cout << "featureIndex.isValid() = " << featureIndex.isValid() << endl;
+	cout << "Test custom index ok..............." << endl << endl;
+
     // Get the text document
     docTextUS = cas.getDocumentText();
     /* Get number of Unicode chars (UTF-16 code units)  */
