@@ -32,13 +32,6 @@
     <import location="testTypeSystem.xml"/>
   </imports>
 </typeSystemDescription>
-
-<!--
-        IndexSystem Definition
-  <imports>
-    <import location="kltIndexes.xml"/>
-  </imports>
--->
         
 
 <!--
