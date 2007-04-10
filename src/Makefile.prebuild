@@ -1,0 +1,26 @@
+# -*- makefile -*-
+# Create distribution build files
+
+#VERBOSE:=--verbose
+BUILD_DIR ?= .
+
+all: $(BUILD_DIR)/configure $(BUILD_DIR)/Makefile.in
+
+distclean:
+	rm -f Makefile.in aclocal.m4 config.guess config.sub configure
+	rm -f depcomp install-sh config.guess config.sub ltmain.sh missing spc-config.h.in
+	rm -rf autom4te.cache
+
+$(BUILD_DIR)/Makefile.in: $(wildcard Makefile.am*) $(BUILD_DIR)/aclocal.m4 $(BUILD_DIR)/ltmain.sh
+	cd $(BUILD_DIR) && automake --add-missing
+	cd $(BUILD_DIR) && sed -i 'N;N;N;s|\$$(top_srcdir)/configure:.*\n.*\n.*\n.*$$||' Makefile.in
+
+$(BUILD_DIR)/configure: $(BUILD_DIR)/configure.in $(BUILD_DIR)/aclocal.m4 
+	cd $(BUILD_DIR) && autoconf $(VERBOSE)
+
+$(BUILD_DIR)/aclocal.m4: $(BUILD_DIR)/configure.in $(BUILD_DIR)/ltmain.sh
+	cd $(BUILD_DIR) && aclocal $(VERBOSE)
+
+$(BUILD_DIR)/ltmain.sh:
+	cd $(BUILD_DIR) && libtoolize --automake
+	cd $(BUILD_DIR) && touch AUTHORS NEWS README ChangeLog
