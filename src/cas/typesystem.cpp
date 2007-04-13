@@ -90,12 +90,17 @@ namespace uima {
   }
 
   Feature::Feature(lowlevel::TyFSFeature aFeature, uima::lowlevel::TypeSystem & typeSystem)
-      : iv_tyFeature(aFeature),
+      : iv_tyFeature(aFeature), multipleReferencesAllowed(false),
       iv_typeSystem( & typeSystem) {}
 
   Feature::Feature()
-      : iv_tyFeature(0),
+      : iv_tyFeature(0), multipleReferencesAllowed(false),
       iv_typeSystem( NULL ) {}
+
+  Feature::Feature(lowlevel::TyFSFeature aFeature, 
+	  uima::lowlevel::TypeSystem & typeSystem, bool allowMultRefs)
+      : iv_tyFeature(aFeature), multipleReferencesAllowed(allowMultRefs),
+      iv_typeSystem( & typeSystem) {}
 
   bool Feature::isValid() const {
     return(iv_tyFeature != 0) && (EXISTS(iv_typeSystem));
@@ -132,6 +137,10 @@ namespace uima {
   uima::TypeSystem const & Feature::getTypeSystem() const {
     checkValidity();
     return *iv_typeSystem;
+  }
+
+  bool Feature::isMultipleReferencesAllowed() const {
+    return multipleReferencesAllowed;
   }
 
 
@@ -322,6 +331,7 @@ namespace uima {
   }
 }
 /* ----------------------------------------------------------------------- */
+
 
 
 

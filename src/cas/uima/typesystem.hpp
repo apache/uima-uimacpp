@@ -70,6 +70,7 @@ namespace uima {
   class Type;
   class TypeSystem;
   class XCASDeserializerHandler;
+  class XmiDeserializerHandler;
   namespace internal {
     class FSPromoter;
   }
@@ -97,8 +98,10 @@ namespace uima {
   private:
     lowlevel::TyFSFeature iv_tyFeature;
     uima::lowlevel::TypeSystem * iv_typeSystem;
+	bool multipleReferencesAllowed;
 
     Feature(lowlevel::TyFSFeature tyFeature, uima::lowlevel::TypeSystem & typeSystem);
+	Feature(lowlevel::TyFSFeature tyFeature, uima::lowlevel::TypeSystem & typeSystem, bool allowMultRefs);
     void checkValidity() const;
   public:
     Feature();
@@ -139,6 +142,8 @@ namespace uima {
      * @throws InvalidFSFeatureObjectException
      */
     uima::TypeSystem const & getTypeSystem() const;
+
+	bool isMultipleReferencesAllowed() const;
   private:
     /* taph 03.12.2002:  do not use. This is a compiler test case*/
     Type getIntroType() const;
@@ -250,6 +255,7 @@ namespace uima {
     friend class uima::CAS;
     friend class uima::lowlevel::TypeSystem;
     friend class uima::XCASDeserializerHandler;
+	 friend class uima::XmiDeserializerHandler;
     friend class lowlevel::DefaultFSIterator;
   protected:
     virtual uima::lowlevel::TypeSystem const & getLowlevelTypeSystem() const = 0;
@@ -273,7 +279,18 @@ namespace uima {
              || ( tyType == uima::internal::gs_tyDoubleArrayType )
              || (tyType == uima::internal::gs_tyFSArrayType);
     }
+    
+	 bool isListType(lowlevel::TyFSType tyType) const  {
+      return ( tyType == uima::internal::gs_tyIntListType )
+             || ( tyType == uima::internal::gs_tyFloatListType )
+             || ( tyType == uima::internal::gs_tyStringListType )
+             || ( tyType == uima::internal::gs_tyFSListType );
+    }
 
+    bool isFSType(lowlevel::TyFSType tyType) const  {
+      return ( !isPrimitive(tyType) && !isArrayType(tyType)
+		       && !isListType(tyType) );
+    }
 
   public:
 
@@ -347,4 +364,5 @@ namespace uima {
 
 
 #endif
+
 

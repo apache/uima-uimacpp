@@ -52,6 +52,7 @@
 #include "uima/casdefinition.hpp"
 #include "xercesc/framework/LocalFileInputSource.hpp"
 #include "xercesc/framework/MemBufInputSource.hpp"
+#include "uima/stltools.hpp"
 XERCES_CPP_NAMESPACE_USE
 
 /* ----------------------------------------------------------------------- */
@@ -447,7 +448,17 @@ namespace uima {
     XMLParser builder;
     AnalysisEngineMetaData * pAe = new AnalysisEngineMetaData();
 	TypeSystemDescription * tsDesc = new TypeSystemDescription();
-	LocalFileInputSource fileIS((XMLCh const *)crFileName);
+	
+	UnicodeString ufn(crFileName);
+    size_t uiLen = ufn.length();
+    auto_array<UChar> arBuffer( new UChar[uiLen + 1] );
+    assert( EXISTS(arBuffer.get()));
+    ufn.extract(0, uiLen, arBuffer.get());
+    (arBuffer.get())[uiLen] = 0; // terminate the buffer with 0
+
+	LocalFileInputSource fileIS((XMLCh const *) arBuffer.get());
+
+	builder.parseTypeSystemDescription(*tsDesc, fileIS);
     pAe->setTypeSystemDescription(tsDesc);
 
     auto_ptr<AnalysisEngineMetaData> apSpecifier(pAe  );
@@ -472,6 +483,7 @@ namespace uima {
     MemBufInputSource memIS((XMLByte const *)usRef.asUTF8().c_str(),
 		                    usRef.asUTF8().length(),
 							"sysID");
+	builder.parseTypeSystemDescription(*tsDesc,memIS);
     pAe->setTypeSystemDescription(tsDesc);
 
     auto_ptr<AnalysisEngineMetaData> apSpecifier(pAe  );
@@ -590,6 +602,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

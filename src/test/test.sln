@@ -59,6 +59,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TextSegmentConsumer", "src\
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_xmideserialization", "src\test_xmideserialization.vcproj", "{2A4A561A-F304-4280-9238-DD2C1C82F8AE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -121,6 +125,14 @@ Global
 		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Debug.Build.0 = Debug|Win32
 		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Release.ActiveCfg = Release|Win32
 		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Release.Build.0 = Release|Win32
+		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Debug.ActiveCfg = Debug|Win32
+		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Debug.Build.0 = Debug|Win32
+		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Release.ActiveCfg = Release|Win32
+		{0BC37546-5E6B-4383-9984-EF348B9FB966}.Release.Build.0 = Release|Win32
+		{2A4A561A-F304-4280-9238-DD2C1C82F8AE}.Debug.ActiveCfg = Debug|Win32
+		{2A4A561A-F304-4280-9238-DD2C1C82F8AE}.Debug.Build.0 = Debug|Win32
+		{2A4A561A-F304-4280-9238-DD2C1C82F8AE}.Release.ActiveCfg = Release|Win32
+		{2A4A561A-F304-4280-9238-DD2C1C82F8AE}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

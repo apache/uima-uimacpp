@@ -80,7 +80,7 @@ namespace uima {
  */
 namespace uima {
 
-
+/**
   class UIMA_LINK_IMPORTSPEC XMLWriterABase : public CASWriterABase {
   protected:
     void normalize(UnicodeStringRef const & in, icu::UnicodeString& out) const;
@@ -90,7 +90,7 @@ namespace uima {
 
     virtual void write(ostream& os) = 0;
   };
-
+**/
 
 
   class UIMA_LINK_IMPORTSPEC XMLDumpWriter : public XMLWriterABase {

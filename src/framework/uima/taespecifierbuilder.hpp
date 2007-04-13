@@ -186,6 +186,7 @@ namespace uima {
     void parseSofaMappings(AnalysisEngineDescription::TyVecpSofaMappings  & sofaMapDesc,
 											InputSource const & crInputSource);
 
+
   private:
     
     AnalysisEngineMetaData * buildAEMetaData(DOMElement * specElem, icu::UnicodeString const &);
@@ -253,7 +254,7 @@ namespace uima {
     
 	void buildConfigParams(AnalysisEngineMetaData & aeMetaData, DOMElement * specElem);
     void buildConfigParamSettings(AnalysisEngineMetaData & aeMetaData, DOMElement * specElem);
-	
+
   private:
     ErrorHandler * iv_pXMLErrorHandler;
 	bool doSchemaValidation;
@@ -319,6 +320,7 @@ namespace uima {
     static char const * TAG_TYPE_DESC_FEAT_DESC_NAME;
     static char const * TAG_TYPE_DESC_FEAT_DESC_RANGE;
     static char const * TAG_TYPE_DESC_FEAT_DESC_DESC;
+	static char const * TAG_TYPE_DESC_FEAT_DESC_MULTREFS;
     static char const * TAG_TYPE_PRIORITIES;
     static char const * TAG_TYPE_PRIORITY_LIST;
     static char const * TAG_TYPE_PRIORITY_LIST_TYPE;
@@ -376,6 +378,9 @@ namespace uima {
     static char const * FS_INDEX_KEY_KIND_SORTED;
     static char const * FS_INDEX_KEY_KIND_BAG;
     static char const * FS_INDEX_KEY_KIND_SET;
+
+	
+
   };
 
 
@@ -454,4 +459,5 @@ namespace uima {
 }
 
 #endif
+
 

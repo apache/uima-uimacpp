@@ -25,9 +25,12 @@
 #include "uima/api.hpp"
 #include "uima/macros.h"
 #include "uima/xmlwriter.hpp"
+#include "uima/xmiwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
+#include "uima/xmideserializer.hpp"
 #include "uima/internal_casserializer.hpp"
 #include "uima/internal_casdeserializer.hpp"
+#include "uima/taespecifierbuilder.hpp"
 
 #include <fstream>
 
@@ -101,7 +104,11 @@ void createExampleFS(CAS & cas)  {
   Feature shortArrayF = testType.getFeatureByBaseName("shortArrayFeature");
   Feature longArrayF = testType.getFeatureByBaseName("longArrayFeature");
   Feature doubleArrayF = testType.getFeatureByBaseName("doubleArrayFeature");
-
+  Feature intListF = testType.getFeatureByBaseName("intListFeature");
+  Feature floatListF = testType.getFeatureByBaseName("floatListFeature");
+  Feature stringListF = testType.getFeatureByBaseName("stringListFeature");
+  Feature fsListF = testType.getFeatureByBaseName("fsListFeature");
+  Feature fsArrayF = testType.getFeatureByBaseName("fsArrayFeature");
   //get index repository
   FSIndexRepository & indexRep = cas.getIndexRepository();
 
@@ -115,16 +122,30 @@ void createExampleFS(CAS & cas)  {
   englishView->getIndexRepository().addFS(fs);
 
   // create Array FSs
-
+  StringListFS stringListFS = cas.createStringListFS();
+  for (size_t i=0;i < NUMBEROF(strings); i++) {
+	  stringListFS.addLast(strings[i]);
+  }
   StringArrayFS stringArrayFS = cas.createStringArrayFS(NUMBEROF(strings));
 
   for (size_t i=0; i< NUMBEROF(strings); ++i) {
     stringArrayFS.set(i, strings[i]);
   }
 
+  IntListFS intListFS = cas.createIntListFS();
+  for (size_t i=0;i < NUMBEROF(ints); i++) {
+	  intListFS.addLast(ints[i]);
+  }
+
   IntArrayFS intArrayFS = cas.createIntArrayFS(NUMBEROF(ints));
   for (size_t i=0; i< NUMBEROF(ints); ++i) {
     intArrayFS.set(i, ints[i]);
+  }
+
+
+  FloatListFS floatListFS = cas.createFloatListFS();
+  for (size_t i=0;i < NUMBEROF(floats); i++) {
+	  floatListFS.addLast(floats[i]);
   }
 
   FloatArrayFS floatArrayFS = cas.createFloatArrayFS(NUMBEROF(floats));
@@ -157,11 +178,28 @@ void createExampleFS(CAS & cas)  {
     doubleArrayFS.set(i, doubles[i]);
   }
 
+  Type annot = cas.getTypeSystem().getType(CAS::TYPE_NAME_ANNOTATION);
+  
+  ListFS fsListFS = cas.createListFS();
+  for (size_t i=0; i < 2; i++) {
+	  AnnotationFS annotFS = englishView->createAnnotation(annot,i,i+5);
+	  fsListFS.addFirst(annotFS);
+  }
+  fs.setFeatureValue(fsListF,fsListFS);
+
+  ArrayFS fsArrayFS = cas.createArrayFS(3);
+  for (size_t i=0; i < 3; i++) {
+	  AnnotationFS annotFS = englishView->createAnnotation(annot,i,i+5);
+	  fsArrayFS.set(i,annotFS);
+  }
+  fs.setFeatureValue(fsArrayF,fsArrayFS);
+
   // set features of fs
   fs.setStringValue(stringF, strings[0]);
   fs.setFloatValue(floatF, floats[0]);
   fs.setBooleanValue(booleanF, val);
   fs.setByteValue(byteF, chars[0]);
+  fs.setByteValue(byteF, 'z');
   fs.setShortValue(shortF, shorts[0]);
   fs.setLongValue(longF, longs[0]);
   fs.setDoubleValue(doubleF, doubles[0]);
@@ -174,6 +212,9 @@ void createExampleFS(CAS & cas)  {
   fs.setFeatureValue(shortArrayF, shortArrayFS);
   fs.setFeatureValue(longArrayF, longArrayFS);
   fs.setFeatureValue(doubleArrayF, doubleArrayFS);
+  fs.setFeatureValue(intListF, intListFS);
+  fs.setFeatureValue(floatListF, floatListFS);
+  fs.setFeatureValue(stringListF, stringListFS);
 
 }
 
@@ -198,6 +239,12 @@ void validateFS(CAS & cas)  {
   Feature shortArrayF = testType.getFeatureByBaseName("shortArrayFeature");
   Feature longArrayF = testType.getFeatureByBaseName("longArrayFeature");
   Feature doubleArrayF = testType.getFeatureByBaseName("doubleArrayFeature");
+  Feature intListF = testType.getFeatureByBaseName("intListFeature");
+  Feature floatListF = testType.getFeatureByBaseName("floatListFeature");
+  Feature stringListF = testType.getFeatureByBaseName("stringListFeature");
+  Feature fsListF = testType.getFeatureByBaseName("fsListFeature");
+  Feature fsArrayF = testType.getFeatureByBaseName("fsArrayFeature");
+
   //get index repository
   FSIndexRepository & indexRep = cas.getIndexRepository();
 
@@ -211,18 +258,40 @@ void validateFS(CAS & cas)  {
   AnnotationFS fs = iter.get();
   ASSERT_OR_THROWEXCEPTION(fs.isValid());
 
-  // check array values
+  size_t num;
+  
+  StringListFS strListFS = fs.getStringListFSValue(stringListF);
+  for (num=0; num< NUMBEROF(floats); num++) {
+    ASSERT_OR_THROWEXCEPTION(strListFS.getHead()==strings[num]);
+	strListFS = strListFS.getTail();
+  }
+  ASSERT_OR_THROWEXCEPTION(NUMBEROF(strings)==num);
+  
   StringArrayFS stringArrayFS = fs.getStringArrayFSValue(stringArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(strings)==stringArrayFS.size());
   for (size_t i=0; i< NUMBEROF(strings); ++i) {
     ASSERT_OR_THROWEXCEPTION(0==stringArrayFS.get(i).compare(strings[i]));
   }
-
+  
+  IntListFS intListFS = fs.getIntListFSValue(intListF);
+  for (num=0; num< NUMBEROF(ints); num++) {
+    ASSERT_OR_THROWEXCEPTION(intListFS.getHead()==ints[num]);
+	intListFS = intListFS.getTail();
+  }
+  ASSERT_OR_THROWEXCEPTION(NUMBEROF(ints)==num);
+  
   IntArrayFS intArrayFS = fs.getIntArrayFSValue(intArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(ints)==intArrayFS.size());
   for (size_t i=0; i< NUMBEROF(ints); ++i) {
     ASSERT_OR_THROWEXCEPTION(intArrayFS.get(i)==ints[i]);
   }
+
+  FloatListFS floatListFS = fs.getFloatListFSValue(floatListF);
+  for (num=0; num< NUMBEROF(floats); num++) {
+    ASSERT_OR_THROWEXCEPTION(floatListFS.getHead()==floats[num]);
+	floatListFS = floatListFS.getTail();
+  }
+  ASSERT_OR_THROWEXCEPTION(NUMBEROF(floats)==num);
 
   FloatArrayFS floatArrayFS = fs.getFloatArrayFSValue(floatArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(floats)==floatArrayFS.size());
@@ -261,14 +330,30 @@ void validateFS(CAS & cas)  {
     ASSERT_OR_THROWEXCEPTION(doubleArrayFS.get(i) == doubles[i]);
   }
 
-
+  FeatureStructure listFS = fs.getFSValue(fsListF);
+  num=0;
+  ListFS curNode(listFS);
+  while (!curNode.isEmpty()) {
+    num++;
+	FeatureStructure fs = curNode.getHead();
+	ASSERT_OR_THROWEXCEPTION(fs.getType().getName().compare(CAS::TYPE_NAME_ANNOTATION)==0);
+    curNode = curNode.getTail();
+  }
+  ASSERT_OR_THROWEXCEPTION(num==2);
+  
+  ArrayFS arrayFS = (ArrayFS) fs.getFSValue(fsArrayF);
+  ASSERT_OR_THROWEXCEPTION(3==arrayFS.size());
+  for (int i=0; i<3; i++) {
+    FeatureStructure fs = arrayFS.get(i);
+	ASSERT_OR_THROWEXCEPTION(fs.getType().getName().compare(CAS::TYPE_NAME_ANNOTATION)==0);
+  }
   // check scalar values
   ASSERT_OR_THROWEXCEPTION(0==fs.getStringValue(stringF).compare(strings[0]));
   ASSERT_OR_THROWEXCEPTION(fs.getBeginPosition()==begin);
   ASSERT_OR_THROWEXCEPTION(fs.getEndPosition()==end);
   ASSERT_OR_THROWEXCEPTION(fs.getFloatValue(floatF)==floats[0]);
   ASSERT_OR_THROWEXCEPTION(fs.getBooleanValue(booleanF)==val);
-  ASSERT_OR_THROWEXCEPTION(fs.getByteValue(byteF)==chars[0]);
+  ASSERT_OR_THROWEXCEPTION(fs.getByteValue(byteF)=='z');
   ASSERT_OR_THROWEXCEPTION(fs.getShortValue(shortF)==shorts[0]);
   ASSERT_OR_THROWEXCEPTION(fs.getLongValue(longF)==longs[0]);
   ASSERT_OR_THROWEXCEPTION(fs.getDoubleValue(doubleF)==doubles[0]);
@@ -375,6 +460,31 @@ int main(int argc, char * argv[]) /*
       "     <description></description>"
       "     <rangeTypeName>uima.cas.DoubleArray</rangeTypeName>"
       "   </featureDescription>"
+	  " <featureDescription>"
+      "     <name>intListFeature</name>"
+      "     <description></description>"
+      "     <rangeTypeName>uima.cas.IntegerList</rangeTypeName>"
+      "   </featureDescription>"
+	  " <featureDescription>"
+      "     <name>floatListFeature</name>"
+      "     <description></description>"
+      "     <rangeTypeName>uima.cas.FloatList</rangeTypeName>"
+      "   </featureDescription>"
+	  " <featureDescription>"
+      "     <name>stringListFeature</name>"
+      "     <description></description>"
+      "     <rangeTypeName>uima.cas.StringList</rangeTypeName>"
+      "   </featureDescription>"
+	   " <featureDescription>"
+      "     <name>fsListFeature</name>"
+      "     <description></description>"
+      "     <rangeTypeName>uima.cas.FSList</rangeTypeName>"
+      "   </featureDescription>"
+	  " <featureDescription>"
+      "     <name>fsArrayFeature</name>"
+      "     <description></description>"
+      "     <rangeTypeName>uima.cas.FSArray</rangeTypeName>"
+      "   </featureDescription>"
       "        </features>"
       "   </typeDescription>"
       " </types>"
@@ -388,7 +498,7 @@ int main(int argc, char * argv[]) /*
     static TypeSystem *ts = Framework::createTypeSystemFromXMLBuffer(config, errorInfo );
     CAS* cas =  Framework::createCAS(*ts, errorInfo);
     ASSERT_OR_THROWEXCEPTION( EXISTS(cas) );
-
+    
     /* add a FS */
     LOG("UIMATEST_PRIMITIVETYPES create a FS");
     createExampleFS(*cas);
@@ -397,16 +507,30 @@ int main(int argc, char * argv[]) /*
     /* test xcas serialization */
     CAS* trgCas =  Framework::createCAS(*ts, errorInfo);
     LOG("UIMATEST_PRIMITIVETYPES test XCAS serialization");
-    outputStream.open("testprimitivetypes.xcas");
+    outputStream.open("temp.xcas");
     ASSERT_OR_THROWEXCEPTION(outputStream);
     //LOG("serialize XCAS");
     XCASWriter writer(*cas, false);
     writer.write(outputStream);
     outputStream.close();
     //LOG("deserialize XCAS");
-    XCASDeserializer::deserialize("testprimitivetypes.xcas", *trgCas);
+    XCASDeserializer::deserialize("temp.xcas", *trgCas);
     validateFS(*trgCas);
 
+	/* test xmi serialization */
+    LOG("UIMATEST_PRIMITIVETYPES test XMI serialization");
+    outputStream.open("testprimitivetypes.xmi");
+    ASSERT_OR_THROWEXCEPTION(outputStream);
+    trgCas->reset();
+    //LOG("serialize XMI");
+    XmiWriter xmiwriter(*cas, false);
+    xmiwriter.write(outputStream);
+    outputStream.close();
+    //LOG("deserialize XMI"); 
+    XmiDeserializer::deserialize("testprimitivetypes.xmi", *trgCas);
+    validateFS(*trgCas);
+    
+   
     /* test blob serialization */
     LOG("UIMATEST_PRIMITIVETYPES test blob serialization");
     trgCas->reset();
@@ -431,7 +555,6 @@ int main(int argc, char * argv[]) /*
     //LOG("deserialize data");
     deserializer.deserializeData(serializedCas, *trgCas);
     validateFS(*trgCas);
-
 
     delete cas;
     delete trgCas;

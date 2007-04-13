@@ -6,12 +6,12 @@ lib_LTLIBRARIES = $(TST_LIB)
 TST_LIB=libtoknz.la libdump.la libSofaStreamHandlerFile.la libSimpleTextSegmenter.la libTextSegmentConsumer.la libMeetingAnnotator.la
 
 TST_BIN=test_cas test_engine test_typepriority test_language  \
- test_iterators test_casserializer test_sofa test_primitivetypes test_xcasdeserialization
+ test_iterators test_casserializer test_sofa test_primitivetypes test_xcasdeserialization test_xmideserialization
 
 test_tgt: $(TST_BIN) $(TST_LIB)
 
 clean:
-	rm -f $(TST_BIN) $(test_engine_OBJECTS) $(test_typepriority_OBJECTS) $(test_sofa_OBJECTS) $(test_language_OBJECTS) $(test_cas_OBJECTS)  $(test_iterators_OBJECTS) $(test_casserializer_OBJECTS) $(test_primitivetypes_OBJECTS) $(test_xcasdeserialization_OBJECTS)
+	rm -f $(TST_BIN) $(test_engine_OBJECTS) $(test_typepriority_OBJECTS) $(test_sofa_OBJECTS) $(test_language_OBJECTS) $(test_cas_OBJECTS)  $(test_iterators_OBJECTS) $(test_casserializer_OBJECTS) $(test_primitivetypes_OBJECTS) $(test_xcasdeserialization_OBJECTS) $(test_xmideserialization_OBJECTS)
 	rm -f $(TST_LIB) $(libtoknz_la_OBJECTS) $(libdump_la_OBJECTS) $(libSofaStreamHandlerFile_la_OBJECTS) $(libSimpleTextSegmenter_la_OBJECTS) $(libTextSegmentConsumer_la_OBJECTS) $(libMeetingAnnotator_la_OBJECTS)
 
 INCLUDES  = -Isrc
@@ -60,6 +60,9 @@ test_sofa_SOURCES = src/test_sofa.cpp
 test_primitivetypes_SOURCES = src/test_primitivetypes.cpp
 
 test_xcasdeserialization_SOURCES = src/test_xcasdeserialization.cpp
+
+test_xmideserialization_SOURCES = src/test_xmideserialization.cpp
+
 
 # Plugin libraries
 #

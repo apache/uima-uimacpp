@@ -1084,9 +1084,7 @@ namespace uima {
 
 
   void AnalysisEngineDescription::toXMLBufferNoXMLHeader(icu::UnicodeString & s) const {
-    size_t i,j;
-
-
+    size_t i;
     bool isCasConsumer=false;
     if ( getXmlRootTag().compare("casConsumerDescription") == 0) {
       isCasConsumer=true;
@@ -1147,14 +1145,52 @@ namespace uima {
       }
     }
 
+	toXMLBuffer( *(getAnalysisEngineMetaData()), isCasConsumer, s);
+
+	if (!isCasConsumer) {
+      TyVecpSofaMappings const & sofamappingVec = getSofaMappings();
+      if (sofamappingVec.size() >  0) {
+        s.append("<sofaMappings>");
+        for (i=0; i<sofamappingVec.size(); ++i) {
+          s.append("<sofaMapping>");
+          s.append("<componentKey>");
+          s.append(sofamappingVec[i]->getComponentKey());
+          s.append("</componentKey>");
+
+          s.append("<componentSofaName>");
+          s.append(sofamappingVec[i]->getComponentSofaName());
+          s.append("</componentSofaName>");
+
+          s.append("<aggregateSofaName>");
+          s.append(sofamappingVec[i]->getAggregateSofaName());
+          s.append("</aggregateSofaName>");
+
+          s.append("</sofaMapping>");
+        }
+        s.append("</sofaMappings>");
+      }
+    }
+
+    s.append("</");
+    s.append(getXmlRootTag());
+    s.append(">");
+
+
+  }
+
+  void AnalysisEngineDescription::toXMLBuffer(AnalysisEngineMetaData const & md,  
+													   bool isCasConsumer,
+													   icu::UnicodeString & s) const {
+    size_t i,j;
     // AE Meta data
+	
     if (isCasConsumer) {
       s.append("<processingResourceMetaData>");
     } else s.append("<analysisEngineMetaData>");
+    
 
-
-    AnalysisEngineMetaData const & md = * getAnalysisEngineMetaData();
-
+    ///AnalysisEngineMetaData const & md = * getAnalysisEngineMetaData();
+    
     //    name
     s.append("<name>");
     s.append(md.getName());
@@ -1345,6 +1381,11 @@ namespace uima {
               s.append("<rangeTypeName>");
               s.append(fs->getRangeTypeName());
               s.append("</rangeTypeName>");
+			  if (fs->isMultipleReferencesAllowed() ) {
+				s.append("<multipleReferencesAllowed>");
+                s.append("true");
+                s.append("</multipleReferencesAllowed>");
+			  }
               s.append("</featureDescription>");
             }
             s.append("</features>");
@@ -1495,43 +1536,21 @@ namespace uima {
     }
 
     s.append("</capabilities>");
+    
+    //temporarity added here to support AsynchAE
+	//needs to be supported by XMLParser
+	s.append("<operationalProperties>");
+	s.append ("<modifiesCas>true</modifiesCas>");
+	s.append ("<multipleDeploymentAllowed>true</multipleDeploymentAllowed>");
+    s.append("<outputsNewCASes>false</outputsNewCASes>");
+    s.append("</operationalProperties>");
 
     if (isCasConsumer) {
       s.append("</processingResourceMetaData>");
     } else s.append("</analysisEngineMetaData>");
+	
+ }
 
-
-    if (!isCasConsumer) {
-      TyVecpSofaMappings const & sofamappingVec = getSofaMappings();
-      if (sofamappingVec.size() >  0) {
-        s.append("<sofaMappings>");
-        for (i=0; i<sofamappingVec.size(); ++i) {
-          s.append("<sofaMapping>");
-          s.append("<componentKey>");
-          s.append(sofamappingVec[i]->getComponentKey());
-          s.append("</componentKey>");
-
-          s.append("<componentSofaName>");
-          s.append(sofamappingVec[i]->getComponentSofaName());
-          s.append("</componentSofaName>");
-
-          s.append("<aggregateSofaName>");
-          s.append(sofamappingVec[i]->getAggregateSofaName());
-          s.append("</aggregateSofaName>");
-
-          s.append("</sofaMapping>");
-        }
-        s.append("</sofaMappings>");
-      }
-    }
-
-    s.append("</");
-    s.append(getXmlRootTag());
-    s.append(">");
-
-  }
-
-}
-
-
+    
+} //namespace
 

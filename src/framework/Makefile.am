@@ -114,5 +114,8 @@ libuima_la_SOURCES += ../cas/xmlwriter.cpp
 libuima_la_SOURCES += ../jni/jni.cpp
 libuima_la_SOURCES += ../jni/jni_utils.cpp
 libuima_la_SOURCES += ../jni/jni_string.cpp
+libuima_la_SOURCES += ../cas/xmideserializer.cpp			       
+libuima_la_SOURCES += ../cas/xmideserializer_handler.cpp
+libuima_la_SOURCES += ../cas/xmiwriter.cpp
 
 libuima_la_LIBADD = $(UIMA_XERCES_LIB) $(UIMA_APR_LIB) $(UIMA_ICU_LIB) $(UIMACPP_HOME_LIB)

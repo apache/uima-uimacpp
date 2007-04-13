@@ -103,7 +103,8 @@ namespace uima {
   public:
 
     FeatureDescription()
-        :MetaDataObject(), iv_name(), iv_description(), iv_rangeType() {}
+        :MetaDataObject(), iv_name(), iv_description(), iv_rangeType(), 
+	                  iv_multipleRefsAllowed(false) {}
 
     FeatureDescription(const FeatureDescription & crOther) {
       iv_name = crOther.getName();
@@ -143,14 +144,27 @@ namespace uima {
       return UIMA_ERR_NONE;
     }
 
-    const icu::UnicodeString & getDescription() const {
+	const icu::UnicodeString & getDescription() const {
       return iv_description;
     }
+
+	TyErrorId setMultipleReferencesAllowed(bool allowed) {
+      if (! isModifiable()) {
+        return UIMA_ERR_CONFIG_OBJECT_COMITTED;
+      }
+      iv_multipleRefsAllowed = allowed;
+      return UIMA_ERR_NONE;
+    }
+
+	const bool isMultipleReferencesAllowed()  const {
+		return iv_multipleRefsAllowed;
+	}
 
   private:
     icu::UnicodeString iv_name;
     icu::UnicodeString iv_description;
     icu::UnicodeString iv_rangeType;
+	bool iv_multipleRefsAllowed;
   };
 
   /**
@@ -418,4 +432,5 @@ namespace uima {
 
 }
 #endif
+
 

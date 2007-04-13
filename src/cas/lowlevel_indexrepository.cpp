@@ -177,6 +177,29 @@ namespace uima {
       fillit.assign(iv_usedIndexes.begin(), iv_usedIndexes.end());
     }
 
+	void IndexRepository::getIndexedFSs(vector<TyFS>& fillit) {
+      fillit.clear();
+      for (size_t i=0;i < iv_undefinedindex.size(); i++ ) {
+            TyFS tyFSHeapIndex = this->iv_undefinedindex[i];
+            fillit.push_back(tyFSHeapIndex);
+      }
+	  for (size_t i=0; i<iv_usedIndexes.size(); ++i) {
+          vector<uima::lowlevel::internal::SingleIndex*> const & crSingleIndexes =
+            getAllSingleIndexesForType(iv_usedIndexes[i]);
+          for (size_t j=0; j<crSingleIndexes.size(); ++j) {
+            auto_ptr<uima::lowlevel::IndexIterator> apIt(crSingleIndexes[j]->createIterator());
+            for (apIt->moveToFirst(); apIt->isValid(); apIt->moveToNext()) {
+              uima::lowlevel::TyHeapCell pHeapCell = (uima::lowlevel::TyHeapCell) apIt->get();
+              TyFS tyFSHeapIndex =  pHeapCell;
+              fillit.push_back( tyFSHeapIndex );
+            }
+          }
+      }
+	  // eliminate duplicates
+      sort(fillit.begin(), fillit.end());
+      vector<TyFS>::iterator end = unique(fillit.begin(), fillit.end());
+    }
+
     void IndexRepository::reset() {
 
       // clear undefined index
@@ -349,6 +372,7 @@ namespace uima {
   }
 }
 /* ----------------------------------------------------------------------- */
+
 
 
 

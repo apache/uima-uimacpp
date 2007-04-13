@@ -97,6 +97,7 @@ namespace uima {
       friend class uima::internal::FSPromoter;
       friend class uima::lowlevel::DefaultFSIterator;
       friend class uima::XCASDeserializerHandler;
+	  friend class uima::XmiDeserializerHandler;
       friend class uima::XMLDumpWriter;
       friend class uima::LocalSofaDataStream;
 /*  VC++ 8 rejects all these forms of friend declaration
@@ -1026,4 +1027,5 @@ namespace uima {
 #endif
 
 #endif
+
 

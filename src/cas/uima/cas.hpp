@@ -84,7 +84,9 @@ namespace uima {
   class SofaDataStream;
   class LocalSofaDataStream;
   class XCASDeserializerHandler;
+  class XmiDeserializerHandler;
   class XCASWriter;
+  class XmiWriter;
   class ComponentInfo;
   class AnnotatorContext;
   class SofaDataStream;
@@ -161,7 +163,9 @@ namespace uima {
     friend class uima::internal::CASSerializer;
     friend class uima::internal::CASDeserializer;
     friend class uima::XCASWriter;
+	friend class uima::XmiWriter;
     friend class uima::XCASDeserializerHandler;
+    friend class uima::XmiDeserializerHandler;
     friend class uima::Framework;
     friend class uima::CASPool;
     friend class AnnotationFS;
@@ -184,7 +188,7 @@ namespace uima {
     SofaFS getSofa(char* sofaName);
     SofaFS getSofa(UnicodeStringRef sofaName);
     uima::lowlevel::IndexRepository * getIndexRepositoryForSofa(SofaFS sofa);
-    void bumpSofaCount();
+    void bumpSofaCount();	
     void invalidBaseCasMethod();
 
     void registerView(SofaFS);
@@ -1489,4 +1493,5 @@ namespace uima {
 }
 
 #endif
+
 

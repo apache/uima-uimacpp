@@ -42,6 +42,7 @@
 
 #include <iostream>
 #include "uima/types.h"
+#include "uima/unistrref.hpp"
 
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
@@ -72,6 +73,17 @@ namespace uima {
   public:
     CASWriterABase(CAS const & crCAS, bool bAddDocument);
     virtual ~CASWriterABase();
+
+    virtual void write(ostream& os) = 0;
+  };
+
+
+  class UIMA_LINK_IMPORTSPEC XMLWriterABase : public CASWriterABase {
+  protected:
+    void normalize(UnicodeStringRef const & in, icu::UnicodeString& out) const;
+  public:
+    XMLWriterABase(CAS const & crCAS, bool bAddDocBuffer);
+    virtual ~XMLWriterABase();
 
     virtual void write(ostream& os) = 0;
   };

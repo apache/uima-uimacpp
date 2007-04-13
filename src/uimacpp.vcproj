@@ -330,6 +330,15 @@
 				RelativePath="cas\xcasdeserializer_handler.cpp">
 			</File>
 			<File
+				RelativePath=".\cas\xmideserializer.cpp">
+			</File>
+			<File
+				RelativePath=".\cas\xmideserializer_handler.cpp">
+			</File>
+			<File
+				RelativePath=".\cas\xmiwriter.cpp">
+			</File>
+			<File
 				RelativePath="cas\xmlerror_handler.cpp">
 			</File>
 			<File
@@ -449,7 +458,7 @@
 				RelativePath="framework\uima\exceptions.hpp">
 			</File>
 			<File
-				RelativePath="framework\uima\featurestructure.hpp">
+				RelativePath=".\cas\uima\featurestructure.hpp">
 			</File>
 			<File
 				RelativePath="framework\uima\filename.hpp">
@@ -530,7 +539,7 @@
 				RelativePath="framework\uima\language.hpp">
 			</File>
 			<File
-				RelativePath="framework\uima\listfs.hpp">
+				RelativePath=".\cas\uima\listfs.hpp">
 			</File>
 			<File
 				RelativePath="framework\uima\location.hpp">
@@ -672,6 +681,18 @@
 			</File>
 			<File
 				RelativePath="cas\uima\xcasdeserializer_handler.hpp">
+			</File>
+			<File
+				RelativePath=".\cas\uima\xmideserializer.hpp">
+			</File>
+			<File
+				RelativePath=".\cas\uima\xmideserializer_handler.hpp">
+			</File>
+			<File
+				RelativePath=".\cas\uima\xmishareddata.hpp">
+			</File>
+			<File
+				RelativePath=".\cas\uima\xmiwriter.hpp">
 			</File>
 			<File
 				RelativePath="cas\uima\xmlerror_handler.hpp">

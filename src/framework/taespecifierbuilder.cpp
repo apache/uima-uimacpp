@@ -1043,7 +1043,6 @@ namespace uima {
     assert( EXISTS(children) );
 
     FeatureDescription * featureDesc = new FeatureDescription();
-
     size_t i;
     for (i=0; i< children->getLength(); i++) {
       if ((children->item(i))->getNodeType() != DOMNode::ELEMENT_NODE) {
@@ -1057,6 +1056,10 @@ namespace uima {
         featureDesc->setRangeTypeName(getSpannedText(child));
       } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_DESC) == 0) {
         featureDesc->setDescription(getSpannedText(child));
+	  } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_MULTREFS) == 0) {
+		  if (isTrue(getSpannedText(child))) {
+			featureDesc->setMultipleReferencesAllowed(true);
+		  }
       } else {
         /**
         ErrorMessage errMsg(UIMA_MSG_ID_EXC_UNKNOWN_CONFIG_XML_TAG);
@@ -1228,6 +1231,22 @@ namespace uima {
   void XMLParser::buildFSIndexes(AnalysisEngineMetaData::TyVecpFSIndexDescriptions & vecFSIndexDesc,
       DOMElement * descElem) {
     assert(EXISTS(descElem));
+
+
+	if ( XMLString::compareString(descElem->getNodeName(), convert(TAG_FS_INDEX_COLLECTION)) == 0) {
+      DOMNodeList * children = descElem->getChildNodes();
+      if (! EXISTS(children)) { // there may be no index descriptions
+        return;
+      }
+	  for (size_t i=0; i < children->getLength(); i++) {
+        if ((children->item(i))->getNodeType() != DOMNode::ELEMENT_NODE) {
+          continue;
+        }
+		descElem = (DOMElement*) children->item(i);
+		break;
+	  }
+	}
+
     assert( XMLString::compareString(descElem->getNodeName(), convert(TAG_FS_INDEXES)) == 0);
     DOMNodeList * children = descElem->getChildNodes();
 
@@ -1327,6 +1346,7 @@ namespace uima {
 
   FSIndexDescription * XMLParser::buildFSIndexDesc(DOMElement * descElem) {
     assert(EXISTS(descElem));
+	//cout << __FILE__ <<  " " << UnicodeString((UChar*)descElem->getNodeName()) << endl;
     assert( XMLString::compareString(descElem->getNodeName(), convert(TAG_FS_INDEX_DESC)) == 0);
     DOMNodeList * children = descElem->getChildNodes();
     assert(EXISTS(children));
@@ -2078,8 +2098,9 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
   }
 
 
-
   
+
+ 
   //----------------------------------------------------
   //
   //XMLParser private methods.
@@ -2251,6 +2272,7 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_NAME="name";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_RANGE="rangeTypeName";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_DESC="description";
+  char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_MULTREFS="multipleReferencesAllowed";
 
   char const * XMLParser::TAG_TYPE_PRIORITIES="typePriorities";
   char const * XMLParser::TAG_TYPE_PRIORITY_LIST="priorityList";
@@ -2333,8 +2355,8 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
   char const * XMLParser::FS_INDEX_KEY_KIND_BAG="bag";
   char const * XMLParser::FS_INDEX_KEY_KIND_SET="set";
 
+  
 
 
-
-
+  
 }

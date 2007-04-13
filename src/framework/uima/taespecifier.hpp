@@ -1067,6 +1067,9 @@ namespace uima {
      * converts this specifier to an XML buffer.
      */
     void toXMLBuffer(icu::UnicodeString &) const;
+	void toXMLBuffer(AnalysisEngineMetaData const & md,  
+													   bool isCasConsumer,
+													   icu::UnicodeString & s) const;
     void appendConfigParamsAndSettingsToXMLBuffer(UnicodeString & s) const;
 
     TyErrorId setFrameworkImplName(EnFrameworkImplName impl) {
@@ -1123,7 +1126,6 @@ namespace uima {
 
 
   };
-  
 
   class  UIMA_LINK_IMPORTSPEC TextAnalysisEngineSpecifier : public AnalysisEngineDescription {
   public:
@@ -1134,8 +1136,10 @@ namespace uima {
     }
 
   };
+
 }
 
 #endif
+
 
 

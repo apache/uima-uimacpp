@@ -79,12 +79,16 @@ namespace uima {
     static icu::UnicodeString const ustrLT("<");
     static icu::UnicodeString const ustrAPOS("'");
     static icu::UnicodeString const ustrQUOT("\"");
+    static icu::UnicodeString const ustrCR("\r");
+    static icu::UnicodeString const ustrLF("\n");
 
     static icu::UnicodeString const ustrAMP_ESC("&amp;");
     static icu::UnicodeString const ustrGT_ESC("&gt;");
     static icu::UnicodeString const ustrLT_ESC("&lt;");
     static icu::UnicodeString const ustrAPOS_ESC("&apos;");
     static icu::UnicodeString const ustrQUOT_ESC("&quot;");
+    static icu::UnicodeString const ustrCR_ESC("&#13;");
+    static icu::UnicodeString const ustrLF_ESC("&#10;");
 
     // do this first!!
     out.findAndReplace(ustrAMP , ustrAMP_ESC);
@@ -92,6 +96,8 @@ namespace uima {
     out.findAndReplace(ustrLT  , ustrLT_ESC);
     out.findAndReplace(ustrAPOS, ustrAPOS_ESC);
     out.findAndReplace(ustrQUOT, ustrQUOT_ESC);
+    out.findAndReplace(ustrCR, ustrCR_ESC);
+    out.findAndReplace(ustrLF, ustrLF_ESC);
   }
 
 
@@ -99,23 +105,23 @@ namespace uima {
   // DumpWriter
 
   XMLDumpWriter::XMLDumpWriter(CAS const & crCAS,
-                               bool bAddDocBuffer)
-      : XMLWriterABase(crCAS, bAddDocBuffer),
-      iv_crCAS( ((uima::internal::CASImpl const &) crCAS) ),
-      iv_rFSHeap( iv_crCAS.getHeap() ),
-      iv_rTypeSystem( iv_rFSHeap.getTypeSystem() ),
-      iv_tyAnnotationType( uima::internal::gs_tyAnnotationType),
-      iv_tyIntegerType(uima::internal::gs_tyIntegerType),
-      iv_tyStringType(uima::internal::gs_tyStringType),
-      iv_tyFloatType(uima::internal::gs_tyFloatType),
-      iv_tyArrayType(uima::internal::gs_tyArrayBaseType),
-      iv_tyStringArrayType(uima::internal::gs_tyStringArrayType),
-      iv_tyIntArrayType(uima::internal::gs_tyIntArrayType),
-      iv_tyFloatArrayType(uima::internal::gs_tyFloatArrayType),
-      iv_tyListType(uima::internal::gs_tyFSListType),
-      iv_tyBeginPosFeature(uima::internal::gs_tyBeginPosFeature),
-      iv_tyEndPosFeature(uima::internal::gs_tyEndPosFeature) {
-  }
+    bool bAddDocBuffer)
+    : XMLWriterABase(crCAS, bAddDocBuffer),
+    iv_crCAS( ((uima::internal::CASImpl const &) crCAS) ),
+    iv_rFSHeap( iv_crCAS.getHeap() ),
+    iv_rTypeSystem( iv_rFSHeap.getTypeSystem() ),
+    iv_tyAnnotationType( uima::internal::gs_tyAnnotationType),
+    iv_tyIntegerType(uima::internal::gs_tyIntegerType),
+    iv_tyStringType(uima::internal::gs_tyStringType),
+    iv_tyFloatType(uima::internal::gs_tyFloatType),
+    iv_tyArrayType(uima::internal::gs_tyArrayBaseType),
+    iv_tyStringArrayType(uima::internal::gs_tyStringArrayType),
+    iv_tyIntArrayType(uima::internal::gs_tyIntArrayType),
+    iv_tyFloatArrayType(uima::internal::gs_tyFloatArrayType),
+    iv_tyListType(uima::internal::gs_tyFSListType),
+    iv_tyBeginPosFeature(uima::internal::gs_tyBeginPosFeature),
+    iv_tyEndPosFeature(uima::internal::gs_tyEndPosFeature) {
+    }
 
   XMLDumpWriter::~XMLDumpWriter() {}
 
@@ -694,6 +700,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

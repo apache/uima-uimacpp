@@ -190,7 +190,7 @@ namespace uima {
        * get the most general type the index with ID <code>id</code> is defined for.
        */
       TyFSType getTypeForIndex(TyIndexID const & crID) const {
-        assert( isValidIndexId(crID) );
+        //assert( isValidIndexId(crID) );
         map<TyIndexID, TyFSType>::const_iterator cit = iv_mapIndexTypes.find(crID);
         return (*cit).second;
       }
@@ -224,4 +224,5 @@ namespace uima {
 
 
 #endif
+
 

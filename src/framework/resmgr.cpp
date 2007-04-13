@@ -449,7 +449,6 @@ namespace uima {
     icu::UnicodeString us( crclFilename.getAsCString() );
     uima::ErrorInfo errInfo;
     internal::ResourceAnnotatorFile const * cpResAnnotatorFile = (internal::ResourceAnnotatorFile const *) getResource( us, factory, errInfo);
-    assert( errInfo.getErrorId() == UIMA_ERR_NONE );
 	if (errInfo.getErrorId()==UIMA_ERR_NONE && EXISTS(cpResAnnotatorFile)) {
       return cpResAnnotatorFile->getAnnotatorFile();
 	} else {
@@ -985,4 +984,5 @@ namespace uima {
 }
 
 /* <EOF> */
+
 

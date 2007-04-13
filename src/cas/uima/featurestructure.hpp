@@ -111,6 +111,7 @@ namespace uima {
     friend class RemoteSofaDataStream;
     friend class LocalSofaDataStream;
     friend class XCASDeserializerHandler;
+	friend class XmiDeserializerHandler;
 
   protected:
     lowlevel::TyFS      iv_tyFS;
@@ -643,4 +644,5 @@ namespace uima {
 
 #endif
 /* <EOF> */
+
 

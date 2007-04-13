@@ -79,6 +79,7 @@ namespace uima {
     class UIMA_LINK_IMPORTSPEC IndexRepository : public FSIndexRepository {
       friend class uima::internal::CASSerializer;
       friend class uima::XCASWriter;
+	  friend class uima::XmiWriter;
     private:
       IndexDefinition const & iv_indexDefinition;
       FSHeap & iv_rFSHeap;
@@ -158,6 +159,9 @@ namespace uima {
       }
 
       void getUsedIndexes(vector<TyFSType>& fillit);
+      
+	  //only used for serialization
+	  void getIndexedFSs(vector<TyFS>& fillit);
 
 #ifndef NDEBUG
       void print(ostream&) const;
@@ -294,4 +298,5 @@ namespace uima {
 
 
 #endif
+
 

@@ -135,7 +135,7 @@ namespace uima {
   char const * CAS::NAME_DEFAULT_TEXT_SOFA    = "_InitialView";
   char const * CAS::NAME_DEFAULT_SOFA         = "_InitialView";
 
-  char const * CAS::TYPE_NAME_ANNOTATION_BASE       = "AnnotationBase";
+  char const * CAS::TYPE_NAME_ANNOTATION_BASE       = UIMA_CAS_PFX "AnnotationBase";
   char const * CAS::TYPE_NAME_ANNOTATION            = ANNOTATION;
   char const * CAS::TYPE_NAME_DOCUMENT_ANNOTATION = DOCUMENTANNOTATION;
   char const * CAS::FEATURE_BASE_NAME_SOFA       = SOFA;
@@ -1703,6 +1703,7 @@ namespace uima {
 }
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

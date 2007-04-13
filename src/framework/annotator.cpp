@@ -196,9 +196,9 @@ namespace uima {
     clTrace.dump(_TEXT("Annotator"), getSymbolicName().c_str());
     clTrace.dump("unload...");
 
-    assert(EXISTS(iv_cpclFile));
+    //assert(EXISTS(iv_cpclFile));
     /* make sure that deInit() was performed before call to unload() */
-    assert(NOTEXISTS(iv_hUserData));
+    //assert(NOTEXISTS(iv_hUserData));
     iv_cpclFile = 0;
   }
 
@@ -646,4 +646,5 @@ namespace uima {
 
 }
 /* <EOF> */
+
 
