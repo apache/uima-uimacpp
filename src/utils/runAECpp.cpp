@@ -24,6 +24,7 @@
 #include "uima/api.hpp"
 #include "uima/xmlwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
+#include "uima/xmideserializer.hpp"
 
 using namespace uima;
 
@@ -41,8 +42,11 @@ static void tafCheckError(ErrorInfo const &);
 // sofa to use for creating a tcas
 bool useSofa;
 const char* sofaName;
-///input data in xcas format
-bool xcasInput;
+
+// input data types
+enum dataFormats { textFormat, xcasFormat, xmiFormat };
+dataFormats xcasInput;
+
 void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string out);
 void writeXCAS (CAS & outCas, int num,  std::string in, std::string outfn);
 
@@ -53,7 +57,7 @@ void tell() {
   cerr << "  InputFileOrDir      Input file or directory of files to process" << endl;
   cerr << "  OutputDir           Existing directory for XCAS outputs (optional)" << endl;
   cerr << "       Options:" << endl;
-  cerr << "   -x            Input(s) must be in XCAS format (default is raw text)" << endl;
+  cerr << "   -x [-xmi]     Input(s) must be in XCAS [XMI] format (default is raw text)" << endl;
   cerr << "   -s Sofa       Name of a Sofa to process (input must be an XCAS)" << endl;
   cerr << "   -l logLevel   Set to 0, 1, or 2 for Message, Warning, or Error" << endl;
 }
@@ -71,7 +75,7 @@ int main(int argc, char * argv[]) {
       return 1;
     }
     useSofa = false;
-    xcasInput = false;
+    xcasInput = textFormat;
     /* input/output dir arg */
     std::string in;
     std::string out;
@@ -83,7 +87,11 @@ int main(int argc, char * argv[]) {
     while (++index < argc) {
       char* arg = argv[index];
       if (0 == strcmp(arg, "-x")) {
-        xcasInput = true;
+        xcasInput = xcasFormat;
+      } else if (0 == strcmp(arg, "-xcas")) {
+        xcasInput = xcasFormat;
+      } else if (0 == strcmp(arg, "-xmi")) {
+        xcasInput = xmiFormat;
       } else if (0 == strcmp(arg, "-s")) {
         if ( ++index < argc ) {
           sofaName = argv[index];
@@ -217,11 +225,16 @@ static void tafCheckError(ErrorInfo const & errInfo) {
 void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string outfn) {
   cout << endl << "runAECpp::processing " << in << endl;
   try {
-    if (xcasInput) {
-      /* initialize from the xcas */
-      //cout << "runAECpp::processing xcas file " << in << endl;
-      LocalFileInputSource fileIS(XMLString::transcode(in.c_str()));
-      XCASDeserializer::deserialize(fileIS, *cas);
+    if (xcasInput != textFormat) {
+      /* initialize from an xcas or xmicas */
+      //cout << "runAECpp::processing xml file " << in << endl;
+	  LocalFileInputSource fileIS(XMLString::transcode(in.c_str()));
+	  if (xcasInput == xcasFormat) {
+		XCASDeserializer::deserialize(fileIS, *cas);
+	  }
+	  else {
+		XmiDeserializer::deserialize(fileIS, *cas);
+	  }
     } else {
       /* read as text file and set document text of default view */
       FILE * pFile = fopen(in.c_str(),"rb");
