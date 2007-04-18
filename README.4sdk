@@ -23,21 +23,21 @@ There are three environmental variables that need modification for UIMA C++ to f
 
     * UIMACPP_HOME should point to the uimacpp directory of your unpacked Apache UIMA C++
       distribution. UIMACPP_HOME is used when compiling & linking UIMA C++ components.
-    * Append UIMACPP_HOME/bin to your PATH to pick up the runAECpp test driver
-    * Append UIMACPP_HOME/lib to your LD_LIBRARY_PATH (or DYLD_LIBRARY_PATH on MacOSX)
+    * Append $UIMACPP_HOME/bin to your PATH to pick up the runAECpp test driver
+    * Append $UIMACPP_HOME/lib to your LD_LIBRARY_PATH (or DYLD_LIBRARY_PATH on MacOSX)
       so that the necessary shared libraries can be found.
 
 Also note that UIMA C++ annotators are built as shared libraries, so they must be in a directory in the LD_LIBRARY_PATH, DYLD_LIBRARY_PATH or PATH (as appropriate to your platform) as well. An example of this is described in the next section.
 
-For better runtime integration, the Apache UIMA Java SDK utilities and Eclipse run configurations automatically add $UIMA_HOME/uimacpp/lib to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH, and adds $UIMA_HOME/uimacpp/bin to PATH.
+For better runtime integration between Java and C++, the Apache UIMA Java SDK command line utilities and Eclipse run configurations automatically add $UIMA_HOME/uimacpp/lib to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH, and add $UIMA_HOME/uimacpp/bin to PATH.
 
 
 Verifying Your Installation
 ----------------------------
 
-The procedure here is to first test that Apache UIMA C++ is installed and operating correctly. If desired, then check if the code is interoperating properly with Apache UIMA Java.
+The procedure here is to first test that Apache UIMA C++ is installed and operating correctly. Then if desired, check if the code is interoperating properly with Apache UIMA Java.
 
-Set up the environment as described above. Go to $UIMACPP_HOME/examples/src in order to build the sample code and add the src directory to the appropriate path.
+Set up the environment as described above. Go to $UIMACPP_HOME/examples/src to build the sample code and add the src directory to the appropriate path as follows.
 
 On Linux:
     * make -f DaveDetector.mak
@@ -47,15 +47,15 @@ On Windows:
     * devenv DaveDetector.vcproj /build release
     * PATH=%PATH%;%CD%
 
-To test the sample code, change back to the $UIMACPP_HOME/examples directory and run:
+To test the sample code in the C++ environment, change back to the $UIMACPP_HOME/examples directory and run:
     * runAECpp descriptors/DaveDetector.xml data/example.txt
 
 The console should show that a Dave was found.
 
-To test interoperability, first verify that Apache UIMA Java is working from the current shell, as described in that package, and then use the runAE.sh utility (use runAE on Windows)
+To test interoperability with Java, first verify that Apache UIMA Java is working from the current shell, as described in that package, and then use the runAE.sh utility (use runAE on Windows) from $UIMACPP_HOME/examples:
     * runAE.sh descriptors/DaveDetector.xml data/example.txt
 
-For more information about the sample code see $UIMACPP_HOME/examples/readme.html.
+For more information about the C++ sample code see $UIMACPP_HOME/examples/readme.html.
 
 
 Disclaimer

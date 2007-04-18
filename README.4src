@@ -1,7 +1,85 @@
-For instructions on building Apache UIMA please refer to:
-http://incubator.apache.org/uima/svn.html#building.with.maven
 
 See the NOTICE file for licensing information.
+
+--------------------------------
+Building the Apache UIMA C++ SDK
+--------------------------------
+
+The library has dependencies on the APR, ICU and Xerces-C++ libraries.
+The simplest way to resolve these dependencies is to use the copies
+included in the Apache UIMA C++ runtime package.  Install the
+appropriate image and set the UIMACPP_HOME environmental parameter to
+the location of the runtime.
+
+There is also a dependency on JNI headers from a Java JDK. The build
+looks for these headers in the directory specified by JAVA_INCLUDE.
+
+To replace one or more of the dependent libraries with different
+versions, download and build the component(s) and specify their use
+with the environmental parameters APR_HOME, ICU_HOME, and XERCES_HOME
+pointing at the root of each. If APR version 1.x is used on Windows,
+an additional parameter must be set: APR_VER=-1
+
+Building, testing and packaging on Linux:
+-----------------------------------------
+Set up your environment as described above. Assuming you have unpacked
+the source into $HOME/uimacpp-2.1.0-incubating
+
+This step can be skipped if building from a source tarball.
+When building from SVN, the GNU automake scripts must first be created.
+To create the automake scripts:
+  cd $HOME/uimacpp-2.1.0-incubating/src
+  make -f Makefile.prebuild
+
+Build the UIMA shared library and test routines:
+  cd $HOME/uimacpp-2.1.0-incubating/src
+  make -f Makefile.unix install
+
+Run the test suite:
+  cd $HOME/uimacpp-2.1.0-incubating/src/test
+  ./fvt.sh
+
+Build the documentation:
+  cd $HOME/uimacpp-2.1.0-incubating/docs
+  ./builddocs.sh
+
+Build the SDK tree:
+  cd $HOME/uimacpp-2.1.0-incubating
+  ./buildsdk.sh target_dir
+
+Package the SDK tarball:
+  cd target_dir
+  tar czf uimacpp-2.1.0-incubating-bin.tgz uimacpp
+
+
+Building, testing and packaging on Windows:
+-----------------------------
+Set up your environment as described above. Assuming you have unpacked
+the source into \uimacpp-2.1.0-incubating
+
+  cd \uimacpp-2.1.0-incubating\src
+  winmake
+
+Build and run the test suite:
+  cd \uimacpp-2.1.0-incubating\src\test
+  devenv test.sln /build release
+  fvt
+
+Build the documentation:
+  cd \uimacpp-2.1.0-incubating\docs
+  builddocs
+
+Build the SDK tree:
+  set MSVCRT_HOME to the directory with the msvc*.dll files required.
+  cd \uimacpp-2.1.0-incubating
+  buildsdk target_dir
+
+Package the SDK zipfile by creating a compressed folder of target_dir\uimacpp
+into uimacpp-2.1.0-incubating-bin.zip
+
+
+Disclaimer
+-----------
 
 Apache UIMA is an effort undergoing incubation at The Apache Software
 Foundation (ASF). Incubation is required of all newly accepted projects
@@ -10,4 +88,3 @@ and decision making process have stabilized in a manner consistent with
 other successful ASF projects. While incubation status is not necessarily
 a reflection of the completeness or stability of the code, it does
 indicate that the project has yet to be fully endorsed by the ASF.
-
