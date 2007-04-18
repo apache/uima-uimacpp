@@ -50,11 +50,18 @@
 		</nameValuePair>
 	</configurationParameterSettings>
 
-	<typeSystemDescription>
-	  <imports>
-		<import name="org.apache.uima.examples.SourceDocumentInformation"/>
-	  </imports>
-	</typeSystemDescription>
+	<typeSystemDescription/>
+
+	<fsIndexCollection>
+	 <fsIndexes>
+	   <fsIndexDescription>
+	      <label>TestIndex</label>
+	      <typeName>uima.cas.TOP</typeName>
+	      <kind>bag</kind>
+	      <keys/>
+	    </fsIndexDescription>
+          </fsIndexes>
+        </fsIndexCollection>
 		
 	<capabilities>
 		<capability>
