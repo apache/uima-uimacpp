@@ -577,6 +577,23 @@ int main(int argc, char * argv[]) /*
 	  testOotsComplexCas(partialTSCasDef, casDef, "ExampleCas/cas.xml");
 	  LOG("UIMACPP_XMITEST OOTS Complex CAS with partial typesystem Finished");
 
+ 		//test that some xml doc fails
+     LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Start");
+ 		UnicodeString someXmlFile("ExampleCas/cas.xml");
+     UnicodeString xmlfn = ResourceManager::resolveFilename(someXmlFile, someXmlFile);
+ 		CAS * pCas = Framework::createCAS(*casDef,errorInfo);
+
+     bool bExceptionThrown = false;
+ 		try {
+ 			XmiDeserializer::deserialize(xmlfn, *pCas);
+ 		} catch (Exception e)  {
+ 			LOG("Exception thrown correctly: ");
+ 			LOG(e.asString());
+ 			bExceptionThrown =true;
+ 		}
+ 	  ASSERT_OR_THROWEXCEPTION(bExceptionThrown); 
+     LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Finished");
+  	 delete pCas;
 		
     delete partialts;
     delete partialTSCasDef;
