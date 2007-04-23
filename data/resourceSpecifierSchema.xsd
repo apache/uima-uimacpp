@@ -103,14 +103,14 @@
 	<!-- Type Definitions -->
 
 	<complexType name="ResourceMetaDataType">
-		<sequence>
+		<all>
 			<element name="name" type="rs:EnvVarType" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
 			<element name="vendor" type="string" minOccurs="0" />
 			<element name="configurationParameters" type="rs:ConfigurationParametersType" minOccurs="0" />
 			<element name="configurationParameterSettings" type="rs:ConfigurationParameterSettingsType" minOccurs="0" />
-		</sequence>
+		</all>
 	</complexType>
 
 	<complexType name="ProcessingResourceMetaDataType">
@@ -277,7 +277,7 @@
 	</group>
 
 	<complexType name="TypeSystemDescriptionType">
-		<sequence>
+		<all>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
@@ -290,7 +290,7 @@
 					</sequence>
 				</complexType>
 			</element>
-		</sequence>
+		</all>
 	</complexType>
 
 	<complexType name="ImportSequenceType">
@@ -346,7 +346,7 @@
 	</complexType>
 
 	<complexType name="TypePriorityType">
-		<sequence>
+		<all>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
@@ -362,7 +362,7 @@
 				</element>
 				<element name="priorityList" type="rs:PriorityListType" minOccurs="0" maxOccurs="unbounded" />
 			</choice>
-		</sequence>
+		</all>
 	</complexType>
 
 	<complexType name="PriorityListType">
@@ -372,7 +372,7 @@
 	</complexType>
 
 	<complexType name="FsIndexCollectionType">
-		<sequence>
+		<all>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
@@ -388,7 +388,7 @@
 				</element>
 				<element name="fsIndexDescription" type="rs:FsIndexType" minOccurs="0" maxOccurs="unbounded" />
 			</choice>
-		</sequence>
+		</all>
 	</complexType>
 
 	<complexType name="FsIndexType">
@@ -514,7 +514,7 @@
 	</complexType>
 
 	<complexType name="ResourceManagerConfigurationType">
-		<sequence>
+		<all>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="vendor" type="string" minOccurs="0" />
@@ -523,7 +523,7 @@
 			<element name="import" type="rs:ImportType" minOccurs="0"/> <!-- Old Style -->
 			<element name="externalResources" type="rs:ExternalResourcesType" minOccurs="0" />
 			<element name="externalResourceBindings" type="rs:ExternalResourceBindingsType" minOccurs="0" />
-		</sequence>
+		</all>
 	</complexType>
 
 	<complexType name="ExternalResourcesType">
