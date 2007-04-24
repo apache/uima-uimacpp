@@ -146,7 +146,7 @@ xcopy /Q /Y %UIMA_INSTALLDIR%\include\uima\* %UIMA_DIR%\include\uima
 
 echo.
 echo copying from %UIMA_DOCDIR%...
-xcopy /Q /Y %UIMA_DOCDIR%\QuickStart.html %UIMA_DIR%\docs
+xcopy /Q /Y %UIMA_DOCDIR%\overview_and_setup.html %UIMA_DIR%\docs
 xcopy /Q /Y %UIMA_DOCDIR%\uimadoxytags.tag %UIMA_DIR%\docs
 mkdir %UIMA_DIR%\docs\html
 xcopy /Q /Y %UIMA_DOCDIR%\html\* %UIMA_DIR%\docs\html

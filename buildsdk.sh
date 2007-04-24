@@ -190,7 +190,7 @@ if [ "$UNAME" = "Darwin" ]; then
 fi
 	
 echo copying from "$UIMACPP_SOURCE/docs"...
-cp -p "$UIMACPP_SOURCE"/docs/QuickStart.html "$UIMA_DIR"/docs/
+cp -p "$UIMACPP_SOURCE"/docs/overview_and_setup.html "$UIMA_DIR"/docs/
 cp -p "$UIMACPP_SOURCE"/docs/uimadoxytags.tag  "$UIMA_DIR"/docs/
 cp $CPLR "$UIMACPP_SOURCE"/docs/html "$UIMA_DIR"/docs/
 
