@@ -161,6 +161,9 @@ del %TARGET_DIR%\scriptators\python\Makefile
 xcopy /Q %UIMACPP_SOURCE%\scriptators\tcl\*.* %TARGET_DIR%\scriptators\tcl
 del %TARGET_DIR%\scriptators\tcl\Makefile
 
+echo cleaning the target tree
+for /R %TARGET_DIR% %%d in (.) do del %%d\*~ 2> NUL
+
 echo DONE ... Source image created in %TARGET_DIR%
 goto end
 

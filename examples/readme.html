@@ -11,16 +11,11 @@
 This directory contains example code that illustrate how to use the UIMA C++ Framework. 
 </p>
 <h2>Building the Examples</h2>
-Copy the examples directory and its subdirectories into a writable directory, referred to here as myExamples, and cd to myExamples. Set environment variables and build the examples as follows:
+Set environment variables as described in the overview and build the examples as follows:
 <h3>On Linux</h3>
-Assuming the SDK was unpacked in your home directory:
   <ul>
     <code>
-      export UIMACPP_HOME=$HOME/uimacpp<br>
-      export LD_LIBRARY_PATH=$UIMACPP_HOME/lib:$LD_LIBRARY_PATH<br>
-      export PATH=$UIMACPP_HOME/bin:$PATH<br>
-      cp -r $UIMACPP_HOME/examples myExamples<br>
-      cd myExamples<br>
+      cd $UIMACPP_HOME/examples<br>
       make -C src -f all.mak
     </code>
   </ul>  
@@ -33,14 +28,10 @@ This will create shared libraries and executables in the src directory which mus
   </ul> 
   
 <h3>On Windows</h3>
-Assuming the zipfile was installed in C:\UIMA
   <ul>
     <code>
-      set UIMACPP_HOME=c:\UIMA\uimacpp<br>
-      set PATH=%UIMACPP_HOME%\bin;%UIMACPP_HOME%\lib;%PATH%<br>
-      xcopy /SYQI %UIMACPP_HOME%\docs\examples c:\myExamples<br>
-      cd c:\myExamples<br>
-      devenv src\uimacpp-examples.sln /build debug<br>
+      cd %UIMACPP_HOME%\examples<br>
+      devenv src\uimacpp-examples.sln /build release<br>
     </code>
   </ul>
 This will create DLLs and executables in the src directory which must be placed in the PATH as follows:
@@ -50,7 +41,7 @@ This will create DLLs and executables in the src directory which must be placed 
     </code>
   </ul>
 <h2>Running the Sample UIMA Components</h2>
-<p> Build the examples and set up environment variables as described above. These components can be run using either in the native C++ environment using the <code>runAECpp</code> program or run from Java using the <code>runTAE</code> utility or integrated into a CPE. The UIMA C++ descriptors are location in the descriptors subdirectory.
+<p>These components can be run using either in the native C++ environment using the <code>runAECpp</code> program or run from Java using the <code>runAE</code> utility or integrated into a CPE. The UIMA C++ descriptors are location in the descriptors subdirectory.
 <h3>DaveDetector</h3>
 A UIMA annotator that finds Daves in text and annotates them. It has one configuration parameter, <code>DaveString</code>, that specifies the string to match. It illustrates how to use the CAS APIs to create annotations and add them to the index. 
 <p>
