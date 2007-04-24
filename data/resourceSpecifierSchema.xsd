@@ -103,14 +103,14 @@
 	<!-- Type Definitions -->
 
 	<complexType name="ResourceMetaDataType">
-		<all>
+		<sequence>
 			<element name="name" type="rs:EnvVarType" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
 			<element name="vendor" type="string" minOccurs="0" />
 			<element name="configurationParameters" type="rs:ConfigurationParametersType" minOccurs="0" />
 			<element name="configurationParameterSettings" type="rs:ConfigurationParameterSettingsType" minOccurs="0" />
-		</all>
+		</sequence>
 	</complexType>
 
 	<complexType name="ProcessingResourceMetaDataType">
@@ -346,7 +346,7 @@
 	</complexType>
 
 	<complexType name="TypePriorityType">
-		<all>
+		<sequence>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
@@ -362,7 +362,7 @@
 				</element>
 				<element name="priorityList" type="rs:PriorityListType" minOccurs="0" maxOccurs="unbounded" />
 			</choice>
-		</all>
+		</sequence>
 	</complexType>
 
 	<complexType name="PriorityListType">
@@ -372,7 +372,7 @@
 	</complexType>
 
 	<complexType name="FsIndexCollectionType">
-		<all>
+		<sequence>
 			<element name="name" type="string" minOccurs="0" />
 			<element name="description" type="string" minOccurs="0" />
 			<element name="version" type="string" minOccurs="0" />
@@ -388,7 +388,7 @@
 				</element>
 				<element name="fsIndexDescription" type="rs:FsIndexType" minOccurs="0" maxOccurs="unbounded" />
 			</choice>
-		</all>
+		</sequence>
 	</complexType>
 
 	<complexType name="FsIndexType">
