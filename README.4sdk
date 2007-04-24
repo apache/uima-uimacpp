@@ -19,15 +19,16 @@ Apache UIMA C++ has been tested with the latest levels of gcc on Linux and MacOS
 Environment Variables
 ----------------------
 
-There are three environmental variables that need modification for UIMA C++ to function properly.
+The following environmental variables are needed for UIMA C++ to function properly.
 
     * UIMACPP_HOME should point to the uimacpp directory of your unpacked Apache UIMA C++
       distribution. UIMACPP_HOME is used when compiling & linking UIMA C++ components.
     * Append $UIMACPP_HOME/bin to your PATH to pick up the runAECpp test driver
-    * Append $UIMACPP_HOME/lib to your LD_LIBRARY_PATH (or DYLD_LIBRARY_PATH on MacOSX)
+      and shared libraries (Windows)
+    * Append $UIMACPP_HOME/lib to your LD_LIBRARY_PATH (Linux) or DYLD_LIBRARY_PATH (MacOSX)
       so that the necessary shared libraries can be found.
 
-Also note that UIMA C++ annotators are built as shared libraries, so they must be in a directory in the LD_LIBRARY_PATH, DYLD_LIBRARY_PATH or PATH (as appropriate to your platform) as well. An example of this is described in the next section.
+Also note that UIMA C++ annotators are built as shared libraries, so they must be in a directory in the LD_LIBRARY_PATH, DYLD_LIBRARY_PATH or PATH (as appropriate to your platform) as well. An example of this is given in the next section.
 
 For better runtime integration between Java and C++, the Apache UIMA Java SDK command line utilities and Eclipse run configurations automatically add $UIMA_HOME/uimacpp/lib to LD_LIBRARY_PATH and DYLD_LIBRARY_PATH, and add $UIMA_HOME/uimacpp/bin to PATH.
 
@@ -48,12 +49,12 @@ On Windows:
     * PATH=%PATH%;%CD%
 
 To test the sample code in the C++ environment, change back to the $UIMACPP_HOME/examples directory and run:
-    * runAECpp descriptors/DaveDetector.xml data/example.txt
+    * runAECpp descriptors/DaveDetector.xml data
 
-The console should show that a Dave was found.
+The console should show that a Dave was found in some of the files in the data directory.
 
 To test interoperability with Java, first verify that Apache UIMA Java is working from the current shell, as described in that package, and then use the runAE.sh utility (use runAE on Windows) from $UIMACPP_HOME/examples:
-    * runAE.sh descriptors/DaveDetector.xml data/example.txt
+    * runAE.sh descriptors/DaveDetector.xml data
 
 For more information about the C++ sample code see $UIMACPP_HOME/examples/readme.html.
 
