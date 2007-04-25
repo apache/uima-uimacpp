@@ -249,6 +249,9 @@ xcopy /Q /Y %ICU_HOME%\LICENSE* %UIMA_DIR%\licenses\icu
 if not exist %UIMA_DIR%\licenses\xerces mkdir %UIMA_DIR%\licenses\xerces
 xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
 
+echo cleaning the target tree
+for /R %UIMA_DIR% %%d in (.) do del %%d\*~ 2> NUL
+
 echo DONE SDK image in %UIMA_DIR%
 goto end
 
