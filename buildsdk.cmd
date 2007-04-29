@@ -209,27 +209,33 @@ xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\ThreadAnnotator.h %UIMA_DIR%\scriptators
 
 echo.
 echo copying the Perl scriptator...
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\Perl.html %UIMA_DIR%\docs	
 mkdir %UIMA_DIR%\scriptators\perl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\Perl.html %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.cpp %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.pl  %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.xml %UIMA_DIR%\scriptators\perl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.vcproj %UIMA_DIR%\scriptators\perl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.cmd %UIMA_DIR%\scriptators\perl
 
 echo.
 echo copying Python scriptator...
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\Python.html %UIMA_DIR%\docs	
 mkdir %UIMA_DIR%\scriptators\python
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\Python.html %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.cpp %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.py  %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.xml %UIMA_DIR%\scriptators\python
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.vcproj %UIMA_DIR%\scriptators\python
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.cmd %UIMA_DIR%\scriptators\python
 
 echo.
 echo copying Tcl scriptator...
-xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\Tcl.html %UIMA_DIR%\docs	
 mkdir %UIMA_DIR%\scriptators\tcl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\Tcl.html %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.cpp %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.tcl %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.xml %UIMA_DIR%\scriptators\tcl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.vcproj %UIMA_DIR%\scriptators\tcl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.cmd %UIMA_DIR%\scriptators\tcl
 
 echo.
 echo copying licenses...
