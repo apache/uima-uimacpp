@@ -33,7 +33,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib icuuc.lib uimaD.lib"
-				OutputFile="$(OutDir)/test_xmideserialization.exe"
+				OutputFile="$(OutDir)/test_xmideserializationD.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
 				GenerateDebugInformation="TRUE"

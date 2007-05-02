@@ -25,7 +25,17 @@ if "%UIMA_HOME%" == "" (
 	set UIMACPPTEST_JNI=@echo "UIMA_HOME is not set. The JNI test was not run."
 )
 
-nmake -f fvtTestfile %1
+if "%~1" == "debug" (
+  nmake -f fvtTestfile.debug
+)
+if "%~2" == "debug" (
+  nmake -f fvtTestfile.debug
+)
+if not "%~2" == "debug" (
+  if not "%~1" == "debug" (
+    nmake -f fvtTestfile
+  )
+)
 
 goto end
 

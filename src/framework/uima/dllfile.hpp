@@ -191,6 +191,15 @@ namespace uima {
         // and that is expected back in ResourceManager::requestAnnotatorFile
         dsoBuffer = (char*) apr_palloc ( dsoPool, DSOBUFLEN );
 
+#ifdef _DEBUG
+#ifdef _WINDOWS
+        // Add "D" to library name
+        char libName[128];
+        strcpy(libName, iv_clFilename.getName());
+        strcat(libName, "D");
+        iv_clFilename.setNewName(libName);
+#endif
+#endif
         // Add the appropriate extension if missing
         if (! iv_clFilename.isAbsolute() && *iv_clFilename.getExtension() == '\0' )
           iv_clFilename.setNewExtension(DSO_EXTN);

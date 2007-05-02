@@ -37,7 +37,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib icuuc.lib uimaD.lib libapr$(APR_VER).lib"
-				OutputFile="$(OutDir)\ExampleApplication.exe"
+				OutputFile="$(OutDir)\ExampleApplicationD.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(UIMACPP_HOME)\lib&quot;"
 				GenerateDebugInformation="TRUE"

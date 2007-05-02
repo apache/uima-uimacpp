@@ -34,7 +34,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="icuuc.lib libapr$(APR_VER).lib uimaD.lib"
-				OutputFile="$(OutDir)\lib$(ProjectName).dll"
+				OutputFile="$(OutDir)\lib$(ProjectName)D.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
 				GenerateDebugInformation="TRUE"

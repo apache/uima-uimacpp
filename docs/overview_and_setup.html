@@ -181,19 +181,19 @@ The runAECpp driver will process the input text file and DaveDetector should fin
 To test the interoperability with UIMA Java SDK, make sure UIMA_HOME is set to the location of the UIMA SDK, and that its bin directory is in the PATH. Run DaveDetector as follows:
 <h4>2.3.1 On Linux</h4>
 <ul>
-    <code>runTAE.sh descriptors/DaveDetector.xml data</code>
+    <code>runAE.sh descriptors/DaveDetector.xml data</code>
 </ul>  
 <h4>2.3.2 On Windows</h4>
 <ul>
-    <code>runTAE descriptors\DaveDetector.xml data</code>
+    <code>runAE descriptors\DaveDetector.xml data</code>
 </ul>  
-The runTAE driver will process all files in the data directory and DaveDetector should find Daves in some of them.
+The runAE driver will process all files in the data directory and DaveDetector should find Daves in some of them.
 
 <h2>3.0 Developing a C++ Component</h2>
 
 <h3>3.1 Developing UIMA C++ Components without Java</h3>
 <p>
-It is advantageous to debug C++ components as stand-alone C++ applications.
+It is advantageous to develop C++ components as stand-alone C++ applications.
 The program <CODE>runAECpp</CODE> found under the $UIMACPP_HOME/bin directory is a
 C++ utility that imports one or more XML format CAS files into CAS objects and for each calls the 
 <CODE>process</CODE> method of the specified UIMA C++ component, optionally
@@ -206,7 +206,7 @@ that can be run at any point
 in the CPE flow to export the contents of the CAS object to a file in an XML format. 
 </p>
 <p>
-To debug using XML CAS serialization, use one of the above serializers to dump
+To develop using XML CAS serialization, use one of the above serializers to dump
 the CAS at the point the C++ component would be called, 
 or even create the XML content with an editor.  Use runAECpp to process XML format CAS input as follows:
 </p>
@@ -234,12 +234,32 @@ runAECpp -x descriptors/SofaExampleAnnotator.xml data/sofa.xcas &lt;yourOutputDi
 <a href="../examples/readme.html">C++ Examples</a>
 </p>
 
-<h3>3.2 Message Logging from a C++ Component</h3>
+<h3>3.2 Debugging UIMA C++ Components</h3>
+<p>Another advantage in developing UIMA C++ components as stand-alone applications is the use of native debuggers.
+The component driver, runAECpp, simplifies running the C++ component under a native debugger.
+</p>
+<h4>3.2.1 Debugging on Windows</h4>
+<p>The UIMA C++ framework has special provisions for debugging on Windows.
+UIMA C++ components built debug should link to a debug version of the framework, uimaD.dll.
+The debug framework automatically appends "D" to the name of C++ components before trying to load them.
+This applies to annotators and URI scheme handlers. All UIMA C++ example code follow this convention.
+</p>
+<p>Note also that the runAECppD version of the component driver should be used with debug components.
+</p>
+
+<h3>3.3 Running C++ Components under Java</h3>
+<p>Native components running under Java may operate differently than when run from a native application.
+This is because the JVM uses different default process limits than those used for a native application.
+For example, the maximum stack size for a thread running under a JVM may be 100KB versus
+1MB for a native command line application. Use "java -X" to get more information on non-standard JVM options.
+</p>
+
+<h3>3.4 Message Logging from a C++ Component</h3>
 <p>For formal integration with UIMA applications, a logfile interface is available.
 When a C++ annotator is called from Java, logging messages are integrated into the Java log.
 If the C++ annotator is called from a native C++ application, such as runAECpp,
 a local logfile may be created. The name of the logfile is taken from the 
-the environmental parameter, UIMACPP_LOG_FILE, and it is opened "append".
+the environmental parameter, UIMACPP_LOGFILE, and it is opened "append".
 The default is to disable logging.
 </p>
 <p>Three levels of message logging can be used: Message, Warning and Error.
@@ -247,5 +267,6 @@ When called from Java the UIMA log level is used to control output.
 When called from a C++ application an API is available to set the log level; the default level is Error.
 When called from runAECpp the value of these levels are 0, 1, and 2, respectively.
 </p>
+
 </body>
 </html>

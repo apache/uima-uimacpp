@@ -1,0 +1,43 @@
+
+all:	cas sofa engine typepriority language iterators casserializer primitivetypes xcasdeserialization xmideserialization jni
+
+cas:
+	$(DEBUG_FVT)test_casD
+
+sofa:
+	$(DEBUG_FVT)test_sofaD
+	$(RM) temp.xcas
+
+engine:	
+	$(DEBUG_FVT)test_engineD
+
+typepriority:
+	$(DEBUG_FVT)test_typepriorityD
+	$(RM) ANDump.xml
+
+language:
+	$(DEBUG_FVT)test_languageD
+
+iterators:	
+	$(DEBUG_FVT)test_iteratorsD
+
+casserializer:
+	$(DEBUG_FVT)test_casserializerD
+
+primitivetypes:
+	$(DEBUG_FVT)test_primitivetypesD
+	$(RM) temp.xcas
+	$(RM) testprimitivetypes.xmi
+
+xcasdeserialization:
+	$(DEBUG_FVT)test_xcasdeserializationD
+	$(RM) temp.xcas
+
+xmideserialization:
+	$(DEBUG_FVT)test_xmideserializationD
+	$(RM) temp.xmi
+	$(RM) oots.xmi
+	$(RM) oots2.xmi
+
+jni:
+	$(UIMACPPTEST_JNI)
