@@ -129,6 +129,7 @@ echo copying from %UIMACPP_SOURCE%\src\test
 xcopy /Q %UIMACPP_SOURCE%\src\test\*.sln %TARGET_DIR%\src\test
 xcopy /Q %UIMACPP_SOURCE%\src\test\*.bat %TARGET_DIR%\src\test
 xcopy /Q %UIMACPP_SOURCE%\src\test\fvtTestfile %TARGET_DIR%\src\test
+xcopy /Q %UIMACPP_SOURCE%\src\test\fvtTestfile.debug %TARGET_DIR%\src\test
 xcopy /Q %UIMACPP_SOURCE%\src\test\data\*.* %TARGET_DIR%\src\test\data
 xcopy /Q %UIMACPP_SOURCE%\src\test\data\segmenterinput\*.* %TARGET_DIR%\src\test\data\segmenterinput
 xcopy /Q %UIMACPP_SOURCE%\src\test\data\ExampleCas\*.* %TARGET_DIR%\src\test\data\ExampleCas
