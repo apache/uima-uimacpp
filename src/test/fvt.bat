@@ -29,11 +29,11 @@ if "%~1" == "debug" (
   nmake -f fvtTestfile.debug
 )
 if "%~2" == "debug" (
-  nmake -f fvtTestfile.debug
+  nmake -f fvtTestfile.debug %1
 )
 if not "%~2" == "debug" (
   if not "%~1" == "debug" (
-    nmake -f fvtTestfile
+    nmake -f fvtTestfile %1
   )
 )
 
