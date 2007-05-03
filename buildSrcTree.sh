@@ -96,6 +96,7 @@ cp $CPL $UIMACPP_SOURCE/docs/uimacppdocs.mak $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/builddocs.sh $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/uimacpp.dox $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/doxyheader.html $target_dir/docs
+cp $CPL $UIMACPP_SOURCE/docs/overview_and_setup.html $target_dir/docs
 
 print -u2 "copying from $UIMACPP_SOURCE/src"
 cp $CPL $UIMACPP_SOURCE/src/readme.tobuild $target_dir/src/
