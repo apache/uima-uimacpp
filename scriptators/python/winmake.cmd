@@ -23,7 +23,7 @@ echo SWIG_PATH is invalid
 goto TheEnd
 
 :PythonNotSet
-echo Python environments is invalid
+echo Python environment is invalid
 
 
 :TheEnd

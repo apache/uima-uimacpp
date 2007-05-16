@@ -23,7 +23,7 @@ echo SWIG_PATH is invalid
 goto TheEnd
 
 :PerlNotSet
-echo Perl environments is invalid
+echo Perl environment is invalid
 
 
 :TheEnd

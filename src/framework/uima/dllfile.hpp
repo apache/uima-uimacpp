@@ -285,10 +285,11 @@ namespace uima {
 	  if (APR_TO_OS_ERROR(aprError) == ERROR_MOD_NOT_FOUND) {
 	    return UIMA_ERR_ANNOTATOR_COULD_NOT_FIND;
 	  } 
-#endif
+#else
 	  if (APR_TO_OS_ERROR(aprError) == ENOENT) {
 		  return UIMA_ERR_ANNOTATOR_COULD_NOT_FIND;
 	  }
+#endif
 	  return UIMA_ERR_ANNOTATOR_COULD_NOT_LOAD;   
     }
 

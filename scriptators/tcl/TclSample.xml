@@ -22,7 +22,7 @@
    -->
 
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
-  <frameworkImplementation>TAF</frameworkImplementation>
+  <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
 <annotatorImplementationName>tclator</annotatorImplementationName>
 

@@ -117,7 +117,7 @@ public:
 						   static_cast<void *>( this), threadPool);
 
 	// wait for worker thread to be ready
-    apr_sleep(100);
+    apr_sleep(1000);
 	apr_thread_mutex_lock(mutex);
  	if (!threadReady) {
 	  cerr << "WARNING: ThreadAnnotator worker thread not ready! " << endl;

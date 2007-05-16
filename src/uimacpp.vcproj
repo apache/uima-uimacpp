@@ -1,133 +1,197 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="7.10"
+	Version="8.00"
 	Name="uimacpp"
 	ProjectGUID="{70B51CFD-850A-44D1-BF14-A44A1CB27550}"
 	RootNamespace="uimacpp"
-	Keyword="Win32Proj">
+	Keyword="Win32Proj"
+	>
 	<Platforms>
 		<Platform
-			Name="Win32"/>
+			Name="Win32"
+		/>
 	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
 			OutputDirectory="..\Debug\lib"
 			IntermediateDirectory="..\Debug\$(ProjectName)"
 			ConfigurationType="2"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine="checkEnvVars"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHac"
 				Optimization="0"
 				AdditionalIncludeDirectories="cas;framework;jni;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(JAVA_INCLUDE)&quot;;&quot;$(JAVA_INCLUDE)\win32&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;"
-				PreprocessorDefinitions="_UIMA_LIBRARY_;UIMA_VERSION=1.4.4;UIMA_SUPPRESS_TIMING;WIN32;_WINDOWS;_USRDLL;_DEBUG"
-				IgnoreStandardIncludePath="FALSE"
+				PreprocessorDefinitions="_UIMA_LIBRARY_;UIMA_VERSION=1.4.4;UIMA_SUPPRESS_TIMING;WIN32;_WINDOWS;_USRDLL;_DEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				IgnoreStandardIncludePath="false"
 				GeneratePreprocessedFile="0"
-				MinimalRebuild="FALSE"
-				ExceptionHandling="FALSE"
+				MinimalRebuild="false"
+				ExceptionHandling="0"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="FALSE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="false"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr$(APR_VER).lib"
 				OutputFile="$(OutDir)\..\bin\uimaD.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
-				GenerateMapFile="TRUE"
+				GenerateMapFile="true"
 				MapFileName="$(OutDir)\$(TargetName).map"
 				SubSystem="2"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				ImportLibrary="$(OutDir)/$(TargetName).lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="checkEnvVars"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			OutputDirectory="..\Release\lib"
 			IntermediateDirectory="..\Release\$(ProjectName)"
 			ConfigurationType="2"
-			CharacterSet="2">
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			CharacterSet="2"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+				CommandLine="checkEnvVars"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/EHac"
 				Optimization="3"
 				AdditionalIncludeDirectories="cas;framework;jni;&quot;$(APR_HOME)\include&quot;;&quot;$(ICU_HOME)\include&quot;;&quot;$(XERCES_HOME)\include&quot;;&quot;$(JAVA_INCLUDE)&quot;;&quot;$(JAVA_INCLUDE)\win32&quot;;&quot;$(UIMACPP_HOME)\include&quot;;&quot;$(UIMACPP_HOME)\include\apr&quot;"
-				PreprocessorDefinitions="_UIMA_LIBRARY_;UIMA_VERSION=1.4.4;UIMA_SUPPRESS_TIMING;WIN32;_WINDOWS;_USRDLL;TRACEOFF;NDEBUG"
-				ExceptionHandling="FALSE"
+				PreprocessorDefinitions="_UIMA_LIBRARY_;UIMA_VERSION=1.4.4;UIMA_SUPPRESS_TIMING;WIN32;_WINDOWS;_USRDLL;TRACEOFF;NDEBUG;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE"
+				ExceptionHandling="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="TRUE"
-				DebugInformationFormat="3"/>
+				Detect64BitPortabilityProblems="true"
+				DebugInformationFormat="3"
+			/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr$(APR_VER).lib"
 				OutputFile="$(OutDir)\..\bin\uima.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(APR_HOME)\Release&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;"
-				GenerateDebugInformation="FALSE"
+				GenerateDebugInformation="false"
 				ProgramDatabaseFile="$(OutDir)/$(TargetName).pdb"
-				GenerateMapFile="TRUE"
+				GenerateMapFile="true"
 				MapFileName="$(OutDir)\$(TargetName).map"
 				SubSystem="2"
 				OptimizeReferences="0"
 				EnableCOMDATFolding="0"
 				ImportLibrary="$(OutDir)/$(TargetName).lib"
-				TargetMachine="1"/>
+				TargetMachine="1"
+			/>
 			<Tool
-				Name="VCMIDLTool"/>
+				Name="VCALinkTool"
+			/>
 			<Tool
-				Name="VCPostBuildEventTool"/>
+				Name="VCManifestTool"
+			/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="checkEnvVars"/>
+				Name="VCXDCMakeTool"
+			/>
 			<Tool
-				Name="VCPreLinkEventTool"/>
+				Name="VCBscMakeTool"
+			/>
 			<Tool
-				Name="VCResourceCompilerTool"/>
+				Name="VCFxCopTool"
+			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
+				Name="VCAppVerifierTool"
+			/>
 			<Tool
-				Name="VCXMLDataGeneratorTool"/>
+				Name="VCWebDeploymentTool"
+			/>
 			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+				Name="VCPostBuildEventTool"
+			/>
 		</Configuration>
 	</Configurations>
 	<References>
@@ -136,581 +200,772 @@
 		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
-			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
 			<File
-				RelativePath="framework\annotator.cpp">
+				RelativePath="framework\annotator.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\annotator_context.cpp">
+				RelativePath="framework\annotator_context.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\annotator_mgr.cpp">
+				RelativePath="framework\annotator_mgr.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\arrayfs.cpp">
+				RelativePath="cas\arrayfs.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\cas.cpp">
+				RelativePath="cas\cas.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\casdefinition.cpp">
+				RelativePath="framework\casdefinition.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\casexception.cpp">
+				RelativePath="cas\casexception.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\casiterator.cpp">
+				RelativePath="framework\casiterator.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\caspool.cpp">
+				RelativePath="framework\caspool.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\caswriter_abase.cpp">
+				RelativePath="cas\caswriter_abase.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\config_param.cpp">
+				RelativePath="framework\config_param.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\consoleui.cpp">
+				RelativePath="framework\consoleui.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\cp2ucnvrt.cpp">
+				RelativePath="framework\cp2ucnvrt.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\dottypesystemwriter.cpp">
+				RelativePath="framework\dottypesystemwriter.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\engine.cpp">
+				RelativePath="framework\engine.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\exceptions.cpp">
+				RelativePath="framework\exceptions.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\featurestructure.cpp">
+				RelativePath="cas\featurestructure.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\fsfilterbuilder.cpp">
+				RelativePath="cas\fsfilterbuilder.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\fsindex.cpp">
+				RelativePath="cas\fsindex.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\fsindexrepository.cpp">
+				RelativePath="cas\fsindexrepository.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\fsiterator.cpp">
+				RelativePath="cas\fsiterator.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\ftools.cpp">
+				RelativePath="framework\ftools.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\internal_aggregate_engine.cpp">
+				RelativePath="framework\internal_aggregate_engine.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\internal_capability_container.cpp">
+				RelativePath="framework\internal_capability_container.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_casdeserializer.cpp">
+				RelativePath="cas\internal_casdeserializer.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_casimpl.cpp">
+				RelativePath="cas\internal_casimpl.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_casserializer.cpp">
+				RelativePath="cas\internal_casserializer.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\internal_engine_base.cpp">
+				RelativePath="framework\internal_engine_base.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_fspromoter.cpp">
+				RelativePath="cas\internal_fspromoter.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\internal_jedii_engine.cpp">
+				RelativePath="framework\internal_jedii_engine.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\internal_primitive_engine.cpp">
+				RelativePath="framework\internal_primitive_engine.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_serializedcas.cpp">
+				RelativePath="cas\internal_serializedcas.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_typeshortcuts.cpp">
+				RelativePath="cas\internal_typeshortcuts.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\internal_xmlconstants.cpp">
+				RelativePath="cas\internal_xmlconstants.cpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\jni.cpp">
+				RelativePath="jni\jni.cpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\jni_string.cpp">
+				RelativePath="jni\jni_string.cpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\jni_utils.cpp">
+				RelativePath="jni\jni_utils.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\language.cpp">
+				RelativePath="framework\language.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\listfs.cpp">
+				RelativePath="cas\listfs.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\log.cpp">
+				RelativePath="framework\log.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_fsheap.cpp">
+				RelativePath="cas\lowlevel_fsheap.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_index.cpp">
+				RelativePath="cas\lowlevel_index.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_indexcomparator.cpp">
+				RelativePath="cas\lowlevel_indexcomparator.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_indexdefinition.cpp">
+				RelativePath="cas\lowlevel_indexdefinition.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_indexrepository.cpp">
+				RelativePath="cas\lowlevel_indexrepository.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_internal_indexes.cpp">
+				RelativePath="cas\lowlevel_internal_indexes.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\lowlevel_typesystem.cpp">
+				RelativePath="cas\lowlevel_typesystem.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\res_abase.cpp">
+				RelativePath="framework\res_abase.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\res_annotator.cpp">
+				RelativePath="framework\res_annotator.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\resmgr.cpp">
+				RelativePath="framework\resmgr.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\sofastream.cpp">
+				RelativePath="cas\sofastream.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\strtools.cpp">
+				RelativePath="framework\strtools.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\taemetadata.cpp">
+				RelativePath="framework\taemetadata.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\taespecifier.cpp">
+				RelativePath="framework\taespecifier.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\taespecifierbuilder.cpp">
+				RelativePath="framework\taespecifierbuilder.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\timedatetools.cpp">
+				RelativePath="framework\timedatetools.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\token_properties.cpp">
+				RelativePath="framework\token_properties.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\typenamespace.cpp">
+				RelativePath="cas\typenamespace.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\typesystem.cpp">
+				RelativePath="cas\typesystem.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\typesystemdescription.cpp">
+				RelativePath="framework\typesystemdescription.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\u2cpcnvrt.cpp">
+				RelativePath="framework\u2cpcnvrt.cpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\unistrref.cpp">
+				RelativePath="framework\unistrref.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xcasdeserializer.cpp">
+				RelativePath="cas\xcasdeserializer.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xcasdeserializer_handler.cpp">
+				RelativePath="cas\xcasdeserializer_handler.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\xmideserializer.cpp">
+				RelativePath=".\cas\xmideserializer.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\xmideserializer_handler.cpp">
+				RelativePath=".\cas\xmideserializer_handler.cpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\xmiwriter.cpp">
+				RelativePath=".\cas\xmiwriter.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xmlerror_handler.cpp">
+				RelativePath="cas\xmlerror_handler.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xmltypesystemreader.cpp">
+				RelativePath="cas\xmltypesystemreader.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xmltypesystemwriter.cpp">
+				RelativePath="cas\xmltypesystemwriter.cpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\xmlwriter.cpp">
+				RelativePath="cas\xmlwriter.cpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
+			>
 			<File
-				RelativePath="framework\uima\annotator.hpp">
+				RelativePath="framework\uima\annotator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_abase.hpp">
+				RelativePath="framework\uima\annotator_abase.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_aux.hpp">
+				RelativePath="framework\uima\annotator_aux.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_context.hpp">
+				RelativePath="framework\uima\annotator_context.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_generic.inl">
+				RelativePath="framework\uima\annotator_generic.inl"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_mgr.hpp">
+				RelativePath="framework\uima\annotator_mgr.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\annotator_timing.hpp">
+				RelativePath="framework\uima\annotator_timing.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\arrayfs.hpp">
+				RelativePath="cas\uima\arrayfs.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\assertmsg.h">
+				RelativePath="framework\uima\assertmsg.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\capability.hpp">
+				RelativePath="framework\uima\capability.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\cas.hpp">
+				RelativePath="cas\uima\cas.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\casconsumer_generic.inl">
+				RelativePath="framework\uima\casconsumer_generic.inl"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\casdefinition.hpp">
+				RelativePath="framework\uima\casdefinition.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\casexception.hpp">
+				RelativePath="cas\uima\casexception.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\casiterator.hpp">
+				RelativePath="framework\uima\casiterator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\caspool.hpp">
+				RelativePath="framework\uima\caspool.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\caswriter_abase.hpp">
+				RelativePath="framework\uima\caswriter_abase.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\ccsid.hpp">
+				RelativePath="framework\uima\ccsid.hpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\uima\com_ibm_itu_JTafEngine.h">
+				RelativePath="jni\uima\com_ibm_itu_JTafEngine.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\comp_ids.h">
+				RelativePath="framework\uima\comp_ids.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\config_param.hpp">
+				RelativePath="framework\uima\config_param.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\configure.h">
+				RelativePath="framework\uima\configure.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\consoleui.hpp">
+				RelativePath="framework\uima\consoleui.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\cp2ucnvrt.hpp">
+				RelativePath="framework\uima\cp2ucnvrt.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\dirwalk.hpp">
+				RelativePath="framework\uima\dirwalk.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\dllfile.hpp">
+				RelativePath="framework\uima\dllfile.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\dottypesystemwriter.hpp">
+				RelativePath="framework\uima\dottypesystemwriter.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\endian.h">
+				RelativePath="framework\uima\endian.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\engine.hpp">
+				RelativePath="framework\uima\engine.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\engine_state.hpp">
+				RelativePath="framework\uima\engine_state.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\envvar.hpp">
+				RelativePath="framework\uima\envvar.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\envvars.h">
+				RelativePath="framework\uima\envvars.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\err_ids.h">
+				RelativePath="framework\uima\err_ids.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\exceptions.hpp">
+				RelativePath="framework\uima\exceptions.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\featurestructure.hpp">
+				RelativePath=".\cas\uima\featurestructure.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\filename.hpp">
+				RelativePath="framework\uima\filename.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\filter_abase.hpp">
+				RelativePath="framework\uima\filter_abase.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\fsfilterbuilder.hpp">
+				RelativePath="framework\uima\fsfilterbuilder.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\fsindex.hpp">
+				RelativePath="framework\uima\fsindex.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\fsindexrepository.hpp">
+				RelativePath="framework\uima\fsindexrepository.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\fsiterator.hpp">
+				RelativePath="framework\uima\fsiterator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\ftools.hpp">
+				RelativePath="framework\uima\ftools.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\importdescription.hpp">
+				RelativePath="framework\uima\importdescription.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_aggregate_engine.hpp">
+				RelativePath="framework\uima\internal_aggregate_engine.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_capability_container.hpp">
+				RelativePath="framework\uima\internal_capability_container.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_casdeserializer.hpp">
+				RelativePath="cas\uima\internal_casdeserializer.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_casimpl.hpp">
+				RelativePath="cas\uima\internal_casimpl.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_casserializer.hpp">
+				RelativePath="cas\uima\internal_casserializer.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_engine_base.hpp">
+				RelativePath="framework\uima\internal_engine_base.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_fspromoter.hpp">
+				RelativePath="framework\uima\internal_fspromoter.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_fsvalue_accessors.hpp">
+				RelativePath="framework\uima\internal_fsvalue_accessors.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_jedii_engine.hpp">
+				RelativePath="framework\uima\internal_jedii_engine.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\internal_primitive_engine.hpp">
+				RelativePath="framework\uima\internal_primitive_engine.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_serializedcas.hpp">
+				RelativePath="cas\uima\internal_serializedcas.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_tcasimpl.hpp">
+				RelativePath="cas\uima\internal_tcasimpl.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_typeshortcuts.hpp">
+				RelativePath="cas\uima\internal_typeshortcuts.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\internal_xmlconstants.hpp">
+				RelativePath="cas\uima\internal_xmlconstants.hpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\uima\jni.hpp">
+				RelativePath="jni\uima\jni.hpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\uima\jni_string.hpp">
+				RelativePath="jni\uima\jni_string.hpp"
+				>
 			</File>
 			<File
-				RelativePath="jni\uima\jni_utils.hpp">
+				RelativePath="jni\uima\jni_utils.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\language.hpp">
+				RelativePath="framework\uima\language.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\listfs.hpp">
+				RelativePath=".\cas\uima\listfs.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\location.hpp">
+				RelativePath="framework\uima\location.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\log.hpp">
+				RelativePath="framework\uima\log.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_defaultfsiterator.hpp">
+				RelativePath="cas\uima\lowlevel_defaultfsiterator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_fsfilter.hpp">
+				RelativePath="cas\uima\lowlevel_fsfilter.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_fsheap.hpp">
+				RelativePath="cas\uima\lowlevel_fsheap.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_index.hpp">
+				RelativePath="cas\uima\lowlevel_index.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_indexcomparator.hpp">
+				RelativePath="cas\uima\lowlevel_indexcomparator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_indexdefinition.hpp">
+				RelativePath="cas\uima\lowlevel_indexdefinition.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_indexiterator.hpp">
+				RelativePath="cas\uima\lowlevel_indexiterator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_indexrepository.hpp">
+				RelativePath="cas\uima\lowlevel_indexrepository.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_internal_heap.hpp">
+				RelativePath="cas\uima\lowlevel_internal_heap.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_internal_indexes.hpp">
+				RelativePath="cas\uima\lowlevel_internal_indexes.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_internal_indexfactory.hpp">
+				RelativePath="cas\uima\lowlevel_internal_indexfactory.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_typedefs.hpp">
+				RelativePath="cas\uima\lowlevel_typedefs.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\lowlevel_typesystem.hpp">
+				RelativePath="cas\uima\lowlevel_typesystem.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\macros.h">
+				RelativePath="framework\uima\macros.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\msg.h">
+				RelativePath="framework\uima\msg.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\msgstrtab.h">
+				RelativePath="framework\uima\msgstrtab.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\pragmas.hpp">
+				RelativePath="framework\uima\pragmas.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\res_abase.hpp">
+				RelativePath="framework\uima\res_abase.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\res_annotator.hpp">
+				RelativePath="framework\uima\res_annotator.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\resmgr.hpp">
+				RelativePath="framework\uima\resmgr.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\result_specification.hpp">
+				RelativePath="framework\uima\result_specification.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\sofaid.hpp">
+				RelativePath="cas\uima\sofaid.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\sofamapping.hpp">
+				RelativePath="framework\uima\sofamapping.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\sofastream.hpp">
+				RelativePath="cas\uima\sofastream.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\sofastreamhandler.hpp">
+				RelativePath="cas\uima\sofastreamhandler.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\stltools.hpp">
+				RelativePath="framework\uima\stltools.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\strconvert.hpp">
+				RelativePath="framework\uima\strconvert.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\strtools.hpp">
+				RelativePath="framework\uima\strtools.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\taemetadata.hpp">
+				RelativePath="framework\uima\taemetadata.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\taespecifier.hpp">
+				RelativePath="framework\uima\taespecifier.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\taespecifierbuilder.hpp">
+				RelativePath="framework\uima\taespecifierbuilder.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\tcas.hpp">
+				RelativePath="cas\uima\tcas.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\text.h">
+				RelativePath="framework\uima\text.h"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\timedatetools.hpp">
+				RelativePath="framework\uima\timedatetools.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\token_properties.hpp">
+				RelativePath="framework\uima\token_properties.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\trace.hpp">
+				RelativePath="framework\uima\trace.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\type_or_feature.hpp">
+				RelativePath="framework\uima\type_or_feature.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\typenamespace.hpp">
+				RelativePath="framework\uima\typenamespace.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\types.h">
+				RelativePath="framework\uima\types.h"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\typesystem.hpp">
+				RelativePath="cas\uima\typesystem.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\typesystemdescription.hpp">
+				RelativePath="framework\uima\typesystemdescription.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\u2cpcnvrt.hpp">
+				RelativePath="framework\uima\u2cpcnvrt.hpp"
+				>
 			</File>
 			<File
-				RelativePath="framework\uima\unistrref.hpp">
+				RelativePath="framework\uima\unistrref.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xcasdeserializer.hpp">
+				RelativePath="cas\uima\xcasdeserializer.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xcasdeserializer_handler.hpp">
+				RelativePath="cas\uima\xcasdeserializer_handler.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\xmideserializer.hpp">
+				RelativePath=".\cas\uima\xmideserializer.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\xmideserializer_handler.hpp">
+				RelativePath=".\cas\uima\xmideserializer_handler.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\xmishareddata.hpp">
+				RelativePath=".\cas\uima\xmishareddata.hpp"
+				>
 			</File>
 			<File
-				RelativePath=".\cas\uima\xmiwriter.hpp">
+				RelativePath=".\cas\uima\xmiwriter.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xmlerror_handler.hpp">
+				RelativePath="cas\uima\xmlerror_handler.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xmltypesystemreader.hpp">
+				RelativePath="cas\uima\xmltypesystemreader.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xmltypesystemwriter.hpp">
+				RelativePath="cas\uima\xmltypesystemwriter.hpp"
+				>
 			</File>
 			<File
-				RelativePath="cas\uima\xmlwriter.hpp">
+				RelativePath="cas\uima\xmlwriter.hpp"
+				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
+			>
 		</Filter>
 	</Files>
 	<Globals>
