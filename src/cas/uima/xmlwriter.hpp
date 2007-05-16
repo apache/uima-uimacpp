@@ -154,6 +154,7 @@ namespace uima {
     bool isReferenceType(Type const & t) const;
     bool enqueueIndexed(FeatureStructure const &fs, int sofa);
     bool enqueueUnindexed(FeatureStructure const &fs);
+		void writeStringArray(ostream & os, StringArrayFS const & array, char const * tag);
   public:
     XCASWriter(CAS const & crCAS, bool bAddDocBuffer);
     ~XCASWriter();

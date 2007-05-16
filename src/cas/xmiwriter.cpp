@@ -195,7 +195,7 @@ namespace uima {
      Type type = allTypes.at(i);
      lowlevel::TyFSType typecode = uima::internal::FSPromoter::demoteType(type);
      //cout << "Mapping " << type.getName() << endl;
-		 UnicodeStringRef name = type.getName();
+     UnicodeStringRef name = type.getName();
      xmiTypeNames[typecode] = uimaTypeName2XmiElementName(name);
      // this also populats the nsUriToPrefix map
    }
@@ -299,8 +299,8 @@ namespace uima {
 
  void XmiWriter::writeView(ostream & os,int sofaXmiId, vector<lowlevel::TyFS>& members) {
    UnicodeString viewType(UnicodeString("uima.cas.View"));
-	 UnicodeStringRef uref(viewType.getBuffer(), viewType.length());
-	 XmlElementName * elemName = uimaTypeName2XmiElementName(uref);
+   UnicodeStringRef uref(viewType.getBuffer(), viewType.length());
+   XmlElementName * elemName = uimaTypeName2XmiElementName(uref);
 
    stringstream membersString;
    for (size_t i = 0; i < members.size(); i++) {
@@ -318,13 +318,13 @@ namespace uima {
      }
    }
 
-	 //remove leading and trailing blanks
-	 string outstr = membersString.str();
-	 size_t startpos = outstr.find_first_not_of(" ");
-	 size_t endpos = outstr.find_last_not_of(" ");
-	 if (string::npos != startpos && string::npos != endpos) {
-		 outstr = outstr.substr(startpos, endpos-startpos+1);
-	 } 
+   //remove leading and trailing blanks
+   string outstr = membersString.str();
+   size_t startpos = outstr.find_first_not_of(" ");
+   size_t endpos = outstr.find_last_not_of(" ");
+   if (string::npos != startpos && string::npos != endpos) {
+	 outstr = outstr.substr(startpos, endpos-startpos+1);
+   } 
 
    if (sofaXmiId !=0 || outstr.size() > 0) {
      os << "<" << elemName->qualifiedName;
@@ -546,8 +546,10 @@ namespace uima {
       case internal::gs_tyStringArrayType: {
         StringArrayFS arrayfs(fs);
         size_t n = arrayfs.size();
+				UnicodeString ustr;
         for (size_t i=0; i < n;i++) {
-          str << "<" << tag << ">" << arrayfs.get(i) << "</" << tag << ">";
+          normalize( arrayfs.get(i), ustr );
+          str << "<" << tag << ">" << ustr << "</" << tag << ">";
         }		  
         break;
                                            }
@@ -1142,9 +1144,11 @@ void XmiWriter::write(ostream & os) {
                                     }
     case internal::gs_tyNEStringListType:  {
       StringListFS curNode(fs);
+      UnicodeString ustr;
       while (!curNode.isEmpty()) { 
-        string head = curNode.getHead().asUTF8();
-        str << "<" << tag << ">" << head << "</" << tag << ">";
+        ///string head = curNode.getHead().asUTF8();
+        normalize(curNode.getHead(), ustr);
+        str << "<" << tag << ">" << ustr << "</" << tag << ">";
         curNode = curNode.getTail();
         int addr = internal::FSPromoter::demoteFS(curNode);
         if (visited[addr] == addr) {

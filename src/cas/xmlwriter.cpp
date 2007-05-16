@@ -463,6 +463,23 @@ namespace uima {
     }
   }
 
+	void XCASWriter::writeStringArray(ostream & os, StringArrayFS const & array, char const * tag) {
+    size_t i;
+		UnicodeString ustr;
+    if (array.size() > 0) {
+      os << " size=\"" << array.size() << "\">" << endl;
+      for (i=0; i<array.size(); ++i) {
+        os << "  <" << tag << ">";
+				normalize(array.get(i),ustr);
+        os << ustr;
+        os << "</" << tag << ">" << endl;
+      }
+      os << " </" << array.getType().getName() << ">" << endl;
+    } else {
+      os << " size=\"0\"/>" << endl;
+    }
+  }
+
   void XCASWriter::writeFSFlat(ostream & os,
                                FeatureStructure const & fs,
                                vector<int>* indexInfo) {
@@ -493,7 +510,7 @@ namespace uima {
       } else if ( t == iv_floatArrayType ) {
         writeArray( os, FloatArrayFS(fs), "i");
       } else if ( t == iv_stringArrayType ) {
-        writeArray( os, StringArrayFS(fs), "i");
+        writeStringArray( os, StringArrayFS(fs), "i");
       } else if ( t == iv_byteArrayType ) {
         ByteArrayFS array(fs);
         if (array.size() > 0) {
@@ -700,6 +717,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 
