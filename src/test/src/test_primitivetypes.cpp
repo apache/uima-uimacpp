@@ -31,9 +31,9 @@
 #include "uima/internal_casserializer.hpp"
 #include "uima/internal_casdeserializer.hpp"
 #include "uima/taespecifierbuilder.hpp"
-
+#include "xercesc/util/Base64.hpp"
 #include <fstream>
-
+XERCES_CPP_NAMESPACE_USE
 #ifndef NDEBUG
 #define ASSERT_OR_THROWEXCEPTION(x) assert(x)
 #else
@@ -59,9 +59,12 @@ int ints[] = {
 float floats[] = {
                    (float)1.1, (float)2.2, (float)3.3, (float)4.4, (float)5.5
                  };
+
 char chars[] = {
-                 'a','b','c','c','d'
+                 1, 10, 'a','b','c','d','e',8,16,64,128,255
                };
+
+
 int shorts[] = {
                  10,20,30,40,50
                };
@@ -424,6 +427,7 @@ int main(int argc, char * argv[]) /*
       "     <name>intArrayFeature</name>"
       "     <description></description>"
       "     <rangeTypeName>uima.cas.IntegerArray</rangeTypeName>"
+		//	 "     <multipleReferencesAllowed>true</multipleReferencesAllowed>"
       "   </featureDescription>"
       "   <featureDescription>"
       "     <name>floatArrayFeature</name>"
@@ -439,6 +443,7 @@ int main(int argc, char * argv[]) /*
       "     <name>boolArrayFeature</name>"
       "     <description></description>"
       "     <rangeTypeName>uima.cas.BooleanArray</rangeTypeName>"
+		//	 "     <multipleReferencesAllowed>true</multipleReferencesAllowed>"
       "   </featureDescription>"
       "   <featureDescription>"
       "     <name>byteArrayFeature</name>"
@@ -449,11 +454,13 @@ int main(int argc, char * argv[]) /*
       "     <name>shortArrayFeature</name>"
       "     <description></description>"
       "     <rangeTypeName>uima.cas.ShortArray</rangeTypeName>"
+		//	 "     <multipleReferencesAllowed>true</multipleReferencesAllowed>"
       "   </featureDescription>"
       "   <featureDescription>"
       "     <name>longArrayFeature</name>"
       "     <description></description>"
       "     <rangeTypeName>uima.cas.LongArray</rangeTypeName>"
+		//	 "     <multipleReferencesAllowed>true</multipleReferencesAllowed>"
       "   </featureDescription>"
       "   <featureDescription>"
       "     <name>doubleArrayFeature</name>"
@@ -529,8 +536,7 @@ int main(int argc, char * argv[]) /*
     //LOG("deserialize XMI"); 
     XmiDeserializer::deserialize("testprimitivetypes.xmi", *trgCas);
     validateFS(*trgCas);
-    
-   
+        
     /* test blob serialization */
     LOG("UIMATEST_PRIMITIVETYPES test blob serialization");
     trgCas->reset();

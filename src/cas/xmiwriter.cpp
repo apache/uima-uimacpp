@@ -425,6 +425,7 @@ namespace uima {
 
  string XmiWriter::arrayToString(FeatureStructure const & fs, char const * tag) {  
    stringstream str;
+	
    int typecode = internal::FSPromoter::demoteType(fs.getType());
    switch (typecode) {
       case internal::gs_tyIntArrayType: {
@@ -467,13 +468,14 @@ namespace uima {
       case internal::gs_tyByteArrayType: {
         ByteArrayFS arrayfs(fs);
         size_t n = arrayfs.size();
-        for (size_t i=0; i < n;i++) {
-          char out[3];
-          sprintf(out,"%02X",arrayfs.get(i)); 
-          //itoa (arrayfs.get(i),out,16);
-          //printf ("itoahexadecimal: %s\n",out);
+				char * out = new char[3];
+				memset(out,0,3);
+        for (size_t i=0; i < n;i++) {      
+          sprintf(out,"%02X",0xFF & arrayfs.get(i)); 
+          //printf ("itoahexadecimal: %d %d\n",i, arrayfs.get(i));
           str << out[0] << out[1];			  
         }		  
+		
         break;
                                          }
       case internal::gs_tyShortArrayType: {
@@ -678,8 +680,10 @@ namespace uima {
           if (f.isMultipleReferencesAllowed() ) {
             writeFeatureValue(os, fs, f);
           } else {
-            string str = arrayToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
-            os << " " << f.getName() << "=\"" << str << "\" ";  
+						if (fs.getFSValue(f).isValid()) {
+              string str = arrayToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
+              os << " " << f.getName() << "=\"" << str << "\" ";
+						}
           }	
           break;                               
         }
@@ -703,10 +707,12 @@ namespace uima {
             if (f.isMultipleReferencesAllowed() ) {
               writeFeatureValue(os, fs, f);
             } else {
-              string str = listToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
-              if (listFS.isValid() && str.length() > 0) {
-                strcontent << str;					
-              }				  
+							if (fs.getFSValue(f).isValid()) {
+                string str = listToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
+                if (listFS.isValid() && str.length() > 0) {
+                  strcontent << str;					
+                }			
+							}
             }
           }
           break;                                        }
@@ -1229,6 +1235,7 @@ char const *  XmiWriter::XMI_VERSION_VALUE = "2.0";
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 
