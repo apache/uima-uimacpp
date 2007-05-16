@@ -64,7 +64,7 @@ if "%UIMA_INSTALLDIR%"=="" set UIMA_INSTALLDIR=%UIMA_SOURCE%\install
 if "%UIMA_DOCDIR%" == "" set UIMA_DOCDIR=%UIMA_SOURCE%\docs
 if "%UIMA_EXAMPLESDIR%" == "" set UIMA_EXAMPLESDIR=%UIMA_SOURCE%\examples
 if "%UIMA_SCRIPTATORSDIR%" == "" set UIMA_SCRIPTATORSDIR=%UIMA_SOURCE%\scriptators
-if "%UIMA_LICENSEDIR%" == "" set UIMA_LICENSEDIR=%UIMA_SOURCE%\licenses
+REM if "%UIMA_LICENSEDIR%" == "" set UIMA_LICENSEDIR=%UIMA_SOURCE%\licenses
 if "%UIMA_TESTSRCDIR%" == "" set UIMA_TESTSRCDIR=%UIMA_SOURCE%\src\test\src
 
 REM if not exist "%UIMA_INSTALLDIR%"\bin\runAECpp.exe goto uimaInstallPathInvalid
@@ -130,7 +130,7 @@ mkdir %UIMA_DIR%\docs
 mkdir %UIMA_DIR%\include
 mkdir %UIMA_DIR%\examples
 mkdir %UIMA_DIR%\scriptators
-mkdir %UIMA_DIR%\licenses
+REM mkdir %UIMA_DIR%\licenses
 
 echo.
 echo copying from %UIMA_INSTALLDIR%...
@@ -248,12 +248,12 @@ xcopy /Q /Y %UIMA_SOURCE%\README.4sdk %UIMA_DIR%
 ren %UIMA_DIR%\README.4sdk README
 xcopy /Q /Y %UIMA_SOURCE%\DISCLAIMER %UIMA_DIR%
 
-mkdir %UIMA_DIR%\licenses\apr
-xcopy /Q /Y %APR_HOME%\LICENSE* %UIMA_DIR%\licenses\apr
-if not exist %UIMA_DIR%\licenses\icu mkdir %UIMA_DIR%\licenses\icu
-xcopy /Q /Y %ICU_HOME%\LICENSE* %UIMA_DIR%\licenses\icu
-if not exist %UIMA_DIR%\licenses\xerces mkdir %UIMA_DIR%\licenses\xerces
-xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
+REM mkdir %UIMA_DIR%\licenses\apr
+REM xcopy /Q /Y %APR_HOME%\LICENSE* %UIMA_DIR%\licenses\apr
+REM if not exist %UIMA_DIR%\licenses\icu mkdir %UIMA_DIR%\licenses\icu
+REM xcopy /Q /Y %ICU_HOME%\LICENSE* %UIMA_DIR%\licenses\icu
+REM if not exist %UIMA_DIR%\licenses\xerces mkdir %UIMA_DIR%\licenses\xerces
+REM xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
 
 echo cleaning the target tree
 for /R %UIMA_DIR% %%d in (.) do del %%d\*~ 2> NUL
