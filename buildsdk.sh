@@ -44,20 +44,20 @@ copylicenses() {
 	cp $CPL  $UIMACPP_SOURCE/README.4sdk $UIMA_DIR/README
 	cp $CPL  $UIMACPP_SOURCE/DISCLAIMER $UIMA_DIR/
 
-	mkdir "$UIMA_DIR"/licenses/apr
-	if [ -r "$APR_HOME"/LICENSE ]; then
-  	  cp -p "$APR_HOME"/LICENSE* "$UIMA_DIR"/licenses/apr/
-	else
-	  echo "WARNING: LICENSE file for APR must be copied to $UIMA_DIR"/licenses/apr
-	fi
-	mkdir "$UIMA_DIR"/licenses/icu
-	cp -p "$ICU_HOME"/license* "$UIMA_DIR"/licenses/icu/
-	mkdir "$UIMA_DIR"/licenses/xerces
-	if [ -r "$XERCES_HOME"/LICENSE ]; then
-  	  cp -p "$XERCES_HOME"/LICENSE* "$UIMA_DIR"/licenses/xerces/
-	else
-	  echo "WARNING: LICENSE file for XERCES must be copied to $UIMA_DIR"/licenses/xerces
-	fi
+# 	mkdir "$UIMA_DIR"/licenses/apr
+# 	if [ -r "$APR_HOME"/LICENSE ]; then
+#   	  cp -p "$APR_HOME"/LICENSE* "$UIMA_DIR"/licenses/apr/
+# 	else
+# 	  echo "WARNING: LICENSE file for APR must be copied to $UIMA_DIR"/licenses/apr
+# 	fi
+# 	mkdir "$UIMA_DIR"/licenses/icu
+# 	cp -p "$ICU_HOME"/license* "$UIMA_DIR"/licenses/icu/
+# 	mkdir "$UIMA_DIR"/licenses/xerces
+# 	if [ -r "$XERCES_HOME"/LICENSE ]; then
+#   	  cp -p "$XERCES_HOME"/LICENSE* "$UIMA_DIR"/licenses/xerces/
+# 	else
+# 	  echo "WARNING: LICENSE file for XERCES must be copied to $UIMA_DIR"/licenses/xerces
+# 	fi
         return
 }
 
@@ -164,7 +164,7 @@ mkdir "$UIMA_DIR"/docs
 mkdir "$UIMA_DIR"/include
 mkdir "$UIMA_DIR"/include/uima
 mkdir "$UIMA_DIR"/lib
-mkdir "$UIMA_DIR"/licenses
+#mkdir "$UIMA_DIR"/licenses
 
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
