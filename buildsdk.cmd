@@ -96,15 +96,15 @@ if not exist "%XERCES_HOME%"\include (
 	goto error
 )
 
-if not "%MSVCRT_HOME%" == "" goto msvcrt_set
-        set MSVCRT_HOME=C:\Program Files\Microsoft Visual Studio .NET 2003\SDK\v1.1\bin
+if "%MSVCRT_HOME%" == "" (
+        set MSVCRT_HOME=C:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT
         echo MSVCRT_HOME undefined: trying: "%MSVCRT_HOME%"
+)
 
-:msvcrt_set
-if exist "%MSVCRT_HOME%" goto msvcrt_exists
+if not exist "%MSVCRT_HOME%" (
         echo ERROR: MSVCRT_HOME "%MSVCRT_HOME%" is invalid.
         goto error
-:msvcrt_exists
+)
 
 if not exist "%UIMA_SCRIPTATORSDIR%"\uima.i (
 	echo ERROR: UIMA_SCRIPTATORSDIR "%UIMA_SCRIPTATORSDIR%" is invalid.
