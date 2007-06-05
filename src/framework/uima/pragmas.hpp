@@ -56,16 +56,17 @@
 #  pragma warning( disable: 4800 ) // forcing value to bool 'true' or 'false' (performance warning)
 
 // special includes to get line information in memory leak output
-#  if !defined( NDEBUG ) && !defined(UIMA_NO_MAP_ALLOC)
+#if !defined( NDEBUG ) && !defined(UIMA_NO_MAP_ALLOC)
 //       Can't have _CRTDBG_MAP_ALLOC defined as it redefines malloc et al in
 //       crtdbg.h BEFORE they are declared in malloc.h (which APR drags in)
 //       malloc.h should have a matching ifndef _CRTDBG_MAP_ALLOC around the dcls
-#        ifdef CRTDBG_BUG_FIXED
-#   define _CRTDBG_MAP_ALLOC
-#   include <stdlib.h>
-#   include <crtdbg.h>
-#        endif
-#  endif
+//#        ifdef CRTDBG_BUG_FIXED
+// Appears to be fixed in VC++ 8 
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+//#endif
+#endif
 
 #elif defined(__BORLANDC__)
 #pragma warn -inl
@@ -79,4 +80,5 @@
 #endif /* UIMA_PRAGMAS_HPP */
 
 /* <EOF> */
+
 

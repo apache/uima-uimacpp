@@ -377,7 +377,7 @@ int main(int argc, char * argv[]) /*
 {
   LOG("UIMATEST_PRIMITIVETYPES started");
   int iRetVal = 0;
-
+  ////iRetVal = _CrtSetBreakAlloc(486);
   try {
     char const * config =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -561,7 +561,7 @@ int main(int argc, char * argv[]) /*
     //LOG("deserialize data");
     deserializer.deserializeData(serializedCas, *trgCas);
     validateFS(*trgCas);
-
+    delete ts;
     delete cas;
     delete trgCas;
     LOG("UIMATEST_PRIMITIVETYPES finished");
@@ -574,6 +574,8 @@ int main(int argc, char * argv[]) /*
     cerr << "Unexpected exception " << endl;
     iRetVal = 1;
   }
+#else
+  ResourceManager::deleteInstance();
 #endif
   return iRetVal;
 }

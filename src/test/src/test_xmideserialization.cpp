@@ -22,6 +22,15 @@
 /* ----------------------------------------------------------------------- */
 /*       Include dependencies                                              */
 /* ----------------------------------------------------------------------- */
+
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+///#define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
+
+
+
 #include "uima/api.hpp"
 #include "uima/xmiwriter.hpp"
 #include "uima/xmideserializer.hpp"
@@ -31,7 +40,7 @@
 
 #include <fstream>
 
-#ifndef NDEBUG
+#ifdef NDEBUG
 #define ASSERT_OR_THROWEXCEPTION(x) assert(x)
 #else
 #define ASSERT_OR_THROWEXCEPTION(x) if (!(x)) { cerr << __FILE__ << ": Error in line " << __LINE__ << endl; exit(1); }
@@ -249,12 +258,13 @@ void testMultipleSofas(internal::CASDefinition * casDef)  {
     outputStream.open("temp.xmi");
     ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
 
-    XmiWriter writer(*cas,false);
+    XmiWriter writer(*cas,true);
     writer.write(outputStream);
     outputStream.close();
 
     ostringstream str;
-    writer.write(str);
+    XmiWriter writerstr(*cas,true);
+    writerstr.write(str);
     str.flush();
 
     // deserialize into another CAS (repeat twice to check it still works after reset)
@@ -308,11 +318,12 @@ void doTestNoInitialSofa(internal::CASDefinition * casDef) {
 
   //reserialize cas1
   stringstream str1;
-  writer.write(str1);
-
+  XmiWriter writerstr1(*cas1, false);
+  writerstr1.write(str1);
+  
   //reserialize cas2
   stringstream str2;
-  XmiWriter writer2(*cas2,false);
+  XmiWriter writer2(*cas2,true);
   writer2.write(str2);
 
   //compare serialized xmi string
@@ -470,15 +481,18 @@ int main(int argc, char * argv[]) /*
 ---------------------------------- */
 {
   LOG("UIMATEST_XMISERIALIZATION started");
+
   int iRetVal = 0;
 
+//#if !defined(NDEBUG) && defined(_MSC_VER)
+//   iRetVal = _CrtSetBreakAlloc(662909);
+//#endif
   try {
 
     ResourceManager::createInstance("testxmi");
     ofstream outputStream;
     ErrorInfo errorInfo;
 
-	
     TextAnalysisEngineSpecifierBuilder builder;
 	
 	  //setup
@@ -486,7 +500,7 @@ int main(int argc, char * argv[]) /*
     UnicodeString tsfn = ResourceManager::resolveFilename(tsFile, tsFile);
     TypeSystem * ts = Framework::createTypeSystem( ((UnicodeStringRef)tsfn).asUTF8().c_str(),errorInfo);
     ASSERT_OR_THROWEXCEPTION( EXISTS(ts) );
-
+	
 	  UnicodeString tsFile2("ExampleCas/testTypeSystem_withMultiRefs.xml");
     UnicodeString tsfn2 = ResourceManager::resolveFilename(tsFile2, tsFile2);
     TypeSystem * ts2 = Framework::createTypeSystem( ((UnicodeStringRef)tsfn2).asUTF8().c_str(),errorInfo);
@@ -529,6 +543,7 @@ int main(int argc, char * argv[]) /*
 	  testMultipleSofas(casDef);
 	  LOG("UIMACPP_XMITEST testMultipleSofas Finished");
 
+    
 	  //test OOTS Missing Type 1
 	  TypeSystemDescription * baseTSDesc = new TypeSystemDescription();
 	  TypeSystem * baseTS = Framework::createTypeSystem(*baseTSDesc,"base",errorInfo);
@@ -547,6 +562,7 @@ int main(int argc, char * argv[]) /*
     testOotsNewPrimitives(baseCasDef, primitivesCasDef, ((UnicodeStringRef)newpxcasfn).asUTF8().c_str());
      LOG("UIMACPP_XMITEST OOTS new primitives missing type Finished");
 
+
     //test OOTS missing feature
 	  LOG("UIMACPP_XMITEST OOTS new primitives missing feature Start");
 	  UnicodeString newpPartialFile("ExampleCas/newprimitivesPartialTypeSystem.xml");
@@ -559,7 +575,7 @@ int main(int argc, char * argv[]) /*
 	  delete newpPartialts;
 	  delete newpPartialCasDef;
 	  LOG("UIMACPP_XMITEST OOTS new primitives missing features Finished");
-	
+
 	  //test OOTS complex cas missing types
 	  LOG("UIMACPP_XMITEST OOTS Complex CAS Missing Types Start");
 	  testOotsComplexCas(baseCasDef, casDef, "ExampleCas/cas.xml");
@@ -588,7 +604,7 @@ int main(int argc, char * argv[]) /*
  			XmiDeserializer::deserialize(xmlfn, *pCas);
  		} catch (Exception e)  {
  			LOG("Exception thrown correctly: ");
- 			LOG(e.asString());
+ 			//LOG(e.asString());
  			bExceptionThrown =true;
  		}
  	  ASSERT_OR_THROWEXCEPTION(bExceptionThrown); 
@@ -597,16 +613,21 @@ int main(int argc, char * argv[]) /*
 		
     delete partialts;
     delete partialTSCasDef;
-	  delete primitivests;
+    delete primitivests;
 	  delete primitivesCasDef;
-	  delete casDef;
     delete baseTSDesc;
 	  delete baseTS;
 	  delete baseCasDef;
-		
-
+    
+		delete casDef;
+    delete ts;
+		delete ts2;
+    for (int i=0; i < fsDesc.size();i++) {
+      delete fsDesc.at(i);
+    }
+    
     LOG("UIMATEST_XMISERIALIZATION finished");
-
+  
   } catch (Exception & exc) {
     cerr << exc.asString() << endl;
     iRetVal = 1;
@@ -614,7 +635,6 @@ int main(int argc, char * argv[]) /*
     cerr << "Unexpected exception " << endl;
     iRetVal = 1;
   }
-
   return iRetVal;
 }
 

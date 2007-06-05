@@ -84,6 +84,9 @@ namespace uima {
     assert(iv_uconverter != NULL);
   }
 
+  Unicode2CodePageConverter::~Unicode2CodePageConverter( ) {
+     ucnv_close(iv_uconverter) ;
+  }
   size_t Unicode2CodePageConverter::getMaximumSize(const UChar * cpclSource,
       size_t uiSourceLength) {
     size_t                     uiTargetSize;
@@ -138,4 +141,5 @@ namespace uima {
 }
 
 /* <EOF> */
+
 

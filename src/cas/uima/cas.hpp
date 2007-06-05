@@ -229,6 +229,7 @@ namespace uima {
     CAS* iv_initialView;
     bool isbaseCas;
     bool initialSofaCreated;
+    bool isDeletingViews;  //set this flag to true when destroying CAS
     AnnotatorContext *iv_componentInfo;
 
     uima::lowlevel::TyFSType     iv_utDocumentType;
@@ -1493,5 +1494,6 @@ namespace uima {
 }
 
 #endif
+
 
 

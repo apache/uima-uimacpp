@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) /*
 {
   LOG("UIMATEST_SOFATEST started");
   int iRetVal = 0;
-
+  //iRetVal = _CrtSetBreakAlloc(824);
   try {
     char const * config =
       "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -92,7 +92,7 @@ int main(int argc, char * argv[]) /*
     ASSERT_OR_THROWEXCEPTION(es.isValid());
     // Initial View is #1!!!
     ASSERT_OR_THROWEXCEPTION(2 == es.getSofaRef());
-
+    delete id;
     // Set the document text
 //TODO?   es.setLocalSofaData("this beer is good");
     es.setLocalSofaData(UnicodeString("this beer is good"));
@@ -286,7 +286,6 @@ int main(int argc, char * argv[]) /*
     engAnnot = (AnnotationFS)mrIt.get();
     ASSERT_OR_THROWEXCEPTION(0==engAnnot.getCoveredText().compare("this"));
 
-
     // --------------------------------------------------------
     // Test reuse of views with createSofa
     // --------------------------------------------------------
@@ -303,7 +302,7 @@ int main(int argc, char * argv[]) /*
     SofaFS tv = cas->createSofa(*nuid, "text");
 	testView = cas->getView(tv);
     ASSERT_OR_THROWEXCEPTION(0 == testView->getViewName().compare("testView"));
-
+    delete nuid;
 
     // --------------------------------------------------------
     // Test sofa data stream
@@ -454,7 +453,9 @@ int main(int argc, char * argv[]) /*
     }
     delete pStream;
 
+    delete ts;
     delete cas;
+    
     LOG("UIMATEST_SOFATEST finished");
   } catch (Exception & exc) {
     cerr << exc.asString() << endl;
@@ -465,6 +466,8 @@ int main(int argc, char * argv[]) /*
     cerr << "Unexpected exception " << endl;
     iRetVal = 1;
   }
+#else
+  ResourceManager::deleteInstance();
 #endif
   return iRetVal;
 }

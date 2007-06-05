@@ -119,6 +119,9 @@ namespace uima {
       errInfo.setMessage(msg);
       errInfo.setSeverity(ErrorInfo::unrecoverable);
       ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+      delete errorHandler;
+      delete parser;
       throw exc;
     }
     catch (const SAXParseException& e) {
@@ -135,6 +138,46 @@ namespace uima {
       errInfo.setMessage(msg);
       errInfo.setSeverity(ErrorInfo::unrecoverable);
       ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+      delete errorHandler;
+      delete parser; 
+      throw exc;
+    } catch (Exception e) {
+       ErrorInfo errInfo;
+      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
+      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
+      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
+      msg.addParam( e.asString() );
+      msg.addParam( 0 );
+      msg.addParam( 0 );
+      errInfo.setMessage(msg);
+      errInfo.setSeverity(ErrorInfo::unrecoverable);
+      ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+      delete errorHandler;
+      delete parser;
+      throw exc;
+
+    } catch (...) {
+       ErrorInfo errInfo;
+      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
+      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
+      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
+      msg.addParam("Unknown Exception when parsing XMI document." );
+      msg.addParam( 0 );
+      msg.addParam( 0 );
+      errInfo.setMessage(msg);
+      errInfo.setSeverity(ErrorInfo::unrecoverable);
+      ExcIllFormedInputError exc(errInfo);
+      if (contentHandler != NULL) {
+        delete contentHandler;
+      }
+      if (errorHandler !=NULL) {
+        delete errorHandler;
+      }
+      if (parser != NULL) {
+        delete parser;
+      }
       throw exc;
     }
 
@@ -178,6 +221,9 @@ namespace uima {
       errInfo.setMessage(msg);
       errInfo.setSeverity(ErrorInfo::unrecoverable);
       ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+    delete errorHandler;
+    delete parser;
       throw exc;
     }
     catch (const SAXParseException& e) {
@@ -194,8 +240,49 @@ namespace uima {
       errInfo.setMessage(msg);
       errInfo.setSeverity(ErrorInfo::unrecoverable);
       ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+    delete errorHandler;
+    delete parser;
+      throw exc;
+    }  catch (Exception e) {
+       ErrorInfo errInfo;
+      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
+      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
+      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
+      msg.addParam( e.asString() );
+      msg.addParam( 0 );
+      msg.addParam( 0 );
+      errInfo.setMessage(msg);
+      errInfo.setSeverity(ErrorInfo::unrecoverable);
+      ExcIllFormedInputError exc(errInfo);
+      delete contentHandler;
+      delete errorHandler;
+      delete parser;
+      throw exc;
+
+    } catch (...) {
+       ErrorInfo errInfo;
+      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
+      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
+      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
+      msg.addParam("Unknown Exception when parsing XMI document." );
+      msg.addParam( 0 );
+      msg.addParam( 0 );
+      errInfo.setMessage(msg);
+      errInfo.setSeverity(ErrorInfo::unrecoverable);
+      ExcIllFormedInputError exc(errInfo);
+      if (contentHandler != NULL) {
+        delete contentHandler;
+      }
+      if (errorHandler !=NULL) {
+        delete errorHandler;
+      }
+      if (parser != NULL) {
+        delete parser;
+      }
       throw exc;
     }
+
 
     // Delete the parser instance and handlers
     delete contentHandler;
@@ -221,6 +308,7 @@ namespace uima {
     XmiDeserializer::deserialize(fileIS, cas, sharedData);
   }
 }
+
 
 
 

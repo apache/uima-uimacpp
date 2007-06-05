@@ -83,7 +83,10 @@ namespace uima {
 
 
 
-
+  CodePage2UnicodeConverter::~CodePage2UnicodeConverter( )
+  {
+      ucnv_close(iv_uconverter) ;
+  }
 
   size_t CodePage2UnicodeConverter::convertBytes(UChar * pclTarget,
       size_t uiTargetMaxSize,

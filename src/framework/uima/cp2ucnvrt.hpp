@@ -73,6 +73,7 @@ namespace uima {
     /** Create an instance for a converter from CCSID <TT>crclCCSID</TT> to
         CCSID CCSID::EnCCSID_UCS2. */
     CodePage2UnicodeConverter(const char * crConverterName);
+    ~CodePage2UnicodeConverter();
 
     /** TODO: fix
      * implementation of convertBytes is probably wrong.
@@ -131,4 +132,5 @@ namespace uima {
 #endif /* UIMA_CP2UCNVRT_HPP */
 
 /* <EOF> */
+
 

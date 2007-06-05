@@ -63,7 +63,11 @@ namespace uima {
 
   //Destructor
   RemoteSofaDataStream::~RemoteSofaDataStream() {
-
+    if (iv_pHandler != NULL) {
+      iv_pHandler->closeStream();
+      delete iv_pHandler;
+      iv_pHandler = NULL;
+    }
     if (iv_pHandlerDll != NULL) {
       delete iv_pHandlerDll;
       iv_pHandlerDll=NULL;

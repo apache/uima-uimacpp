@@ -68,7 +68,7 @@ class XmlElementName {
 	  string shortName;
 	  string qualifiedName;
 	  XmlElementName(string ns, string sname, string qname) :
-		nsUri(ns), shortName(sname), qualifiedName(qname) {}
+    nsUri(ns), shortName(sname), qualifiedName(qname) {}
   };
 
 /**
@@ -225,6 +225,21 @@ public:
           }
         }
       }
+    }
+
+	map<int,vector<int>*>::iterator viewite;
+	for (viewite = ootsViewMembers.begin(); 
+		viewite != ootsViewMembers.end();viewite++) {
+		if (viewite->second != NULL) {
+			delete viewite->second;
+		}
+    }
+	map<int, OotsElementData*>::iterator featite;
+	for (featite = ootsFeatures.begin(); 
+		featite != ootsFeatures.end();featite++) {
+		if (featite->second != NULL) {
+			delete featite->second;
+		}
     }
   }
 

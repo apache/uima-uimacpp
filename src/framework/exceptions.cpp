@@ -326,8 +326,13 @@ namespace uima {
       }
     }
     //cout << buf << endl;
-    return string(buf);
-
+   string target(buf);
+   delete[] buf ;
+   return target;
+	 //string target;
+	 //target.assign(buf, UIMA_MSG_MAX_STR_LEN);                   // Copy the result to the string
+   //delete buf;
+	 //return target;
   }
 
   ostream &

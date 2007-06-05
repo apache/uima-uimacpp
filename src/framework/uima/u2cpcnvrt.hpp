@@ -71,6 +71,7 @@ namespace uima {
     /** @name Constructors */
     /*@{*/
     Unicode2CodePageConverter(const char * converterName);
+    ~Unicode2CodePageConverter();
     /*@}*/
     /** @name Miscellaneous */
     /*@{*/
@@ -113,4 +114,5 @@ namespace uima {
 #endif /* UIMA_U2CPCNVRT_HPP */
 
 /* <EOF> */
+
 

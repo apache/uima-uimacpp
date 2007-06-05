@@ -185,6 +185,13 @@ namespace uima {
 			//readFS(typeName, attrs);
 			readFS(unsuri, ulocalname, qualifiedName, attrs);
 
+			map<UnicodeString, vector<UnicodeString>*>::iterator mite;
+            for (mite=multiValuedFeatures.begin();
+				mite != multiValuedFeatures.end(); mite++) {
+					if (mite->second != NULL) {
+						delete mite->second;
+					}
+			}
 			multiValuedFeatures.clear();
 			iv_state = FEAT_STATE;
 			break;	   
@@ -570,7 +577,7 @@ namespace uima {
 
 		int id = -1;
 		//       int sofaRef = -1; // 0 ==> baseCas indexRepository
-		vector<int>* sofaRef = new vector<int>;
+		////vector<int>* sofaRef = new vector<int>;
 		UnicodeString attrName;
 		UnicodeString attrValue;
 		bool nameMapping = false;
@@ -1397,5 +1404,6 @@ void XmiDeserializerHandler::handleFeature(lowlevel::TyFS addr,
 
 
 } // namespace uima
+
 
 

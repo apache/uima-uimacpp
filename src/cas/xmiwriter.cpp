@@ -475,7 +475,7 @@ namespace uima {
           //printf ("itoahexadecimal: %d %d\n",i, arrayfs.get(i));
           str << out[0] << out[1];			  
         }		  
-		
+		    delete out;
         break;
                                          }
       case internal::gs_tyShortArrayType: {
@@ -1239,6 +1239,7 @@ char const *  XmiWriter::XMI_VERSION_VALUE = "2.0";
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

@@ -286,41 +286,55 @@ namespace uima {
     isbaseCas = true;
     iv_baseCas = this;
     bOwnsCASDefinition=ownsCasDef;
+    isDeletingViews = false;
   }
 
   CAS::~CAS() {
-    if (iv_indexRepository != NULL) {
+    
+    //always delete index repository
+    if (this->iv_indexRepository != NULL) {
       delete iv_indexRepository;
       iv_indexRepository = NULL;
+		}
+    if (this->iv_cpDocument != NULL) {
+      delete this->iv_cpDocument;
+      this->iv_cpDocument = NULL;
     }
-
-    if (isbaseCas) {
-      if (iv_heap != NULL) {
-        delete iv_heap;
-        iv_heap = NULL;
+    //initial call to delete object
+    if (this->isbaseCas) {
+      this->iv_baseCas->isDeletingViews = true;
+      
+      if (this->iv_baseCas->iv_heap != NULL) {
+        delete this->iv_baseCas->iv_heap;
+        this->iv_baseCas->iv_heap = NULL;
       }
-      if (iv_filterBuilder != NULL) {
-        delete iv_filterBuilder;
-        iv_filterBuilder = NULL;
+      if (iv_baseCas->iv_filterBuilder != NULL) {
+        delete iv_baseCas->iv_filterBuilder;
+        iv_baseCas->iv_filterBuilder = NULL;
+      }
+      if (this->iv_baseCas->bOwnsCASDefinition ) {
+		    if (this->iv_baseCas->iv_casDefinition != NULL) { 
+               delete this->iv_baseCas->iv_casDefinition;
+			    this->iv_baseCas->iv_casDefinition = NULL;
+		    }
       }
       map<int, CAS*>::iterator mIter;
-      // make a local copy of the map
-      map<int, CAS*> mapCopy(iv_sofa2tcasMap);
-      // now delete all CAS Views using mapCopy, as the original map will be modified during delete
-      for ( mIter = mapCopy.begin( ); mIter != mapCopy.end( ); mIter++ ) {
+      map<int,CAS*> mapcopy(this->iv_baseCas->iv_sofa2tcasMap);
+      for ( mIter = mapcopy.begin( );
+            mIter != mapcopy.end( ); mIter++ ) {
         CAS* tcas = mIter->second;
-        delete tcas;
-      }
-      iv_sofa2tcasMap.clear( );
-      iv_sofa2indexMap.clear();
+        if ( tcas != NULL) {
+          delete tcas;
+        }
+      //this->iv_baseCas->iv_sofa2tcasMap.clear( );
+      //this->iv_baseCas->iv_sofa2indexMap.clear();
+      } 
     } else {
-      // is a view ... delete from map
-      int sofaNum = getSofaNum();
-      iv_baseCas->dropView(sofaNum);
-    }
-
-    if (bOwnsCASDefinition ) {
-      delete iv_casDefinition;
+      if (!this->iv_baseCas->isDeletingViews) {
+        dropView(this->getSofaNum());
+        this->iv_baseCas->isDeletingViews=true;
+        delete this->iv_baseCas;
+      }
     }
   }
 
@@ -573,16 +587,21 @@ namespace uima {
 
   CAS* CAS::getView(const icu::UnicodeString & localViewName) {
     SofaID* sid;
+    bool deleteSofaID = false;
     if (0 != iv_baseCas->iv_componentInfo) {
       sid = const_cast<SofaID*> (&iv_baseCas->iv_componentInfo->mapToSofaID(localViewName));
     } else {
       sid = new SofaID();
+      deleteSofaID = true;
       sid->setSofaId(localViewName);
     }
 
     // if this resolves to the Initial View, return view(1)...
     // ... as the Sofa for this view may not exist yet
     if (0==sid->getSofaId().compare(CAS::NAME_DEFAULT_SOFA)) {
+      if (deleteSofaID) {
+        delete sid;
+      }
       return getInitialView();
     }
 
@@ -597,17 +616,22 @@ namespace uima {
                          ErrorInfo::unrecoverable
                         );
     }
+    if (deleteSofaID) {
+      delete sid;
+    }
     return getView(as);
   }
 
   CAS* CAS::createView(icu::UnicodeString const & localViewName) {
     // map the input name
     SofaID* sid;
+    bool deleteSofaID = false;
     if (0 != iv_baseCas->iv_componentInfo) {
       sid = const_cast<SofaID*> (&iv_baseCas->iv_componentInfo->mapToSofaID(localViewName));
     } else {
       sid = new SofaID();
       sid->setSofaId(localViewName);
+      deleteSofaID = true;
     }
     // test if this is the reserved name
     if ( 0 == sid->getSofaId().compare(UnicodeString(CAS::NAME_DEFAULT_SOFA)) ) {
@@ -622,6 +646,9 @@ namespace uima {
     }
 
     SofaFS newSofa = createSofa(sid->getSofaId(), UnicodeStringRef());
+    if (deleteSofaID) {
+      delete sid;
+    }
     return getView(newSofa);
   }
 
@@ -860,9 +887,9 @@ namespace uima {
 
   // Drop View from sofaMap
   void CAS::dropView(int sofaNum) {
-    map<int, CAS*>::iterator cit = iv_sofa2tcasMap.find(sofaNum);
-    if (cit != iv_sofa2tcasMap.end()) {
-      iv_sofa2tcasMap.erase(cit);
+    map<int, CAS*>::iterator cit = iv_baseCas->iv_sofa2tcasMap.find(sofaNum);
+    if (cit != iv_baseCas->iv_sofa2tcasMap.end()) {
+      iv_baseCas->iv_sofa2tcasMap.erase(cit);
     }
   }
 
@@ -1703,6 +1730,7 @@ namespace uima {
 }
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

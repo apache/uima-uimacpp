@@ -45,6 +45,17 @@
 #include <locale>
 #endif
 
+#if defined(_MSC_VER)
+int rc = _CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+// Send all reports to STDOUT
+int rc1 =   _CrtSetReportMode( _CRT_WARN, _CRTDBG_MODE_FILE );
+_HFILE h1 =  _CrtSetReportFile( _CRT_WARN, _CRTDBG_FILE_STDOUT );
+int rc3 =   _CrtSetReportMode( _CRT_ERROR, _CRTDBG_MODE_FILE );
+_HFILE h2 = _CrtSetReportFile( _CRT_ERROR, _CRTDBG_FILE_STDOUT );
+int rc5 =   _CrtSetReportMode( _CRT_ASSERT, _CRTDBG_MODE_FILE );
+_HFILE h3 = _CrtSetReportFile( _CRT_ASSERT, _CRTDBG_FILE_STDOUT );
+#endif
+
 #include <jni.h>
 #include "uima/envvar.hpp"
 #include "uima/trace.hpp"
@@ -111,6 +122,7 @@ namespace uima {
   /* ----------------------------------------------------------------------- */
   /*       Globals                                                           */
   /* ----------------------------------------------------------------------- */
+  
 
   ResourceManager * ResourceManager::cv_pclSingletonInstance = 0;
   TyProcedure               iv_traceProc;
@@ -146,6 +158,7 @@ namespace uima {
       iv_useJavaLogging(false)
       /* ----------------------------------------------------------------------- */
   {
+    
     string                    str;
     const TCHAR *              cpszLogFile = 0;
 
@@ -711,7 +724,9 @@ namespace uima {
 
       // Terminate apr (undo matching apr_initialize)
       apr_terminate();
-
+#if !defined( NDEBUG ) && defined(_MSC_VER) && defined(_CRTDBG_MAP_ALLOC)   
+      int iRetVal = _CrtDumpMemoryLeaks();
+#endif
       UIMA_TPRINT("ResMgr instance deleted");
     }
     assert( cv_pclSingletonInstance == 0 );
@@ -984,5 +999,6 @@ namespace uima {
 }
 
 /* <EOF> */
+
 
 

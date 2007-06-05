@@ -26,6 +26,7 @@
 #include "uima/xmlwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
 #include "uima/casdefinition.hpp"
+#include "uima/xmiwriter.hpp"
 
 #include <fstream>
 
@@ -49,7 +50,7 @@ int main(int argc, char * argv[]) /*
 {
   LOG("UIMATEST_XCASSERIALIZATION started");
   int iRetVal = 0;
-
+  //iRetVal = _CrtSetBreakAlloc(824);
   try {
 
     ResourceManager::createInstance("test");
@@ -124,7 +125,7 @@ int main(int argc, char * argv[]) /*
     // Deserialize XCAS
     cas->reset();
     XCASDeserializer::deserialize("temp.xcas", *cas);
-
+    
     //TODO compare!
 
 
@@ -168,7 +169,7 @@ int main(int argc, char * argv[]) /*
 
 
 
-
+    delete  casDef;
     delete cas;
     delete v1cas;
     LOG("UIMATEST_XCASSERIALIZATION finished");
@@ -180,7 +181,9 @@ int main(int argc, char * argv[]) /*
     cerr << "Unexpected exception " << endl;
     iRetVal = 1;
   }
-
+#ifndef NDEBUG
+  ResourceManager::deleteInstance();
+#endif 
   return iRetVal;
 }
 
