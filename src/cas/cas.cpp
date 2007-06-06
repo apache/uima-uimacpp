@@ -204,6 +204,7 @@ namespace uima {
     iv_sofaCount = 0;
     isbaseCas = true;
     iv_baseCas = this;
+    isDeletingViews = false;
     bOwnsCASDefinition=false;
   }
 
@@ -243,6 +244,7 @@ namespace uima {
     isbaseCas = false;
     iv_baseCas = inCas;
     bOwnsCASDefinition = false;
+    isDeletingViews = false;
   }
 
   CAS::CAS(uima::internal::CASDefinition & casDefs,

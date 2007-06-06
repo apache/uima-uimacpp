@@ -387,6 +387,7 @@ namespace uima {
     UIMA_ANNOTATOR_TIMING(iv_clTimerDeInit.stop());
     clTrace.dump(_TEXT("rc"), utRetVal);
     /* at this point, the user data may not be used any more */
+	delete iv_hUserData;
     iv_hUserData = 0;
     return(utRetVal);
   }

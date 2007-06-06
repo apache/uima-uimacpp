@@ -724,9 +724,9 @@ namespace uima {
 
       // Terminate apr (undo matching apr_initialize)
       apr_terminate();
-#if !defined( NDEBUG ) && defined(_MSC_VER) && defined(_CRTDBG_MAP_ALLOC)   
-      int iRetVal = _CrtDumpMemoryLeaks();
-#endif
+//#if !defined( NDEBUG ) && defined(_MSC_VER) && defined(_CRTDBG_MAP_ALLOC)   
+//      int iRetVal = _CrtDumpMemoryLeaks();
+//#endif
       UIMA_TPRINT("ResMgr instance deleted");
     }
     assert( cv_pclSingletonInstance == 0 );
