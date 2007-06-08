@@ -26,7 +26,7 @@ if "%UIMA_HOME%" == "" (
 )
 
 if "%~1" == "debug" (
-  nmake -f fvtTestfile.debug
+  nmake -f fvtTestfile.debug %2
 )
 if "%~2" == "debug" (
   nmake -f fvtTestfile.debug %1

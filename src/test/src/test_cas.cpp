@@ -1584,6 +1584,10 @@ void testOOFilterBuilder() {
   //////////////////////////////////////////
   LOG("Checking type filter");
 
+  //TODO: the filter passed to ix.filteredIterator is wrapped in another object,
+  // added to ixit, and never deleted.
+  // LEAK!!!
+
   FSFilter * typeFilter = builder.createTypeFilter(tokenType, false);
   ixit = ix.filteredIterator(typeFilter);
   i=0;
@@ -1695,6 +1699,7 @@ void testOOFilterBuilder() {
   ASSERT_OR_THROWEXCEPTION(i == (tokenNum - 1));
   andFilter2->deInit();
   delete andFilter2;
+  delete pCas;
 
   LOG("... string filter checked");
 
