@@ -123,7 +123,7 @@ namespace uima {
       throw exc;
     }
 
-    LocalFileInputSource fileIS((XMLCh const *) arBuffer.get() );
+    LocalFileInputSource fileIS((XMLCh const *) arBuffer.get() ); 
     parseAnalysisEngineDescription(taeSpec, fileIS);
   }
 
@@ -140,6 +140,7 @@ namespace uima {
     }
     parser.setExternalSchemaLocation( ResourceManager::getInstance().getSchemaInfo());
     bool bHasOwnErrorHandler = false;
+    
     if (iv_pXMLErrorHandler == NULL) {
       iv_pXMLErrorHandler = new XMLErrorHandler();
       assert( EXISTS(iv_pXMLErrorHandler) );
@@ -147,27 +148,17 @@ namespace uima {
     }
 
     parser.setErrorHandler(iv_pXMLErrorHandler);
+    
     try {
       parser.parse( crInputSource );
-    } catch (XMLException const & e){
+    } catch (Exception e){
       if (bHasOwnErrorHandler) {
         delete iv_pXMLErrorHandler;
         iv_pXMLErrorHandler = NULL; 
       }
-      ErrorInfo errInfo;
-      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
-      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
-      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
-      msg.addParam( crInputSource.getSystemId() );
-      msg.addParam( 0 );
-      msg.addParam( 0 );
-      msg.addParam( (UChar const *) e.getMessage());
-      errInfo.setMessage(msg);
-      errInfo.setSeverity(ErrorInfo::unrecoverable);
-      ExcIllFormedInputError exc(errInfo);
-      throw exc;
+      throw(e);      
     }
-
+    
     DOMDocument* doc = parser.getDocument();
     assert(EXISTS(doc));
 
@@ -201,23 +192,12 @@ namespace uima {
     parser.setErrorHandler(iv_pXMLErrorHandler);
     try {
       parser.parse( crInputSource );
-    } catch (XMLException const & e){
+    } catch (Exception const & e){
       if (bHasOwnErrorHandler) {
         delete iv_pXMLErrorHandler;
         iv_pXMLErrorHandler = NULL; 
       }
-      ErrorInfo errInfo;
-      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
-      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
-      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
-      msg.addParam( crInputSource.getSystemId() );
-      msg.addParam( 0 );
-      msg.addParam( 0 );
-      msg.addParam( (UChar const *) e.getMessage());
-      errInfo.setMessage(msg);
-      errInfo.setSeverity(ErrorInfo::unrecoverable);
-      ExcIllFormedInputError exc(errInfo);
-      throw exc;
+      throw e;
     }
 
 
@@ -257,23 +237,12 @@ namespace uima {
     parser.setErrorHandler(iv_pXMLErrorHandler);
     try {
     parser.parse( crInputSource );
-    } catch (XMLException const & e){
+    } catch (Exception const & e){
       if (bHasOwnErrorHandler) {
         delete iv_pXMLErrorHandler;
         iv_pXMLErrorHandler = NULL; 
       }
-      ErrorInfo errInfo;
-      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
-      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
-      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
-      msg.addParam( crInputSource.getSystemId() );
-      msg.addParam( 0 );
-      msg.addParam( 0 );
-      msg.addParam( (UChar const *) e.getMessage());
-      errInfo.setMessage(msg);
-      errInfo.setSeverity(ErrorInfo::unrecoverable);
-      ExcIllFormedInputError exc(errInfo);
-      throw exc;
+      throw e;
     }
 
     DOMDocument* doc = parser.getDocument();
@@ -308,23 +277,12 @@ namespace uima {
     parser.setErrorHandler(iv_pXMLErrorHandler);
     try {
       parser.parse( crInputSource );
-    } catch (XMLException const & e){
+    } catch (Exception const & e){
       if (bHasOwnErrorHandler) {
         delete iv_pXMLErrorHandler;
         iv_pXMLErrorHandler = NULL; 
       }
-      ErrorInfo errInfo;
-      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
-      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
-      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
-      msg.addParam( crInputSource.getSystemId() );
-      msg.addParam( 0 );
-      msg.addParam( 0 );
-      msg.addParam( (UChar const *) e.getMessage());
-      errInfo.setMessage(msg);
-      errInfo.setSeverity(ErrorInfo::unrecoverable);
-      ExcIllFormedInputError exc(errInfo);
-      throw exc;
+      throw e;
     }
 
     DOMDocument* doc = parser.getDocument();
@@ -361,23 +319,12 @@ namespace uima {
     parser.setErrorHandler(iv_pXMLErrorHandler);
     try {
     parser.parse( crInputSource );
-    } catch (XMLException const & e){
+    } catch (Exception const & e){
       if (bHasOwnErrorHandler) {
         delete iv_pXMLErrorHandler;
         iv_pXMLErrorHandler = NULL; 
       }
-      ErrorInfo errInfo;
-      errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
-      ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
-      assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
-      msg.addParam( crInputSource.getSystemId());
-      msg.addParam( 0 );
-      msg.addParam( 0 );
-      msg.addParam( (UChar const *) e.getMessage());
-      errInfo.setMessage(msg);
-      errInfo.setSeverity(ErrorInfo::unrecoverable);
-      ExcIllFormedInputError exc(errInfo);
-      throw exc;
+      throw e;
     }
 
     DOMDocument* doc = parser.getDocument();
@@ -1908,7 +1855,15 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
     }
 
     parser.setErrorHandler(iv_pXMLErrorHandler);
-    parser.parse( fileIS );
+    try {
+      parser.parse( fileIS );
+    } catch (Exception e) {
+      if (bHasOwnErrorHandler) {
+        delete iv_pXMLErrorHandler;
+        iv_pXMLErrorHandler=NULL;
+      }
+      throw  e;
+    }
     DOMDocument* doc = parser.getDocument();
     // get top node
     DOMElement * descElem = doc->getDocumentElement();
@@ -1981,8 +1936,15 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
       bHasOwnErrorHandler = true;
     }
     parser.setErrorHandler(iv_pXMLErrorHandler);
-
-    parser.parse( fileIS );
+    try {
+      parser.parse( fileIS );
+    } catch (Exception e) {
+      if (bHasOwnErrorHandler) {
+        delete iv_pXMLErrorHandler;
+        iv_pXMLErrorHandler = NULL;
+      }
+      throw e;
+    }
     DOMDocument* doc = parser.getDocument();
     // get top node
     DOMElement * descElem = doc->getDocumentElement();
