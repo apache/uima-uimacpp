@@ -34,7 +34,12 @@ When the Perltator is initialized, e.g. at CPE initialization, the C++ code crea
 
 <h2>Prerequisites</h2>
 <p>The Perltator uses SWIG (http://www.swig.org/) to implement the PERL library interface to UIMA. SWIG version 1.3.29 or later is required.</p>
-<p>The UIMA C++ Enablement layer is required.
+<p>The UIMA C++ Enablement layer is required.</p>
+<p>Also necessary is the Perl development package. On some Unix platforms the dev kit is not included with the standard interpretor package. A Unix command line test for the dev kit is
+  <ul>
+    <code>perl -MExtUtils::Embed -e ccopts</code>
+  </ul>
+which returns the gcc options necessary to link with the interpretor.
 </p>
 
 <h2>Perltator Distribution</h2>
