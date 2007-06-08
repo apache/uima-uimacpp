@@ -353,7 +353,7 @@ void testSerializeData(util::ConsoleUI * pConsole ) {
   delete tcas;
   delete newTCAS;
   delete pEngine;
-
+  delete blob;
 }
 
 /* ----------------------------------------------------------------------- */
@@ -366,7 +366,9 @@ int main(int argc, char * argv[]) /*
   /* create console */
   util::ConsoleUI * pConsole = new util::ConsoleUI(argc, argv, MAIN_TITLE, "\n");
   assert(EXISTS(pConsole));
-
+  #if !defined(NDEBUG) && defined(_MSC_VER)
+   //int iRetVal = _CrtSetBreakAlloc(124613);
+  #endif
   /* create a UIMA resource */
   try {
     ResourceManager::createInstance(MAIN_TITLE);
@@ -381,11 +383,12 @@ int main(int argc, char * argv[]) /*
     pConsole->error(rclException.what());
     return 1;
   }
-
+  delete pConsole;
   return(0);
 
 }
 
 /* <EOF> */
+
 
 

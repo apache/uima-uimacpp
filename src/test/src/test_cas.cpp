@@ -181,7 +181,7 @@ namespace uima {
           : CASDefinition(NULL) {}
 
 
-      ~TTDefinition() {}
+      ~TTDefinition()   { }
 
       void commitTypeSystem() {
         CASDefinition::commitTypeSystem();
@@ -196,9 +196,9 @@ namespace uima {
   }
 }
 
-uima::internal::CASImpl & getCASImpl(uima::internal::CASDefinition & casDef) {
+uima::internal::CASImpl * getCASImpl(uima::internal::CASDefinition & casDef) {
   ErrorInfo errorInfo;
-  return * (uima::internal::CASImpl*) Framework::createCAS(casDef, errorInfo);
+  return (uima::internal::CASImpl*) Framework::createCAS(casDef, errorInfo);
 }
 
 
@@ -907,7 +907,8 @@ void testLowLevelIndex() {
   LOG("Lemma number: " << LEMMA_NUM);
 
 //      uima::internal::TCASImpl tcasimpl(ttdef, 5000, 5000, 5000);
-  uima::internal::CASImpl & tcasimpl = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcasimpl = *pCas;
 
   uima::lowlevel::FSHeap & heap = tcasimpl.getHeap();
   uima::lowlevel::IndexRepository & ixStore = tcasimpl.getIndexRepository();
@@ -1087,7 +1088,7 @@ void testLowLevelIndex() {
     it->moveToNext();
     ++i;
   }
-
+  delete pCas;
   LOG("testLowlevelIndex finished");
 
 }
@@ -1109,13 +1110,14 @@ void testEmptyStrings() {
   ttdef.commit();
 
 //      uima::internal::TCASImpl tcas(ttdef, 300, 300, 300);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
 
   uima::lowlevel::FSHeap& heap = tcas.getHeap();
 
   lowlevel::TyFS fs = heap.createFS(t);
   UnicodeStringRef uref = heap.getStringValue(fs, f);
-
+  delete pCas;
   ASSERT_OR_THROWEXCEPTION( uref.getBuffer() == NULL );
   LOG("testEmptyStrings() finished");
 }
@@ -1141,16 +1143,18 @@ void testFloatFeatures() {
 
 //     ErrorInfo errorInfo;
 //     uima::internal::CASImpl & tcas = *(uima::internal::CASImpl*) Framework::createCAS(ttdef, errorInfo);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
 
   lowlevel::FSHeap& heap = tcas.getHeap();
 
   lowlevel::TyFS fs = heap.createFS(t);
   float x = 0.4237f;
   heap.setFloatValue(fs, f, x);
-
+  
   float y = heap.getFloatValue(fs, f);
   ASSERT_OR_THROWEXCEPTION(x == y);
+  delete pCas;
   LOG("testFloatFeatures finished");
 }
 
@@ -1180,7 +1184,8 @@ void testNestedStructures() {
   ttdef.commit();
 
 //      uima::internal::TCASImpl tcas(ttdef, 400, 400, 400);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
 
 //#ifndef NDEBUG
 //   ts.print(cout);
@@ -1215,7 +1220,7 @@ void testNestedStructures() {
   ASSERT_OR_THROWEXCEPTION( heap.getFSValue(fs_t2, f2) == fs_t4 );
   ASSERT_OR_THROWEXCEPTION( heap.getFSValue(fs_t3, f3) == fs_t5 );
 
-
+  delete pCas;
   LOG("testNestedStructures finished");
 }
 
@@ -1343,7 +1348,8 @@ void testOOExceptions() {
 //   tcas.createPredefinedTTIndexes();
 
 //      uima::internal::TCASImpl tcas(ttdef, 50000, 50000, 50000);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
 
 
   // check invalid fs
@@ -1479,7 +1485,7 @@ void testOOExceptions() {
     LOG("Exception thrown correctly: " << exc.asString());
     bExceptionThrown = true;
   }
-
+  delete pCas;
   LOG("testOOExceptions() finished");
 }
 
@@ -1492,7 +1498,7 @@ void testOOFilterBuilder() {
 
   TTDefinition ttdef;
   ttdef.init();
-
+  
 
 
   TypeSystem const & typeSystem  = ttdef.getTypeSystem();
@@ -1522,7 +1528,8 @@ void testOOFilterBuilder() {
 
   ttdef.commit();
 //      uima::internal::TCASImpl tcas(ttdef, 4000, 4000, 4000);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
 
   uima::FSIndexRepository & indexRep = tcas.getIndexRepository();
 
@@ -2785,7 +2792,7 @@ void testFullyQualifiedFeatureNames() {
   ASSERT_OR_THROWEXCEPTION( beginPosFeature5.isValid() );
   ASSERT_OR_THROWEXCEPTION( beginPosFeature5 == beginPosFeature );
   */
-
+ 
   LOG("testFullyQualifiedFeatureNames() finished");
 }
 /************************************************************************************/
@@ -2824,7 +2831,8 @@ void testTypeNameSpaces() {
   ttdef.commit();
 
 //      uima::internal::TCASImpl cas(ttdef, 1000, 1000, 1000);
-  uima::internal::CASImpl & cas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & cas = *pCas;
   TypeSystem const & typeSys = cas.getTypeSystem();
 
   TypeNameSpace n1(typeSys, "n1");
@@ -2878,7 +2886,7 @@ void testTypeNameSpaces() {
   ASSERT_OR_THROWEXCEPTION( ! noConflict );
   ASSERT_OR_THROWEXCEPTION( ! t.isValid() );
 
-
+  delete pCas;
   LOG("testTypeNameSpaces() finished");
 }
 /************************************************************************************/
@@ -3016,7 +3024,8 @@ void testXMLTypeSystemReader() {
   ttdef.commit();
 
 //      uima::internal::TCASImpl tcas(ttdef, 5000, 5000, 5000);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
   uima::TypeSystem const & crTypeSystem = tcas.getTypeSystem();
 
   uima::Type top = crTypeSystem.getTopType();
@@ -3054,7 +3063,7 @@ void testXMLTypeSystemReader() {
 #endif
 
   XMLPlatformUtils::Terminate();
-
+  delete pCas;
   LOG("testXMLTypeSystemReader() finished");
 }
 
@@ -3088,7 +3097,8 @@ void testStringSubypes() {
   ASSERT_OR_THROWEXCEPTION( ts.getTypeByName("t2") == t2 );
 
 //      uima::internal::TCASImpl tcas(ttdef, 5000, 5000, 5000);
-  uima::internal::CASImpl & tcas = getCASImpl(ttdef);
+   uima::internal::CASImpl * pCas = getCASImpl(ttdef);
+  uima::internal::CASImpl & tcas = *pCas;
   // lowlevel API
   lowlevel::FSHeap & heap = tcas.getHeap();
 
@@ -3121,7 +3131,7 @@ void testStringSubypes() {
   }
   ASSERT_OR_THROWEXCEPTION( bExcCaught );
 
-
+  delete pCas;
   LOG("testStringSubypes() finished");
 }
 
@@ -3210,6 +3220,11 @@ void testClone3() {
 int main() {
   LOG("*********************************");
   LOG("   UIMA5 regression test");
+  LOG(" Please note that when running in debug");
+  LOG(" mode the test routine testOOFilterBuilder()");
+  LOG(" will report memory leaks because the TTDefinition");
+  LOG(" does not properly clean up memory allocations.");
+
   LOG("*********************************");
   LOG("Go...");
 
@@ -3227,16 +3242,16 @@ int main() {
     testNestedStructures();
 
 
-
+  
     testStringSubypes();
     testFilters();
     testPermanentStructures();
     testIteratorSetToPosition();
-
+   
     testOOIndex();
     testOOExceptions();
 
-    testOOFilterBuilder();
+    testOOFilterBuilder();  //TTDefinition leak
     testOOArrayFS();
     testOOStringArrayFS();
     testClone();
@@ -3254,7 +3269,7 @@ int main() {
     testTypeNameSpaces();
 
     testXMLTypeSystemReader();
-
+    
   } catch (Exception & exc) {
     LOG("UIMA exception: " << endl << exc.asString());
     bSuccess = false;
@@ -3290,4 +3305,5 @@ int main() {
   LOG("*********************************");
   return 0;
 }
+
 

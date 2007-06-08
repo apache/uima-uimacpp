@@ -313,11 +313,11 @@ namespace uima {
       //  Warning: this could cause a memory leak if the createTAE() method coudl not create
       //           the actual engine object.     suhre 02/11/03
       apTAESpecifier.release();
-
       AnalysisEngine * pResult = createAnalysisEngine(* apANC.release(), true,
                                      true,
                                      * apCASDef.release(), true,
                                      rErrorInfo);
+           
       return pResult;
     } catch (Exception & rExc) {
       rErrorInfo = rExc.getErrorInfo();
@@ -380,7 +380,7 @@ namespace uima {
       // release auto_ptrs here because the createTAE transfers ownership to the engine
       //  Warning: this could cause a memory leak if the createTAE() method coudl not create (construct)
       //           the actual engine object.     suhre 02/11/03
-      AnalysisEngine * pResult = createAnalysisEngine(*apANC.release(), true,
+       AnalysisEngine * pResult = createAnalysisEngine(*apANC.release(), true,
                                      false,
                                      *apCASDef.release(), true,
                                      rErrorInfo);
@@ -602,6 +602,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

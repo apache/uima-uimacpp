@@ -605,6 +605,8 @@ void testSubIterators(util::ConsoleUI * pConsole) {
   checkSubIterators(uima::TT::TYPE_NAME_SENTENCE_ANNOTATION, uima::TT::TYPE_NAME_TOKEN_ANNOTATION, enUnambiguous, *tcas, pConsole );
   checkSubIterators(uima::CAS::TYPE_NAME_ANNOTATION, uima::TT::TYPE_NAME_TOKEN_ANNOTATION, enUnambiguous, *tcas, pConsole );
   checkSubIterators(uima::TT::TYPE_NAME_LEXICAL_ANNOTATION, uima::TT::TYPE_NAME_LEXICAL_ANNOTATION, enUnambiguous, *tcas, pConsole );
+  delete tcas;
+  delete pEngine;
   pConsole->info("Sub Iterators test finished.");
 }
 /**
@@ -663,6 +665,8 @@ void testIterators(util::ConsoleUI * pConsole) {
   /* checkIterators twice - true/false */
   checkIterators(true, pConsole, &(uima::internal::CASImpl::promoteCAS(*tcas)));
   checkIterators(false, pConsole,  &(uima::internal::CASImpl::promoteCAS(*tcas)));
+  delete tcas;
+  delete pEngine;
   pConsole->info("Iterators test finished");
 }
 
@@ -718,6 +722,8 @@ void testCaching(util::ConsoleUI * pConsole) {
     ASSERT_OR_THROWEXCEPTION( checkIndex(an1, ix) );
     ASSERT_OR_THROWEXCEPTION( checkIndex(an2, ix) );
   }
+  delete tcas;
+  delete pEngine;
   pConsole->info("Caching test finished");
   return;
 }
@@ -770,7 +776,8 @@ int main(int argc, char * argv[]) /*
     pConsole->error(rclException.what());
     return 1;
   }
-
+  delete pConsole;
   return(0);
 }
+
 

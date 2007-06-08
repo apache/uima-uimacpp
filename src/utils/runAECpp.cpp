@@ -133,6 +133,13 @@ int main(int argc, char * argv[]) {
     /* Create/link up to a UIMACPP resource manager instance (singleton) */
     (void) ResourceManager::createInstance("runAECpp");
 
+    /* check if input file / directory exists */
+    uima::util::Filename infn(in.c_str());
+    if (!infn.isExistent() ) {
+      cout << "runAECpp: ERROR: input file / directory does not exist. " << endl;
+      return -1;
+    }
+
     if (loglevel >= 0) {
       ResourceManager::getInstance().setLoggingLevel((LogStream::EnEntryType)loglevel);
     }
@@ -374,4 +381,5 @@ void writeXCAS (CAS & outCas, int num,  std::string in, std::string outfn)  {
 }
 
 /* <EOF> */
+
 

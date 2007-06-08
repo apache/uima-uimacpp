@@ -428,7 +428,8 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
     pEngine->getAnnotatorContext().releaseCAS(seg);
   }
   failIfNotTrue(num==3);
-
+  delete pEngine;
+  delete cas;
   rclConsole.info("testCasMultiplier finished." );
 }
 
@@ -521,4 +522,5 @@ int main(int argc, char * argv[]) /*
 }
 
 /* <EOF> */
+
 

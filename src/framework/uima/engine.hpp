@@ -592,12 +592,15 @@ namespace uima {
 
 
     /*@}*/
-
+    
 
     /**
      * create a AnalysisEngine from an AnalysisEngineDescription. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
+     * The createAnalysisEngine functions could cause a memory leak if it 
+     * fails because these methods use auto ptrs which are released prior
+     * to engine initialization.
      */
     static AnalysisEngine * createAnalysisEngine(AnalysisEngineDescription &, ErrorInfo& errorInfo);
 
@@ -605,6 +608,9 @@ namespace uima {
      * create a AnalysisEngine from the name of configuration file. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
+     * The createAnalysisEngine functions could cause a memory leak if it 
+     * fails because these methods use auto ptrs which are released prior
+     * to engine initialization.
      */
     static AnalysisEngine * createAnalysisEngine(char const * cpConfigFileName, ErrorInfo& errorInfo);
 
@@ -612,6 +618,9 @@ namespace uima {
      * create a TextAnalysisEngine from an in-memory XML Buffer. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
+     * The createAnalysisEngine functions could cause a memory leak if it 
+     * fails because these methods use auto ptrs which are released prior
+     * to engine initialization.
      */
     static AnalysisEngine * createAnalysisEngine(UChar const * cpBuffer, size_t uiLength, ErrorInfo& errorInfo);
 
@@ -619,6 +628,9 @@ namespace uima {
 	/**
      * Creates a TAE from a file name if the first argument is true or 
      * an XML buffer if false.
+     * The createAnalysisEngine functions could cause a memory leak if it 
+     * fails because these methods use auto ptrs which are released prior
+     * to engine initialization.
      */
     static AnalysisEngine * createAnalysisEngine(bool isFile,
                                           icu::UnicodeString const &,
@@ -626,6 +638,9 @@ namespace uima {
 
     /**
      * A lower level API for creating a TextAnalysisEngine
+     * The createAnalysisEngine functions could cause a memory leak if it 
+     * fails because these methods use auto ptrs which are released prior
+     * to engine initialization.
      */
     static AnalysisEngine * createAnalysisEngine(AnnotatorContext & rANC, bool bOwnsANC,
                                           bool bOwnsTAESpecifier,
@@ -643,5 +658,6 @@ namespace uima {
 #endif /* UIMA_ENGINE_HPP */
 
 /* <EOF> */
+
 
 
