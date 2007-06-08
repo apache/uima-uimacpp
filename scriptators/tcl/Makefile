@@ -7,12 +7,10 @@ SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell swig -ve
 ifeq ($(SWIGVERSION),)
   $(error unable to determine SWIGVERSION)
 endif
-ifeq ($(SWIGVERSION),1.3.29)
+
 SWIGDEPS=uimatclwrap.h
 SWIGFLAGS=-DSWIG$(subst .,_,$(SWIGVERSION))
-else
-SWIGFLAGS=-DSWIG_GLOBAL -DSWIG$(subst .,_,$(SWIGVERSION))
-endif
+
 
 ###################################
 # This portion was divined by looking at the base.mak file

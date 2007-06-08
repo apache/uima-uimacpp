@@ -7,12 +7,9 @@ SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell swig -ve
 ifeq ($(SWIGVERSION),)
   $(error unable to determine SWIGVERSION)
 endif
-ifeq ($(SWIGVERSION),1.3.29)
+
 SWIGDEPS=uimapywrap.h
 SWIGFLAGS=-DSWIG$(subst .,_,$(SWIGVERSION))
-else
-SWIGFLAGS=-DSWIG_GLOBAL -DSWIG$(subst .,_,$(SWIGVERSION))
-endif
 
 
 PYTHONVERSION:=$(subst ., ,$(subst Python ,,$(shell python -V 2>&1)))
