@@ -75,7 +75,6 @@ public:
   /** */
   TyErrorId process(CAS & rCAS, ResultSpecification const & crResultSpecification) {
     CAS *engTcas, *germTcas;
-    UnicodeString delimUS(" ");
     UChar *myLocalSaveState;
 
     // Look for english document and "translate" to German
@@ -109,7 +108,11 @@ public:
     FSIndexRepository & germIndexRep = germTcas->getIndexRepository();
 
     // Parse the English text
-    UChar * next = u_strtok_r(uWork, delimUS.getBuffer(), &myLocalSaveState);
+    UChar uDelim[2];
+    UnicodeString delimUS(" ");
+    u_strncpy(uDelim, delimUS.getBuffer(), 1);
+	uDelim[1] = 0;
+    UChar * next = u_strtok_r(uWork, uDelim, &myLocalSaveState);
 
     while (next) {
       // Create annotation on source text
@@ -123,7 +126,7 @@ public:
       // Accumulate the total translated document
       if (germBegin > 0) {
         // if not the first word, add space before
-        u_strncat(translation, delimUS.getBuffer(), 1);
+        u_strncat(translation, uDelim, 1);
         germBegin += 1;
       }
       u_strcat(translation, gword);
@@ -136,7 +139,7 @@ public:
       germAnnot.setFSValue(other, engAnnot);
       germBegin = germEnd;
 
-      next = u_strtok_r(NULL, delimUS.getBuffer(), &myLocalSaveState);
+      next = u_strtok_r(NULL, uDelim, &myLocalSaveState);
     }
     // set documentText with accumulated transation
     germTcas->setDocumentText( translation, u_strlen(translation), true );
