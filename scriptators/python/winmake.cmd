@@ -1,6 +1,6 @@
 @echo off
 if "%UIMACPP_HOME%" == "" goto TafRootNotSet
-if not exist %UIMACPP_HOME%\include\uima\cas.hpp goto UimaRootBad
+if not exist "%UIMACPP_HOME%"\include\uima\cas.hpp goto UimaRootBad
 
 set SWIG_PATH=\swigwin-1.3.29
 if not exist %SWIG_PATH% goto SwigPathNotSet

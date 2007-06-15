@@ -203,7 +203,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo TCL_INCLUDE: %TCL_INCLUDE%&#x0D;&#x0A;echo TCL_LIBDIR: %TCL_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -tcl -external-runtime uimatclwrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -tcl -oh uimatclwrap.h $(InputPath)&#x0D;&#x0A;&#x0D;&#x0A;"
+						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo TCL_INCLUDE: %TCL_INCLUDE%&#x0D;&#x0A;echo TCL_LIBDIR: %TCL_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -tcl -external-runtime uimatclwrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -tcl -oh uimatclwrap.h &quot;$(InputPath)&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 						Outputs="uima_wrap.cxx; uimatclwrap.h"
 					/>
 				</FileConfiguration>
@@ -212,7 +212,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo TCL_INCLUDE: %TCL_INCLUDE%&#x0D;&#x0A;echo TCL_LIBDIR: %TCL_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -tcl -external-runtime uimatclwrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -tcl -oh uimatclwrap.h  $(InputPath)&#x0D;&#x0A;&#x0D;&#x0A;"
+						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo TCL_INCLUDE: %TCL_INCLUDE%&#x0D;&#x0A;echo TCL_LIBDIR: %TCL_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -tcl -external-runtime uimatclwrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -tcl -oh uimatclwrap.h  &quot;$(InputPath)&quot;&#x0D;&#x0A;&#x0D;&#x0A;"
 						Outputs="uima_wrap.cxx; uimatclwrap.h"
 					/>
 				</FileConfiguration>

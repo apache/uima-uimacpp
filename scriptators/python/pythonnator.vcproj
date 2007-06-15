@@ -209,7 +209,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo PYTHON_INCLUDE: %PYTHON_INCLUDE%&#x0D;&#x0A;echo PYTHON_LIB: %PYTHON_LIB%&#x0D;&#x0A;echo PYTHON_LIBDIR: %PYTHON_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -python -external-runtime uimapywrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -python -oh uimapywrap.h $(InputPath)&#x0D;&#x0A;"
+						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo PYTHON_INCLUDE: %PYTHON_INCLUDE%&#x0D;&#x0A;echo PYTHON_LIB: %PYTHON_LIB%&#x0D;&#x0A;echo PYTHON_LIBDIR: %PYTHON_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -python -external-runtime uimapywrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -python -oh uimapywrap.h &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="uima_wrap.cxx; uimapywrap.h; pythonnator.py"
 					/>
 				</FileConfiguration>
@@ -218,7 +218,7 @@
 					>
 					<Tool
 						Name="VCCustomBuildTool"
-						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo PYTHON_INCLUDE: %PYTHON_INCLUDE%&#x0D;&#x0A;echo PYTHON_LIB: %PYTHON_LIB%&#x0D;&#x0A;echo PYTHON_LIBDIR: %PYTHON_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -python -external-runtime uimapywrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -python -oh uimapywrap.h  $(InputPath)&#x0D;&#x0A;"
+						CommandLine="echo In order to function correctly, please ensure the following environment variables are correctly set:&#x0D;&#x0A;echo PYTHON_INCLUDE: %PYTHON_INCLUDE%&#x0D;&#x0A;echo PYTHON_LIB: %PYTHON_LIB%&#x0D;&#x0A;echo PYTHON_LIBDIR: %PYTHON_LIBDIR%&#x0D;&#x0A;echo SWIG_PATH: %SWIG_PATH%&#x0D;&#x0A;echo on&#x0D;&#x0A;%SWIG_PATH%\swig -outdir . -c++ -python -external-runtime uimapywrap.h&#x0D;&#x0A;%SWIG_PATH%\swig  -o uima_wrap.cxx -outdir . -c++ -python -oh uimapywrap.h  &quot;$(InputPath)&quot;&#x0D;&#x0A;"
 						Outputs="uima_wrap.cxx; uimapywrap.h; pythonnator.py"
 					/>
 				</FileConfiguration>
