@@ -173,7 +173,7 @@ if [ "$UNAME" = "Darwin" ]; then
   LIBEXT=dylib
 else
   CPL=-pl
-  CPLR=-plra
+  CPLR=-pdr
   LIBEXT=so
 fi
 

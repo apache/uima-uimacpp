@@ -62,8 +62,8 @@ if [ "$UNAME" = "Darwin" ]; then
   LIBEXT=dylib
 else
   CP=-pH
-  CPL=-pl
-  CPLR=-plra
+  CPL=-pd
+  CPLR=-pdr
   LIBEXT=so
 fi
 
@@ -154,6 +154,7 @@ find $target_dir -type f -iname '*.sln' -exec rm -f {} \;
 find $target_dir -type f -iname '*.vcproj' -exec rm -f {} \;
 find $target_dir -type f -iname '*.cmd' -exec rm -f {} \;
 find $target_dir -type f -iname '*.bat' -exec rm -f {} \;
+find $target_dir -type f -iname '*~' -exec rm -f {} \;
 
 print -u2 "DONE ... Source image created in $target_dir"
 
