@@ -23,13 +23,6 @@
 /*       Include dependencies                                              */
 /* ----------------------------------------------------------------------- */
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-///#define DEBUG_CLIENTBLOCK   new( _CLIENT_BLOCK, __FILE__, __LINE__)
-
-
 
 #include "uima/api.hpp"
 #include "uima/xmiwriter.hpp"
