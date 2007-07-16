@@ -18,7 +18,7 @@
 #   under the License.
 
 # for now, change versionnumber in line below
-srcName=uimacpp-2.1.0-incubating
+srcName=uimacpp-2.2.0-incubating
 
 if [ "$1" = 'TRACE' ]
     then set -vx ;shift
