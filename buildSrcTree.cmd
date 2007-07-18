@@ -105,7 +105,6 @@ xcopy /Q %UIMACPP_SOURCE%\docs\doxyheader.html %TARGET_DIR%\docs
 xcopy /Q %UIMACPP_SOURCE%\docs\overview_and_setup.html %TARGET_DIR%\docs
 
 echo copying from %UIMACPP_SOURCE%\src
-xcopy /Q %UIMACPP_SOURCE%\src\readme.tobuild %TARGET_DIR%\src
 xcopy /Q %UIMACPP_SOURCE%\src\*.cmd %TARGET_DIR%\src
 xcopy /Q %UIMACPP_SOURCE%\src\*.sln %TARGET_DIR%\src
 xcopy /Q %UIMACPP_SOURCE%\src\*.bat %TARGET_DIR%\src

@@ -99,7 +99,6 @@ cp $CPL $UIMACPP_SOURCE/docs/doxyheader.html $target_dir/docs
 cp $CPL $UIMACPP_SOURCE/docs/overview_and_setup.html $target_dir/docs
 
 print -u2 "copying from $UIMACPP_SOURCE/src"
-cp $CPL $UIMACPP_SOURCE/src/readme.tobuild $target_dir/src/
 cp $CPL $UIMACPP_SOURCE/src/Makefile.in $target_dir/src/
 cp $CP $UIMACPP_SOURCE/src/aclocal.m4 $target_dir/src/
 cp $CP $UIMACPP_SOURCE/src/install-sh $target_dir/src/
