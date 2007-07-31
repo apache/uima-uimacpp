@@ -331,9 +331,9 @@ namespace uima {
             strncpy(handlerdllfilename,curptr, len);
             handlerdllfilename[len]='\0';
             registerStreamHandlerForURIScheme(urischeme, handlerdllfilename);
-            delete handlerdllfilename;
+            delete [] handlerdllfilename;
           }
-          delete urischeme;
+          delete [] urischeme;
         }
 
         //move ptr

@@ -173,6 +173,8 @@ namespace uima {
       iv_typeSystem(NULL),
       iv_heap(NULL),
       initialSofaCreated(false),
+      iv_sofaNum(0),
+      iv_sofaCount(0),
       iv_initialView(NULL),
       iv_indexRepository(NULL),
       iv_filterBuilder(NULL),
@@ -201,7 +203,6 @@ namespace uima {
 
     iv_filterBuilder = new uima::FSFilterBuilder();
     assert( EXISTS(iv_filterBuilder) );
-    iv_sofaCount = 0;
     isbaseCas = true;
     iv_baseCas = this;
     isDeletingViews = false;
@@ -210,6 +211,8 @@ namespace uima {
 
   // Constructor used for views
   CAS::CAS(CAS* inCas, SofaFS inSofa):
+      iv_sofaNum(0),
+      iv_sofaCount(0),
       iv_cpDocument(NULL),
       iv_uiDocumentLength(0),
       iv_copyOfDocument(NULL),
@@ -255,6 +258,8 @@ namespace uima {
       : iv_casDefinition( & casDefs ),
       iv_typeSystem(NULL),
       iv_heap(NULL),
+      iv_sofaNum(0),
+      iv_sofaCount(0),
       initialSofaCreated(false),
       iv_initialView(NULL),
       iv_indexRepository(NULL),
@@ -284,7 +289,6 @@ namespace uima {
 
     iv_filterBuilder = new uima::FSFilterBuilder();
     assert( EXISTS(iv_filterBuilder) );
-    iv_sofaCount = 0;
     isbaseCas = true;
     iv_baseCas = this;
     bOwnsCASDefinition=ownsCasDef;
@@ -299,7 +303,7 @@ namespace uima {
       iv_indexRepository = NULL;
 		}
     if (this->iv_cpDocument != NULL) {
-      delete this->iv_cpDocument;
+      delete[] this->iv_cpDocument;
       this->iv_cpDocument = NULL;
     }
     //initial call to delete object

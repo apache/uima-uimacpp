@@ -236,7 +236,7 @@ public:
       stream=NULL;
     }
     if (buffer != NULL)  {
-      delete buffer;
+      delete[] buffer;
       buffer=NULL;
     }
     return;

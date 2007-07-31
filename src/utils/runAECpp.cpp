@@ -235,7 +235,9 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
     if (xcasInput != textFormat) {
       /* initialize from an xcas or xmicas */
       //cout << "runAECpp::processing xml file " << in << endl;
-	  LocalFileInputSource fileIS(XMLString::transcode(in.c_str()));
+	  XMLCh* native = XMLString::transcode(in.c_str());
+	  LocalFileInputSource fileIS(native);
+	  XMLString::release(&native);
 	  if (xcasInput == xcasFormat) {
 		XCASDeserializer::deserialize(fileIS, *cas);
 	  }
@@ -267,7 +269,7 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
       /* convert to unicode and set tcas document text*/
       UnicodeString ustrInputText(pBuffer, (int32_t)numread, "utf-8");
       cas->setDocumentText(UnicodeStringRef(ustrInputText));
-      delete pBuffer;
+      delete[] pBuffer;
     }
 
     // Is the input a tcas?

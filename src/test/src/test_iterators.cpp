@@ -584,7 +584,7 @@ void testSubIterators(util::ConsoleUI * pConsole) {
 
   /* convert to unicode and set tcas document text*/
   UnicodeString ustrInputText(pBuffer, (int32_t)numread, "utf-8");
-  delete pBuffer;
+  delete[] pBuffer;
   /* set TCAS Document text */
   CAS * tcas = pEngine->newCAS();
   ASSERT_OR_THROWEXCEPTION( EXISTS(tcas) );
@@ -651,7 +651,7 @@ void testIterators(util::ConsoleUI * pConsole) {
 
   /* convert to unicode and set tcas document text*/
   UnicodeString ustrInputText(pBuffer, (int32_t)numread, "utf-8");
-  delete pBuffer;
+  delete[] pBuffer;
   /* set TCAS Document text */
   CAS * tcas = pEngine->newCAS();
   ASSERT_OR_THROWEXCEPTION( EXISTS(tcas) );

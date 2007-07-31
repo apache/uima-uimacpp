@@ -76,7 +76,9 @@ namespace uima {
 
   void XCASDeserializer::deserialize(char const * xcasFilename, CAS & cas) {
 
-    LocalFileInputSource fileIS (XMLString::transcode(xcasFilename));
+	XMLCh* native = XMLString::transcode(xcasFilename);
+    LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XCASDeserializer::deserialize(fileIS, cas);
 
   }
@@ -84,13 +86,17 @@ namespace uima {
   void XCASDeserializer::deserialize(UnicodeString & xcasFilename, CAS & cas) {
     char buff[1024];
     xcasFilename.extract(0, xcasFilename.length(), buff);
-    LocalFileInputSource fileIS (XMLString::transcode(buff));
+	XMLCh* native = XMLString::transcode(buff);
+	LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XCASDeserializer::deserialize(fileIS, cas);
   }
 
   void XCASDeserializer::deserialize(char const * xcasFilename, CAS & cas,  uima::AnnotatorContext  * const ctx) {
 
-    LocalFileInputSource fileIS (XMLString::transcode(xcasFilename));
+    XMLCh* native = XMLString::transcode(xcasFilename);
+    LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XCASDeserializer::deserialize(fileIS, cas, ctx);
 
   }

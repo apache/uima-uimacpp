@@ -517,7 +517,7 @@ namespace uima {
   //close
   void LocalSofaDataStream::close() {
     if (iv_pstringsofadata != NULL)
-      delete iv_pstringsofadata;
+      delete[] iv_pstringsofadata;
     iv_pstringsofadata = NULL;
     iv_curpos=0;
     iv_psofadata = NULL;

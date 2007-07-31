@@ -211,7 +211,7 @@ void processFile (std::string filename, AnalysisEngine * pEngine, CAS * tcas ) {
 
     tcas->setDocumentText(ustrInputText.getBuffer(), ustrInputText.length(), true);
 
-    delete pBuffer;
+    delete[] pBuffer;
     /* process the CAS */
     TyErrorId utErrorId = ((AnalysisEngine*)pEngine)->process(*tcas);
     CheckError(utErrorId, *pEngine);

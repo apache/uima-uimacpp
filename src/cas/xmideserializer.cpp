@@ -76,7 +76,9 @@ namespace uima {
 
   void XmiDeserializer::deserialize(char const * xmiFilename, CAS & cas) {
 
-    LocalFileInputSource fileIS (XMLString::transcode(xmiFilename));
+    XMLCh* native = XMLString::transcode(xmiFilename);
+	LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XmiDeserializer::deserialize(fileIS, cas);
 
   }
@@ -84,7 +86,9 @@ namespace uima {
   void XmiDeserializer::deserialize(UnicodeString & xmiFilename, CAS & cas) {
     char buff[1024];
     xmiFilename.extract(0, xmiFilename.length(), buff);
-    LocalFileInputSource fileIS (XMLString::transcode(buff));
+    XMLCh* native = XMLString::transcode(buff);
+    LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XmiDeserializer::deserialize(fileIS, cas);
   }
 
@@ -108,6 +112,7 @@ namespace uima {
       char* message = XMLString::transcode(e.getMessage());
       cerr << "XMLException message is: \n"
       << message << "\n";
+	  delete message;
 
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
@@ -128,6 +133,8 @@ namespace uima {
       char* message = XMLString::transcode(e.getMessage());
       cerr << "SaxParseException message is: \n"
       << message << "\n";
+	  delete message;
+
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
       ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
@@ -210,6 +217,7 @@ namespace uima {
       char* message = XMLString::transcode(e.getMessage());
       cerr << "XMLException message is: \n"
       << message << "\n";
+	  delete message;
 
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
@@ -230,6 +238,8 @@ namespace uima {
       char* message = XMLString::transcode(e.getMessage());
       cerr << "SaxParseException message is: \n"
       << message << "\n";
+	  delete message;
+
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
       ErrorMessage msg(UIMA_MSG_ID_EXC_XML_SAXPARSE_FATALERROR);
@@ -294,7 +304,9 @@ namespace uima {
 									CAS & cas,
 									XmiSerializationSharedData & sharedData) {
 
-    LocalFileInputSource fileIS (XMLString::transcode(xmiFilename));
+    XMLCh* native = XMLString::transcode(xmiFilename);
+	LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XmiDeserializer::deserialize(fileIS, cas, sharedData);
 
  }
@@ -304,7 +316,9 @@ namespace uima {
 									XmiSerializationSharedData & sharedData) {
     char buff[1024];
     xmiFilename.extract(0, xmiFilename.length(), buff);
-    LocalFileInputSource fileIS (XMLString::transcode(buff));
+    XMLCh* native = XMLString::transcode(buff);
+    LocalFileInputSource fileIS (native);
+	XMLString::release(&native);
     XmiDeserializer::deserialize(fileIS, cas, sharedData);
   }
 }

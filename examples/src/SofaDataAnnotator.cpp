@@ -121,7 +121,7 @@ public:
     /** close the stream */
     pStream->close();
     delete pStream;
-    delete pBuffer;
+    delete[] pBuffer;
 
     cout << "SofaDataAnnotator: process() ends" << endl;
     return (TyErrorId)UIMA_ERR_NONE;

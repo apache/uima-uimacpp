@@ -475,7 +475,7 @@ namespace uima {
           //printf ("itoahexadecimal: %d %d\n",i, arrayfs.get(i));
           str << out[0] << out[1];			  
         }		  
-		    delete out;
+		    delete[] out;
         break;
                                          }
       case internal::gs_tyShortArrayType: {
