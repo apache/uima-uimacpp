@@ -75,6 +75,7 @@ mkdir %TARGET_DIR%\examples
 mkdir %TARGET_DIR%\examples\data
 mkdir %TARGET_DIR%\examples\descriptors
 mkdir %TARGET_DIR%\examples\src
+mkdir %TARGET_DIR%\examples\run_configuration
 mkdir %TARGET_DIR%\examples\tutorial
 mkdir %TARGET_DIR%\examples\tutorial\src
 mkdir %TARGET_DIR%\examples\tutorial\descriptors
@@ -142,6 +143,9 @@ echo copying from %UIMACPP_SOURCE%\src\utils
 xcopy /Q %UIMACPP_SOURCE%\src\utils\*.cpp %TARGET_DIR%\src\utils
 
 echo copying from %UIMACPP_SOURCE%\examples
+xcopy /Q %UIMACPP_SOURCE%\examples\run_configuration %TARGET_DIR%\examples\run_configuration
+xcopy /Q %UIMACPP_SOURCE%\examples\.project %TARGET_DIR%\examples
+xcopy /Q %UIMACPP_SOURCE%\examples\.cdtproject %TARGET_DIR%\examples
 xcopy /Q %UIMACPP_SOURCE%\examples\*.cmd %TARGET_DIR%\examples
 xcopy /Q %UIMACPP_SOURCE%\examples\*.html %TARGET_DIR%\examples
 xcopy /Q %UIMACPP_SOURCE%\examples\data\*.* %TARGET_DIR%\examples\data
