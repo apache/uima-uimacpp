@@ -1,36 +1,23 @@
-/**************************************************************************/
-/*  Licensed Materials - Property of IBM                                  */
-/*  (C) Copyright IBM Corporation 2003, 2004.                             */
-/*  All rights reserved.                                                  */		
-/*                                                                        */
-/* US Government Users Restricted Rights - Use, duplication or            */
-/* disclosure restricted by GSA ADP Schedule Contract with                */
-/* IBM Corporation.                                                       */
-/**************************************************************************/
-/*  Permission Notice                                                     */
-/*                                                                        */
-/*  Permission is granted to copy, use, modify, and merge this sample     */
-/*  software into your applications and to permit others to do any of the */
-/*  foregoing. You may further distribute this software for               */
-/*  commercial purposes only as part of your application that adds        */
-/*  significant value and function beyond that provided by these          */
-/*  samples.                                                              */
-/*  You must include this permission statement and retain the copyright   */
-/*  notice in all copies and modified versions of this software.          */
-/*                                                                        */
-/**************************************************************************/
-/*                                                                        */
-/*  DISCLAIMER OF WARRANTIES                                              */
-/*                                                                        */
-/*  The sample software is provided to you by IBM to assist you in        */
-/*  developing your applications. THIS SOFTWARE IS PROVIDED AS-IS,        */
-/*  WITHOUT WARRANTY OF ANY KIND. IBM SHALL NOT BE LIABLE FOR ANY         */
-/*  DAMAGES ARISING OUT OF YOUR USE OR THE USE BY ANY THIRD PARTY OF      */
-/*  OF THE SAMPLE SOFTWARE EVEN IF IT HAS BEEN ADVISED OF THE POSSIBILITY */
-/*  OF SUCH DAMAGES. IN ADDITION, IBM SHALL NOT BE LIABLE FOR ANY THIRD   */
-/*  PARTY CLAIMS AGAINST YOU.                                             */
-/*                                                                        */
-/**************************************************************************/
+/** \file TextSegmentConsumer.cpp .
+
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+
+-------------------------------------------------------------------------- */
 
 #include "uima/api.hpp"
 

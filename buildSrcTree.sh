@@ -78,6 +78,7 @@ mkdir $target_dir/src/jni/uima
 mkdir $target_dir/src/framework
 mkdir $target_dir/src/framework/uima
 mkdir $target_dir/src/utils
+mkdir $target_dir/src/test
 
 print -u2 "copying from $UIMACPP_SOURCE"
 cp $CPL  $UIMACPP_SOURCE/buildsdk.sh $target_dir/
@@ -141,9 +142,12 @@ print -u2 "copying from $UIMACPP_SOURCE/examples"
 cp $CPLR $UIMACPP_SOURCE/examples $target_dir/
 
 print -u2 "copying from $UIMACPP_SOURCE/src/test"
-cp $CPLR $UIMACPP_SOURCE/src/test $target_dir/src/
-rm -rf $target_dir/src/test/.libs
-rm -rf $target_dir/src/test/.deps
+cp $CPLR $UIMACPP_SOURCE/src/test/src $target_dir/src/test/
+cp $CPLR $UIMACPP_SOURCE/src/test/data $target_dir/src/test/
+cp $CPL $UIMACPP_SOURCE/src/test/Makefile.am $target_dir/src/test/
+cp $CPL $UIMACPP_SOURCE/src/test/Makefile.in $target_dir/src/test/
+cp $CPL $UIMACPP_SOURCE/src/test/fvt.sh $target_dir/src/test/
+cp $CPL $UIMACPP_SOURCE/src/test/fvtTestfile $target_dir/src/test/
 find $target_dir/src/test -type f -iname '*.l?' -exec rm -f {} \;
 find $target_dir/src/test -type f -iname '*.o' -exec rm -f {} \;
 
