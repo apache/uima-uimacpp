@@ -253,6 +253,17 @@ This is because the JVM uses different default process limits than those used fo
 For example, the maximum stack size for a thread running under a JVM may be 100KB versus
 1MB for a native command line application. Use "java -X" to get more information on non-standard JVM options.
 </p>
+<h4>3.3.1 Running Debug Modules on Windows</h4>
+<p>In order to run UIMA C++ components built debug, Java must load the debug version of the framework.
+Define the Java system property DEBUG_UIMACPP to specify use of the debug framework. 
+A convenient way to pass JVM properties to UIMA's Java commandline utilities, such as runAE.sh, is to define 
+them in the environmental variable UIMA_JVM_OPTS. For example to run a debug version of DaveDetector from Java:
+<ul>
+    <code>export UIMA_JVM_OPTS=-DDEBUG_UIMACPP</code><br>
+    <code>runAE.sh descriptors/DaveDetector.xml data</code>
+</ul>
+</p>
+
 
 <h3>3.4 Message Logging from a C++ Component</h3>
 <p>For formal integration with UIMA applications, a logfile interface is available.
