@@ -95,15 +95,14 @@ namespace uima {
 
     TypeSystem::StFeatureInfo gs_arBuiltinFeatures[] = {
           {
-            CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_FS_LIST, CAS::TYPE_NAME_TOP,               "head"
-          },
-          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_FS_LIST, CAS::TYPE_NAME_FS_LIST,               "tail"},
-          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_FLOAT_LIST, CAS::TYPE_NAME_FLOAT, "head of float list"},
-          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_FLOAT_LIST, CAS::TYPE_NAME_FLOAT_LIST, "tail of float list"},
-          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_INTEGER_LIST, CAS::TYPE_NAME_INTEGER, "head of integer list"},
-          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_INTEGER_LIST, CAS::TYPE_NAME_INTEGER_LIST, "tail of integer list"},
-          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_STRING_LIST, CAS::TYPE_NAME_STRING, "head of string list"},
-          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_STRING_LIST, CAS::TYPE_NAME_STRING_LIST, "tail of string list"}
+            CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_FS_LIST, CAS::TYPE_NAME_TOP, false, "head"},
+          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_FS_LIST, CAS::TYPE_NAME_FS_LIST, false, "tail"},
+          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_FLOAT_LIST, CAS::TYPE_NAME_FLOAT, false, "head of float list"},
+          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_FLOAT_LIST, CAS::TYPE_NAME_FLOAT_LIST, false, "tail of float list"},
+          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_INTEGER_LIST, CAS::TYPE_NAME_INTEGER, false, "head of integer list"},
+          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_INTEGER_LIST, CAS::TYPE_NAME_INTEGER_LIST, false, "tail of integer list"},
+          { CAS::FEATURE_BASE_NAME_HEAD, CAS::TYPE_NAME_NON_EMPTY_STRING_LIST, CAS::TYPE_NAME_STRING, false, "head of string list"},
+          { CAS::FEATURE_BASE_NAME_TAIL, CAS::TYPE_NAME_NON_EMPTY_STRING_LIST, CAS::TYPE_NAME_STRING_LIST, false, "tail of string list"}
         };
 
     char const * TYPE_NAME_INVALID               = "INVALID_TYPE";
@@ -165,6 +164,7 @@ namespace uima {
       iv_vecFeatureCreatorIDs.resize(1);
       iv_vecFeatureCreatorIDs[0] = FEATURE_NAME_INVALID;
       iv_vecRangeTypes.resize(1);
+      iv_vecMultiRefs.resize(1);
 
 
       size_t uiType;
@@ -234,7 +234,7 @@ namespace uima {
     }
 
 
-    TyFSFeature TypeSystem::createFeature(TyFSType tyIntro, TyFSType tyRange, icu::UnicodeString const & crusName, icu::UnicodeString const & crusCreatorID) {
+    TyFSFeature TypeSystem::createFeature(TyFSType tyIntro, TyFSType tyRange, bool multiRef, icu::UnicodeString const & crusName, icu::UnicodeString const & crusCreatorID) {
       UIMA_TPRINT("Creating feature " << crusName);
       assert( !iv_bIsCommitted);
       assert( (tyIntro > 0) && (tyIntro < iv_vecTree.size()) );
@@ -271,6 +271,7 @@ namespace uima {
       TyFSFeature newFeature = iv_vecFeatureBaseNames.size();
       iv_vecFeatureBaseNames.push_back(crusName);
       iv_vecRangeTypes.push_back(tyRange);
+      iv_vecMultiRefs.push_back(multiRef);
       iv_vecIntroducedFeatures[tyIntro].push_back(newFeature);
       iv_vecFeatureCreatorIDs.push_back(crusName);
 
@@ -308,7 +309,7 @@ namespace uima {
       assert( tyIntroType != INVALID_TYPE );
       TyFSType tyRangeType = getTypeByName(icu::UnicodeString( crFeatureInfo.iv_cpszRangeTypeName) );
       assert( tyRangeType != INVALID_TYPE );
-      TyFSFeature tyNewFeature = createFeature( tyIntroType, tyRangeType, crFeatureInfo.iv_cpszName, crusCreatorID );
+      TyFSFeature tyNewFeature = createFeature( tyIntroType, tyRangeType, crFeatureInfo.iv_multipleRefsAllowed, crFeatureInfo.iv_cpszName, crusCreatorID );
       assert( tyNewFeature != INVALID_FEATURE );
       return tyNewFeature;
     }
@@ -846,6 +847,7 @@ namespace uima {
       ASSERT_OR_RETURN_FALSE(iv_vecTree.size() == iv_vecIntroducedFeatures.size() );
       ASSERT_OR_RETURN_FALSE(iv_vecTree.size() == iv_vecTypeNames.size() );
       ASSERT_OR_RETURN_FALSE(iv_vecRangeTypes.size() == iv_vecFeatureBaseNames.size());
+      ASSERT_OR_RETURN_FALSE(iv_vecMultiRefs.size() == iv_vecFeatureBaseNames.size());
 
       size_t n = iv_vecTree.size();
       size_t i,j;

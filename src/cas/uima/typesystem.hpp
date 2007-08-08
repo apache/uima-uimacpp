@@ -98,11 +98,9 @@ namespace uima {
   private:
     lowlevel::TyFSFeature iv_tyFeature;
     uima::lowlevel::TypeSystem * iv_typeSystem;
-	bool multipleReferencesAllowed;
-
     Feature(lowlevel::TyFSFeature tyFeature, uima::lowlevel::TypeSystem & typeSystem);
-	Feature(lowlevel::TyFSFeature tyFeature, uima::lowlevel::TypeSystem & typeSystem, bool allowMultRefs);
     void checkValidity() const;
+
   public:
     Feature();
     bool isValid() const;

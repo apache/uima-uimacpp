@@ -171,6 +171,7 @@ namespace uima {
 
       icu::UnicodeString rangeTypeName = convert( featureElement->getAttribute( convert(uima::internal::XMLConstants::ATTRIBUTENAME_RANGE) ) );
       icu::UnicodeString featureName = convert( featureElement->getAttribute( convert(uima::internal::XMLConstants::ATTRIBUTENAME_NAME)) );
+      icu::UnicodeString multiRefs = convert( featureElement->getAttribute( convert(uima::internal::XMLConstants::ATTRIBUTENAME_MULTIREFS)) );
       UIMA_TPRINT("Checking for feature  : " << featureName << " with range type " << rangeTypeName);
 
       DOMNode * introTypeNode = featureNode->getParentNode();
@@ -207,7 +208,8 @@ namespace uima {
       } else {
         UIMA_TPRINT("Creating feature  : " << featureName << " with range type " << rangeTypeName << " at intro type " << introTypeName);
         // create the feature
-        tyFeature = iv_rTypeSystem.createFeature( tyIntro, tyRange, featureName, iv_ustrCreatorID );
+		bool mr = (multiRefs == icu::UnicodeString("true"));
+        tyFeature = iv_rTypeSystem.createFeature( tyIntro, tyRange, mr, featureName, iv_ustrCreatorID );
       }
     }
   }

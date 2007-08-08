@@ -341,14 +341,14 @@ namespace uima {
 
       // for each new feature
       for (i=uiNewFeatureStart; i<crFeatureSymbolTable.size(); ++i) {
-        assert( (2*i)   < crFeatureDefTable.size() );
-        assert( (2*i+1) < crFeatureDefTable.size() );
-        uima::lowlevel::TyFSType tyIntro = crFeatureDefTable[2*i];
-        uima::lowlevel::TyFSType tyRange = crFeatureDefTable[2*i+1];
+        assert( (3*i+2) < crFeatureDefTable.size() );
+        uima::lowlevel::TyFSType tyIntro = crFeatureDefTable[3*i];
+        uima::lowlevel::TyFSType tyRange = crFeatureDefTable[3*i+1];
+        bool multiRefs = crFeatureDefTable[3*i+2] == 1;
         UnicodeStringRef uref = crFeatureSymbolTable[i];
         icu::UnicodeString ustrFeatureName( uref.getBuffer(), uref.length() );
         UIMA_TPRINT("Creating feature: " << ustrFeatureName);
-        rTypeSystem.createFeature(tyIntro, tyRange, ustrFeatureName, ustrCREATOR_ID_CAS_DESERIALIZER);
+        rTypeSystem.createFeature(tyIntro, tyRange, multiRefs, ustrFeatureName, ustrCREATOR_ID_CAS_DESERIALIZER);
       }
 
 

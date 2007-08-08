@@ -57,6 +57,7 @@ namespace uima {
     char const * XMLConstants::TAGNAME_TYPEHIERARCHY = "type_system";
     char const * XMLConstants::ATTRIBUTENAME_RANGE = "range";
     char const * XMLConstants::ATTRIBUTENAME_NAME = "name";
+    char const * XMLConstants::ATTRIBUTENAME_MULTIREFS = "multirefs";
   }
 }
 

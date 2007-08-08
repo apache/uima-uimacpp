@@ -76,6 +76,7 @@ namespace uima {
         os <<"<" << uima::internal::XMLConstants::TAGNAME_FEATURE
         << " " <<  uima::internal::XMLConstants::ATTRIBUTENAME_NAME << "=\"" << features[i].getName()
         << "\" " << uima::internal::XMLConstants::ATTRIBUTENAME_RANGE << "=\"" << range.getName() << "\"/>" << endl;
+// TODO ? add multiRefs ?
       }
     }
     vector<uima::Type> subTypes;

@@ -58,6 +58,7 @@ namespace uima {
       static char const * TAGNAME_TYPEHIERARCHY;
       static char const * ATTRIBUTENAME_RANGE;
       static char const * ATTRIBUTENAME_NAME;
+      static char const * ATTRIBUTENAME_MULTIREFS;
     };
   }
 }

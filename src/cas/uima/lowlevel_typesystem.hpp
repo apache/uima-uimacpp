@@ -94,6 +94,8 @@ namespace uima {
 
       // iv_vecRangeTypes[f] is the range type for feature f
       vector<TyFSType> iv_vecRangeTypes;
+      // iv_vecMultiRefs[f] is the multipleReferencesAllowed property for feature f
+      vector<bool> iv_vecMultiRefs;
 
       // names of types and features
       vector<icu::UnicodeString> iv_vecTypeNames;
@@ -200,6 +202,7 @@ namespace uima {
         char const * iv_cpszName;
         char const * iv_cpszIntroTypeName;
         char const * iv_cpszRangeTypeName;
+        bool const iv_multipleRefsAllowed;
         char const * iv_cpszDescription;
       }
       StFeatureInfo;
@@ -260,7 +263,7 @@ namespace uima {
        * create a feature on <code>tyIntro</code> with value type <code>tyValueType</code>
        * and name <code>crName</code>.
        */
-      TyFSFeature createFeature(TyFSType tyIntro, TyFSType tyValueType, icu::UnicodeString const & crName, icu::UnicodeString const & crusCreatorID);
+      TyFSFeature createFeature(TyFSType tyIntro, TyFSType tyValueType, bool multiRef, icu::UnicodeString const & crName, icu::UnicodeString const & crusCreatorID);
 
       /**
        * create a type from a type info struct.
@@ -457,6 +460,15 @@ namespace uima {
       TyFSType getRangeType(TyFSFeature tyFeature) const {
         assert( isValidFeature(tyFeature) );
         return iv_vecRangeTypes[tyFeature];
+      }
+
+      /**
+       * get the feature property multipleReferencesAllowed.
+       *
+       */
+      bool isMultipleReferencesAllowed(TyFSFeature tyFeature) const {
+        assert( isValidFeature(tyFeature) );
+        return iv_vecMultiRefs[tyFeature];
       }
 
 

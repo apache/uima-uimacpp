@@ -141,8 +141,8 @@ namespace uima {
       rSerializedCAS.iv_vecFeatureDefinitionTable.clear();
       size_t uiFeatureNum = crTypeSystem.getNumberOfFeatures() + 1;
 
-      // leave the first two cells empty
-      rSerializedCAS.iv_vecFeatureDefinitionTable.resize(2,0);
+      // leave the first three cells empty
+      rSerializedCAS.iv_vecFeatureDefinitionTable.resize(3,0);
 
 #ifndef NDEBUG
       vector<uima::lowlevel::TyFSFeature> vecFeatures;
@@ -158,8 +158,10 @@ namespace uima {
         UIMA_TPRINT("Adding feature: " << crTypeSystem.getFeatureName(tyFeat) );
         uima::lowlevel::TyFSType tyIntroType = crTypeSystem.getIntroType(tyFeat);
         uima::lowlevel::TyFSType tyRangeType = crTypeSystem.getRangeType(tyFeat);
+		int tyMultiRefs = crTypeSystem.isMultipleReferencesAllowed(tyFeat) ? 1 : 0;
         rSerializedCAS.iv_vecFeatureDefinitionTable.push_back( tyIntroType );
         rSerializedCAS.iv_vecFeatureDefinitionTable.push_back( tyRangeType );
+        rSerializedCAS.iv_vecFeatureDefinitionTable.push_back( tyMultiRefs );
       }
 
 #ifndef NDEBUG
@@ -167,10 +169,12 @@ namespace uima {
         uima::lowlevel::TyFSFeature tyFeat = vecFeatures[i];
         uima::lowlevel::TyFSType tyIntroType = crTypeSystem.getIntroType(tyFeat);
         uima::lowlevel::TyFSType tyRangeType = crTypeSystem.getRangeType(tyFeat);
+		int tyMultiRefs = crTypeSystem.isMultipleReferencesAllowed(tyFeat) ? 1 : 0;
         assert( (tyFeat*2) <rSerializedCAS.iv_vecFeatureDefinitionTable.size() );
         assert( (tyFeat*2+1) <rSerializedCAS.iv_vecFeatureDefinitionTable.size() );
-        assert( rSerializedCAS.iv_vecFeatureDefinitionTable[tyFeat*2] == tyIntroType );
-        assert( rSerializedCAS.iv_vecFeatureDefinitionTable[tyFeat*2+1] == tyRangeType );
+        assert( rSerializedCAS.iv_vecFeatureDefinitionTable[tyFeat*3] == tyIntroType );
+        assert( rSerializedCAS.iv_vecFeatureDefinitionTable[tyFeat*3+1] == tyRangeType );
+        assert( rSerializedCAS.iv_vecFeatureDefinitionTable[tyFeat*3+2] == tyMultiRefs );
       }
 #endif
 

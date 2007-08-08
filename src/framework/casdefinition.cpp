@@ -398,6 +398,7 @@ namespace uima {
           FeatureDescription const * pFeatDesc = *citFeats;
           icu::UnicodeString const & crFeatureName = pFeatDesc->getName();
           icu::UnicodeString const & crRangeTypeName = pFeatDesc->getRangeTypeName();
+		  bool multiRefs = pFeatDesc->isMultipleReferencesAllowed();
           uima::lowlevel::TyFSType rangeType = rTypeSystem.getTypeByName(crRangeTypeName);
           if ( !rTypeSystem.isValidType(rangeType) ) {
             // throw exception
@@ -429,7 +430,7 @@ namespace uima {
             }
           } else {
             // create feature
-            rTypeSystem.createFeature(introType, rangeType, crFeatureName, crCreatorID);
+            rTypeSystem.createFeature(introType, rangeType, multiRefs, crFeatureName, crCreatorID);
           }
         }
       }

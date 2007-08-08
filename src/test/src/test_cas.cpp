@@ -308,33 +308,33 @@ void testLowLevelTypeSystem() {
   lowlevel::TyFSType t132 = ts.createType(t13, "t132", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidType(t132) );
 
-  lowlevel::TyFSFeature f1 = ts.createFeature(t1, t3, "f1", ustrCreatorID);
+  lowlevel::TyFSFeature f1 = ts.createFeature(t1, t3, false, "f1", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f1) );
-  lowlevel::TyFSFeature g1 = ts.createFeature(t1, t4, "g1", ustrCreatorID);
+  lowlevel::TyFSFeature g1 = ts.createFeature(t1, t4, false, "g1", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(g1) );
-  lowlevel::TyFSFeature f11 = ts.createFeature(t11, t21, "f11", ustrCreatorID);
+  lowlevel::TyFSFeature f11 = ts.createFeature(t11, t21, false, "f11", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f11) );
-  lowlevel::TyFSFeature f12 = ts.createFeature(t12, t211, "f12", ustrCreatorID);
+  lowlevel::TyFSFeature f12 = ts.createFeature(t12, t211, false, "f12", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f12) );
-  lowlevel::TyFSFeature f13 = ts.createFeature(t13, t14, "f13", ustrCreatorID);
+  lowlevel::TyFSFeature f13 = ts.createFeature(t13, t14, false, "f13", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f13) );
-  lowlevel::TyFSFeature f131 = ts.createFeature(t131, t132, "f131", ustrCreatorID);
+  lowlevel::TyFSFeature f131 = ts.createFeature(t131, t132, false, "f131", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f131) );
-  lowlevel::TyFSFeature g131 = ts.createFeature(t131, top, "g131", ustrCreatorID);
+  lowlevel::TyFSFeature g131 = ts.createFeature(t131, top, false, "g131", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(g131) );
-  lowlevel::TyFSFeature f14 = ts.createFeature(t14, t2, "f14", ustrCreatorID);
+  lowlevel::TyFSFeature f14 = ts.createFeature(t14, t2, false, "f14", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f14) );
-  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t2, "f2", ustrCreatorID);
+  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t2, false, "f2", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f2) );
-  lowlevel::TyFSFeature f21 = ts.createFeature(t21, t2, "f21", ustrCreatorID);
+  lowlevel::TyFSFeature f21 = ts.createFeature(t21, t2, false, "f21", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f21) );
-  lowlevel::TyFSFeature g21 = ts.createFeature(t21, t211, "g21", ustrCreatorID);
+  lowlevel::TyFSFeature g21 = ts.createFeature(t21, t211, false, "g21", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(g21) );
-  lowlevel::TyFSFeature f31 = ts.createFeature(t31, t32, "f31", ustrCreatorID);
+  lowlevel::TyFSFeature f31 = ts.createFeature(t31, t32, false, "f31", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f31) );
-  lowlevel::TyFSFeature g31 = ts.createFeature(t31, t321, "g31", ustrCreatorID);
+  lowlevel::TyFSFeature g31 = ts.createFeature(t31, t321, false, "g31", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(g31) );
-  lowlevel::TyFSFeature f321 = ts.createFeature(t321, t4, "f321", ustrCreatorID);
+  lowlevel::TyFSFeature f321 = ts.createFeature(t321, t4, false, "f321", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f321) );
 
   ttdef.commit();
@@ -444,7 +444,7 @@ void testLowLevelTypeSystemExceptions() {
 
   LOG("Creating feature on top");
   try {
-    rTypeSystem.createFeature( rTypeSystem.getTopType(), intType, "bla", "test");
+    rTypeSystem.createFeature( rTypeSystem.getTopType(), intType, false, "bla", "test");
   } catch (uima::lowlevel::FeatureIntroductionFailedException & exc) {
     LOG("Exception thrown correctly: " << exc.asString());
     bExceptionThrown = true;
@@ -464,7 +464,7 @@ void testLowLevelTypeSystemExceptions() {
   LOG("Creating feature on integer");
   bExceptionThrown = false;
   try {
-    rTypeSystem.createFeature( intType, intType, "bla", "test");
+    rTypeSystem.createFeature( intType, intType, false, "bla", "test");
   } catch (uima::lowlevel::FeatureIntroductionFailedException & exc) {
     LOG("Exception thrown correctly: " << exc.asString());
     bExceptionThrown = true;
@@ -1105,7 +1105,7 @@ void testEmptyStrings() {
 
   lowlevel::TyFSType floatType = ts.getTypeByName(CAS::TYPE_NAME_STRING);
 
-  lowlevel::TyFSFeature f = ts.createFeature(t, floatType, "f", ustrCreatorID);
+  lowlevel::TyFSFeature f = ts.createFeature(t, floatType, false, "f", ustrCreatorID);
 
   ttdef.commit();
 
@@ -1134,7 +1134,7 @@ void testFloatFeatures() {
 
   lowlevel::TyFSType floatType = ts.getTypeByName(CAS::TYPE_NAME_FLOAT);
 
-  lowlevel::TyFSFeature f = ts.createFeature(t, floatType, "f", ustrCreatorID);
+  lowlevel::TyFSFeature f = ts.createFeature(t, floatType, false, "f", ustrCreatorID);
 
   ttdef.commit();
 //       uima::internal::TCASImpl tcas(ttdef, 30, 30, 30);
@@ -1176,10 +1176,10 @@ void testNestedStructures() {
   lowlevel::TyFSType t4 = ts.createType(top, "t4", ustrCreatorID);
   lowlevel::TyFSType t5 = ts.createType(top, "t5", ustrCreatorID);
 
-  lowlevel::TyFSFeature f11 = ts.createFeature(t1, t2, "f11", ustrCreatorID);
-  lowlevel::TyFSFeature f12 = ts.createFeature(t1, t3, "f12", ustrCreatorID);
-  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t4, "f2", ustrCreatorID);
-  lowlevel::TyFSFeature f3 = ts.createFeature(t3, t5, "f3", ustrCreatorID);
+  lowlevel::TyFSFeature f11 = ts.createFeature(t1, t2, false, "f11", ustrCreatorID);
+  lowlevel::TyFSFeature f12 = ts.createFeature(t1, t3, false, "f12", ustrCreatorID);
+  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t4, false, "f2", ustrCreatorID);
+  lowlevel::TyFSFeature f3 = ts.createFeature(t3, t5, false, "f3", ustrCreatorID);
 
   ttdef.commit();
 
@@ -1513,8 +1513,8 @@ void testOOFilterBuilder() {
   uima::lowlevel::TypeSystem & lolTS = ttdef.getTypeSystem();
   lowlevel::TyFSType lolTokenType = uima::internal::FSPromoter::demoteType( tokenType );
   lowlevel::TyFSType lolMyTokenType = lolTS.createType(lolTokenType, "MyToken", ustrCreatorID);
-  lolTS.createFeature(lolMyTokenType, lolTokenType, "MyRecursiveFeature", ustrCreatorID);
-  lolTS.createFeature(lolMyTokenType, uima::internal::FSPromoter::demoteType(stringType), "MyStringFeature", ustrCreatorID);
+  lolTS.createFeature(lolMyTokenType, lolTokenType, false, "MyRecursiveFeature", ustrCreatorID);
+  lolTS.createFeature(lolMyTokenType, uima::internal::FSPromoter::demoteType(stringType), false, "MyStringFeature", ustrCreatorID);
 
 
   Type myTokenType = typeSystem.getType("MyToken");
@@ -2826,11 +2826,11 @@ void testTypeNameSpaces() {
   lowlevel::TyFSType t4 = ts.createType(top, "n4.t1", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidType(t4) );
 
-  lowlevel::TyFSFeature f1 = ts.createFeature(t1, t3, "f1", ustrCreatorID);
+  lowlevel::TyFSFeature f1 = ts.createFeature(t1, t3, false, "f1", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f1) );
-  lowlevel::TyFSFeature g1 = ts.createFeature(t1, t4, "g1", ustrCreatorID);
+  lowlevel::TyFSFeature g1 = ts.createFeature(t1, t4, false, "g1", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(g1) );
-  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t2, "f2", ustrCreatorID);
+  lowlevel::TyFSFeature f2 = ts.createFeature(t2, t2, false, "f2", ustrCreatorID);
   ASSERT_OR_THROWEXCEPTION( ts.isValidFeature(f2) );
 
   ttdef.commit();
@@ -3014,12 +3014,12 @@ void testXMLTypeSystemReader() {
     "<type_system>"
     "<type name=\"top\">"
     "  <type name=\"t1\">"
-    "    <feature name=\"f1\" range=\"t21\"/>"
-    "    <feature name=\"f2\" range=\"t1\"/>"
+    "    <feature name=\"f1\" range=\"t21\" multirefs=\"false\"/>"
+    "    <feature name=\"f2\" range=\"t1\" multirefs=\"true\"/>"
     "  </type>"
     "  <type name=\"t2\">"
     "     <type name=\"t21\">"
-    "       <feature name=\"f1\" range=\"t21\"/>"
+    "       <feature name=\"f1\" range=\"t21\" multirefs=\"false\"/>"
     "     </type>"
     "  </type>"
     "</type>"
@@ -3054,12 +3054,14 @@ void testXMLTypeSystemReader() {
   uima::Type f1dom;
   f1.getRangeType(f1dom);
   ASSERT_OR_THROWEXCEPTION( f1dom == t21 );
+  ASSERT_OR_THROWEXCEPTION( ! f1.isMultipleReferencesAllowed() );
 
   uima::Feature f2 = crTypeSystem.getFeatureByFullName("t1:f2");
   ASSERT_OR_THROWEXCEPTION( f2.isValid() );
   uima::Type f2dom;
   f2.getRangeType(f2dom);
   ASSERT_OR_THROWEXCEPTION( f2dom == t1 );
+  ASSERT_OR_THROWEXCEPTION( f2.isMultipleReferencesAllowed() );
 
 
 
@@ -3093,8 +3095,8 @@ void testStringSubypes() {
   lowlevel::TyFSType t2 = ts.createStringSubtype("t2", v2, "kreator");
 
   lowlevel::TyFSType t = ts.createType(ts.getTopType(), "t", "kreator");
-  lowlevel::TyFSFeature f1 = ts.createFeature(t, t1, "f1", "kreator");
-  (void)ts.createFeature(t, t2, "f2", "kreator");
+  lowlevel::TyFSFeature f1 = ts.createFeature(t, t1, false, "f1", "kreator");
+  (void)ts.createFeature(t, t2, false, "f2", "kreator");
 
   ttdef.commit();
 
