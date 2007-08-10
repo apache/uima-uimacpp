@@ -20,20 +20,11 @@ then
    export UIMACPP_HOME=../..
 fi
 
-# If appears to be the "install" place use its lib & bin (stripped!)
-# If appears to be the build place use the unstripped programs
+ Testlib=.libs:../framework/.libs
+ Testbin=.libs
 
-if [ -d $UIMACPP_HOME/src ] 
-then
- Testlib=$UIMACPP_HOME/src/test/.libs:$UIMACPP_HOME/src/framework/.libs
- Testbin=$UIMACPP_HOME/src/test/.libs
-else 
- Testlib=$UIMACPP_HOME/lib
- Testbin=$UIMACPP_HOME/bin
-fi
-
-export LD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib
-export DYLD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib
+export LD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib:$UIMACPP_HOME/lib
+export DYLD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib:$UIMACPP_HOME/lib
 export PATH=$Testbin:$PATH
 
 export UIMACPP_DATAPATH=./data
