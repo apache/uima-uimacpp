@@ -72,19 +72,19 @@ namespace uima {
       };
 
   lowlevel::TypeSystem::StFeatureInfo gs_arCASFeatures[] = {
-        { CAS::FEATURE_BASE_NAME_SOFANUM,    CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_INTEGER, "Predefined feature for sofa"},
-        { CAS::FEATURE_BASE_NAME_SOFAID,     CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_STRING,  "Predefined feature for sofa"},
-        { CAS::FEATURE_BASE_NAME_SOFAMIME,   CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_STRING,  "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFANUM,   CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_INTEGER, false, "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFAID,    CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_STRING,  false, "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFAMIME,  CAS::TYPE_NAME_SOFA,        CAS::TYPE_NAME_STRING,  false, "Predefined feature for sofa"},
 
-        { CAS::FEATURE_BASE_NAME_SOFAARRAY,  CAS::TYPE_NAME_LOCALSOFA,   CAS::TYPE_NAME_TOP,     "Predefined feature for sofa"},
-        { CAS::FEATURE_BASE_NAME_SOFASTRING, CAS::TYPE_NAME_LOCALSOFA,   CAS::TYPE_NAME_STRING,  "Predefined feature for sofa"},
-        { CAS::FEATURE_BASE_NAME_SOFAURI,    CAS::TYPE_NAME_REMOTESOFA,  CAS::TYPE_NAME_STRING,  "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFAARRAY,  CAS::TYPE_NAME_LOCALSOFA,   CAS::TYPE_NAME_TOP,     false, "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFASTRING, CAS::TYPE_NAME_LOCALSOFA,   CAS::TYPE_NAME_STRING,  false, "Predefined feature for sofa"},
+        { CAS::FEATURE_BASE_NAME_SOFAURI,    CAS::TYPE_NAME_REMOTESOFA,  CAS::TYPE_NAME_STRING,  false, "Predefined feature for sofa"},
 
-        { CAS::FEATURE_BASE_NAME_SOFA,      CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_SOFA, "Predefined sofaReference feature for annotations"},
-        { CAS::FEATURE_BASE_NAME_BEGIN,     CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_INTEGER, "Predefined beginPosition feature for annotations"},
-        { CAS::FEATURE_BASE_NAME_END,       CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_INTEGER, "Predefined endPosition feature for annotations"},
+        { CAS::FEATURE_BASE_NAME_SOFA,  CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_SOFA,    false, "Predefined sofaReference feature for annotations"},
+        { CAS::FEATURE_BASE_NAME_BEGIN, CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_INTEGER, false, "Predefined beginPosition feature for annotations"},
+        { CAS::FEATURE_BASE_NAME_END,   CAS::TYPE_NAME_ANNOTATION, CAS::TYPE_NAME_INTEGER, false, "Predefined endPosition feature for annotations"},
 
-        { CAS::FEATURE_BASE_NAME_LANGUAGE,  CAS::TYPE_NAME_DOCUMENT_ANNOTATION, CAS::TYPE_NAME_STRING, "Predefined language feature for document annotations"},
+        { CAS::FEATURE_BASE_NAME_LANGUAGE, CAS::TYPE_NAME_DOCUMENT_ANNOTATION, CAS::TYPE_NAME_STRING, false, "Predefined language feature for document annotations"},
       };
 }
 
