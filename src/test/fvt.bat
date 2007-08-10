@@ -17,10 +17,7 @@ REM   KIND, either express or implied.  See the License for the
 REM   specific language governing permissions and limitations
 REM   under the License.
 
-@echo on
-
 setlocal
-REM Must be run from the uimacpp/src/test directory
 
 if "%UIMACPP_HOME%"=="" (
   set UIMACPP_HOME=..\..\install
@@ -30,7 +27,7 @@ REM default location of descriptors
 if "%UIMACPP_DATAPATH%"=="" set UIMACPP_DATAPATH=.\data
 
 REM add location of apr, icu, xerces and uimacpp binaries to the path 
-set PATH=%UIMACPP_HOME%\bin;%APR_HOME%\Release;%ICU_HOME%\bin;%XERCES_HOME%\bin;%PATH%
+set PATH=..\..\install\bin;%APR_HOME%\Release;%ICU_HOME%\bin;%XERCES_HOME%\bin;%UIMACPP_HOME%\bin;%PATH%
 
 set RM=\windows\system32\cmd /C del
 
