@@ -254,6 +254,7 @@ namespace uima {
     friend class uima::lowlevel::TypeSystem;
     friend class uima::XCASDeserializerHandler;
 	 friend class uima::XmiDeserializerHandler;
+	 friend class XmiWriter;
     friend class lowlevel::DefaultFSIterator;
   protected:
     virtual uima::lowlevel::TypeSystem const & getLowlevelTypeSystem() const = 0;
@@ -279,10 +280,18 @@ namespace uima {
     }
     
 	 bool isListType(lowlevel::TyFSType tyType) const  {
-      return ( tyType == uima::internal::gs_tyIntListType )
+      return ( tyType == uima::internal::gs_tyFSListType )
+             || ( tyType == uima::internal::gs_tyEListType )
+             || ( tyType == uima::internal::gs_tyNEListType )
+			 || ( tyType == uima::internal::gs_tyIntListType )
+		     || ( tyType == uima::internal::gs_tyEIntListType )
+		     || ( tyType == uima::internal::gs_tyNEIntListType )
              || ( tyType == uima::internal::gs_tyFloatListType )
+             || ( tyType == uima::internal::gs_tyEFloatListType )
+             || ( tyType == uima::internal::gs_tyNEFloatListType )
              || ( tyType == uima::internal::gs_tyStringListType )
-             || ( tyType == uima::internal::gs_tyFSListType );
+             || ( tyType == uima::internal::gs_tyEStringListType )
+		     || ( tyType == uima::internal::gs_tyNEStringListType );
     }
 
     bool isFSType(lowlevel::TyFSType tyType) const  {

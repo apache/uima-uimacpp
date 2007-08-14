@@ -690,8 +690,14 @@ namespace uima {
           break;                               
         }
         case internal::gs_tyIntListType:
+        case internal::gs_tyEIntListType:
+        case internal::gs_tyNEIntListType:
         case internal::gs_tyFloatListType:
-        case internal::gs_tyFSListType:  {
+        case internal::gs_tyEFloatListType:
+        case internal::gs_tyNEFloatListType:
+        case internal::gs_tyFSListType:
+        case internal::gs_tyEListType:
+        case internal::gs_tyNEListType:  {
           //cout << "list type " << f.getName() << endl;
           if (f.isMultipleReferencesAllowed()) {
             writeFeatureValue(os, fs, f);
@@ -703,7 +709,9 @@ namespace uima {
             }
           }	
           break;                                     }
-        case internal::gs_tyStringListType: {
+        case internal::gs_tyStringListType:
+        case internal::gs_tyEStringListType:
+        case internal::gs_tyNEStringListType: {
           FeatureStructure listFS = fs.getFSValue(f);
           if (listFS.isValid()) {
             if (f.isMultipleReferencesAllowed() ) {
@@ -775,10 +783,7 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
     Type t = fs.getType();
 	//cout << "findReferencedFSs() " << t.getName() << endl;
 	int tcode = internal::FSPromoter::demoteType(t);
-	if (tcode == internal::gs_tyFSListType ||
-		tcode == internal::gs_tyIntListType ||
-		tcode == internal::gs_tyFloatListType ||
-		tcode == internal::gs_tyStringListType) {
+	if ( fs.getCAS().getTypeSystem().isListType(tcode) ) {
 			insideListNode=true;
 	}
     assert( t.isValid() );
@@ -790,7 +795,9 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
           findReferencedFSs(array.get(i));
         }
       }
-	} else if (tcode == internal::gs_tyFSListType) {
+	} else if (tcode == internal::gs_tyFSListType
+			   || tcode == internal::gs_tyEListType
+			   || tcode == internal::gs_tyNEListType ) {
 		ListFS listfs(fs);
 		//cout << __LINE__ << " Enqueue FSList elements " << listfs.getLength() << endl;
         //we need to enqueue any FSs reachable from an FSList
