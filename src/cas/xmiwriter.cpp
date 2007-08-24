@@ -172,7 +172,7 @@ namespace uima {
      vector<OotsElementData*> & ootsElements = this->sharedData->getOutOfTypeSystemElements();
      for(size_t i=0;i<ootsElements.size();i++) {
        OotsElementData * oed = ootsElements.at(i);
-       string nsUri = oed->elementName->nsUri; 
+       string nsUri = oed->elementName->nsUri;
        string qname = oed->elementName->qualifiedName;
        string localName = oed->elementName->shortName;
        string prefix = qname.substr(0, oed->elementName->qualifiedName.find_first_of(":"));
@@ -205,7 +205,7 @@ namespace uima {
  * Converts a UIMA-style dotted type name to the element name that should be used in the XMI
  * serialization. The XMI element name consists of three parts - the Namespace URI, the Local
  * Name, and the QName (qualified name).
- * 
+ *
  * @param uimaTypeName
  *          a UIMA-style dotted type name
  * @return a data structure holding the three components of the XML element name
@@ -223,8 +223,8 @@ namespace uima {
    {
      shortName = typeName;
      nsUri = DEFAULT_NAMESPACE_URI;
-   } else { 
-     nameSpace = typeName.substr(0, lastDotIndex); 
+   } else {
+     nameSpace = typeName.substr(0, lastDotIndex);
      shortName = typeName.substr(lastDotIndex + 1);
      nsUri = "http:///";
      nsUri.append(nameSpace);
@@ -238,7 +238,7 @@ namespace uima {
    string prefix;
    if  (ite != nsUriToPrefixMap.end()) {
      prefix =  ite->second;
-   } 
+   }
 
    //create a prefix and associate nameSpace with prefix
    if (prefix.length() == 0) {
@@ -255,7 +255,7 @@ namespace uima {
      int num=1;
      while (prefixIte != nsPrefixesUsed.end()) {
        num++;
-       stringstream basePrefix; 
+       stringstream basePrefix;
        basePrefix << prefix << num << endl;
        prefixIte = nsPrefixesUsed.find(basePrefix.str());
        if (prefixIte == nsPrefixesUsed.end() ) {
@@ -323,7 +323,7 @@ namespace uima {
    size_t startpos = outstr.find_first_not_of(" ");
    size_t endpos = outstr.find_last_not_of(" ");
    if (string::npos != startpos && string::npos != endpos) {
-	 outstr = outstr.substr(startpos, endpos-startpos+1);
+     outstr = outstr.substr(startpos, endpos-startpos+1);
    } 
 
    if (sofaXmiId !=0 || outstr.size() > 0) {
@@ -336,7 +336,7 @@ namespace uima {
      }
      os << "/>";
    }   
-	 delete elemName;
+     delete elemName;
  }
 
   bool XmiWriter::isReferenceType(Type const & t) const {
@@ -347,7 +347,7 @@ namespace uima {
     assert( fs.isValid() );
     assert( f.isValid() );
     Type t;
-    f.getRangeType(t);
+    f.getRangeType(t); 
     assert( t.isValid() );
     if ( t == iv_stringType || t.isStringSubType() ) {
       UnicodeStringRef ref = fs.getStringValue(f);
@@ -369,10 +369,10 @@ namespace uima {
       os << val << "\"";
     } else if (t == iv_booleanType) {
       os << " " << f.getName() << "=\"";
-	  if (fs.getBooleanValue(f))
-		os << "true" << "\"";
-	  else 
-	    os << "false" << "\"";
+      if (fs.getBooleanValue(f))
+        os << "true" << "\"";
+      else 
+        os << "false" << "\"";
     } else if (t == iv_shortType) {
       os << " " << f.getName() << "=\"";
       os << fs.getShortValue(f) << "\"";
@@ -385,15 +385,15 @@ namespace uima {
       s << fs.getDoubleValue(f);
       os << s.str() << "\"";
     } else {
-
+     
       FeatureStructure referencedFS = fs.getFSValue(f);
       uima::lowlevel::TyFS lolFS = uima::internal::FSPromoter::demoteFS(referencedFS);
       if (lolFS != uima::lowlevel::FSHeap::INVALID_FS) {
-		os << " " ;
+        os << " " ;
         os << f.getName() << "=\"";
         //ptrdiff_t val = uima::internal::CASImpl::promoteCAS(iv_cas).getHeap().getUniqueID(lolFS);
-		int val = getXmiId(lolFS);
-		os << val << "\"";
+        int val = getXmiId(lolFS);
+        os << val << "\"";
       }
     }
   }
@@ -404,28 +404,28 @@ namespace uima {
     if (array.size() > 0) {
       //XCAS os << " size=\"" << array.size() << "\">" << endl;
       os << " <" << tag;
-			os << " " << XmiWriter::ID_ATTR_NAME << "=\"" << xmiid << "\"";
+            os << " " << XmiWriter::ID_ATTR_NAME << "=\"" << xmiid << "\"";
       os << " elements=\"" ;
-	  os << arrayToString(array, tag);	  
-	  os << "\"/>" << endl;
+      os << arrayToString(array, tag);    
+      os << "\"/>" << endl;
     } else {
       //XCAS os << " size=\"0\"/>" << endl;
     }
   }
 
   void XmiWriter::writeArray(ostream & os, 
-							FeatureStructure const & array, 
-							char const * tag, int xmiid) { 
+                            FeatureStructure const & array, 
+                            char const * tag, int xmiid) { 
       os << " <" << tag;
       os << " " << ID_ATTR_NAME << "=\"" << xmiid << "\"";
       os << " elements=\"" ;
-	  os << arrayToString(array, tag);
-	  os << "\"/>" << endl;
+      os << arrayToString(array, tag);
+      os << "\"/>" << endl;
   }
 
  string XmiWriter::arrayToString(FeatureStructure const & fs, char const * tag) {  
    stringstream str;
-	
+
    int typecode = internal::FSPromoter::demoteType(fs.getType());
    switch (typecode) {
       case internal::gs_tyIntArrayType: {
@@ -436,7 +436,7 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                         }
       case internal::gs_tyFloatArrayType: {
@@ -447,7 +447,7 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                           }
       case internal::gs_tyBooleanArrayType: {
@@ -462,20 +462,20 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                             }
       case internal::gs_tyByteArrayType: {
         ByteArrayFS arrayfs(fs);
         size_t n = arrayfs.size();
-				char * out = new char[3];
-				memset(out,0,3);
+                char * out = new char[3];
+                memset(out,0,3);
         for (size_t i=0; i < n;i++) {      
           sprintf(out,"%02X",0xFF & arrayfs.get(i)); 
           //printf ("itoahexadecimal: %d %d\n",i, arrayfs.get(i));
-          str << out[0] << out[1];			  
-        }		  
-		    delete[] out;
+          str << out[0] << out[1];            
+        }         
+            delete[] out;
         break;
                                          }
       case internal::gs_tyShortArrayType: {
@@ -486,7 +486,7 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                           }
       case internal::gs_tyLongArrayType: {
@@ -497,7 +497,7 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                          }
       case internal::gs_tyDoubleArrayType: {
@@ -508,7 +508,7 @@ namespace uima {
           if (i+1 < n) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                            }
       case internal::gs_tyFSArrayType: {
@@ -540,17 +540,17 @@ namespace uima {
           if (j+1 < size) {         
             str << " ";
           }
-        }		  
+        }         
         break;
                                        }
       case internal::gs_tyStringArrayType: {
         StringArrayFS arrayfs(fs);
         size_t n = arrayfs.size();
-				UnicodeString ustr;
+                UnicodeString ustr;
         for (size_t i=0; i < n;i++) {
           normalize( arrayfs.get(i), ustr );
           str << "<" << tag << ">" << ustr << "</" << tag << ">";
-        }		  
+        }         
         break;
                                            }
       default: {
@@ -575,8 +575,8 @@ namespace uima {
       os << " <" << tag;
       os << " " << ID_ATTR_NAME << "=\"" << xmiid << "\"";
       os << " elements=\"" ;
-	    os << arrayToString(array, tag).c_str();
-	    os << "\"/>" << endl;
+        os << arrayToString(array, tag).c_str();
+        os << "\"/>" << endl;
     } 
   }
 
@@ -585,8 +585,8 @@ namespace uima {
       //XCAS os << " size=\"" << array.size() << "\">" << endl;
       os << " <" << tag;
       os << " " << ID_ATTR_NAME << "=\"" << xmiid << "\">";
-	    os << arrayToString(array, "elements").c_str();
-	    os << "</" << tag << ">" << endl;
+        os << arrayToString(array, "elements").c_str();
+        os << "</" << tag << ">" << endl;
     } 
   }
 
@@ -596,58 +596,57 @@ namespace uima {
     uima::internal::CASImpl const & crCASImpl = uima::internal::CASImpl::promoteCAS(iv_cas);
     assert( fs.isValid() );
     Type t = fs.getType();
-
-	  lowlevel::TyFSType  typecode = uima::internal::FSPromoter::demoteType(t);
-	  XmlElementName * xmlElementName = xmiTypeNames[typecode];
-	
+    lowlevel::TyFSType  typecode = uima::internal::FSPromoter::demoteType(t);
+    XmlElementName * xmlElementName = xmiTypeNames[typecode];
+    bool insidelist = fs.getCAS().getTypeSystem().isListType(typecode);
     int xmiId = /**crCASImpl.getHeap().getUniqueID**/
-		getXmiId( uima::internal::FSPromoter::demoteFS(fs) );
+      getXmiId( uima::internal::FSPromoter::demoteFS(fs) );
    
     // if array
     if ( iv_arrayType.subsumes(t) ) {
-	  const CAS* ccasp = &iv_cas;
+      const CAS* ccasp = &iv_cas;
       CAS* casp = const_cast<CAS*> (ccasp);
-	    if (casp->getHeap()->getArraySize(internal::FSPromoter::demoteFS(fs)) >0) {
-		    if ( t == iv_intArrayType ) {
-			    writeArray( os, IntArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_floatArrayType ) {
-			    writeArray( os, FloatArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_stringArrayType ) {
-			    //cout << "got a string array " << endl;
-			    writeStringArray( os, StringArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_byteArrayType ) {
-			    writeArray(os, ByteArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_booleanArrayType ) {
-			    writeArray( os, BooleanArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_shortArrayType ) {
-			    writeArray( os, ShortArrayFS(fs),xmlElementName->qualifiedName.c_str(), xmiId );
-		    } else if ( t == iv_longArrayType ) {
-			    writeArray( os, LongArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else if ( t == iv_doubleArrayType ) {
-			    writeArray( os, DoubleArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-		    } else {
-			    assert( t == iv_cas.getTypeSystem().getType(uima::CAS::TYPE_NAME_FS_ARRAY) );
-			    if (internal::FSPromoter::demoteType(t) == internal::gs_tyFSArrayType) {
-				    writeArray( os, ArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
-			    } else {
-				    cerr << "writeFSFlat unknown array type " << t.getName() << endl;
-			    }
-		    }
-	    }
+        if (casp->getHeap()->getArraySize(internal::FSPromoter::demoteFS(fs)) >0) {
+            if ( t == iv_intArrayType ) {
+                writeArray( os, IntArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_floatArrayType ) {
+                writeArray( os, FloatArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_stringArrayType ) {
+                //cout << "got a string array " << endl;
+                writeStringArray( os, StringArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_byteArrayType ) {
+                writeArray(os, ByteArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_booleanArrayType ) {
+                writeArray( os, BooleanArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_shortArrayType ) {
+                writeArray( os, ShortArrayFS(fs),xmlElementName->qualifiedName.c_str(), xmiId );
+            } else if ( t == iv_longArrayType ) {
+                writeArray( os, LongArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else if ( t == iv_doubleArrayType ) {
+                writeArray( os, DoubleArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+            } else {
+                assert( t == iv_cas.getTypeSystem().getType(uima::CAS::TYPE_NAME_FS_ARRAY) );
+                if (internal::FSPromoter::demoteType(t) == internal::gs_tyFSArrayType) {
+                    writeArray( os, ArrayFS(fs), xmlElementName->qualifiedName.c_str(), xmiId);
+                } else {
+                    cerr << "writeFSFlat unknown array type " << t.getName() << endl;
+                }
+            }
+        }
     } else {
       vector<Feature> features;
       fs.getType().getAppropriateFeatures(features);
       size_t i;
-	    stringstream strcontent;
-	    os << " <" << xmlElementName->qualifiedName;
-	    os << " " << ID_ATTR_NAME << "=\"" << getXmiId( uima::internal::FSPromoter::demoteFS(fs) ) << "\"";
+        stringstream strcontent;
+        os << " <" << xmlElementName->qualifiedName;
+        os << " " << ID_ATTR_NAME << "=\"" << getXmiId( uima::internal::FSPromoter::demoteFS(fs) ) << "\"";
       bool containsElements=false;
-	    for (i=0; i<features.size(); ++i) {
+        for (i=0; i<features.size(); ++i) {
         uima::Feature const & f = features[i];
         Type range;
-        f.getRangeType(range);
-		    int typecode = internal::FSPromoter::demoteType(range);
-		    //cout << "writeFSFlat() " << range.getName() << endl;
+        f.getRangeType(range); 
+            int typecode = internal::FSPromoter::demoteType(range);
+            //cout << "writeFSFlat() " << range.getName() << endl;
         switch (typecode) {
         case internal::gs_tyBooleanType:
         case internal::gs_tyByteType:
@@ -666,9 +665,9 @@ namespace uima {
           } else {
             StringArrayFS arrayFS = fs.getStringArrayFSValue(f);
             if (arrayFS.isValid() && arrayFS.size() > 0) {
-              strcontent << arrayToString(arrayFS, f.getName().asUTF8().c_str());					
+              strcontent << arrayToString(arrayFS, f.getName().asUTF8().c_str());
             }
-          }	
+          }
           break;                             
         }
         case internal::gs_tyIntArrayType:
@@ -682,11 +681,11 @@ namespace uima {
           if (f.isMultipleReferencesAllowed() ) {
             writeFeatureValue(os, fs, f);
           } else {
-						if (fs.getFSValue(f).isValid()) {
+            if (fs.getFSValue(f).isValid()) {
               string str = arrayToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
               os << " " << f.getName() << "=\"" << str << "\" ";
-						}
-          }	
+            }
+          }
           break;                               
         }
         case internal::gs_tyIntListType:
@@ -695,20 +694,18 @@ namespace uima {
         case internal::gs_tyFloatListType:
         case internal::gs_tyEFloatListType:
         case internal::gs_tyNEFloatListType:
-        case internal::gs_tyFSListType:
-        case internal::gs_tyEListType:
-        case internal::gs_tyNEListType:  {
-          //cout << "list type " << f.getName() << endl;
-          if (f.isMultipleReferencesAllowed()) {
+        case internal::gs_tyFSListType:  {
+          if (f.isMultipleReferencesAllowed() || insidelist) {
             writeFeatureValue(os, fs, f);
           } else {
             if (fs.getFSValue(f).isValid()) {
-              string str = listToString(fs.getFSValue(f), f.getName().asUTF8().c_str());		          
+              string str = listToString(fs.getFSValue(f), f.getName().asUTF8().c_str());                  
               os << " " << f.getName() << "=\"" << str << "\" ";  
               //cout << "   " << range.getName() << str << endl;
             }
-          }	
-          break;                                     }
+          }
+          break;
+        }
         case internal::gs_tyStringListType:
         case internal::gs_tyEStringListType:
         case internal::gs_tyNEStringListType: {
@@ -717,22 +714,23 @@ namespace uima {
             if (f.isMultipleReferencesAllowed() ) {
               writeFeatureValue(os, fs, f);
             } else {
-							if (fs.getFSValue(f).isValid()) {
+              if (fs.getFSValue(f).isValid()) {
                 string str = listToString(fs.getFSValue(f), f.getName().asUTF8().c_str());          
                 if (listFS.isValid() && str.length() > 0) {
-                  strcontent << str;					
-                }			
-							}
+                  strcontent << str;
+                }
+              }
             }
           }
-          break;                                        }
+          break;
+        }
         default: { 
           writeFeatureValue(os, fs, f);
           break;
         }
-     }	    
-	}
-	  
+     }      
+    }
+      
   //add out-of-typesystem features, if any
   if (this->sharedData != NULL) {
     int fsaddr = internal::FSPromoter::demoteFS(fs);
@@ -770,7 +768,7 @@ namespace uima {
 
 void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
     
-	bool insideListNode=false;
+
     if (! fs.isValid() ) {
       return;
     }
@@ -781,11 +779,9 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
       }
     }
     Type t = fs.getType();
-	//cout << "findReferencedFSs() " << t.getName() << endl;
-	int tcode = internal::FSPromoter::demoteType(t);
-	if ( fs.getCAS().getTypeSystem().isListType(tcode) ) {
-			insideListNode=true;
-	}
+    //cout << "findReferencedFSs() " << t.getName() << endl;
+    int tcode = internal::FSPromoter::demoteType(t);
+    bool insideListNode=fs.getCAS().getTypeSystem().isListType(tcode);
     assert( t.isValid() );
     size_t i;
     if ( iv_arrayType.subsumes(t) ) {
@@ -795,17 +791,8 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
           findReferencedFSs(array.get(i));
         }
       }
-	} else if (tcode == internal::gs_tyFSListType
-			   || tcode == internal::gs_tyEListType
-			   || tcode == internal::gs_tyNEListType ) {
-		ListFS listfs(fs);
-		//cout << __LINE__ << " Enqueue FSList elements " << listfs.getLength() << endl;
-        //we need to enqueue any FSs reachable from an FSList
-		for (size_t i = 0; i < listfs.getLength(); i++) {
-			findReferencedFSs(listfs.getHead());
-		}
-	}
-	else {
+    } 
+    else {
       vector<Feature> features;
       fs.getType().getAppropriateFeatures(features);
 
@@ -815,13 +802,13 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
         f.getRangeType(range); 
         if (isReferenceType(range)) {
           //cout << __LINE__ << "a referenced feature " <<
-			    //	f.getName() << endl;
-			    int typecode = internal::FSPromoter::demoteType(range);
-			    switch (typecode) {
-				    case internal::gs_tyFSArrayType:  {
-					  findReferencedFSs(fs.getFSValue(f));
-					  break;
-				  }
+                //  f.getName() << endl;
+                int typecode = internal::FSPromoter::demoteType(range);
+                switch (typecode) {
+                    case internal::gs_tyFSArrayType:  {
+                      findReferencedFSs(fs.getFSValue(f));
+                      break;
+                  }
           case internal::gs_tyFSListType:  {
             // we only enqueue lists as first-class objects if the feature has
             // multipleReferencesAllowed = true
@@ -834,31 +821,31 @@ void XmiWriter::findReferencedFSs(FeatureStructure const & fs, bool check) {
             }
             break;
           }
-				  case internal::gs_tyBooleanArrayType:
-				  case internal::gs_tyByteArrayType:
-				  case internal::gs_tyIntArrayType:
-				  case internal::gs_tyFloatArrayType:
-				  case internal::gs_tyStringArrayType:
-				  case internal::gs_tyShortArrayType:
-				  case internal::gs_tyLongArrayType:
-				  case internal::gs_tyDoubleArrayType: {
-					  if (f.isMultipleReferencesAllowed ()) {
-						  findReferencedFSs(fs.getFSValue(f));
-				    }
-					  break;
-				  }
-				  case internal::gs_tyIntListType:
-				  case internal::gs_tyFloatListType:
-				  case internal::gs_tyStringListType:   {
-				    if (f.isMultipleReferencesAllowed () || insideListNode) {
-						  findReferencedFSs(fs.getFSValue(f));
-				    }
-					  break;
-				  }
-				  default: { //FS Ref
-					  findReferencedFSs(fs.getFSValue(f));
-				  }
-		    }
+                  case internal::gs_tyBooleanArrayType:
+                  case internal::gs_tyByteArrayType:
+                  case internal::gs_tyIntArrayType:
+                  case internal::gs_tyFloatArrayType:
+                  case internal::gs_tyStringArrayType:
+                  case internal::gs_tyShortArrayType:
+                  case internal::gs_tyLongArrayType:
+                  case internal::gs_tyDoubleArrayType: {
+                      if (f.isMultipleReferencesAllowed ()) {
+                          findReferencedFSs(fs.getFSValue(f));
+                    }
+                      break;
+                  }
+                  case internal::gs_tyIntListType:
+                  case internal::gs_tyFloatListType:
+                  case internal::gs_tyStringListType:   {
+                    if (f.isMultipleReferencesAllowed () || insideListNode) {
+                          findReferencedFSs(fs.getFSValue(f));
+                    }
+                      break;
+                  }
+                  default: { //FS Ref
+                      findReferencedFSs(fs.getFSValue(f));
+                  }
+            }
       }
     }
   }
@@ -949,7 +936,7 @@ void XmiWriter::write(ostream & os) {
     if (NULL != indexes) {
       return false;
     }
-	//cout << "enqueue new fs " << tyfs << " " << fs.getType().getName() << endl;
+    //cout << "enqueue new fs " << tyfs << " " << fs.getType().getName() << endl;
     // new FS, enqueue it
     indexes = new vector<int>;
     enqueuedFS[tyfs] = indexes;
@@ -965,7 +952,7 @@ void XmiWriter::write(ostream & os) {
     if (NULL != indexes) {
       return false;
     }
-	//cout << "enqueue new fs " << tyfs << " " << fs.getType().getName() << endl;
+    //cout << "enqueue new fs " << tyfs << " " << fs.getType().getName() << endl;
     // new FS, enqueue it
     indexes = new vector<int>;
     enqueuedFS[id] = indexes;
@@ -1049,7 +1036,7 @@ void XmiWriter::write(ostream & os) {
         this->findReferencedFSs(head);
       }
 
-      curNode = curNode.getTail();		  
+      curNode = curNode.getTail();        
     }
   }
 
@@ -1102,11 +1089,11 @@ void XmiWriter::write(ostream & os) {
       break;
                                          }
     case internal::gs_tyEListType: {
-      cout << "listToString() Empty FSList SKIP"  << endl;
+      //cout << "listToString() Empty FSList SKIP"  << endl;
       break;
                                    }
     case internal::gs_tyFSListType: {
-      cout << "listToString() FSList SKIP"  << endl;
+      //cout << "listToString() FSList SKIP"  << endl;
       break;
                                     }
     case internal::gs_tyNEListType: {
@@ -1246,6 +1233,7 @@ char const *  XmiWriter::XMI_VERSION_VALUE = "2.0";
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

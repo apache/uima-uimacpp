@@ -224,6 +224,7 @@ public:
             delete vec->at(i);
           }
         }
+        delete vec;
       }
     }
 
