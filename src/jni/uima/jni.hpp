@@ -39,6 +39,7 @@
 #include "uima/engine.hpp"
 #include "uima/annotator_context.hpp"
 #include "uima/casiterator.hpp"
+#include <jni.h>
 
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
@@ -68,7 +69,33 @@
 /* ----------------------------------------------------------------------- */
 /*       Types / Classes                                                   */
 /* ----------------------------------------------------------------------- */
+class UIMA_LINK_IMPORTSPEC JNILogger : public  uima::Logger {
+    public:
+      JNILogger(JNIEnv * env); 
+      
+      virtual void log(uima::LogStream::EnEntryType entrytype, 
+                  string classname,
+                  string methodname,
+                  string message,
+                  long errorCode)  ;
+      void setJNIEnv(JNIEnv * env) {
+         iv_jnienv=env;
+      }
+    private:
+      /** Format the log message */
+      std::string format(uima::LogStream::EnEntryType enType,
+                        const string & cpszMsg, 
+                        long lUserCode) const;
+
+      JNIEnv * iv_jnienv;     //handle to Java environment
+      jclass   cv_clazz ;    //proxy class on java side
+      jmethodID cv_logMethod; //log method
+  };
+    
+
 namespace uima {
+  
+
 class JNIInstance {
 private:
   uima::AnalysisEngine * iv_pEngine;
@@ -79,15 +106,23 @@ private:
   bool iv_hasNext;
 
 public:
+  JNILogger * iv_logger;
   JNIInstance() :
       iv_pEngine(NULL),
       iv_pCAS(NULL),
       iv_serializedCAS(),
       iv_pSegment(NULL),
       iv_serializedSegment(),
-      iv_hasNext(false) {}
+      iv_hasNext(false),
+      iv_logger(0) {}
 
-  ~JNIInstance() {}
+  ~JNIInstance() {
+    if (iv_logger != NULL) {
+      uima::ResourceManager::getInstance().unregisterLogger(iv_logger);
+      delete iv_logger;
+      iv_logger=NULL;
+    }
+  }
 
   uima::AnalysisEngine * getEngine() {
     return iv_pEngine;

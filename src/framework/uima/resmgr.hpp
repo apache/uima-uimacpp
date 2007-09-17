@@ -240,6 +240,18 @@ namespace uima {
     static icu::UnicodeString resolveFilename(icu::UnicodeString const & filename,
         icu::UnicodeString const & lastFilename);
 
+
+    /**
+      * Register Logger. Caller owns the logger instance.
+      */
+     void registerLogger (Logger *);
+    /**
+      * unregister this logger. Caller owns logger instance.
+      */
+      void unregisterLogger(Logger *);
+
+    vector<Logger*> & getLoggers();
+
     /*@}*/
   protected:
     /* --- functions --- */
@@ -268,22 +280,14 @@ namespace uima {
     bool                    bDoSchemaValidation;
     TCHAR                   schemaInfo[1024];
 
-    FILE                  * iv_logFile;
-    LogStream::EnEntryType  iv_logLevel;
-    uima::LogFacility      * iv_frameworkLogger;
-    FILE                  * getLogFile();
+    //Logging
+    vector<Logger *>        iv_loggers;    //registered loggers
+    FileLogger *            iv_fileLogger; //created if UIMACPP_LOGFILE env variable is set.
 
-    //java logging
-    bool                    iv_useJavaLogging; //use java logging if true; else log to local file.
-
-    void writeToJavaLogger (LogStream::EnEntryType entype,
-                            std::string srcclass,
-                            const TCHAR * message);
-
-    void writeToJavaLogger (LogStream::EnEntryType entype,
-                            std::string srcclass,
-                            std::string srcmethod,
-                            const TCHAR * message);
+    LogStream::EnEntryType  iv_logLevel;  // minimum level for message to be logged
+    uima::LogFacility      * iv_frameworkLogger; //instance of log facility used by the
+                                                 //framework.
+   
 
     /* --- friends --- */
     friend class ResourceManagerAutomaticInstanceDestructor;
@@ -322,4 +326,5 @@ namespace uima {
 #endif /* UIMA_RESMGR_HPP */
 
 /* <EOF> */
+
 

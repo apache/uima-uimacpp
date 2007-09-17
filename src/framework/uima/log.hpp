@@ -66,7 +66,6 @@ namespace uima {
 
 namespace uima {
 
-
   /**
    * The class LogStream logs user-related information which would otherwise be
    * hard to concatenate into a single string.
@@ -108,9 +107,63 @@ namespace uima {
   }
   ; /* LogStream */
 
+
+  /**
+   * This defines the interface for Loggers.  To use a custom logger,
+   * implement a class that implements this interface, and register
+   * it using the ResourceManager::registerLogger(Logger *) method.
+   */
+
+  class UIMA_LINK_IMPORTSPEC Logger {
+  public:
+    /*
+     *  Destructor
+     *
+     */
+    virtual ~Logger() { }
+
+    virtual void log(LogStream::EnEntryType entrytype, 
+                  string classname,
+                  string methodname,
+                  string message,
+                  long errorCode)  =0;
+
+  };
+
+  /** This class is the built in Logger that writes log
+    * message to a file. The ResourceManager instantiates
+    * and registers a FileLogger when the UIMACPP_LOGFILE
+    * environment variable is set to the location of a
+    * log file. 
+    */
+  class UIMA_LINK_IMPORTSPEC FileLogger : public  Logger {
+    public:
+      FileLogger(string filename);
+      ~FileLogger() {fclose(iv_logfile);}
+      
+      virtual void log(LogStream::EnEntryType entrytype, 
+                  string classname,
+                  string methodname,
+                  string message,
+                  long errorCode) ;
+      
+    private:
+      /** Format the log message */
+      std::string format(LogStream::EnEntryType enType,
+                        const string & cpszMsg, 
+                        long lUserCode) ;
+
+      FILE * iv_logfile;
+  
+  };
+    
+
+
   /**
    * The class LogFacility logs user-related information
-   * for debugging or error recording purposes.
+   * for debugging or error recording purposes.  The log messages
+   * are written to one or more loggers registered with the
+   * ResourceManager.
    * \code
      if(myErrorOccured)
         {
@@ -154,11 +207,14 @@ namespace uima {
     /*@{*/
     /** Create a new instance of a log facility. <TT>cpszAppKey</TT> must denote the
         key of the application. */
-    /** this constructor gets handle to the log file
-    * from the ResourceManager  */
+    /** this constructor gets handle to the loggers 
+    * from the ResourceManager and sets the mininum log level to INFO.
+    *  This is used in the AnnotatorContext to create separate instances
+    *   of the  LogFacility for each annotator. */
     LogFacility(icu::UnicodeString const & );
-    /** this constructor logs to the specified file  */
-    LogFacility(icu::UnicodeString const &, FILE *, LogStream::EnEntryType level );
+    /** this constructor gets the handle to loggers from the ResourceManager.
+        This constructor is used by the framework ResourceManager */
+    LogFacility(icu::UnicodeString const &,  LogStream::EnEntryType level );
     ~LogFacility();
     /*@}*/
     /** @name Properties */
@@ -196,8 +252,6 @@ namespace uima {
     void              logError(const icu::UnicodeString & crclMessage, long lUserCode = 0) const;
     /** Log the specified error. */
     void              logError(const ErrorInfo & crclErrorInfo) const;
-    /** Format the log message */
-    std::string       format(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode) const;
     /**  */
     /*@}*/
   protected:
@@ -210,7 +264,8 @@ namespace uima {
     ErrorInfo         iv_errInfo;
     LogStream         iv_logStream;
     LogStream::EnEntryType   iv_logLevel;
-    FILE *    iv_logFile;
+    vector<Logger*> & vecLoggers;
+
     /* --- functions --- */
     TyMessageId       getTypeAsMessageId(LogStream::EnEntryType enType) const;
     void              doLog(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode = 0) const;
@@ -327,4 +382,5 @@ namespace uima {
 #endif /* UIMA_LOG_HPP */
 
 /* <EOF> */
+
 

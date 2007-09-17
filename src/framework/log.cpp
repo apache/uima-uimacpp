@@ -1,5 +1,5 @@
 /** @name log.cpp
------------------------------------------------------------------------------
+------------------------------------------------------------------F-----------
 
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -62,6 +62,70 @@ const size_t                  UIMA_LOG_STATIC_CONVERSION_BUFSIZE = 1024;
 /*       Private Implementation                                            */
 /* ----------------------------------------------------------------------- */
 namespace uima {
+  FileLogger::FileLogger(string filename) : iv_logfile(0) {
+     iv_logfile = fopen(filename.c_str(),"a");
+     if (iv_logfile == NULL) {   //Need to handle this better
+        //cerr << "Could not open the log file " << cpszLogFile << endl;
+        string str = "Could not open the log file ";
+        str += filename;
+        UIMA_EXC_THROW_NEW(Uima_runtime_error,
+                           UIMA_MSG_ID_LITERAL_STRING,
+                           UIMA_MSG_ID_LITERAL_STRING,
+                           ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, str.c_str()),
+                           ErrorInfo::unrecoverable);
+      } 
+  }
+
+  void FileLogger::log(LogStream::EnEntryType enType, 
+                      string cpszClass,
+                      string cpszMethod,
+                      string cpszMsg, 
+                      long lUserCode) 
+  /* ----------------------------------------------------------------------- */
+  {
+     //write to local log file if one is available
+     string message = cpszClass + " ";
+     if (cpszMethod.length() >0) {
+       message += cpszMethod + " ";
+     }
+     message += cpszMsg;
+     message = format(enType, message, lUserCode);
+     fwrite(message.c_str(), 1, message.size(), iv_logfile);
+     fflush(iv_logfile);
+  }
+
+   std::string  FileLogger::format(LogStream::EnEntryType enType, 
+                                  const string & cpszMsg, 
+                                  long lUserCode)  {
+    
+    time_t rawtime;
+    time ( &rawtime );
+    string currts = ctime(&rawtime);
+
+    stringstream str;
+    str << currts.substr(0,currts.length()-1);
+
+    //map enType to string
+    switch (enType) {
+    case LogStream::EnWarning :
+      str << " WARNING: ";
+      str << " RC=" << lUserCode << " ";
+      break;
+    case LogStream::EnError :
+      str << " SEVERE: ";
+      str << " RC=" << lUserCode << " ";
+      break;
+    default:
+      str << " INFO: ";
+      if (lUserCode !=0) {
+        str << " RC=" << lUserCode << " ";
+      }
+    }
+    
+    str << cpszMsg << endl;
+   
+    return str.str();
+  }
 
   TyMessageId LogFacility::getTypeAsMessageId(LogStream::EnEntryType enType) const
   /* ----------------------------------------------------------------------- */
@@ -74,7 +138,7 @@ namespace uima {
     case LogStream::EnError   :
       return(UIMA_MSG_ID_LOG_ERROR);
     default:
-      assertWithMsg(false, _TEXT("Unknow EnLogEntryType"));  //lint !e506: Constant value Boolean
+      assertWithMsg(false, _TEXT("Unknown EnLogEntryType"));  //lint !e506: Constant value Boolean
     }
     return(0);                                         /* shutup compiler */
   }
@@ -82,64 +146,14 @@ namespace uima {
   void LogFacility::doLog(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode) const
   /* ----------------------------------------------------------------------- */
   {
+    string method;
     if (isLoggable(enType)) {
-      if (ResourceManager::hasInstance() ) {
-        ResourceManager & resmgr = ResourceManager::getInstance();
-        if ( resmgr.isJavaLoggingEnabled()) {
-          //route to java logger if one is available
-          resmgr.writeToJavaLogger(enType, iv_strOrigin,
-                                   cpszMsg);
-        } else if (iv_logFile != NULL) {
-          //write to local log file if one is available
-          string message = format(enType, cpszMsg, lUserCode);
-          fwrite(message.c_str(), 1, message.size(), iv_logFile);
-          fflush(iv_logFile);
-        }
+      for (int i=0; i < vecLoggers.size(); i++) {
+        vecLoggers.at(i)->log(enType,this->iv_strOrigin,
+                                     method,cpszMsg,lUserCode);
       }
     }
 
-  }
-
-  std::string  LogFacility::format(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode) const {
-
-    //if (isLoggable(enType)) {
-    /***char dateStr [9];
-    char timeStr [9];
-    _strdate( dateStr);
-    _strtime( timeStr );
-       
-    message += dateStr;
-    message += " ";
-    message += timeStr;
-    message += " ";
-    message += iv_strOrigin.c_str();
-    message += " ";
-             ***/
-
-    time_t rawtime;
-    time ( &rawtime );
-    string currts = ctime(&rawtime);
-    string message = currts.substr(0,currts.length()-1);
-
-    //map enType to Java levels
-    switch (enType) {
-    case LogStream::EnMessage :
-      message += (" INFO: ");
-      break;
-    case LogStream::EnWarning :
-      message += " WARNING: ";
-      break;
-    case LogStream::EnError :
-      message += " SEVERE: ";
-      break;
-    default:
-      message += " INFO: ";
-    }
-
-    message += cpszMsg;
-    message += "\n";
-    //}
-    return message;
   }
 
   bool LogFacility::isLoggable(LogStream::EnEntryType enType) const {
@@ -226,23 +240,22 @@ namespace uima {
   LogFacility::LogFacility(icu::UnicodeString const & crEngineName):
       iv_lLastUserCode(0),
       iv_logStream(*this, LogStream::EnMessage),
-      iv_logFile(NULL),
-      iv_logLevel(LogStream::EnMessage) {
+      vecLoggers(ResourceManager::getInstance().getLoggers()),
+      iv_logLevel(ResourceManager::getInstance().getLoggingLevel()) {
     UnicodeStringRef ref(crEngineName);
     ref.extract(iv_strOrigin, CCSID::getDefaultName()  );
-    iv_logFile = uima::ResourceManager::getInstance().getLogFile();
-    iv_logLevel = uima::ResourceManager::getInstance().getLoggingLevel();
+    
   }
 
   LogFacility::LogFacility(icu::UnicodeString const & crEngineName,
-                           FILE * crpLogFile,
                            LogStream::EnEntryType crLoggingLevel):
       iv_lLastUserCode(0),
-      iv_logStream(*this, LogStream::EnMessage),
-      iv_logFile(crpLogFile),
+      iv_logStream(*this, crLoggingLevel),
+      vecLoggers(ResourceManager::getInstance().getLoggers()),
       iv_logLevel(crLoggingLevel) {
     UnicodeStringRef ref(crEngineName);
     ref.extract(iv_strOrigin, CCSID::getDefaultName() );
+    
   }
 
   LogFacility::~LogFacility() {
@@ -305,4 +318,5 @@ namespace uima {
 
 } //namespace uima
 /* <EOF> */
+
 

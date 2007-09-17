@@ -125,6 +125,23 @@ void failImpl( const char * cpszExpr, const char * cpszFile, unsigned int uiLine
                      ErrorInfo::unrecoverable);
 }
 
+class TestLogger : public Logger {
+public:
+  string message;
+  long errcode;
+  TestLogger() : message(), errcode(0) {}
+  void log(LogStream::EnEntryType entrytype,
+    string classname, string methodname, string msg, long code)  {
+      this->message = msg;
+      errcode = code;
+  }
+  void reset() {
+    message.clear();
+    errcode =0;
+  }
+  
+};
+
 void testCallingSequence1(uima::util::ConsoleUI & rclConsole, const TCHAR * cpszConfigFilename)
 /* ----------------------------------------------------------------------- */
 {
@@ -235,6 +252,68 @@ void testMissingResMgr(uima::util::ConsoleUI & rclConsole)
   failIfNotTrue(errInfo.getErrorId() == UIMA_ERR_ENGINE_RESMGR_NOT_INITIALIZED);
   failIfNotTrue(pEngine == NULL);
   rclConsole.info("testMissingResMgr finished." );
+}
+
+void testRegisterLoggers(uima::util::ConsoleUI & rclConsole)
+/* ----------------------------------------------------------------------- */
+{
+  rclConsole.info("testRegisterLoggers start.");
+
+  failIfNotTrue( ResourceManager::hasInstance() );
+  ErrorInfo errInfo;
+  TestLogger * pLogger1 = new TestLogger();
+  TestLogger * pLogger2 = new TestLogger();
+
+  
+  LogFacility & logFacility = ResourceManager::getInstance().getLogger();
+  /* register a logger */
+  ResourceManager::getInstance().registerLogger(pLogger1);
+  /* write log messages */
+  string message = "This is message 1.";
+  logFacility.logMessage(message);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  message = "This is an error message.";
+  logFacility.logError(message,100);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  failIfNotTrue(100 == pLogger1->errcode);
+ 
+  /* register second logger */
+  pLogger1->reset();
+  pLogger2->reset();
+  ResourceManager::getInstance().registerLogger(pLogger2);
+  /* write log messages */
+  message = "This is message 2.";
+  logFacility.logMessage(message);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  failIfNotTrue(message.compare(pLogger2->message) == 0);
+  message = "This is an error message 2.";
+  logFacility.logError(message,200);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  failIfNotTrue(message.compare(pLogger2->message) == 0);
+  failIfNotTrue(200 == pLogger1->errcode);
+  failIfNotTrue(200 == pLogger2->errcode);
+
+  /* unregister 2nd logger */
+  pLogger1->reset();
+  pLogger2->reset();
+  ResourceManager::getInstance().unregisterLogger(pLogger2);
+  /* write log messages */
+  message = "This is message 3.";
+  logFacility.logMessage(message);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  failIfNotTrue(pLogger2->message.length() == 0);
+  message = "This is an error message 3.";
+  logFacility.logError(message,100);
+  failIfNotTrue(message.compare(pLogger1->message) == 0);
+  failIfNotTrue(pLogger2->message.length() == 0);
+  failIfNotTrue(100 == pLogger1->errcode);
+  failIfNotTrue(0 == pLogger2->errcode);
+
+  /* cleanup - unregister the first logger */
+  ResourceManager::getInstance().unregisterLogger(pLogger1);
+  delete pLogger1;
+  delete pLogger2;
+  rclConsole.info("testRegisterLoggers finished." );
 }
 
 void testProcessDocu(uima::util::ConsoleUI & rclConsole,
@@ -489,7 +568,8 @@ int main(int argc, char * argv[]) /*
   try {
     /* create a UIMA resource */
     (void) uima::ResourceManager::createInstance(MAIN_TITLE);
-
+    /* test registering user specified loggers */
+    testRegisterLoggers(clConsole);
     ///mainTest(clConsole, lCCSID, cpszConfigFilename, cpszLanguage, (size_t) lNumberOfIterations);
     UnicodeString filename("toktest.xml");
     UnicodeString fn = ResourceManager::resolveFilename(filename, filename);
@@ -522,5 +602,6 @@ int main(int argc, char * argv[]) /*
 }
 
 /* <EOF> */
+
 
 

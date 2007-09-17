@@ -127,12 +127,6 @@ namespace uima {
   ResourceManager * ResourceManager::cv_pclSingletonInstance = 0;
   TyProcedure               iv_traceProc;
 
-  //used for java logging
-  JNIEnv * cv_env = 0;    //handle to Java environment
-  jclass   cv_clazz = 0;    //proxy class on java side
-  jmethodID cv_logMethod = 0; //log method
-
-
   /* see docu for class ResourceManagerAutomaticInstanceDestructor above */
   static ResourceManagerAutomaticInstanceDestructor gs_clResourceManagerAutomaticInstanceDestructor;
 
@@ -153,14 +147,13 @@ namespace uima {
       iv_locationWork("."),
       iv_locationData("."),
       iv_frameworkLogger(NULL),
-      iv_logFile(NULL),
       iv_logLevel(LogStream::EnMessage),
-      iv_useJavaLogging(false)
+      iv_fileLogger(NULL),
+      iv_loggers()
       /* ----------------------------------------------------------------------- */
   {
     
     string                    str;
-    const TCHAR *              cpszLogFile = 0;
 
     assert(EXISTS(cpszInstance));
     UIMA_TPRINT(_TEXT("instance: ") << cpszInstance);
@@ -171,39 +164,6 @@ namespace uima {
        we may instantiate a first trace object */
     util::Trace                 clTrace(util::enTraceDetailLow, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_RESOURCE_MGR);
     clTrace.dump(_TEXT("UIMACPP Instance"), cpszInstance);
-
-    /* determine log file name */
-    str = UIMA_ENVVAR_LOG_FILE;
-    util::EnvironmentVariableQueryOnly clEnvVarLogFilePath(str.c_str());
-    UIMA_TPRINT(_TEXT("querying envvar: ") << str.c_str());
-    if (clEnvVarLogFilePath.hasValue()) {
-      cpszLogFile = clEnvVarLogFilePath.getValue();
-      UIMA_TPRINT(_TEXT("value: ") << cpszLogFile);
-      /* open log file for writing */
-      iv_logFile = fopen(cpszLogFile,"a");
-      if (iv_logFile == NULL) {   //Need to handle this better
-        //effectively logging is OFF ... throw Exception ?
-        //cerr << "Could not open the log file " << cpszLogFile << endl;
-        str = "Could not open the log file ";
-        str += cpszLogFile;
-        UIMA_EXC_THROW_NEW(Uima_runtime_error,
-                           UIMA_MSG_ID_LITERAL_STRING,
-                           UIMA_MSG_ID_LITERAL_STRING,
-                           ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, str.c_str()),
-                           ErrorInfo::unrecoverable);
-      } else {
-        str = "Logging directed to file ";
-        str += cpszLogFile;
-      }
-    } else {
-      iv_logFile = NULL;   //logging is effectively OFF
-      str = "Logging is OFF";
-    }
-
-    //instantiate framework logger
-    iv_frameworkLogger = new LogFacility(UnicodeString("org.apache.uima.cpp"), iv_logFile, iv_logLevel);
-
-    iv_frameworkLogger->logMessage(str);
 
     /* determine xsd path ... use $UIMACPP_HOME/data instead of iv_locationData
        (which defaults to $UIMACPP_DATAPATH) as the latter is for user data. */
@@ -417,6 +377,7 @@ namespace uima {
       deleteResourceList( *pAnnotators );
     }
     iv_resources.clear();
+
     UIMA_TPRINT("  ...seek and destroy!");
   }
 
@@ -538,17 +499,36 @@ namespace uima {
     iv_logLevel=level;
   }
 
-  FILE *  ResourceManager::getLogFile() {
-    return iv_logFile;
-  }
-
-  bool  ResourceManager::isJavaLoggingEnabled() {
-    return iv_useJavaLogging;
-  }
-
   TCHAR const *  ResourceManager::getSchemaInfo() {
     return schemaInfo;
   }
+
+  void ResourceManager::registerLogger(Logger * pLogger) {
+ 	iv_loggers.push_back(pLogger);
+  }
+
+  vector<Logger*> & ResourceManager::getLoggers() {
+ 	return iv_loggers;
+  }
+  
+  void ResourceManager::unregisterLogger(Logger * pLogger) {
+      vector<Logger*>::iterator iter;
+ 	for (iter=iv_loggers.begin(); iter  != iv_loggers.end();iter++) {
+  		if (*iter == pLogger) {
+		    iv_loggers.erase(iter);
+                return;
+            }
+      }
+ 	
+      string str = "Logger not found. Could not unregister.";
+      UIMA_EXC_THROW_NEW(Uima_runtime_error,
+                  UIMA_MSG_ID_LITERAL_STRING,
+                  UIMA_MSG_ID_LITERAL_STRING,
+                  ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, str.c_str()),
+                  ErrorInfo::unrecoverable);
+
+  }
+
 
   void ResourceManager::registerFactory(icu::UnicodeString const & crKind, ResourceFactoryABase & crFactory) {
     iv_resourceFactories.insert(TyResourceFactories::value_type(crKind, &crFactory));
@@ -674,8 +654,38 @@ namespace uima {
         cv_pclSingletonInstance->iv_utLastErrorId = UIMA_ERR_RESMGR_COULD_NOT_INITIALIZE_XML4C;
         assertWithMsg(false, "XML4C initialization failed");
       }
-    }
-    // release mutex
+
+      //create the fileLogger if UIMACPP_LOGFILE env variable is set
+      /* determine log file name */
+      string str = UIMA_ENVVAR_LOG_FILE;
+      util::EnvironmentVariableQueryOnly clEnvVarLogFilePath(str.c_str());
+      UIMA_TPRINT(_TEXT("querying envvar: ") << str.c_str());
+      if (clEnvVarLogFilePath.hasValue()) {
+        const TCHAR *  cpszLogFile = clEnvVarLogFilePath.getValue();
+        UIMA_TPRINT(_TEXT("value: ") << cpszLogFile);
+
+        /* create an instance of FileLogger and register it. */
+        cv_pclSingletonInstance->iv_fileLogger = new FileLogger(cpszLogFile);
+
+        if (cv_pclSingletonInstance->iv_fileLogger == NULL) {   //Need to handle this better
+          //cerr << "Could not open the log file " << cpszLogFile << endl;
+          str = "Could not create FileLogger";
+          str += cpszLogFile;
+          UIMA_EXC_THROW_NEW(Uima_runtime_error,
+                           UIMA_MSG_ID_LITERAL_STRING,
+                           UIMA_MSG_ID_LITERAL_STRING,
+                           ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, str.c_str()),
+                           ErrorInfo::unrecoverable);
+        } else {
+          cv_pclSingletonInstance->registerLogger(cv_pclSingletonInstance->iv_fileLogger);
+        }
+      } 
+
+      //instantiate framework logger
+      cv_pclSingletonInstance->iv_frameworkLogger = new LogFacility(UnicodeString("org.apache.uima.cpp"), cv_pclSingletonInstance->iv_logLevel);
+
+      cv_pclSingletonInstance->iv_frameworkLogger->logMessage("ResourceManager Instance created.");
+    } // release mutex
     UIMA_TPRINT("ResourceManager instance created");
     return(*cv_pclSingletonInstance);
   }
@@ -704,18 +714,13 @@ namespace uima {
         cv_pclSingletonInstance->iv_utLastErrorId = UIMA_ERR_RESMGR_COULD_NOT_TERMINATE_XML4C;
         assertWithMsg(false, "XML4C termination failed");
       }
-      if (cv_pclSingletonInstance->iv_logFile != NULL) {
-        fclose(cv_pclSingletonInstance->iv_logFile);
-      }
-
-//    if (cv_clazz != NULL && cv_env != NULL) {
-//     cv_env->DeleteGlobalRef( (jobject) cv_clazz);
-//    }
-//ee This is bad because cv_env is not valid when this method is called
-// With a common single UimaAnnotator calling from Java, this global reference not needed
-
+     
       if (cv_pclSingletonInstance->iv_frameworkLogger != NULL) {
         delete cv_pclSingletonInstance->iv_frameworkLogger;
+      }
+
+      if (cv_pclSingletonInstance->iv_fileLogger != NULL) {
+        delete cv_pclSingletonInstance->iv_fileLogger;
       }
 
       assert(EXISTS(cv_pclSingletonInstance));
@@ -784,146 +789,6 @@ namespace uima {
     }
     rclFilename = clFilename;
     return(clFilename.isExistent());
-  }
-
-  void ResourceManager::setupJavaLogging(void * jniEnv) {
-    try {
-
-      if (iv_useJavaLogging ) {
-        // Logging previously setup
-        cv_env = (JNIEnv*) jniEnv;
-      } else {
-        UIMA_LOG_STREAM_MESSAGE(getLogger(), "Switching to Java Logging " << endl);
-        cv_env = (JNIEnv*) jniEnv;
-        assert( EXISTS(cv_env) );
-
-        cv_clazz = cv_env->FindClass(JAVA_PROXY);
-        if (cv_clazz == NULL ) {
-          UIMA_LOG_STREAM_MESSAGE(getLogger(), JAVA_PROXY " class not found. Could not setup Java logging. " << endl);
-          cv_env->ExceptionClear();
-          return;
-        }
-
-        cv_clazz = (jclass) cv_env->NewGlobalRef(cv_clazz);
-        if (cv_clazz == NULL) {
-          UIMA_LOG_STREAM_MESSAGE(getLogger(), "Setup global reference to " JAVA_PROXY " class failed. Could not setup Java logging. " << endl);
-          cout << "ResourceManager::setupJavaLogging() ERROR: CPPJEDIIEngine could not construct " << endl;
-          cv_env->ExceptionClear();
-          return;
-        }
-
-        //query the current logging level
-        jmethodID iv_getLoggingLevelMethod = cv_env->GetStaticMethodID(cv_clazz,
-                                             "getLoggingLevel",
-                                             "()I");
-        if (iv_getLoggingLevelMethod == NULL) {
-          UIMA_LOG_STREAM_MESSAGE(getLogger(), JAVA_PROXY ".getLoggingLevel() not found. Could not setup Java logging. " << endl);
-          cout << "ResourceManager::setupJavaLogging() ERROR: CPPJEDIIEngine.getLoggingLevel() not found " << endl;
-          cv_env->ExceptionClear();
-          return;
-        }
-
-        //log method
-        cv_logMethod = cv_env->GetStaticMethodID(cv_clazz, "log", "("
-                       "I"       // level
-                       "Ljava/lang/String;"  // source class
-                       "Ljava/lang/String;" // source method
-                       "Ljava/lang/String;" // message
-                       ")V");
-
-        if (cv_logMethod == NULL) {
-          UIMA_LOG_STREAM_MESSAGE(getLogger(), JAVA_PROXY ".log(int,string,string,string) not found. Could not setup Java logging. " << endl);
-          cout << "ResourceManager::setupJavaLogging() ERROR: CPPJEDIIEngine.log() not found " << endl;
-          cv_env->ExceptionClear();
-          return;
-        }
-
-        //get the current logging level
-        jint logginglevel = cv_env->CallStaticIntMethod(cv_clazz, iv_getLoggingLevelMethod);
-
-        if (logginglevel == 0) {
-          UIMA_LOG_STREAM_MESSAGE(getLogger(), "Could not determine current logging level. Setup Java logging failed. " << endl);
-          cout << "ResourceManager::setupJavaLogging() ERROR: calling CPPJEDIIEngine.getLoggingLevel() " << endl;
-          cv_env->ExceptionClear();
-          return;
-        }
-
-        if (logginglevel == 3) {
-          iv_logLevel = LogStream::EnError;
-        } else if (logginglevel == 2) {
-          iv_logLevel = LogStream::EnWarning;
-        } else {
-          iv_logLevel = LogStream::EnMessage;
-        }
-
-        iv_useJavaLogging=true;
-        LogStream & msgstream = iv_frameworkLogger->getLogStream(LogStream::EnMessage);
-        msgstream << "ResourceManager Logger settings usejavaLogging=" << iv_useJavaLogging
-        << " loglevel from jedii=" << logginglevel <<  " uimacpp logging level set to=" << iv_logLevel << endl;
-        msgstream.flush();
-      }
-    } catch (...) {
-      cout << "Exception in setupJavaLogging() " << endl;
-      cv_env->ExceptionDescribe();
-    }
-  }
-
-
-  void ResourceManager::writeToJavaLogger(LogStream::EnEntryType entype,
-                                          std::string srcclass,
-                                          std::string srcmethod,
-                                          const TCHAR * message) {
-    try {
-      //cout << "ResourceManager::writeToJavaLogger() "
-      //  << "level=" << entype << " "
-      //  << "srcclass=" << srcclass << " "
-      //  << "srcmethod=" << srcmethod << " "
-      //  << "message=" << message << endl;
-      UnicodeString msg(message);
-
-      // Convert the std::strings to Unicode using the default converter
-      UnicodeString ustrsource(srcclass.c_str(), srcclass.length());
-      UnicodeString ustrmethod(srcmethod.c_str(), srcmethod.length());
-
-      jstring jsrcclass = cv_env->NewString((jchar const *) ustrsource.getBuffer(), ustrsource.length());
-      jstring jsrcmethod = cv_env->NewString((jchar const *) ustrmethod.getBuffer(), ustrmethod.length());
-      jstring jmessage = cv_env->NewString((jchar const *) msg.getBuffer(), msg.length());
-
-      jint loglevel;
-      if ( entype == LogStream::EnError) {
-        loglevel = 3;
-      } else  if ( entype == LogStream::EnWarning )  {
-        loglevel  = 2;
-      } else {
-        loglevel = 1;
-      }
-
-      // Call exception clear
-      cv_env->ExceptionClear();
-
-      cv_env->CallStaticVoidMethod(cv_clazz,
-                                   cv_logMethod,
-                                   loglevel,
-                                   jsrcclass,
-                                   jsrcmethod,
-                                   jmessage);
-
-      // Check for exceptions :
-      jthrowable exc = cv_env->ExceptionOccurred();
-      if (exc != NULL) {
-        cv_env->ExceptionDescribe();
-        cv_env->ExceptionClear();
-      }
-    } catch (...) {
-      cout << "Exception in JavaLogging()" << endl;
-    }
-  }
-
-  void ResourceManager::writeToJavaLogger(LogStream::EnEntryType entype,
-                                          std::string srcclass,
-                                          const TCHAR * message) {
-    std::string srcmethod(".");
-    writeToJavaLogger(entype, srcclass, srcmethod, message);
   }
 
   LogFacility & ResourceManager::getLogger() {
@@ -999,6 +864,7 @@ namespace uima {
 }
 
 /* <EOF> */
+
 
 
 
