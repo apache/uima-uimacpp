@@ -167,8 +167,10 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
 
       stringstream str;
       if (entype == uima::LogStream::EnMessage) {
-	  if (lUserCode != 0) {
+        if (lUserCode != 0) {
            str << lUserCode << " " << message;
+        } else {
+		  str << message;
         }
       } else {
         str << lUserCode << " " << message;
@@ -415,7 +417,7 @@ JNIEXPORT void JNICALL JAVA_PREFIX(initializeJNI) (JNIEnv* jeEnv,
     uima::ResourceManager::getInstance().enableSchemaValidation(false);
     // initialize engine
     uima::AnalysisEngine * pEngine = uima::Framework::createAnalysisEngine( (UChar*)uref.getBuffer(), 
-		uref.length(), errInfo);
+       uref.length(), errInfo);
     if (errInfo.getErrorId() != UIMA_ERR_NONE) {
       assert( pEngine == NULL );
       UIMA_TPRINT("Error during initializing engine (code= " << errInfo.getErrorId() << ")" );
