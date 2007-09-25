@@ -146,7 +146,7 @@ namespace uima {
   void LogFacility::doLog(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode) const
   /* ----------------------------------------------------------------------- */
   {
-    string method;
+    string method="";
     if (isLoggable(enType)) {
       for (int i=0; i < vecLoggers.size(); i++) {
         vecLoggers.at(i)->log(enType,this->iv_strOrigin,
