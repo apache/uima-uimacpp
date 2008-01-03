@@ -34,7 +34,6 @@ if not "%UIMACPP_HOME%"=="" (
 )else (
   REM UIMACPP_HOME undefined, all dependencies must be defined
   if "%APR_HOME%"==""     goto noapr
-    echo remember to set APR_VER=-1 to use APR version 1.x
   if "%ICU_HOME%"==""     goto noicu
   if "%XERCES_HOME%"==""  goto noxerces
 )

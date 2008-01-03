@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="icuuc.lib uimaD.lib libapr$(APR_VER).lib"
+				AdditionalDependencies="icuuc.lib uimaD.lib libapr-1.lib"
 				OutputFile="$(OutDir)\libtoknzD.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OutDir)&quot;;&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"

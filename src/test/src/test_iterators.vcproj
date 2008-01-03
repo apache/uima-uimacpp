@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr$(APR_VER).lib uimaD.lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr-1.lib uimaD.lib"
 				OutputFile="$(OutDir)\test_iteratorsD.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Debug&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
@@ -141,7 +141,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr$(APR_VER).lib uima.lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib libapr-1.lib uima.lib"
 				OutputFile="$(OutDir)\test_iterators.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(APR_HOME)\Release&quot;;&quot;$(XERCES_HOME)\lib&quot;;&quot;$(ICU_HOME)\lib&quot;;&quot;$(UIMACPP_HOME)\lib&quot;;..\..\..\install\lib"
