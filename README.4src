@@ -125,8 +125,6 @@ Download and build information for these libraries are at:
   ICU    - http://www.icu-project.org/
   XERCES - http://xml.apache.org/xerces-c/
 
-If APR version 1.x is used on Windows, an additional env parameter 
-must be set: APR_VER=-1
 
 
 Disclaimer
