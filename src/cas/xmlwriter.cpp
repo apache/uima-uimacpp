@@ -44,7 +44,10 @@
 
 #include "uima/resmgr.hpp"
 #include "uima/location.hpp"
-
+#include "xercesc/framework/XMLFormatter.hpp"
+#include "xercesc/framework/MemBufFormatTarget.hpp"
+#include "xercesc/util/XMLString.hpp"
+XERCES_CPP_NAMESPACE_USE
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
 /* ----------------------------------------------------------------------- */
@@ -70,18 +73,7 @@ namespace uima {
   XMLWriterABase::~XMLWriterABase() {}
 
   void XMLWriterABase::normalize(UnicodeStringRef const & in, icu::UnicodeString& out) const {
-    out.setTo( in.getBuffer(), in.length() );
-    // replace special symbols
-
-    // use static vars to initialize/cp-convert the constants only once
-    static icu::UnicodeString const ustrAMP("&");
-    static icu::UnicodeString const ustrGT(">");
-    static icu::UnicodeString const ustrLT("<");
-    static icu::UnicodeString const ustrAPOS("'");
-    static icu::UnicodeString const ustrQUOT("\"");
-    static icu::UnicodeString const ustrCR("\r");
-    static icu::UnicodeString const ustrLF("\n");
-
+    //cout << "normalize() input " << in << endl;
     static icu::UnicodeString const ustrAMP_ESC("&amp;");
     static icu::UnicodeString const ustrGT_ESC("&gt;");
     static icu::UnicodeString const ustrLT_ESC("&lt;");
@@ -90,14 +82,44 @@ namespace uima {
     static icu::UnicodeString const ustrCR_ESC("&#13;");
     static icu::UnicodeString const ustrLF_ESC("&#10;");
 
-    // do this first!!
-    out.findAndReplace(ustrAMP , ustrAMP_ESC);
-    out.findAndReplace(ustrGT  , ustrGT_ESC);
-    out.findAndReplace(ustrLT  , ustrLT_ESC);
-    out.findAndReplace(ustrAPOS, ustrAPOS_ESC);
-    out.findAndReplace(ustrQUOT, ustrQUOT_ESC);
-    out.findAndReplace(ustrCR, ustrCR_ESC);
-    out.findAndReplace(ustrLF, ustrLF_ESC);
+    static UChar const uAMP('&');
+    static UChar const uGT('>');
+    static UChar const uLT('<');
+    static UChar const uAPOS('\'');
+    static UChar const uQUOT('"');
+    static UChar const uCR('\r');
+    static UChar const uLF('\n');
+    
+    const UChar * srcPtr = in.getBuffer();
+
+    for (int i=0; i < in.length(); i++) {
+      switch (*srcPtr) {
+        case uAMP: 
+          out.append(ustrAMP_ESC);
+          break;
+        case uGT: 
+          out.append(ustrGT_ESC);
+          break;
+        case uLT: 
+          out.append(ustrLT_ESC);
+          break;
+        case uAPOS: 
+          out.append(ustrAPOS_ESC);
+          break;
+        case uQUOT: 
+          out.append(ustrQUOT_ESC);
+          break;
+        case uCR: 
+          out.append(ustrCR_ESC);
+          break;
+        case uLF: 
+          out.append(ustrLF_ESC);
+          break;
+        default:
+          out.append(*srcPtr);
+      }
+      srcPtr++;
+    }
   }
 
 
@@ -470,6 +492,7 @@ namespace uima {
       os << " size=\"" << array.size() << "\">" << endl;
       for (i=0; i<array.size(); ++i) {
         os << "  <" << tag << ">";
+        ustr.setTo("");
 				normalize(array.get(i),ustr);
         os << ustr;
         os << "</" << tag << ">" << endl;
@@ -717,6 +740,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

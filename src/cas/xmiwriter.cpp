@@ -546,10 +546,12 @@ namespace uima {
       case internal::gs_tyStringArrayType: {
         StringArrayFS arrayfs(fs);
         size_t n = arrayfs.size();
-                UnicodeString ustr;
+         UnicodeString ustr;       
         for (size_t i=0; i < n;i++) {
+          ustr.setTo("");
           normalize( arrayfs.get(i), ustr );
           str << "<" << tag << ">" << ustr << "</" << tag << ">";
+         
         }         
         break;
                                            }
@@ -1141,6 +1143,7 @@ void XmiWriter::write(ostream & os) {
       UnicodeString ustr;
       while (!curNode.isEmpty()) { 
         ///string head = curNode.getHead().asUTF8();
+        ustr.setTo("");
         normalize(curNode.getHead(), ustr);
         str << "<" << tag << ">" << ustr << "</" << tag << ">";
         curNode = curNode.getTail();
@@ -1233,6 +1236,7 @@ char const *  XmiWriter::XMI_VERSION_VALUE = "2.0";
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 

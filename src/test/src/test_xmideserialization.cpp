@@ -78,6 +78,7 @@ double doubles[] = {
 
 bool val = false;
 UnicodeString ustr("this beer is good");
+UnicodeString ustrWithXmlEscapeChars("TestingXmlEscapeChars'\"&><\r\n");
 int begin = 1;
 int end = 5;
 char * viewName = "EnglishDocument";
@@ -224,6 +225,50 @@ void validateFS(CAS & cas)  {
   ASSERT_OR_THROWEXCEPTION(fs.getDoubleValue(doubleF)==doubles[0]);
 }
 
+
+void doTestXmlEscapeChars(internal::CASDefinition * casDef) {
+  ErrorInfo errorInfo;
+  CAS * cas1 = Framework::createCAS(*casDef,errorInfo);
+  CAS * cas2 = Framework::createCAS(*casDef,errorInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas1) );
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas2) );
+
+   cas1->setDocumentText(ustrWithXmlEscapeChars);
+  // Serialize Xmi
+  ofstream outputStream;
+  outputStream.open("temp.xmi");
+  ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
+
+  XmiWriter writer(*cas1, false);
+  writer.write(outputStream);
+  outputStream.close();
+
+  // Deserialize xmi
+  cas2->reset();
+  XmiDeserializer::deserialize("temp.xmi", *cas2);
+
+  //compare document text
+  ASSERT_OR_THROWEXCEPTION(cas1->getDocumentText().compare(ustrWithXmlEscapeChars)==0);
+  ASSERT_OR_THROWEXCEPTION(cas1->getDocumentText().compare(cas2->getDocumentText())==0);
+  ASSERT_OR_THROWEXCEPTION(cas1->getDocumentText().length() == cas2->getDocumentText().length());
+
+  //reserialize cas1
+  stringstream str1;
+  XmiWriter writerstr1(*cas1, false);
+  writerstr1.write(str1);
+  
+  //reserialize cas2
+  stringstream str2;
+  XmiWriter writer2(*cas2,true);
+  writer2.write(str2);
+
+ 
+  delete cas1;
+  delete cas2;
+}
+
+
+
 void testMultipleSofas(internal::CASDefinition * casDef)  {
   try {
     ErrorInfo errorInfo;
@@ -369,7 +414,7 @@ void doTestDeserializeAndReserialize(internal::CASDefinition * casDef) {
     ASSERT_OR_THROWEXCEPTION(fs.isValid());
     StringArrayFS arrayFS = (StringArrayFS) fs.getFeatureValue(classesFeat);
     ASSERT_OR_THROWEXCEPTION(arrayFS.isValid());
-    for (int i = 0; i < arrayFS.size(); i++) {
+    for (size_t i = 0; i < arrayFS.size(); i++) {
       ASSERT_OR_THROWEXCEPTION(arrayFS.get(i).length() != 0);
     }
     iter.moveToNext();
@@ -536,6 +581,11 @@ int main(int argc, char * argv[]) /*
 	  testMultipleSofas(casDef);
 	  LOG("UIMACPP_XMITEST testMultipleSofas Finished");
 
+    //test Xml Escape Chars
+	  LOG("UIMACPP_XMITEST doTestXmlEscapeChars Start"); 
+	  doTestXmlEscapeChars(casDef);
+	  LOG("UIMACPP_XMITEST doTestXmlEscapeChars Finished"); 
+
     
 	  //test OOTS Missing Type 1
 	  TypeSystemDescription * baseTSDesc = new TypeSystemDescription();
@@ -615,7 +665,7 @@ int main(int argc, char * argv[]) /*
 		delete casDef;
     delete ts;
 		delete ts2;
-    for (int i=0; i < fsDesc.size();i++) {
+    for (size_t i=0; i < fsDesc.size();i++) {
       delete fsDesc.at(i);
     }
     
