@@ -186,7 +186,7 @@ namespace uima {
     void parseSofaMappings(AnalysisEngineDescription::TyVecpSofaMappings  & sofaMapDesc,
 											InputSource const & crInputSource);
 
-
+    OperationalProperties * buildOperationalProperties(DOMElement * descElem);
   private:
     
     AnalysisEngineMetaData * buildAEMetaData(DOMElement * specElem, icu::UnicodeString const &);
@@ -379,6 +379,11 @@ namespace uima {
     static char const * FS_INDEX_KEY_KIND_BAG;
     static char const * FS_INDEX_KEY_KIND_SET;
 
+    static char const * TAG_OPERATIONAL_PROPERTIES;
+    static char const * TAG_MODIFIES_CAS;
+    static char const * TAG_MULTIPLE_DEPLOY_ALLOWED;
+    static char const * TAG_OUTPUTS_NEW_CASES;
+
 	
 
   };
@@ -459,5 +464,6 @@ namespace uima {
 }
 
 #endif
+
 
 

@@ -445,7 +445,6 @@ bool testLoadData(uima::util::ConsoleUI & rclConsole,
   }
   failIfNotTrue( pEngine != NULL );
 
-
   for (size_t ui = 0; ui < uiNumOfIterations; ui++) {
     const TCHAR *           cpszInpTerm = 0;
 
@@ -495,6 +494,13 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
   failIfNotTrue(errInfo.getErrorId() == UIMA_ERR_NONE);
   failIfNotTrue(pEngine != NULL);
 
+
+  //test operational properties settings
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getOutputsNewCASes() == true);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getModifiesCas() == false);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->isMultipleDeploymentAllowed() == true);
+
+ 
   CAS * cas = pEngine->newCAS();
   cas->setDocumentText(UnicodeString("This is the first sentence. This is the second sentence. This is the third sentence."));
 
@@ -602,6 +608,7 @@ int main(int argc, char * argv[]) /*
 }
 
 /* <EOF> */
+
 
 
 

@@ -57,6 +57,40 @@ namespace uima {
   UIMA_EXC_CLASSDECLARE(ConfigParamLookupException, ConfigException);
 
 
+  /**
+  * Specifies operational properties of a UIMA component.
+  **/
+  class  UIMA_LINK_IMPORTSPEC OperationalProperties : public MetaDataObject {
+  public:
+
+    OperationalProperties()
+        :iv_modifiesCas(false), iv_multipleDeploymentAllowed(false), 
+                iv_outputsNewCASes(false) {}
+    bool getModifiesCas() const {
+        return iv_modifiesCas;
+    }
+    bool isMultipleDeploymentAllowed() const {
+      return iv_multipleDeploymentAllowed;
+    }
+    bool getOutputsNewCASes() const {
+      return iv_outputsNewCASes;
+    }
+
+    void setModifiesCas(bool val) {
+      iv_modifiesCas = val;
+    }
+    void setMultipleDeploymentAllowed(bool val) {
+      iv_multipleDeploymentAllowed = val;
+    }
+    void setOutputsNewCASes(bool val) {
+      iv_outputsNewCASes = val;
+    }
+  private:
+    bool iv_modifiesCas;
+    bool iv_multipleDeploymentAllowed;
+    bool iv_outputsNewCASes;
+  };
+
 
 
   /**
@@ -332,7 +366,8 @@ namespace uima {
         :MetaDataObject(), CONFIG_GROUP_NAME_WHEN_NO_GROUPS("CONFIG_GROUP_NAME_WHEN_NO_GROUPS"),
         CONFIG_GROUP_NAME_COMMON_PARMS("CONFIG_GROUP_NAME_COMMON_PARAMETERS"),
         iv_hasGroups(false), iv_hasDefaultGroup(false), iv_searchStrategy(NONE),
-        iv_pTypeSystemDesc(NULL), iv_pFlowConstraints(NULL), iv_vecpTypePriorities() {}
+        iv_pTypeSystemDesc(NULL), iv_pFlowConstraints(NULL), iv_vecpTypePriorities(),
+        iv_pOperationalProperties(NULL) {}
 
     ~AnalysisEngineMetaData();
 
@@ -594,6 +629,13 @@ namespace uima {
       return iv_capabilities;
     }
 
+    void setOperationalProperties(OperationalProperties  * prop) {
+      iv_pOperationalProperties = prop;
+    }
+
+    const OperationalProperties * getOperationalProperties() const {
+       return iv_pOperationalProperties;
+    }
     /**
     * NOTE: This object will assume memory ownership of <code>indexDesc</code>, i.e.
     * it will be deleted when this object's destructor is called !
@@ -804,7 +846,7 @@ namespace uima {
     TyVecpFSIndexImportDescriptions iv_fsindexImportDescs;
     TyVecpTypePriorityImportDescriptions iv_typepriorityImportDescs;
 
-
+    OperationalProperties * iv_pOperationalProperties;
   };
 
   /**
@@ -1140,6 +1182,7 @@ namespace uima {
 }
 
 #endif
+
 
 
 

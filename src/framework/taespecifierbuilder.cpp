@@ -549,6 +549,8 @@ namespace uima {
         buildCapabilities(*aeMetaData, child);
       } else if (childTag.compare(TAG_FLOW) == 0) {
         aeMetaData->setFlowConstraints(buildFlowConstraints(child));
+      } else if (childTag.compare(TAG_OPERATIONAL_PROPERTIES) == 0) {
+        aeMetaData->setOperationalProperties(buildOperationalProperties(child));
       } else {
         /**
         ErrorMessage errMsg = ErrorMessage(UIMA_MSG_ID_EXC_UNKNOWN_CONFIG_XML_TAG);
@@ -1675,6 +1677,49 @@ namespace uima {
     return flow;
   }
 
+
+  OperationalProperties * XMLParser::buildOperationalProperties(DOMElement * descElem) {
+    assert(EXISTS(descElem));
+    assert( XMLString::compareString( descElem->getNodeName(), convert(TAG_OPERATIONAL_PROPERTIES) ) == 0);
+    DOMNodeList * children = descElem->getChildNodes();
+    assert(EXISTS(children));
+    assert(children->getLength() > 0);
+
+    OperationalProperties * op = new OperationalProperties();
+
+    size_t i;
+    for (i=0; i < children->getLength(); i++) {
+      if ((children->item(i))->getNodeType() != DOMNode::ELEMENT_NODE) {
+        continue;
+      }
+      DOMElement * child = (DOMElement *) children->item(i);
+      const icu::UnicodeString & childTag = convert(child->getNodeName());
+
+      if (childTag.compare(TAG_MODIFIES_CAS) == 0) {
+        op->setModifiesCas(isTrue(getSpannedText(child)));
+      } else if (childTag.compare(TAG_MULTIPLE_DEPLOY_ALLOWED)==0) {
+        op->setMultipleDeploymentAllowed(isTrue(getSpannedText(child)));
+      } else if (childTag.compare(TAG_OUTPUTS_NEW_CASES)==0) {
+        op->setOutputsNewCASes(isTrue(getSpannedText(child)));
+      } else {
+        /**
+        ErrorMessage errMsg(UIMA_MSG_ID_EXC_UNKNOWN_CONFIG_XML_TAG);
+        errMsg.addParam(childTag);
+        errMsg.addParam(schemaFileName);
+        UIMA_EXC_THROW_NEW(InvalidXMLException,
+                          UIMA_ERR_CONFIG_INVALID_XML_TAG,
+                          errMsg,
+                          UIMA_MSG_ID_EXCON_BUILD_TAE_SPEC,
+                          ErrorInfo::unrecoverable);
+        **/
+      }
+    }
+    return op;
+  }
+
+
+
+
   FixedFlow * XMLParser::buildFixedFlow(DOMElement * descElem) {
     assert(EXISTS(descElem));
     assert( XMLString::compareString(descElem->getNodeName(), convert(TAG_FLOW_FIX)) == 0);
@@ -2415,7 +2460,11 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
   char const * XMLParser::FS_INDEX_KEY_KIND_BAG="bag";
   char const * XMLParser::FS_INDEX_KEY_KIND_SET="set";
 
-  
+  char const * XMLParser::TAG_OPERATIONAL_PROPERTIES="operationalProperties";
+  char const * XMLParser::TAG_MODIFIES_CAS="modifiesCas";
+  char const * XMLParser::TAG_MULTIPLE_DEPLOY_ALLOWED="multipleDeploymentAllowed";
+  char const * XMLParser::TAG_OUTPUTS_NEW_CASES="outputsNewCASes";
+
 
 
   

@@ -613,7 +613,7 @@ namespace uima {
   }
 
   void AnnotatorContext::release(vector<std::string*> & returnValues) const {
-    for (int i=0; i < returnValues.size();i++) {
+    for (size_t i=0; i < returnValues.size();i++) {
       delete returnValues.at(i);
     }
     returnValues.clear();

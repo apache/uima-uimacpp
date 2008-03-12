@@ -49,6 +49,9 @@ namespace uima {
   AnalysisEngineMetaData::~AnalysisEngineMetaData() {
     delete iv_pTypeSystemDesc;
     delete iv_pFlowConstraints;
+    if (iv_pOperationalProperties != 0) {
+      delete iv_pOperationalProperties;
+    }
     size_t i=0;
     for (i=0; i < iv_capabilities.size(); i++) {
       delete iv_capabilities[i];
@@ -1537,14 +1540,19 @@ namespace uima {
 
     s.append("</capabilities>");
     
-    //temporarity added here to support AsynchAE
-	//needs to be supported by XMLParser
-	s.append("<operationalProperties>");
-	s.append ("<modifiesCas>true</modifiesCas>");
-	s.append ("<multipleDeploymentAllowed>true</multipleDeploymentAllowed>");
-    s.append("<outputsNewCASes>false</outputsNewCASes>");
-    s.append("</operationalProperties>");
-
+    if (this->getAnalysisEngineMetaData()->getOperationalProperties() != 0) {
+      s.append("<operationalProperties>"); 
+      s.append ("<modifiesCas>");
+      appendBool(this->getAnalysisEngineMetaData()->getOperationalProperties()->getModifiesCas(), s);
+      s.append ("</modifiesCas>");
+      s.append ("<multipleDeploymentAllowed>");
+      appendBool(this->getAnalysisEngineMetaData()->getOperationalProperties()->isMultipleDeploymentAllowed(), s);
+      s.append("</multipleDeploymentAllowed>");
+      s.append("<outputsNewCASes>");
+      appendBool(this->getAnalysisEngineMetaData()->getOperationalProperties()->getOutputsNewCASes(), s);
+      s.append("</outputsNewCASes>");
+      s.append("</operationalProperties>");
+    }
     if (isCasConsumer) {
       s.append("</processingResourceMetaData>");
     } else s.append("</analysisEngineMetaData>");
@@ -1553,4 +1561,5 @@ namespace uima {
 
     
 } //namespace
+
 
