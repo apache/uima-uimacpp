@@ -19,7 +19,7 @@
 
 --------------------------------------------------------------------------
 
-  Test driver that reads text files or XCASs and calls the annotator
+  Test driver that reads text files or XCASs or XMIs and calls the annotator
 
 -------------------------------------------------------------------------- */
 
@@ -41,7 +41,7 @@
 #include "uima/dirwalk.hpp"
 
 #include "uima/api.hpp"
-#include "uima/xmlwriter.hpp"
+#include "uima/xmiwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
 #include "uima/xmideserializer.hpp"
 
@@ -67,17 +67,17 @@ enum dataFormats { textFormat, xcasFormat, xmiFormat };
 dataFormats xcasInput;
 
 void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string out);
-void writeXCAS (CAS & outCas, int num,  std::string in, std::string outfn);
+void writeXmi (CAS & outCas, int num,  std::string in, std::string outfn);
 
 void tell() {
   cerr << "Usage: runAECpp UimaCppDescriptor <-x> InputFileOrDir <OutputDir>" << endl
   << "                <-s Sofa>  <-l LogLevel>" << endl;
   cerr << "  UimaCppDescriptor   Analysis Engine descriptor for a CPP annotator" << endl;
   cerr << "  InputFileOrDir      Input file or directory of files to process" << endl;
-  cerr << "  OutputDir           Existing directory for XCAS outputs (optional)" << endl;
+  cerr << "  OutputDir           Existing directory for Xmi outputs (optional)" << endl;
   cerr << "       Options:" << endl;
   cerr << "   -x [-xmi]     Input(s) must be in XCAS [XMI] format (default is raw text)" << endl;
-  cerr << "   -s Sofa       Name of a Sofa to process (input must be an XCAS)" << endl;
+  cerr << "   -s Sofa       Name of a Sofa to process (input must be an XCAS or XMI)" << endl;
   cerr << "   -l logLevel   Set to 0, 1, or 2 for Message, Warning, or Error" << endl;
 }
 
@@ -173,7 +173,7 @@ int main(int argc, char * argv[]) {
     /* Get a new CAS */
     CAS* cas = pEngine->newCAS();
 
-    /* process input xcas */
+    /* process input */
     util::DirectoryWalk dirwalker(in.c_str());
     if (dirwalker.isValid()) {
       cout << "runAECpp::processing all files in directory: " << in.c_str() << endl;
@@ -190,7 +190,7 @@ int main(int argc, char * argv[]) {
           //reset the cas
           cas->reset();
         }
-        //get the next xcas file in the directory
+        //get the next input file in the directory
         dirwalker.setToNext();
       }
     } else {
@@ -304,7 +304,7 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
       if (!mySofa.isValid()) {
         cerr << "runAECpp:" << endl
         << "  Specified Sofa named " << sofaName
-        << " not found in the XCAS file" << endl;
+        << " not found in the input file" << endl;
         exit(99);
       }
 
@@ -314,9 +314,9 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
         i++;
         CAS  & outCas = casIter.next();
 
-        //write out xcas
+        //write out xmi
         if (outfn.length() > 0) {
-          writeXCAS(outCas, i, in, outfn);
+          writeXmi(outCas, i, in, outfn);
         }
 
         //release the CAS
@@ -333,9 +333,9 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
       while (casIter.hasNext()) {
         i++;
         CAS & outCas = casIter.next();
-        //write out xcas
+        //write out xmi
         if (outfn.length() > 0) {
-          writeXCAS(outCas, i, in, outfn);
+          writeXmi(outCas, i, in, outfn);
         }
 
         //release CAS
@@ -352,17 +352,17 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
       outfn.append("/");
       outfn.append(infile.getName());
 
-      //open a file stream for output xcas
+      //open a file stream for output xmi
       ofstream file;
       file.open (outfn.c_str(), ios::out | ios::binary);
       if ( !file ) {
-        cerr << "runAECpp: Error opening output xcas: " << outfn.c_str() << endl;
+        cerr << "runAECpp: Error opening output xmi: " << outfn.c_str() << endl;
         exit(99);
       }
 
       //serialize the input cas
-      cout << "runAECpp: write out xcas " << outfn << endl;
-      XCASWriter writer(*cas, true);
+      cout << "runAECpp: write out xmi " << outfn << endl;
+      XmiWriter writer(*cas, true);
       writer.write(file);
       file.close();
     }
@@ -374,7 +374,7 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
   }
 }
 
-void writeXCAS (CAS & outCas, int num,  std::string in, std::string outfn)  {
+void writeXmi (CAS & outCas, int num,  std::string in, std::string outfn)  {
 
   util::Filename infile((TCHAR*) in.c_str());
   std::string ofn;
@@ -386,21 +386,22 @@ void writeXCAS (CAS & outCas, int num,  std::string in, std::string outfn)  {
   s << num;
   ofn.append(s.str());
 
-  //open a file stream for output xcas
+  //open a file stream for output xmi
   ofstream file;
   file.open (ofn.c_str(), ios::out | ios::binary);
   if ( !file ) {
-    cerr << "Error opening output xcas: " << ofn.c_str() << endl;
+    cerr << "Error opening output xmi: " << ofn.c_str() << endl;
     exit(99);
   }
 
   //serialize the cas
-  cout << "write out xcas " << ofn << endl;
-  XCASWriter writer(outCas, true);
+  cout << "write out xmi " << ofn << endl;
+  XmiWriter writer(outCas, true);
   writer.write(file);
   file.close();
 }
 
 /* <EOF> */
+
 
 
