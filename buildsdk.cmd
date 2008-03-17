@@ -34,6 +34,7 @@ if "%~1" == "" (
 	echo       ICU_HOME - root of the ICU install. Required.
 	echo       XERCES_HOME - root of the XERCES install. Required.
 	echo       MSVCRT_HOME - directory with required msvc*.dll files
+	echo       ACTIVEMQ_HOME - root of the XERCES install. Optional.
 	echo     Optional environment variable:
 	echo       UIMA_INSTALL - 'install' location of uimacpp build.
 	echo                      Defaults to ./install
@@ -53,7 +54,6 @@ set UIMA_DIR=%TARGET_DIR%\uimacpp
 if "%APR_HOME%" == "" goto Missing
 if "%ICU_HOME%" == "" goto Missing
 if "%XERCES_HOME%" == "" goto Missing
-
 
 echo.
 echo SDK directory tree will be built in %UIMA_DIR%
@@ -121,6 +121,21 @@ if exist %UIMA_DIR% (
 	goto error
 )
 
+if exist "%UIMA_INSTALLDIR%\bin\deployCppService.exe"  (
+
+  if "%ACTIVEMQ_HOME%" == "" goto Missing
+
+REM  if not exist "%ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll" (
+REM	echo ERROR: ACTIVEMQ_HOME "%ACTIVEMQ_HOME%" is invalid or there is no DebugDLL build. 
+REM	goto error
+REM  )
+
+  if not exist "%ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL\activemq-cpp.dll" (
+	echo ERROR: ACTIVEMQ_HOME "%ACTIVEMQ_HOME%" is invalid or there is no ReleaseDLL build.
+	goto error
+  )
+)
+
 REM Create the top-level directories
 mkdir %UIMA_DIR%
 mkdir %UIMA_DIR%\bin
@@ -138,6 +153,8 @@ xcopy /Q /Y %UIMA_INSTALLDIR%\bin\uima.dll %UIMA_DIR%\bin
 xcopy /Q /Y %UIMA_INSTALLDIR%\bin\uimaD.dll %UIMA_DIR%\bin
 xcopy /Q /Y %UIMA_INSTALLDIR%\bin\runAECpp.exe %UIMA_DIR%\bin
 xcopy /Q /Y %UIMA_INSTALLDIR%\bin\runAECppD.exe %UIMA_DIR%\bin
+xcopy /Q /Y %UIMA_INSTALLDIR%\bin\deployCppService.exe %UIMA_DIR%\bin
+xcopy /Q /Y %UIMA_INSTALLDIR%\bin\deployCppServiceD.exe %UIMA_DIR%\bin
 xcopy /Q /Y %UIMA_INSTALLDIR%\data\resourceSpecifierSchema.xsd %UIMA_DIR%\data
 xcopy /Q /Y %UIMA_INSTALLDIR%\lib\uima.lib %UIMA_DIR%\lib
 xcopy /Q /Y %UIMA_INSTALLDIR%\lib\uimaD.lib %UIMA_DIR%\lib
@@ -254,6 +271,13 @@ REM if not exist %UIMA_DIR%\licenses\icu mkdir %UIMA_DIR%\licenses\icu
 REM xcopy /Q /Y %ICU_HOME%\LICENSE* %UIMA_DIR%\licenses\icu
 REM if not exist %UIMA_DIR%\licenses\xerces mkdir %UIMA_DIR%\licenses\xerces
 REM xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
+
+if exist %UIMA_DIR%\bin\deployCppService.exe (
+  echo.
+  echo copying from %ACTIVEMQ_HOME%...
+  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL\activemq-cpp.dll %UIMA_DIR%\bin
+REM  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
+)
 
 echo cleaning the target tree
 for /R %UIMA_DIR% %%d in (.) do del %%d\*~ 2> NUL
