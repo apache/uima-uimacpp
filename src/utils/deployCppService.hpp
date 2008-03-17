@@ -671,7 +671,7 @@ class SocketLogger : public uima::Logger {
         return -2;
       }
 
-      rv = apr_socket_create(&cs, sa->family, SOCK_STREAM, APR_PROTO_TCP, pool);
+      rv = apr_socket_create(&s, sa->family, SOCK_STREAM, APR_PROTO_TCP, pool);
       if (rv != APR_SUCCESS) {
         cerr << "ERROR: apr_socket_create() logger connection at port " << javaport << endl;
         return -3;

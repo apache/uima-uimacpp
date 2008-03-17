@@ -16,7 +16,7 @@ void printUsage() {
   cout << "Usage: deployCppService aeDescriptor queueName " << endl <<
     "       <-b brokerURL [defaults to tcp://localhost:61616]> " << endl <<   
     "       <-n numInstance [defaults to 1]> " << endl << 
-    "       <-p prefetchSize [defaults to1]> " << endl <<
+    "       <-p prefetchSize [defaults to 1]> " << endl <<
     "       <-l loglevel [defaults to 0 INFO]> " << endl <<
     "       <-t tracelevel [defaults to 0 and valid to 4]> " << endl << 
     "       <-d datapath [defaults to not set] " << endl ;
@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     /*parse descriptor */
     ServiceParameters serviceDesc;
     serviceDesc.parseArgs(argc, argv);
-    //serviceDesc.print();
+    serviceDesc.print();
 
     /*set up logging and monitoring */
     initialize(serviceDesc, pool);   
