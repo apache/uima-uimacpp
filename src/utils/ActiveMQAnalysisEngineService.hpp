@@ -6,16 +6,12 @@
 #ifndef __ACTIVEMQ_AE_SERVICE__
 #define __ACTIVEMQ_AE_SERVICE__
 
-
-
-
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
 #include <cms/ExceptionListener.h>
 #include <cms/MessageListener.h>
 #include <activemq/core/ActiveMQConsumer.h>
-
 
 #include "unicode/unistr.h"
 #include "apr.h"
@@ -32,52 +28,56 @@ using namespace cms;
 using namespace uima;
 
 //Forward declarations
-class AMQEndPoint;
 class Monitor;
 class ServiceParameters;
 
 
-//UIMA_EXC_CLASSDECLARE(UimacppException, Exception);
-//========================================================
-// This class manages an ActiveMQ connection. 
-// It wraps either a MessageConsumer or a MessageProducer
-// session.
-//--------------------------------------------------------
+//==========================================================
+// This class wraps a ActiveMQ JMS connection 
+// and provides utility methods to create a MessageProducer
+// and MessageConsumer and to send and receive messages.
+//----------------------------------------------------------
 class AMQConnection : public ExceptionListener {
-  friend class AMQEndPoint;
 private:
-	
-  string brokerURL;
-  Connection* connection;
-  AMQEndPoint * session;
+  string iv_brokerURL;
+  Connection* iv_pConnection;
   bool iv_valid;
 
+  //consumer session
+  Session* iv_pConsumerSession;
+	MessageConsumer * iv_pConsumer;
+  string iv_inputQueueName;
+  cms::Queue * iv_pInputQueue;      
+  MessageListener * iv_pListener;
+	
+  //producer session
+  Session * iv_pProducerSession;
+  MessageProducer * iv_pProducer;  
+	TextMessage * iv_pTextMessage;
+  map<string, cms::Destination*> iv_replyDestinations; //queuename-destination
+
 public:
-	//Establish connection to a ActiveMQ broker. This creates a Consumer Session.
+	/** Establish connection to the broker and create a Message Producer session. 
+   */
 	AMQConnection ( const char * aBrokerURL);
 
-  /** Creates a MessageConsumer session and registers a listener. */
-	void createSession(string aQueueName, MessageListener * pListener, int prefetch); 
- 
-  /** Creates a MessageProducer session not associated with any queue.
-	 * The queue name must be specifed when this is used to send a 
-	 * message 
-	 */
-  void createSession();
-	
-  /* destructor */
+  /** Creates a MessageConsumer session and registers a listener. 
+      Caller owns the listener. */
+	void createMessageConsumer(string aQueueName, MessageListener * pListener, int prefetch); 
+ 	
+  /** destructor */
 	~AMQConnection();
 
-	/* caller owns the ExceptionListener */
+	/** caller owns the ExceptionListener */
 	void setExceptionListener(ExceptionListener  * el);
 
-	/* This also is a default Exception handler */
+	/** This also is a default Exception handler */
 	void onException( const CMSException& ex);
 
-	// If this is consumer, must be called to start receiving messages 
+	/** If this is consumer, must be called to start receiving messages */ 
 	void start();
 
-	//If this is a consumer, stops receiving messages
+	/** If this is a consumer, stops receiving messages. */
 	void stop();
 
 	/** returns a TextMessage owned by this class. */
@@ -93,197 +93,138 @@ public:
     return iv_valid;
   }
 
-};
-
-/** This class represents a session - either a Message Consumer 
-  *  or a Message Producer.
-  */
-class AMQEndPoint  {
-private:
-
-	AMQConnection* pConnection;
-  Session* session;
-
-	MessageConsumer * consumer;  
-  cms::Queue* destination;  //Message Consumer input queue  
-  MessageListener * pListener;
-	
-  MessageProducer * producer;  
-	TextMessage * textMessage;
-  //cache queue destination objects and
-  //reuse when sending messages.
-  map<string, cms::Destination*> replyDestinations;
- 
-	void cleanup();
-	
-public:
-	string brokerURL;
-  string queueName;
-	/** This creates a session. */
-	AMQEndPoint ( AMQConnection * aconnection, 
-                string queueName,
-                MessageListener * listener=0); 
-	
-	/** destructor */
-	~AMQEndPoint();
-
-	/** returns a TextMessage owned by this class. */
-	TextMessage * getTextMessage();
-
-  /** sends the message and clears it. */
-  void sendMessage(const cms::Destination * dest);
+  /** get the brokerURL */
+  string getBrokerURL() {
+    return this->iv_brokerURL;
+  }
   
-	/** sends the message and clears it. */
-	void sendMessage(string queueName);
-  
-	/** is connection valid */
-	bool isValid() {
-			return pConnection->isValid();
-	}
-
+  /** get the input queue name */
+  string getInputQueueName() {
+    return this->iv_inputQueueName;
+  }
 };
 
 
 //==================================================
-// This class is used to cache and reuse connections.
-// Used by the listener to send responses.
+// This class is used to cache and reuse connections
+// used to send reply messages.
 //--------------------------------------------------
 class AMQConnectionsCache  {
 private:
-	map<string, AMQConnection *> allEndpoints; //key is brokerurl
+	map<string, AMQConnection *> iv_connections; //key is brokerurl
 	
 public:
 	AMQConnectionsCache(); 
 
 	~AMQConnectionsCache(); 
 
-
-	//Retrieves a Connection from the cache if it 
-	//exists or establishes a connection to the
-	//the specified broker and adds to the cache 
-	//and returns the new connection.
+  /**
+	 * Retrieves a Connection from the cache if it 
+	 * exists or establishes a new connection to the
+	 * the specified broker and adds it to the cache.
+   */
 	AMQConnection * getConnection(string brokerURL); 
 	
 };
 
 //======================================================
-// A MessageListener that services getMeta, processCAS
+// A MessageListener that handles getMeta, processCAS
 // and Collection Processing Complete requests.
 //
-// On initialization, it creates an instance of an 
-// AnalysisEngine and a CAS.
-//
-// Handles GETMETA, PROCESSCAS and CPC requests.
 // Records timing and error JMX statistics.
 //
 //------------------------------------------------------
 class AMQListener : public MessageListener {
 private:
-	int id;									//Listener id
-	string queueName;				//queue this listener gets messages from
-	string brokerURL;				//broker this listener is connected to 
-  AMQConnection * pCmsReplyToConnection;
-
-	AnalysisEngine * pEngine;	//AnalysisEngine
-	CAS * cas;								//CAS
-	string aeDescriptor;			//AE descriptor filename
-  size_t initialfsheapsize;
-
-	int count;                //num messages processed
-	bool busy;								//is processing a message
-  apr_time_t timeLastRequestCompleted;
-  
-  Monitor * pStatistics;   //JMX statistics
-
-	AMQConnectionsCache    replyToConnections; //connections cache used when sending reply.
-
-	/*
-	* instantiates an AnalysisEngine from the given AE descriptor
-	* and create a CAS. 
-	*/
-	void initialize(); 
-
-	void sendResponse(const TextMessage * request, apr_time_t elapsedTime, 
-		string msgContent, bool isExceptionMsg); 
-
+	int iv_id;									    //Listener id
+	string iv_inputQueueName;				//queue this listener gets messages from
+	string iv_brokerURL;				    //broker this listener is connected to 
+  AMQConnection * iv_pConnection; //connection this Listener is registered with.
+                                  //Used to send replies to queues on the same broker.
+	AnalysisEngine * iv_pEngine;	  //AnalysisEngine
+	CAS * iv_pCas;								  //CAS
+	string iv_aeDescriptor;			    //AE descriptor XML 
+	int iv_count;                   //num messages processed
+	bool iv_busy;								    //is processing a message
+  apr_time_t iv_timeLastRequestCompleted; //used to calculate idle time between requests
+  Monitor * iv_pStatistics;       //JMX statistics
+	AMQConnectionsCache    iv_replyToConnections; //maintain connections cache for
+                                                //sending reply to other brokers.
+	
   void sendResponse(const TextMessage * request, apr_time_t timeToDeserialize,
                     apr_time_t timeToSerialize, apr_time_t timeInAnalytic,
-                    apr_time_t idleTime, 
-                    apr_time_t elapsedTime, 
-		string msgContent, bool isExceptionMsg); 
+                    apr_time_t idleTime, apr_time_t elapsedTime, 
+		                string msgContent, bool isExceptionMsg); 
 public:
 	/** constructor */ 
-	AMQListener(string  aeDescriptor, 
-                    size_t initialFsHeapSize,
-                    string brokerURL, 
-                    string  queueName, 
-                    int id,
-                    Monitor * pStatistics); 
+  AMQListener(int id,
+              AMQConnection * pConnection,
+              AnalysisEngine * pEngine,
+              CAS * pCas,
+              Monitor * pStatistics); 
+  /** destructor */
 	~AMQListener(); 
 
 	bool isBusy() {
-		return busy;
+		return this->iv_busy;
 	}
 
   /*
-	* Receive a TextMessage and examine the header properties
-	* to determine the type of request and payload.  Processes
-	* one request at a time and is blocked till the requestis 
-	* handled and the response sent.
+	* Process the message. Handles GETMETA, PROCESSCAS
+  * and CPC requests.
 	*/
 	virtual void onMessage( const Message* message ); 
 	
 };
 
-//================================================
-// This class creates and configures a C++  service
+//===================================================
+// This class creates and configures a C++ service
 // according to parameters passed in as arguments.
 //
-// It requires that the UIMA C++ SDK as well as the
-// annotator shared library be available in the
-// PATH (Windows) or LD_LIBRARY_PATH (Linux).
-//
-// This class connects to an ActiveMQ broker and registers
-// one or more MessageConsumers to receive messages from
-// a specified queue.  The MessageConsumers can
+// This class creates connections to an ActiveMQ broker 
+// and registers one or more MessageConsumers to receive 
+// messages from a specified queue.  The MessageConsumers can
 // process requests for GETMETA, PROCESSCAS and Collection
-// Process Complete.
+// Process Complete. 
 //
-// On initialization, each MessageConsumer instance creatss
-// an AnalysisEngine and a CAS based on the input AE descriptor.
-// By default, one instance of a MessageConsumer is created. 
+// Each MessageConsumer registers a MessageListener that will
+// receive and process messages. Each instance of the MessageListener
+// is initialized with an instance of the AnalysisEngine and a CAS.
 // 
 // The service wrapper sets acknowledgment mode to AUTO_ACKNOWLEDGE mode 
 // by default and lets the underlying middleware handle the message
 // acknowledgements.
 //
-// If given a port number, the service will establish a socket connection
-// to a server on the local machine and route logging and JMX statistics 
-// over the socket connection.
+// The lifecycle of the service may be managed by the UIMA AS Java 
+// controller bean org.apache.uima.controller.UimacppServiceController.
+// In this case, the C++ service is started by the controller bean.
+// A socket connection is established between the controller bean and
+// the C++ process and used to route logging messages and JMX statistics.
 //
 // See the UIMA-EE documentation for how to start and manage a C++
 // servcice from Java using the UimacppServiceController bean.
 //------------------------------------------------------------------------
 class AMQAnalysisEngineService : public ExceptionListener,
-	public MessageListener  {
+	                               public MessageListener  {
 private:
-	string queueName;          
-	int count;					
-	int prefetchsize;
-	map<int, AMQListener *> listeners;    //id - listener
-	vector <AMQConnection*> consumerConnections; 
-	Monitor * pStatistics;
-  
-  void initialize(string  aeDescriptor, 
-                  size_t initialFsHeapSize,
-                  string  brokerURL, 
-                  string  queueName,
-		              int prefetch, 
-                  int numInstances); 
+  string iv_brokerURL;  
+	string iv_inputQueueName;  
+  string iv_aeDescriptor;
+	int iv_numInstances;					
+	int iv_prefetchSize;
+  size_t iv_initialFSHeapSize;
+  Monitor * iv_pStatistics;
+
+	vector <AMQConnection*> iv_vecpConnections;
+  vector <AnalysisEngine *> iv_vecpAnalysisEngines;
+  vector <CAS *> iv_vecpCas;
+  map<int, AMQListener *> iv_listeners;    //id - listener
+
+  void initialize(); 
 public:
-   void cleanup();
+  void cleanup();
   
-   ~AMQAnalysisEngineService(); 
+  ~AMQAnalysisEngineService(); 
 
 	AMQAnalysisEngineService(ServiceParameters & desc, Monitor * pStatistics);
 
@@ -298,8 +239,6 @@ public:
 	int stop(); 	  
 };
 
-
-
-
 #endif
+
 
