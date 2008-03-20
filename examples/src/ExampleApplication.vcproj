@@ -65,7 +65,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib uimaD.lib libapr$(APR_VER).lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib uimaD.lib libapr-1.lib"
 				OutputFile="$(OutDir)\ExampleApplicationD.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(UIMACPP_HOME)\lib&quot;"
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib uima.lib libapr$(APR_VER).lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib uima.lib libapr-1.lib"
 				OutputFile="$(OutDir)\ExampleApplication.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(UIMACPP_HOME)\lib&quot;"

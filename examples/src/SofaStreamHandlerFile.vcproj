@@ -64,7 +64,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapr$(APR_VER).lib xerces-c_2.lib icuuc.lib uimaD.lib"
+				AdditionalDependencies="libapr-1.lib xerces-c_2.lib icuuc.lib uimaD.lib"
 				OutputFile="$(OutDir)/SofaStreamHandlerFileD.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(UIMACPP_HOME)\lib&quot;"
@@ -148,7 +148,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libapr$(APR_VER).lib xerces-c_2.lib icuuc.lib uima.lib"
+				AdditionalDependencies="libapr-1.lib xerces-c_2.lib icuuc.lib uima.lib"
 				OutputFile="$(OutDir)/SofaStreamHandlerFile.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(UIMACPP_HOME)\lib&quot;"
