@@ -1,9 +1,9 @@
 <html>
 <head>
-  <title>Apache UIMA C++ v2.2.0 Releate Notes</title>
+  <title>Apache UIMA C++ v2.2.2 Releate Notes</title>
 </head>
 <body>
-<h1>Apache UIMA C++ (Unstructured Information Management Architecture) v2.2.0 Release Notes</h1>
+<h1>Apache UIMA C++ (Unstructured Information Management Architecture) v2.2.2 Release Notes</h1>
 
 <h2>Contents</h2>
 <p>
@@ -62,7 +62,7 @@
 
 <h2><a name="major.changes">2. Major Changes in this Release</a></h2>
 <p>
-This section describes what has changed between version 1.4.4 and version 2.1 of 
+This section describes what has changed between version 1.4.4 and version 2.2.2 of 
 UIMA C++. A migration guide is provided below that describes the required updates to 
 your C++ code and descriptors. See Section 3, "Migrating from IBM UIMA C++ to 
 Apache UIMA C++".
@@ -82,7 +82,7 @@ packages.
 <h3>2.2. Extended Platform Support</h3>
 <p>
 On 64-bit Unix platforms the Apache UIMA C++ framework can be built as
-a 64-bit library. This enabling C++, Perl, Python and Tcl analytics to
+a 64-bit library. This enables C++, Perl, Python and Tcl analytics to
 fully utilize a 64-bit address space. Both XML and binary CAS
 serialization formats are compatible between 32 and 64-bit builds.
 </p>
@@ -92,11 +92,17 @@ MacOSX is now fully supported for SDK build and use.
   
 <h3>2.3. Better Integration with Java SDK</h3>
 <p>
-The Apache UIMA SDK will now run seamlessly with the UIMA C++ framework. Command line tools and Eclipse run configurations in the Java SDK set the native shared library path assuming the UIMA C++ SDK is installed directly under $UIMA_HOME.
+The Apache UIMA SDK shell scripts and Eclipse run configurations set native environment paths assuming the UIMA C++ SDK is installed directly under $UIMA_HOME. This enables the standard UIMA SDK tools to work seemlessly with C++ based annotators.
 </p>
 <p>
 On Unix platforms, the UIMA C++ examples directory can be loaded as an Eclipse CDT project, supporting development of both UIMA C++ and Java components in the same Eclipse IDE.
-</p>  
+</p>
+<p>
+By default, when a uimacpp annotator is instantiated from Java, the annotator runs in the JVM process with communication via the JNI. Multiple uimacpp annotators instantiated in the same JVM must share the same native environment, therefor they must share the same version UIMA C++ framework. As before, a uimacpp annotator can be isolated by wrapping it as a Vinci service.
+</p>
+<p>
+A new approach is provided in this release which allows process isolation of uimacpp annotators without wrapping each one in a JVM. When deployed from Java as a UIMA-AS service, a uimacpp annotator is spawned by the JVM as native process. The native UIMA-AS service communitates to clients via JMS messaging, completely independently of the JVM. However, the native service connects back to the JVM to enable JMX monitoring and logfile integration with other UIMA annotators running in the same JVM.
+</p>
   
 <h3>2.4. C++ Namespace and Module Name Changes</h3>
 <p>
@@ -142,7 +148,10 @@ as the Sofa mapping code has been integrated into the CAS.
 <p>
 The proposed standard for XML interchange of CAS data, XMI serialization, 
 is now supported by UIMA C++. The C++ application driver, runAECpp, has a new option
-to specify XMI format input files.
+to specify XMI format input files, and the output format is now XMI.
+</p>
+<p>
+XMI serialization is also key to implementing the UIMA-AS service wrapper for uimacpp-based annotators.
 </p>
   
 <h3>2.8. Building the SDK on Unix is Simplified</h3>
@@ -160,7 +169,7 @@ Although not required, CPP component descriptors of type <code>taeDescription</c
 <h3>3.1. Migrating C++ Source Code</h3>
 <p>
 This section describes what source code changes are required to migrate from
-UIMA C++ version 1.4.4 to Apache UIMA C++ v2.1. Please note that the first two changes
+UIMA C++ version 1.4.4 to Apache UIMA C++ v2.2.2. Please note that the first two changes
 are order dependent.
 </p> 
 
@@ -199,7 +208,9 @@ issues you find at
   
 <h2><a name="more.info">6. More Documentation on Apache UIMA C++</a></h2>
 <p>
-Please see <a href="docs/overview_and_setup.html">C++ Overview and Setup</a>
+Please see <a href="docs/overview_and_setup.html">Overview and Setup</a>
+for a high level overview of UIMA C++,
+and <a href="docs/html/index.html">Doxygen</a> for details on the UIMA C++ APIs.
 </p>
         
 </body>
