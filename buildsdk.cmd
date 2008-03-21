@@ -121,21 +121,6 @@ if exist %UIMA_DIR% (
 	goto error
 )
 
-if exist "%UIMA_INSTALLDIR%\bin\deployCppService.exe"  (
-
-  if "%ACTIVEMQ_HOME%" == "" goto Missing
-
-REM  if not exist "%ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll" (
-REM	echo ERROR: ACTIVEMQ_HOME "%ACTIVEMQ_HOME%" is invalid or there is no DebugDLL build. 
-REM	goto error
-REM  )
-
-  if not exist "%ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL\activemq-cpp.dll" (
-	echo ERROR: ACTIVEMQ_HOME "%ACTIVEMQ_HOME%" is invalid or there is no ReleaseDLL build.
-	goto error
-  )
-)
-
 REM Create the top-level directories
 mkdir %UIMA_DIR%
 mkdir %UIMA_DIR%\bin
@@ -272,11 +257,11 @@ REM xcopy /Q /Y %ICU_HOME%\LICENSE* %UIMA_DIR%\licenses\icu
 REM if not exist %UIMA_DIR%\licenses\xerces mkdir %UIMA_DIR%\licenses\xerces
 REM xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
 
-if exist %UIMA_DIR%\bin\deployCppService.exe (
+if not "%ACTIVEMQ_HOME%" == "" (
   echo.
   echo copying from %ACTIVEMQ_HOME%...
   xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL\activemq-cpp.dll %UIMA_DIR%\bin
-REM  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
+  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
 )
 
 echo cleaning the target tree
