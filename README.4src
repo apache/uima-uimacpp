@@ -6,7 +6,7 @@ Building the Apache UIMA C++ SDK
 --------------------------------
 
 The Apache UIMA C++ SDK has been built and tested in 32-bit mode
-on Linux systems with gcc versions from 3.2.3 to 4.1.0, on Windows 
+on Linux systems with gcc versions from 3.2.4 to 4.1.0, on Windows 
 using MSVC version 8, and on MacOSX with gcc version 4.0.1.
 
 64-bit builds have only been tested on Linux with gcc 4.1.0.
@@ -14,7 +14,7 @@ using MSVC version 8, and on MacOSX with gcc version 4.0.1.
 
 Setting up the build environment:
 ---------------------------------
-The library has dependencies on the APR, ICU and Xerces-C++ libraries.
+UIMACPP has dependencies on APR, ICU, Xerces-C and activemq-cpp libraries.
 The simplest way to resolve these dependencies is to use the copies
 included in the Apache UIMA C++ runtime package.  Install the
 appropriate image and set the UIMACPP_HOME environmental parameter to
@@ -28,10 +28,11 @@ a "Headers" directory.
 
 To replace one or more of the dependent libraries with different
 versions, download and build the component(s) and specify their use
-with the environmental parameters APR_HOME, ICU_HOME, and XERCES_HOME
-pointing at the install directory for each component. That is, under each
-should be lib and include directories. Additional instructions for building 
-the dependent libraries are found below.
+with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME, and
+ACTIVEMQ_HOME, pointing at the install directory for each
+component. That is, under each should be lib and include
+directories. Additional instructions for building the dependent
+libraries are found below.
 
 
 Building, testing and packaging on Linux:
@@ -114,17 +115,20 @@ A fix is to patch dso/unix/dso.c as follows:
 >
 
 
-Building the dependencies: APR, ICU and Xersec-c
-------------------------------------------------
-Building of libuima.so & uima.dll has been tested with levels of APR up
-to v1.2.7, levels of Xerces-C++ up to v2.7.0, and levels of ICU up to
-v3.4.
+Building the dependencies: APR, ICU, Xersec-c and Activemq-cpp
+--------------------------------------------------------------
 
 Download and build information for these libraries are at:
-  APR    - http://apr.apache.org/
-  ICU    - http://www.icu-project.org/
-  XERCES - http://xml.apache.org/xerces-c/
+  APR      - http://apr.apache.org/
+  ICU      - http://www.icu-project.org/
+  XERCES   - http://xml.apache.org/xerces-c/
+  ACTIVEMQ - http://activemq.apache.org/cms/download.html
 
+For UNIX users that cannot or do not want to install these at
+system root, specify DESTDIR for the install step. For example,
+after building APR, install using:
+
+  DESTDIR=`pwd` make install
 
 
 Disclaimer
