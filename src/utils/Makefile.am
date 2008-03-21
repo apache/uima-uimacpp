@@ -19,12 +19,12 @@
 
 bin_PROGRAMS = $(UTILS_BIN)
 
-UTILS_BIN= runAECpp
+UTILS_BIN= runAECpp deployCppService
 
 test_tgt: $(UTILS_BIN)
 
 clean:
-	rm -f $(UTILS_BIN) $(runAECpp_OBJECTS)
+	rm -f $(UTILS_BIN) $(runAECpp_OBJECTS) $(deployCppService_OBJECTS)
 
 if DEBUG_TEST
 AM_CPPFLAGS = -g -DDEBUG
@@ -34,11 +34,16 @@ endif
 AM_CPPFLAGS += -D_GNU_SOURCE
 
 # Set default for all target_LDADD values
-LDADD = $(UIMA_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) -ldl $(UIMACPP_HOME_LIB)
+LDADD = $(UIMA_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB) -lpthread -luuid 
 
 runAECpp_SOURCES = runAECpp.cpp
 runAECpp_CPPFLAGS  = -g -DDEBUG
 runAECpp_CPPFLAGS += -D_GNU_SOURCE
+
+deployCppService_SOURCES = deployCppService.cpp ActiveMQAnalysisEngineService.cpp
+deployCppService_CPPFLAGS  = -g -DDEBUG
+deployCppService_CPPFLAGS += -D_GNU_SOURCE
+
 
 INCLUDES  = -I.
 INCLUDES += -I../framework
@@ -46,4 +51,5 @@ INCLUDES += -I../cas
 INCLUDES += $(UIMA_XERCES_INCLUDE)
 INCLUDES += $(UIMA_APR_INCLUDE)
 INCLUDES += $(UIMA_ICU_INCLUDE)
+INCLUDES += $(UIMA_ACTIVEMQ_INCLUDE)
 INCLUDES += $(UIMACPP_HOME_INCLUDE)

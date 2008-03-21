@@ -156,6 +156,14 @@ if [ ! -d "$XERCES_HOME"/include ]; then
        echo UIMACPP SDK was not built.
 fi
 
+if [  -r "$UIMA_INSTALLDIR"/bin/deployCppService ]; then
+   if [ ! -d "$ACTIVEMQ_HOME"/lib ]; then
+      echo ERROR: ACTIVEMQ_HOME "$ACTIVEMQ_HOME" is invalid.
+      echo UIMACPP SDK was not built.
+      exit
+   fi
+fi
+
 
 mkdir "$UIMA_DIR"
 mkdir "$UIMA_DIR"/bin
@@ -179,6 +187,9 @@ fi
 
 echo copying from "$UIMA_INSTALLDIR"...
 cp -p  "$UIMA_INSTALLDIR/bin/runAECpp" "$UIMA_DIR"/bin/
+if [ ! "$ACTIVEMQ_HOME" = "" ]; then
+  cp -p  "$UIMA_INSTALLDIR/bin/deployCppService" "$UIMA_DIR"/bin/
+fi
 
 cp $CPLR "$UIMA_INSTALLDIR"/data  "$UIMA_DIR"/
 cp -p "$UIMA_INSTALLDIR"/include/uima/* "$UIMA_DIR"/include/uima/
@@ -222,6 +233,11 @@ eval cp $CPLR "$ICU_HOME"/lib/libicudata.$LIBEXT"*" "$UIMA_DIR"/lib/
 echo copying from "$XERCES_HOME"...
 cp $CPLR "$XERCES_HOME"/include/xercesc "$UIMA_DIR"/include/
 eval cp $CPLR "$XERCES_HOME"/lib/libxerces-c*.$LIBEXT"*" "$UIMA_DIR"/lib/
+
+if [ ! "$ACTIVEMQ_HOME" = "" ]; then
+  echo copying from "$ACTIVEMQ_HOME"...
+  eval cp $CPLR "$ACTIVEMQ_HOME"/lib/libactivemq-cpp*.$LIBEXT"*" "$UIMA_DIR"/lib/
+fi
 
 echo copying the scriptators...
 SCRIPTATORS_HOME=$UIMACPP_SOURCE/scriptators
