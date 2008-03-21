@@ -77,7 +77,7 @@ BUILD_LFLAGS= -Wl,--strip-debug
 endif 
 
 # include directory for compile
-INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1 -I$(UIMACPP_HOME)/include/apr-0
+INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1
 
 # compiler flags:
 CFLAGS=-Wall -x c++ $(BUILD_CFLAGS) $(INCLUDES) $(USER_CFLAGS) \
