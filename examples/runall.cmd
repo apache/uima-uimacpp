@@ -29,28 +29,28 @@ REM   under the License.
   @set sofaexampapp=SofaExampleApplicationD
 )
 %runae% descriptors/DaveDetector.xml data/example.txt
-@if errorlevel 1 goto error
-%runae% descriptors/DaveDetector.xml -x data/tcas.xcas
-@if errorlevel 1 goto error
-%runae% descriptors/DaveDetector.xml -x data/sofa.xcas -s EnglishDocument
-@if errorlevel 1 goto error
-%runae% -x descriptors/SofaExampleAnnotator.xml data/sofa.xcas
-@if errorlevel 1 goto error
+@if not errorlevel 0 goto error
+%runae% descriptors/DaveDetector.xml -xmi data/tcas.xmi
+@if not errorlevel 0 goto error
+%runae% descriptors/DaveDetector.xml -xmi data/sofa.xmi -s EnglishDocument
+@if not errorlevel 0 goto error
+%runae% -xmi descriptors/SofaExampleAnnotator.xml data/sofa.xmi
+@if not errorlevel 0 goto error
 set UIMACPP_STREAMHANDLERS=file:SofaStreamHandlerFile
-%runae% -x descriptors/SofaDataAnnotator.xml data/sofa.xcas
-@if errorlevel 1 goto error
-%runae% -x descriptors/SofaDataAnnotator.xml data/filetcas.xcas
-@if errorlevel 1 goto error
-%runae% -x descriptors/SimpleTextSegmenter.xml data/docforsegmenter.xcas
-@if errorlevel 1 goto error
-%runae% -x descriptors/XCasWriterCasConsumer.xml data/tcas.xcas
-@if errorlevel 1 goto error
-%runae% -x descriptors/XCasWriterCasConsumer.xml data/sofa.xcas
-@if errorlevel 1 goto error
+%runae% -xmi descriptors/SofaDataAnnotator.xml data/sofa.xmi
+@if not errorlevel 0 goto error
+%runae% -xmi descriptors/SofaDataAnnotator.xml data/filetcas.xmi
+@if not errorlevel 0 goto error
+%runae% -xmi descriptors/SimpleTextSegmenter.xml data/docforsegmenter.xmi
+@if not errorlevel 0 goto error
+%runae% -xmi descriptors/XCasWriterCasConsumer.xml data/tcas.xmi
+@if not errorlevel 0 goto error
+%runae% -xmi descriptors/XCasWriterCasConsumer.xml data/sofa.xmi
+@if not errorlevel 0 goto error
 %exampapp% descriptors/DaveDetector.xml data
-@if errorlevel 1 goto error
+@if not errorlevel 0 goto error
 %sofaexampapp% descriptors/SofaExampleAnnotator.xml
-@if errorlevel 1 goto error
+@if not errorlevel 0 goto error
 @echo .................
 @echo All examples ran!
 @echo .................
