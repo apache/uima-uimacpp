@@ -23,7 +23,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.environment</key>
-					<value>UIMACPP_HOME=/uimacpp-common/apache-uima/uimacpp|</value>
+					<value>UIMACPP_HOME=${env_var:UIMA_HOME}/uimacpp|</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.build.target.auto</key>
