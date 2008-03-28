@@ -130,6 +130,8 @@ after building APR, install using:
 
   DESTDIR=`pwd` make install
 
+On Windows, the activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL.
+
 
 Disclaimer
 -----------
