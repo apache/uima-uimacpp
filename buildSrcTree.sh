@@ -18,7 +18,7 @@
 #   under the License.
 
 # for now, change versionnumber in line below
-srcName=uimacpp-2.2.0-incubating
+srcName=uimacpp-2.2.2-incubating
 
 if [ "$1" = 'TRACE' ]
     then set -vx ;shift
@@ -132,6 +132,7 @@ cp $CPL $UIMACPP_SOURCE/src/jni/uima/*.h $target_dir/src/jni/uima/
 
 print -u2 "copying from $UIMACPP_SOURCE/src/utils"
 cp $CPL $UIMACPP_SOURCE/src/utils/*.cpp $target_dir/src/utils/
+cp $CPL $UIMACPP_SOURCE/src/utils/*.hpp $target_dir/src/utils/
 cp $CPL $UIMACPP_SOURCE/src/utils/*.in $target_dir/src/utils/
 cp $CPL $UIMACPP_SOURCE/src/utils/*.am $target_dir/src/utils/
 
