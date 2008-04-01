@@ -5,6 +5,7 @@
 
 #include "ActiveMQAnalysisEngineService.hpp"
 #include "deployCppService.hpp"
+#include <activemq/core/ActiveMQConsumer.h>
 using namespace activemq::exceptions;
 
 int shutdown_service;
@@ -113,4 +114,5 @@ int main(int argc, char* argv[]) {
 
 
 }  //main
+
 

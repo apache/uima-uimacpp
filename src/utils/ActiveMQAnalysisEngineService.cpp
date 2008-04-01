@@ -2,6 +2,10 @@
 * Analysis Engine service wrapper implementation based on 
 * Active MQ C++ client.
 */
+
+#include "ActiveMQAnalysisEngineService.hpp"
+#include "deployCppService.hpp"
+
 #include <activemq/concurrent/Thread.h>
 #include <activemq/concurrent/Runnable.h>
 #include <activemq/concurrent/Concurrent.h>
@@ -9,10 +13,6 @@
 #include <activemq/core/ActiveMQConstants.h>
 #include <activemq/util/Integer.h>
 
-#include "unicode/unistr.h"
-#include "apr.h"
-
-#include "uima/api.hpp"
 #include "uima/xmlwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
 #include "uima/xmiwriter.hpp"
@@ -22,10 +22,8 @@
 using namespace activemq::core;
 using namespace activemq::util;
 using namespace activemq::exceptions;
+using namespace activemq::concurrent;
 using namespace uima;
-
-#include "ActiveMQAnalysisEngineService.hpp"
-#include "deployCppService.hpp"
 
 enum traceLevels {NONE, INFO, FINE, FINER, FINEST };
 traceLevels uimacpp_ee_tracelevel=INFO;
@@ -1171,5 +1169,6 @@ to receive messages from the input queue. */
       LOGERROR("AMQAnalysisEngineService::cleanup() " +  e.getMessage());
     }  
   }           
+
 
 

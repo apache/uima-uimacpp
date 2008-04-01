@@ -5,25 +5,13 @@
 
 #ifndef __ACTIVEMQ_AE_SERVICE__
 #define __ACTIVEMQ_AE_SERVICE__
+#include "uima/api.hpp"
 
 #include <cms/Connection.h>
 #include <cms/Session.h>
 #include <cms/TextMessage.h>
 #include <cms/ExceptionListener.h>
-#include <cms/MessageListener.h>
-#include <activemq/core/ActiveMQConsumer.h>
 
-#include "unicode/unistr.h"
-#include "apr.h"
-#include "uima/api.hpp"
-#include <apr_network_io.h>
-
-#include <stdlib.h>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-
-using namespace activemq::concurrent;
 using namespace cms;
 using namespace uima;
 
@@ -240,5 +228,6 @@ public:
 };
 
 #endif
+
 
 

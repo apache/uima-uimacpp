@@ -5,16 +5,10 @@
 
 #ifndef __DEPLOY_SERVICE__
 #define __DEPLOY_SERVICE__
-
+#include "uima/api.hpp"
 #include <apr_network_io.h>
 #include <apr_proc_mutex.h>
 #include <apr_errno.h>
-#include "uima/api.hpp"
-#include <stdlib.h>
-#include <iostream>
-#include <stdio.h>
-#include <vector>
-
 #include <apr_general.h>
 #include <apr_thread_proc.h>
 #include <apr_thread_cond.h>
@@ -760,4 +754,5 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
 
 
 #endif
+
 
