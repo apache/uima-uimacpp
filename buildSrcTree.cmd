@@ -141,6 +141,7 @@ xcopy /Q %UIMACPP_SOURCE%\src\test\src\uima\*.hpp %TARGET_DIR%\src\test\src\uima
 
 echo copying from %UIMACPP_SOURCE%\src\utils
 xcopy /Q %UIMACPP_SOURCE%\src\utils\*.cpp %TARGET_DIR%\src\utils
+xcopy /Q %UIMACPP_SOURCE%\src\utils\*.hpp %TARGET_DIR%\src\utils
 
 echo copying from %UIMACPP_SOURCE%\examples
 xcopy /Q %UIMACPP_SOURCE%\examples\run_configuration %TARGET_DIR%\examples\run_configuration
