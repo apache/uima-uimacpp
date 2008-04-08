@@ -41,7 +41,7 @@ This will create DLLs and executables in the src directory which must be placed 
     </code>
   </ul>
 <h2>Running the Sample UIMA Components</h2>
-<p>These components can be run using either in the native C++ environment using the <code>runAECpp</code> program or run from Java using the <code>runAE</code> utility or integrated into a CPE. The UIMA C++ descriptors are location in the descriptors subdirectory.
+<p>These components can be run using either in the native C++ environment using the <code>runAECpp</code> program or run from Java using the <code>runAE</code> utility or integrated into a CPE. The UIMA C++ descriptors are located in the descriptors subdirectory.
 <h3>DaveDetector</h3>
 A UIMA annotator that finds Daves in text and annotates them. It has one configuration parameter, <code>DaveString</code>, that specifies the string to match. It illustrates how to use the CAS APIs to create annotations and add them to the index. 
 <p>
@@ -50,8 +50,8 @@ To run this annotator in C++:
 <ul>
 <code>
 runAECpp descriptors/DaveDetector.xml data/example.txt &lt;yourOutputDir&gt;<br>
-runAECpp -x descriptors/DaveDetector.xml -x data/tcas.xcas &lt;yourOutputDir&gt;<br>
-runAECpp -x descriptors/DaveDetector.xml -x data/sofa.xcas &lt;yourOutputDir&gt; -s EnglishDocument<br>
+runAECpp -xmi descriptors/DaveDetector.xml data/tcas.xmi &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/DaveDetector.xml data/sofa.xmi &lt;yourOutputDir&gt; -s EnglishDocument<br>
 </code>
 </ul>
 <h3>SofaExampleAnnotator</h3>
@@ -59,7 +59,7 @@ A simple multi-Sofa example annotator that expects an English text Sofa as input
 To run this annotator in C++:
 <ul>
 <code>
-runAECpp -x descriptors/SofaExampleAnnotator.xml data/sofa.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/SofaExampleAnnotator.xml data/sofa.xmi &lt;yourOutputDir&gt;<br>
 </code>
 </ul>
 <h3>SofaStreamHandlerFile</h3>
@@ -89,13 +89,13 @@ An annotator that accesses the data in Sofa "EnglishDocument" as a text stream.
 It tokenizes the data on whitespace and creates an annotation for each token. The annotator may be run with an input Sofa where the Sofa data is local or with a Sofa where the Sofa data is remote and specified as a URI.  To run this annotator in C++ to process a Sofa with local data: 
 <ul>
 <code>
-runAECpp -x descriptors/SofaDataAnnotator.xml data/sofa.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/SofaDataAnnotator.xml data/sofa.xmi &lt;yourOutputDir&gt;<br>
 </code>
 </ul>
 To run and process Sofa where the Sofa data is specified as a <code>file:</code> URL, register the example <code>sofaStreamFileHandler</code> handler for the <code>file</code> URI scheme as described in the section above. and run:
 <ul>
 <code>
-runAECpp -x descriptors/SofaDataAnnotator.xml data/filetcas.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/SofaDataAnnotator.xml data/filetcas.xmi &lt;yourOutputDir&gt;<br>
 </code>
 </ul>
 <h3>SimpleTextSegmenter</h3>
@@ -103,25 +103,25 @@ A simple example CAS Multiplier which is a type of analysis component that outpu
 To run this annotator in C++:
 <ul>
 <code>
-runAECpp -x descriptors/SimpleTextSegmenter.xml data/docforsegmenter.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/SimpleTextSegmenter.xml data/docforsegmenter.xmi &lt;yourOutputDir&gt;<br>
 </code>
 </ul>
-The original input CAS as well as the new CASs containing the segments will be written out as separate files in your &lt;yourOutputDir&gt; in XCAS format.
+The original input CAS as well as the new CASs containing the segments will be written out as separate files in your &lt;yourOutputDir&gt; in XMI format.
 <h3>XCasWriterCasConsumer</h3>
 A simple example CAS Consumer that generates an XCAS (XML representation of a CAS) and writes it to stdout by default. It can be configured to write the XCAS output to a file in a directory specified by modifying the descriptor and setting a value for the configuration parameter <code>OutputDirectory</code>. The <code>XCasWriterCasConsumer</code> can be inserted at any point in a aggregate or CPE flow to dump the contents of CAS and is useful for debugging.
 To run this annotator in C++:
 <ul>
 <code>
-runAECpp -x descriptors/XCasWriterCasConsumer.xml data/tcas.xcas &lt;yourOutputDir&gt;<br>
-runAECpp -x descriptors/XCasWriterCasConsumer.xml data/sofa.xcas &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/XCasWriterCasConsumer.xml data/tcas.xmi &lt;yourOutputDir&gt;<br>
+runAECpp -xmi descriptors/XCasWriterCasConsumer.xml data/sofa.xmi &lt;yourOutputDir&gt;<br>
 </code>
 </ul>
 To see the results of the earlier examples:
 <ul>
 <code>
-runAECpp -x descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/tcas.xcas<br>
-runAECpp -x descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/sofa.xcas<br>
-runAECpp -x descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/filetcas.xcas<br>
+runAECpp -xmi descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/tcas.xmi<br>
+runAECpp -xmi descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/sofa.xmi<br>
+runAECpp -xmi descriptors/XCasWriterCasConsumer.xml &lt;yourOutputDir&gt;/filetcas.xmi<br>
 </code>
 </ul>
 <h2>Running the Sample UIMA Applications</h2>
