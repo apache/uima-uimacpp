@@ -93,7 +93,6 @@ int main(int argc, char* argv[]) {
     apr_thread_t *thread=0;
     apr_threadattr_t *thd_attr=0;
     if (javaport > 0) {
-     
       apr_threadattr_create(&thd_attr, pool);
       rv = apr_thread_create(&thread, thd_attr, handleCommands, 0, pool);
       assert(rv == APR_SUCCESS);
@@ -117,14 +116,37 @@ int main(int argc, char* argv[]) {
       pool=0;
     }
   }  catch (CMSException& e) {
-    cerr << __FILE__ << __LINE__ << " " << e.getMessage() << endl;
+    stringstream str; 
+    str << e.getMessage() << endl;
+    apr_size_t len = str.str().length();
+    rv = apr_socket_send(cs, str.str().c_str(), &len);
+    len = 1;
+    apr_socket_send(cs,"\n", &len);
     e.printStackTrace();
   } catch (XMLException& e) {
-    cerr << __FILE__ << __LINE__ << " " << e.getMessage() << endl;
+    stringstream str; 
+    str << e.getMessage() << endl;
+    cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    apr_size_t len = str.str().length();
+    rv = apr_socket_send(cs, str.str().c_str(), &len);
+    len = 1;
+    apr_socket_send(cs,"\n", &len);
   } catch (uima::Exception e) {
-    cerr << __FILE__ << __LINE__ << " " << e.asString() << endl;
+    stringstream str;
+    str << e.getErrorInfo().getMessage().asString() << endl;
+    cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    apr_size_t len = str.str().length();
+    rv = apr_socket_send(cs, str.str().c_str(), &len);
+    len = 1;
+    apr_socket_send(cs,"\n", &len);
   } catch (...) {
-    cerr << __FILE__ << __LINE__ << " Unknown Exception" << endl;
+    stringstream str;
+    str <<  "Unknown Exception" << endl;
+    cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    apr_size_t len = str.str().length();
+    rv = apr_socket_send(cs, str.str().c_str(), &len);
+    len = 1;
+    apr_socket_send(cs,"\n", &len);
   }
   cout << "-----------------------------------------------------\n";    
   cout << " UIMA C++ Remote Service terminated:\n";
@@ -132,5 +154,6 @@ int main(int argc, char* argv[]) {
 
 
 }  //main
+
 
 

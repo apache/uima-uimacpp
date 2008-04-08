@@ -43,7 +43,7 @@ class ServiceParameters;
  */
 #define PROCESS_CAS_COMMAND 2000
 #define GET_META_COMMAND    2001
-#define CPC_COMMAND     2002
+#define CPC_COMMAND         2002
 #define REQUEST             3000
 #define RESPONSE            3001
 #define XMI_PAYLOAD         1000
@@ -52,13 +52,10 @@ class ServiceParameters;
 #define EXC_PAYLOAD         1003
 #define NO_PAYLOAD          1005
 
-
-
-
 static int initialize(ServiceParameters &, apr_pool_t*);
- static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data);
- static int terminateService();
- static void signal_handler(int signum);
+static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data);
+static int terminateService();
+static void signal_handler(int signum);
 
 
 /**
@@ -724,11 +721,18 @@ class SocketLogger : public uima::Logger {
 
 
 static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
-   char buf[9];
-      memset(buf,0,9);
-      apr_size_t len = 8;
 
-      //Monitor * pMonitor = (Monitor*) data;
+      //if we are here service initialization was successful, send message
+      //to controller.
+      string msg = "0";
+      apr_size_t len = msg.length();
+      rv = apr_socket_send(cs, msg.c_str(), &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+      //receive JMX, admin requests from controller 
+      char buf[9];
+      memset(buf,0,9);
+      len = 8;
       while ( (rv = apr_socket_recv(cs, buf, &len)) != APR_EOF) {
         string command = buf;
         memset(buf,0,9);
@@ -772,5 +776,6 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
 
 
 #endif
+
 
 

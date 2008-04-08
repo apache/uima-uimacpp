@@ -1016,7 +1016,7 @@ to receive messages from the input queue. */
         } else {
           LOGERROR("AMQAnalysisEngineService::initializer() could not create AE" + errInfo.asString());
           ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
-          msg.addParam("AMQListener::initialize() create AE failed.");
+          msg.addParam("AMQListener::initialize() create AE failed. " + errInfo.getMessage().asString() );
           ErrorInfo errInfo;
           errInfo.setErrorId(UIMA_ERR_RESMGR_COULD_NOT_INITIALIZE_RESOURCE),
             errInfo.setMessage(msg);
@@ -1187,6 +1187,7 @@ to receive messages from the input queue. */
       LOGERROR("AMQAnalysisEngineService::cleanup() " +  e.getMessage());
     }  
   }           
+
 
 
 
