@@ -88,11 +88,10 @@ int main(int argc, char* argv[]) {
     cout << "UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
       serviceDesc.getBrokerURL() << " Ready to process..." << endl;
     
-    /* connect to java proxy if called from java */
-    int javaport=serviceDesc.getJavaPort();   
+    /* connect to java proxy if called from java */  
     apr_thread_t *thread=0;
     apr_threadattr_t *thd_attr=0;
-    if (javaport > 0) {
+    if (cs) {
       apr_threadattr_create(&thd_attr, pool);
       rv = apr_thread_create(&thread, thd_attr, handleCommands, 0, pool);
       assert(rv == APR_SUCCESS);
@@ -118,35 +117,42 @@ int main(int argc, char* argv[]) {
   }  catch (CMSException& e) {
     stringstream str; 
     str << e.getMessage() << endl;
-    apr_size_t len = str.str().length();
-    rv = apr_socket_send(cs, str.str().c_str(), &len);
-    len = 1;
-    apr_socket_send(cs,"\n", &len);
-    e.printStackTrace();
+    if (cs) {
+      apr_size_t len = str.str().length();
+      rv = apr_socket_send(cs, str.str().c_str(), &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+    }
   } catch (XMLException& e) {
     stringstream str; 
     str << e.getMessage() << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
-    apr_size_t len = str.str().length();
-    rv = apr_socket_send(cs, str.str().c_str(), &len);
-    len = 1;
-    apr_socket_send(cs,"\n", &len);
+    if (cs) {
+      apr_size_t len = str.str().length();
+      rv = apr_socket_send(cs, str.str().c_str(), &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+    }
   } catch (uima::Exception e) {
     stringstream str;
     str << e.getErrorInfo().getMessage().asString() << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
-    apr_size_t len = str.str().length();
-    rv = apr_socket_send(cs, str.str().c_str(), &len);
-    len = 1;
-    apr_socket_send(cs,"\n", &len);
+    if (cs) {
+      apr_size_t len = str.str().length();
+      rv = apr_socket_send(cs, str.str().c_str(), &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+    }
   } catch (...) {
     stringstream str;
     str <<  "Unknown Exception" << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
-    apr_size_t len = str.str().length();
-    rv = apr_socket_send(cs, str.str().c_str(), &len);
-    len = 1;
-    apr_socket_send(cs,"\n", &len);
+    if (cs) {
+      apr_size_t len = str.str().length();
+      rv = apr_socket_send(cs, str.str().c_str(), &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+    }
   }
   cout << "-----------------------------------------------------\n";    
   cout << " UIMA C++ Remote Service terminated:\n";
@@ -154,6 +160,7 @@ int main(int argc, char* argv[]) {
 
 
 }  //main
+
 
 
 
