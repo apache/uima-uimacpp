@@ -9,9 +9,9 @@
  # to you under the Apache License, Version 2.0 (the
  # "License"); you may not use this file except in compliance
  # with the License.  You may obtain a copy of the License at
- # 
+ #
  #   http://www.apache.org/licenses/LICENSE-2.0
- # 
+ #
  # Unless required by applicable law or agreed to in writing,
  # software distributed under the License is distributed on an
  # "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -24,7 +24,8 @@
 #   UIMA C++ annotators and applications
 #
 # Change below to customize your platform
-#   For example, the extension for shared libraries specified by DLL_SUFFIX
+#   For example, the extension for shared libraries specified by DLL_SUFFIX,
+#   and FORCE_32 to use a 32-bit UIMA SDK on a 64-bit OS
 #
 # Individual components can add custom compile and link controls
 #   such as USER_CFLAGS
@@ -62,19 +63,22 @@ UNAME = $(shell uname -s)
 ifeq ($(UNAME), Darwin)
   DLL_SUFFIX=dylib
   SHARED_FLAG=-dynamiclib
-  EXTRA_LINK_LIBS=-lxerces-c -lapr-1.0 -licui18n -licuuc -licuio -licudata 
+  EXTRA_LINK_LIBS=-lxerces-c -lapr-1.0 -licui18n -licuuc -licuio -licudata
 endif
+
+# Uncomment the next line to build 32-bit annotators on a 64-bit OS
+#FORCE_32=-m32
 
 ifeq ($(DEBUG),1)
 # compile flags for debug mode
-BUILD_CFLAGS=-DDEBUG -g -fno-inline -fno-default-inline -fPIC
-BUILD_LFLAGS=
+BUILD_CFLAGS=-DDEBUG -g -fno-inline -fno-default-inline -fPIC $(FORCE_32)
+BUILD_LFLAGS= $(FORCE_32)
 else
 # compile flags for ship mode:
 # all optimization on, Multithreaded, dynamic link runtime
-BUILD_CFLAGS=-DNDEBUG -DTRACEOFF -O3 -fPIC
-BUILD_LFLAGS= -Wl,--strip-debug
-endif 
+BUILD_CFLAGS=-DNDEBUG -DTRACEOFF -O3 -fPIC $(FORCE_32)
+BUILD_LFLAGS= -Wl,--strip-debug $(FORCE_32)
+endif
 
 # include directory for compile
 INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1
