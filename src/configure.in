@@ -142,7 +142,7 @@ CPPFLAGS="$CPPFLAGS_save"
 #
 
 AC_ARG_WITH([activemq], AC_HELP_STRING([--with-activemq],
-                                      [use ACTIVEMQ Library (uses $UIMACPP_HOME by default)]),
+                                      [use ACTIVEMQ Library (no deployment wrapper by default)]),
                [UIMA_ACTIVEMQ_INCLUDE="-I$withval/include/activemq-cpp-2.1.3"
                 UIMA_ACTIVEMQ_LIB="-L$withval/lib -lactivemq-cpp"
 		ACTIVEMQ_TEST_INCLUDE="$UIMA_ACTIVEMQ_INCLUDE"
@@ -154,10 +154,18 @@ AC_ARG_WITH([activemq], AC_HELP_STRING([--with-activemq],
 
 CPPFLAGS_save="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $ACTIVEMQ_TEST_INCLUDE"
-AC_CHECK_HEADER([activemq/core/Dispatcher.h],
+activemq=true
+AC_CHECK_HEADER([activemq/exceptions/ExceptionDefines.h],
                 [:],
-                [AC_MSG_ERROR([Unable to find ACTIVEMQ Headers])])
+                [activemq=false])
+
 CPPFLAGS="$CPPFLAGS_save"
+AM_CONDITIONAL([ACTIVEMQ_FOUND], [test x$activemq = xtrue])
+if test "x$activemq" = "xfalse"; then
+AC_MSG_RESULT(***ACTIVEMQ dependency not found)
+AC_MSG_RESULT(***Not building deployCppService)
+AC_MSG_RESULT(***To try again ... touch configure before running make)
+fi
 
 
 
