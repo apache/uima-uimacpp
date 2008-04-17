@@ -144,13 +144,11 @@ CPPFLAGS="$CPPFLAGS_save"
 AC_ARG_WITH([activemq], AC_HELP_STRING([--with-activemq],
                                       [use ACTIVEMQ Library (no deployment wrapper by default)]),
                [UIMA_ACTIVEMQ_INCLUDE="-I$withval/include/activemq-cpp-2.1.3"
-                UIMA_ACTIVEMQ_LIB="-L$withval/lib -lactivemq-cpp"
+                UIMA_ACTIVEMQ_LIB="-L$withval/lib -lactivemq-cpp -lpthread -luuid"
 		ACTIVEMQ_TEST_INCLUDE="$UIMA_ACTIVEMQ_INCLUDE"
 		AC_SUBST(UIMA_ACTIVEMQ_INCLUDE)
 		AC_SUBST(UIMA_ACTIVEMQ_LIB)
-		],
-                      [ACTIVEMQ_TEST_INCLUDE="-I$UIMACPP_HOME/include"
-		       UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -lactivemq-cpp"])
+		])
 
 CPPFLAGS_save="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $ACTIVEMQ_TEST_INCLUDE"

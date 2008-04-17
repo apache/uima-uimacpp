@@ -38,7 +38,7 @@ endif
 AM_CPPFLAGS += -D_GNU_SOURCE
 
 # Set default for all target_LDADD values
-LDADD = $(UIMA_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB) -lpthread -luuid 
+LDADD = $(UIMA_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB)
 
 runAECpp_SOURCES = runAECpp.cpp
 runAECpp_CPPFLAGS  = -g -DDEBUG
