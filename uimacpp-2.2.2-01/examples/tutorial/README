@@ -1,0 +1,7 @@
+This directory contains a C++ version of one of the Java annotations in the
+UIMA tutorial. The descriptor file MeetingAnnotatorCPP.xml assumes that the
+uimacpp SDK is installed in $UIMA_HOME/uimacpp.
+
+The Java SDK also adds $UIMA_HOME/uimacpp/examples/tutorial/src to the
+appropriate native load shared library path so that the C++ annotator will be
+found when run using the Java tutorial.

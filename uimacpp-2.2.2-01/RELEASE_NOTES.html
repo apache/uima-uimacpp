@@ -1,0 +1,217 @@
+<html>
+<head>
+  <title>Apache UIMA C++ v2.2.2 Releate Notes</title>
+</head>
+<body>
+<h1>Apache UIMA C++ (Unstructured Information Management Architecture) v2.2.2 Release Notes</h1>
+
+<h2>Contents</h2>
+<p>
+<a href="#what.is.uima">1. What is UIMA?</a><br/>
+<a href="#major.changes">2. Major Changes in this Release</a><br/>
+<a href="#migrating">3. Migrating from IBM UIMA C++ to Apache UIMA C++</a><br/>
+<a href="#get.involved">4. How to Get Involved</a><br/>
+<a href="#report.issues">5. How to Report Issues</a><br/>
+<a href="#more.info">6. More Documentation on Apache UIMA C++</a><br/>
+</p>  
+   
+<h2><a name="what.is.uima">1. What is UIMA?</a></h2>
+
+     <p>
+  			Unstructured Information Management applications are
+				software systems that analyze large volumes of
+				unstructured information in order to discover knowledge
+				that is relevant to an end user. UIMA is a framework and
+				SDK for developing such applications. An example UIM
+				application might ingest plain text and identify
+				entities, such as persons, places, organizations; or
+				relations, such as works-for or located-at. UIMA enables
+				such an application to be decomposed into components,
+				for example "language identification" -&gt; "language
+				specific segmentation" -&gt; "sentence boundary
+				detection" -&gt; "entity detection (person/place names
+				etc.)". Each component must implement interfaces defined
+				by the framework and must provide self-describing
+				metadata via XML descriptor files. The framework manages
+				these components and the data flow between them.
+				Components are written in Java or C++; the data that
+				flows between components is designed for efficient
+				mapping between these languages. UIMA additionally
+				provides capabilities to wrap components as network
+				services, and can scale to very large volumes by
+				replicating processing pipelines over a cluster of
+				networked nodes.
+			</p>
+                                                <p>
+				Apache UIMA is an Apache-licensed open source
+				implementation of the UIMA specification (that
+				specification is, in turn, being developed concurrently
+				by a technical committee within
+				<a href="http://www.oasis-open.org">OASIS</a>
+				, a standards organization). We invite and encourage you
+				to participate in both the implementation and
+				specification efforts.
+			</p>
+                                                <p>
+				UIMA is a component framework for analysing unstructured
+				content such as text, audio and video. It comprises an
+				SDK and tooling for composing and running analytic
+				components written in Java and C++, with some support
+				for Perl, Python and TCL.
+			</p>
+
+<h2><a name="major.changes">2. Major Changes in this Release</a></h2>
+<p>
+This section describes what has changed between version 1.4.4 and version 2.2.2 of 
+UIMA C++. A migration guide is provided below that describes the required updates to 
+your C++ code and descriptors. See Section 3, "Migrating from IBM UIMA C++ to 
+Apache UIMA C++".
+</p> 
+  
+<!--
+tutorial and other interlock with Java?
+-->
+  
+<h3>2.1. Complete Content for Build, Test and Package</h3>
+<p>
+This release includes a test suite for the uimacpp library. Also
+included are the tools to build both source and binary distribution
+packages.
+</p>
+  
+<h3>2.2. Extended Platform Support</h3>
+<p>
+On 64-bit Unix platforms the Apache UIMA C++ framework can be built as
+a 64-bit library. This enables C++, Perl, Python and Tcl analytics to
+fully utilize a 64-bit address space. Both XML and binary CAS
+serialization formats are compatible between 32 and 64-bit builds.
+</p>
+<p>
+MacOSX is now fully supported for SDK build and use.
+</p>
+  
+<h3>2.3. Better Integration with Java SDK</h3>
+<p>
+The Apache UIMA SDK shell scripts and Eclipse run configurations set native environment paths assuming the UIMA C++ SDK is installed directly under $UIMA_HOME. This enables the standard UIMA SDK tools to work seemlessly with C++ based annotators.
+</p>
+<p>
+On Unix platforms, the UIMA C++ examples directory can be loaded as an Eclipse CDT project, supporting development of both UIMA C++ and Java components in the same Eclipse IDE.
+</p>
+<p>
+By default, when a uimacpp annotator is instantiated from Java, the annotator runs in the JVM process with communication via the JNI. Multiple uimacpp annotators instantiated in the same JVM must share the same native environment, therefor they must share the same version UIMA C++ framework. As before, a uimacpp annotator can be isolated by wrapping it as a Vinci service.
+</p>
+<p>
+A new approach is provided in this release which allows process isolation of uimacpp annotators without wrapping each one in a JVM. When deployed from Java as a UIMA-AS service, a uimacpp annotator is spawned by the JVM as native process. The native UIMA-AS service communitates to clients via JMS messaging, completely independently of the JVM. However, the native service connects back to the JVM to enable JMX monitoring and logfile integration with other UIMA annotators running in the same JVM.
+</p>
+  
+<h3>2.4. C++ Namespace and Module Name Changes</h3>
+<p>
+The UIMA C++ namespace and shared library has changed from "taf" to "uima". 
+Environment variable TAFROOT has changed to UIMACPP_HOME.
+All of the source files have dropped the prefix "taf_". SDK header files 
+have moved from $TAFROOT/include/ to $UIMACPP_HOME/include/uima/. 
+</p>
+  
+<h3>2.5. XML Descriptor Changes</h3>
+<p>
+The XML namespace in UIMA component descriptors has changed from 
+http://uima.watson.ibm.com/resourceSpecifier to 
+http://uima.apache.org/resourceSpecifier. The value of the 
+&lt;frameworkImplementation> for C++ components must now be org.apache.uima.cpp.
+Although <code>taeDescription</code> is still supported, the use of <code>analysisEngineDescription</code>
+is recommended.
+</p>
+  
+<h3>2.6. TCAS replaced by CAS</h3>
+<p>
+In Apache UIMA the TCAS interface has been removed. All uses of it must now be 
+replaced by the CAS interface. All methods that used to be defined on TCAS 
+were moved to CAS. 
+All annotators should now derive from class <code>Annotator</code>, although for backwards
+compatibility C++ annotators can still derive from the class <code>TextAnnotator</code>.
+For all C++ component types, the CAS delivered to the process method will be a base CAS if Sofa capabilities are 
+declared in the component descriptor, else the selected CAS view.
+</p>
+<p>
+The method 
+<ul>
+ <code>CAS.getTCAS(getSofa(getAnnotatorContext().mapToSofaID("SofaName")))</code>
+</ul>
+has been replaced with 
+<ul>
+ <code>CAS->getView("SofaName")</code>
+</ul>
+as the Sofa mapping code has been integrated into the CAS.
+</p>
+
+<h3>2.7. Support added for XMI Serialization</h3>
+<p>
+The proposed standard for XML interchange of CAS data, XMI serialization, 
+is now supported by UIMA C++. The C++ application driver, runAECpp, has a new option
+to specify XMI format input files, and the output format is now XMI.
+</p>
+<p>
+XMI serialization is also key to implementing the UIMA-AS service wrapper for uimacpp-based annotators.
+</p>
+  
+<h3>2.8. Building the SDK on Unix is Simplified</h3>
+<p>
+The Unix build is simplified by redistributing GNU automake output files
+in the source tarball. When building from an SVN checkout, up-to-date versions
+of GNU automake, autoconf and libtool are still required.
+</p>
+
+<h2><a name="migrating">3. Migrating from IBM UIMA C++ to Apache UIMA C++</a></h2>
+<p>
+Although not required, CPP component descriptors of type <code>taeDescription</code> should be changed to type <code>analysisEngineDescription</code>.
+</p>
+
+<h3>3.1. Migrating C++ Source Code</h3>
+<p>
+This section describes what source code changes are required to migrate from
+UIMA C++ version 1.4.4 to Apache UIMA C++ v2.2.2. Please note that the first two changes
+are order dependent.
+</p> 
+
+<ul>
+<li>Replace [case sensitive] all occurances of <code>getTCAS</code> with <code>getView</code></li>
+<li>Replace [case sensitive] all occurances of <code>TCAS</code> with <code>CAS</code></li>
+<li>Replace [case sensitive] all occurances of <code>TAF_</code> with <code>UIMA_</code></li>
+<li>Replace [case sensitive] all occurances of <code>taf_</code> with <code>uima/</code></li>
+<li>Replace <code>"tafapi.hpp"</code> with <code>"uima/api.hpp"</code></li>
+<li>Replace <code>TextAnnotator</code> with <code>Annotator</code></li>
+<li>Replace the generic C API wrapper, usually at the bottom of a cpp component, with
+the MAKE_AE() macro. See sample code in $UIMACPP_HOME/examples/src</li>
+</ul>
+
+<h3>3.1. Migrating Scriptator Source Code</h3>
+<p>
+Tcl source code using variables of type TCAS should use CAS instead.
+No changes should be necessary for Perl or Python source.
+</p>
+  
+<h2><a name="get.involved">4. How to Get Involved</a></h2>
+<p>
+The Apache UIMA project really needs and appreciates any contributions, 
+including documentation help, source code and feedback.  If you are interested
+in contributing, please visit 
+<a href="http://incubator.apache.org/uima/get-involved.html">
+  http://incubator.apache.org/uima/get-involved.html</a>.
+</p>
+  
+<h2><a name="report.issues">5. How to Report Issues</a></h2>
+<p>
+The Apache UIMA project uses JIRA for issue tracking.  Please report any 
+issues you find at 
+<a href="http://issues.apache.org/jira/browse/uima">http://issues.apache.org/jira/browse/uima</a>
+</p>
+  
+<h2><a name="more.info">6. More Documentation on Apache UIMA C++</a></h2>
+<p>
+Please see <a href="docs/overview_and_setup.html">Overview and Setup</a>
+for a high level overview of UIMA C++,
+and <a href="docs/html/index.html">Doxygen</a> for details on the UIMA C++ APIs.
+</p>
+        
+</body>
+</html>
