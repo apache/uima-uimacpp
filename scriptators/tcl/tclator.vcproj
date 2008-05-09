@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib icuin.lib tcl84.lib uima.lib libapr$(APR_VER).lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib icuin.lib tcl84.lib uima.lib libapr-1.lib"
 				OutputFile="$(OutDir)/tclator.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(TCL_LIBDIR);$(UIMACPP_HOME)\lib"
@@ -145,7 +145,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2.lib icuuc.lib icuin.lib tcl84.lib uima.lib libapr$(APR_VER).lib"
+				AdditionalDependencies="xerces-c_2.lib icuuc.lib icuin.lib tcl84.lib uima.lib libapr-1.lib"
 				OutputFile="$(OutDir)/tclator.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(TCL_LIBDIR);$(UIMACPP_HOME)\lib"
