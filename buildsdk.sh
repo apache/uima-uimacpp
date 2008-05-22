@@ -196,7 +196,7 @@ cp -p "$UIMA_INSTALLDIR"/include/uima/* "$UIMA_DIR"/include/uima/
 eval cp $CPLR "$UIMA_INSTALLDIR"/lib/libuima*.$LIBEXT"*"  "$UIMA_DIR"/lib/
 if [ "$UNAME" = "Darwin" ]; then
   thisDir=`pwd`
-  cd "$UIMA_DIR"/lib && ln -s libuima-2.1.dylib  libuima.jnilib
+  cd "$UIMA_DIR"/lib && ln -s libuima.dylib  libuima.jnilib
   cd $thisDir
 fi
 	
