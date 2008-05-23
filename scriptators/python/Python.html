@@ -23,7 +23,7 @@ The descriptor must define one configuration parameter, a second is optional:
   </ul>
 When the Pythonnator is initialized, e.g. at CPE initialization, the C++ code creates a Python interpreter, imports the specified script and calls the script's initialization method. Similarly, when other Pythonnator methods such as process() are called by the UIMA framework, the associated methods in the Python script are called.
 </p>
-<p>The Pythonnator also provides a Python library implementing an interface between Python and the UIMA APIs of the UIMA C++ Enablement layer.
+<p>The Pythonnator also provides a Python library implementing an interface between Python and the UIMA APIs of the UIMA C++ framework.
 </p>
 
 <h2>Supported Platforms</h2>
@@ -32,7 +32,7 @@ When the Pythonnator is initialized, e.g. at CPE initialization, the C++ code cr
 
 <h2>Prerequisites</h2>
 <p>The Pythonnator uses SWIG (http://www.swig.org/) to implement the Python library interface to UIMA. SWIG version 1.3.29 or later is required.</p>
-<p>The UIMA C++ Enable layer is required.
+<p>The UIMA C++ framework is required.
 </p>
 <p>In addition to the Python interpreter, a Python development package (python-devel on Linux) is required for building the Pythonnator. The above mentioned Windows version includes a development package.</p>
 

@@ -23,7 +23,7 @@ The descriptor must define one configuration parameter, a second is optional:
   </ul>
 When the Tclator is initialized, e.g. at CPE initialization, the C++ code creates a Tcl interpreter, imports the specified script and calls the script's initialization method. Similarly, when other Tclator methods such as process() are called by the UIMA framework, the associated methods in the Tcl script are called.
 </p>
-<p>The Tclator also provides a Tcl library implementing an interface between Tcl and the UIMA APIs of the UIMA C++ Enablement layer.
+<p>The Tclator also provides a Tcl library implementing an interface between Tcl and the UIMA APIs of the UIMA C++ framework.
 </p>
 
 <h2>Supported Platforms</h2>
@@ -32,7 +32,7 @@ When the Tclator is initialized, e.g. at CPE initialization, the C++ code create
 
 <h2>Prerequisites</h2>
 <p>The Tclator uses SWIG (http://www.swig.org/) to implement the Tcl library interface to UIMA. SWIG version 1.3.29 or later is required.</p>
-<p>The UIMA C++ Enablement layer is required.
+<p>The UIMA C++ framework is required.
 </p>
 
 <h2>Tclator Distribution</h2>
