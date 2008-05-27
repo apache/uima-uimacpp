@@ -47,14 +47,14 @@ enum traceLevels {NONE, INFO, FINE, FINER, FINEST };
 traceLevels uimacpp_ee_tracelevel=INFO;
 #define MSGHEADER   apr_time_now() << " ThreadId: " << Thread::getId() << __FILE__ << ":" << __LINE__ 
 #define FORMATMSG(x)  stringstream lstr; lstr << MSGHEADER << " " << x;
-#define LOGINFO(n,x) { if (n > uimacpp_ee_tracelevel) {} else {FORMATMSG(x); ResourceManager::getInstance().getLogger().logMessage(lstr.str().c_str());} }
-#define LOGWARN(x) { FORMATMSG(x); ResourceManager::getInstance().getLogger().logWarning(lstr.str().c_str()); }
-#define LOGERROR(x){ FORMATMSG(x); ResourceManager::getInstance().getLogger().logError(lstr.str().c_str(),-99); }
 
+#define LOGINFO(n,x) { if (n > uimacpp_ee_tracelevel) {} else { FORMATMSG(x); logMessage(lstr.str().c_str()); } }
+#define LOGERROR(x){ FORMATMSG(x); logError(lstr.str().c_str()); }
+#define LOGWARN(x) { FORMATMSG(x); logWarning(lstr.str().c_str());}
 //===================================================
 //AMQConnection
 //---------------------------------------------------
-  AMQConnection::AMQConnection( const char * aBrokerURL) : 
+  AMQConnection::AMQConnection( const char * aBrokerURL, Monitor * pStatistics) : 
                                       iv_brokerURL(aBrokerURL), 
                                       iv_pConnection(0), 
                                       iv_pConsumerSession(0),
@@ -69,6 +69,7 @@ traceLevels uimacpp_ee_tracelevel=INFO;
                                       iv_valid(false) {
 
     try {
+      iv_pMonitor = pStatistics;
       LOGINFO(INFO, "AMQConnection() connecting to " + iv_brokerURL);
       // Create a ConnectionFactory
       ActiveMQConnectionFactory* connectionFactory = 
@@ -433,8 +434,8 @@ to receive messages from the input queue. */
 //===================================================
 //AMQConnectionCache
 //---------------------------------------------------
-  AMQConnectionsCache::AMQConnectionsCache() {
-
+  AMQConnectionsCache::AMQConnectionsCache(Monitor * stats) {
+    iv_pMonitor = stats;
   }
 
   AMQConnectionsCache::~AMQConnectionsCache() {
@@ -461,7 +462,7 @@ to receive messages from the input queue. */
       if (ite == iv_connections.end()) {
         LOGINFO(FINE,"AMQConnectionsCache::getConnection() create new connection to " +
           brokerURL);
-        connection = new AMQConnection(brokerURL.c_str());
+        connection = new AMQConnection(brokerURL.c_str(), iv_pMonitor);
         if (connection == NULL) {
           LOGERROR("AMQConnectionCache::getConnection Could not create a endpoint connection to " +
             brokerURL);
@@ -479,7 +480,7 @@ to receive messages from the input queue. */
             LOGWARN("AMQConnectionCache::getEndPoint() Existing connection invalid. Reconnecting to " + brokerURL );
             delete connection;
             this->iv_connections.erase(brokerURL);
-            connection = new AMQConnection(brokerURL.c_str());
+            connection = new AMQConnection(brokerURL.c_str(), iv_pMonitor);
             if (connection == NULL) {
               LOGERROR("AMQConnectionCache::getConnection() could not connect to "
                 + brokerURL );
@@ -532,8 +533,8 @@ to receive messages from the input queue. */
                             iv_pConnection(connection),
                             iv_pEngine(ae),
                             iv_pCas(cas),
-                            iv_pStatistics(stats),
-                            iv_replyToConnections(),
+                            //iv_pMonitor(stats),
+                            iv_replyToConnections(stats),
                             iv_timeLastRequestCompleted(0),
                             iv_busy(false),
                             iv_count(0),
@@ -541,6 +542,7 @@ to receive messages from the input queue. */
                             iv_brokerURL(connection->getBrokerURL()),
                             iv_inputQueueName(connection->getInputQueueName()) {
 
+    iv_pMonitor = stats;
     //get AE descriptor as XML to use when processing GETMETA requests.
     const AnalysisEngineMetaData & aeMetaData = iv_pEngine->getAnalysisEngineMetaData();			
     icu::UnicodeString xmlBuffer;
@@ -591,7 +593,7 @@ to receive messages from the input queue. */
       if (textMessage==0) {
         LOGERROR("AMQListener::onMessage() invalid pointer to TextMessage");
         endTime = apr_time_now();
-        iv_pStatistics->processingComplete(0,false,endTime-startTime);
+        iv_pMonitor->processingComplete(0,false,endTime-startTime);
         this->iv_timeLastRequestCompleted = apr_time_now();
         return;
       }
@@ -600,7 +602,7 @@ to receive messages from the input queue. */
       } else {	   
         LOGERROR("AMQListener::onMessage() ERROR MessageFrom not set.");
         endTime = apr_time_now();
-        iv_pStatistics->processingComplete(0,false,endTime-startTime);
+        iv_pMonitor->processingComplete(0,false,endTime-startTime);
         this->iv_timeLastRequestCompleted = apr_time_now();
         return; 
       }       
@@ -615,7 +617,7 @@ to receive messages from the input queue. */
           timeIdle, endTime-startTime,
           "Required property 'Command' not set." ,true);
         endTime = apr_time_now();
-        iv_pStatistics->processingComplete(0,false,endTime-startTime);
+        iv_pMonitor->processingComplete(0,false,endTime-startTime);
         this->iv_timeLastRequestCompleted = apr_time_now();
         return;
       }
@@ -637,7 +639,7 @@ to receive messages from the input queue. */
             "Required property 'Command' not set." ,true);
 
           endTime = apr_time_now();
-          iv_pStatistics->processingComplete(command,false,endTime-startTime);
+          iv_pMonitor->processingComplete(command,false,endTime-startTime);
           this->iv_timeLastRequestCompleted = apr_time_now();
           return;
         }
@@ -653,7 +655,7 @@ to receive messages from the input queue. */
             timeIdle, endTime-startTime,
             text ,true);
           endTime=apr_time_now();
-          iv_pStatistics->processingComplete(command,false,endTime-startTime);
+          iv_pMonitor->processingComplete(command,false,endTime-startTime);
           this->iv_timeLastRequestCompleted = apr_time_now();
           return;
         }
@@ -677,7 +679,8 @@ to receive messages from the input queue. */
         //response.
         if (payload == XCAS_PAYLOAD) {
           startDeserialize = apr_time_now();
-          XCASDeserializer::deserialize(memIS, *iv_pCas);	 
+          XCASDeserializer deserializer;
+          deserializer.deserialize(memIS, *iv_pCas); 
           startAnnotatorProcess=apr_time_now();
           timeToDeserializeCAS = startAnnotatorProcess-startDeserialize;
 
@@ -692,7 +695,8 @@ to receive messages from the input queue. */
           //deserialize incoming xmi CAS data.
           startDeserialize = apr_time_now();
           XmiSerializationSharedData sharedData;
-          XmiDeserializer::deserialize(memIS, *iv_pCas, sharedData);      
+          XmiDeserializer deserializer;
+          deserializer.deserialize(memIS,*iv_pCas,sharedData);
           startAnnotatorProcess=apr_time_now();
           timeToDeserializeCAS = startAnnotatorProcess-startDeserialize;
 
@@ -712,7 +716,7 @@ to receive messages from the input queue. */
             timeToSerializeCAS, timeInAnalytic,
             timeIdle,endTime-startTime,xmlstr.str() ,true);
           endTime=apr_time_now();
-          iv_pStatistics->processingComplete(command,false,endTime-startTime);
+          iv_pMonitor->processingComplete(command,false,endTime-startTime);
           this->iv_timeLastRequestCompleted = apr_time_now();
           return;
         }
@@ -721,13 +725,13 @@ to receive messages from the input queue. */
         //record end time
         endTime = apr_time_now();
         //send reply
-        LOGINFO(FINER,"AnalysisEngine::process() completed successfully. Sending reply.");   
+        LOGINFO(FINER,"AnalysisEngine::process() completed successfully. Sending reply.");
         sendResponse(textMessage, timeToDeserializeCAS,
                       timeToSerializeCAS, timeInAnalytic,
                       timeIdle, endTime-startTime,
                       xmlstr.str(),false);
         endTime=apr_time_now();
-        iv_pStatistics->processingComplete(command,true,endTime-startTime,
+        iv_pMonitor->processingComplete(command,true,endTime-startTime,
           timeToDeserializeCAS, timeInAnalytic, timeToSerializeCAS);
         LOGINFO(FINE,"Process CAS finished.");		
       } else if (command ==  GET_META_COMMAND ) { //get Meta 	 
@@ -737,7 +741,7 @@ to receive messages from the input queue. */
                   timeToSerializeCAS, timeInAnalytic,
                   timeIdle, endTime-startTime,this->iv_aeDescriptor,false);			
         endTime=apr_time_now();
-        iv_pStatistics->processingComplete(command,true,endTime-startTime);
+        iv_pMonitor->processingComplete(command,true,endTime-startTime);
         LOGINFO(FINE,"Process getMeta request finished.");			
       } else if (command ==  CPC_COMMAND ) { //CPC       			
         LOGINFO(FINE, "Processing CollectionProcessComplete request start");				
@@ -747,7 +751,7 @@ to receive messages from the input queue. */
                     timeToSerializeCAS, timeInAnalytic,
                     timeIdle,endTime-startTime,"CPC completed.",false);
         endTime=apr_time_now();
-        iv_pStatistics->processingComplete(command,true,endTime-startTime);
+        iv_pMonitor->processingComplete(command,true,endTime-startTime);
         LOGINFO(FINE, "Processing CollectionProcessComplete request finished.");	
       } else {
         endTime = apr_time_now();
@@ -761,7 +765,7 @@ to receive messages from the input queue. */
                       timeIdle,
                       endTime-startTime,str.str(),true);
         endTime = apr_time_now();
-        iv_pStatistics->processingComplete(0,false,endTime-startTime);
+        iv_pMonitor->processingComplete(0,false,endTime-startTime);
       }
       iv_busy=false;
       iv_timeLastRequestCompleted = apr_time_now();
@@ -774,13 +778,13 @@ to receive messages from the input queue. */
                     timeToSerializeCAS, timeInAnalytic,
                     timeIdle, endTime-startTime,str.str(),true);
       endTime = apr_time_now();
-      iv_pStatistics->processingComplete(command,false,endTime-startTime);
+      iv_pMonitor->processingComplete(command,false,endTime-startTime);
       iv_timeLastRequestCompleted = apr_time_now();
       iv_busy=false;
     }  catch (CMSException& e) {
       LOGERROR("AMQListener::onMessage()" + e.getMessage());
       endTime = apr_time_now();
-      iv_pStatistics->processingComplete(0,false,endTime-startTime);
+      iv_pMonitor->processingComplete(0,false,endTime-startTime);
       iv_timeLastRequestCompleted = apr_time_now();
       iv_busy=false;
     } catch (uima::Exception e) {
@@ -790,14 +794,14 @@ to receive messages from the input queue. */
                       timeToSerializeCAS, timeInAnalytic,
                       timeIdle,endTime-startTime,e.asString(),true);
       endTime = apr_time_now();
-      iv_pStatistics->processingComplete(command,false,endTime-startTime);
+      iv_pMonitor->processingComplete(command,false,endTime-startTime);
       iv_timeLastRequestCompleted = apr_time_now();
       iv_busy=false;
     }	catch(...) {
       LOGERROR("AMQListener::onMessage() Unknown exception ");
       //TODO: log / shurdown ?}   
       endTime = apr_time_now();
-      iv_pStatistics->processingComplete(command,false,endTime-startTime);
+      iv_pMonitor->processingComplete(command,false,endTime-startTime);
       iv_timeLastRequestCompleted = apr_time_now();
       iv_busy=false;
     }
@@ -894,6 +898,7 @@ to receive messages from the input queue. */
            reply->setLongProperty("TimeToSerializeCAS", timeToSerialize*1000);
            reply->setLongProperty("TimeToDeserializeCAS", timeToDeserialize*1000);
            reply->setLongProperty("TimeInAnalytic", timeInAnalytic*1000);
+           reply->setLongProperty("TimeInProcessCas", timeInAnalytic*1000);
          }
        }
        if (isExceptionMsg) {
@@ -949,7 +954,7 @@ to receive messages from the input queue. */
 
   AMQAnalysisEngineService::AMQAnalysisEngineService(ServiceParameters & desc,
                                                      Monitor * stats) : 
-                                        iv_pStatistics(stats),
+                                        //iv_pMonitor(stats),
                                         iv_numInstances(desc.getNumberOfInstances()),
                                         iv_brokerURL(desc.getBrokerURL()),
                                         iv_inputQueueName(desc.getQueueName()),
@@ -961,6 +966,7 @@ to receive messages from the input queue. */
                                         iv_vecpCas(),
                                         iv_listeners() {
     try {
+      iv_pMonitor = stats;
       initialize();
     } catch (CMSException & e) {
       ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
@@ -981,7 +987,7 @@ to receive messages from the input queue. */
       //create a connection for each instance
       for (int i=0; i < iv_numInstances; i++) {
         //create a connection to MQ Broker 
-        AMQConnection * newConnection = new AMQConnection(this->iv_brokerURL.c_str());
+        AMQConnection * newConnection = new AMQConnection(this->iv_brokerURL.c_str(), iv_pMonitor);
         if (newConnection == NULL) {
           LOGERROR("AMQAnalysisEngineService::initialize() Could not create ActiveMQ endpoint connection.");
           ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
@@ -1057,7 +1063,7 @@ to receive messages from the input queue. */
       for (int i=0; i < iv_numInstances; i++) {
         AMQListener * newListener = new AMQListener(i,iv_vecpConnections.at(i),
           iv_vecpAnalysisEngines.at(i), iv_vecpCas.at(i),
-          iv_pStatistics);
+          iv_pMonitor);
         if (newListener == NULL) {
           LOGERROR("AMQAnalysisEngineService::initialize() Could not create listener.");
           ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
@@ -1076,7 +1082,7 @@ to receive messages from the input queue. */
         this->iv_vecpConnections.at(i)->createMessageConsumer(iv_inputQueueName,
           newListener,this->iv_prefetchSize);
       }
-      iv_pStatistics->setNumberOfInstances(iv_numInstances);
+      iv_pMonitor->setNumberOfInstances(iv_numInstances);
     } catch (uima::Exception e) {
       cout << __LINE__ << "got a uima exception " << endl;
       LOGERROR("AMQAnalysisEngineService::initialize() " + e.asString());
@@ -1105,7 +1111,7 @@ to receive messages from the input queue. */
     LOGERROR("CMS Exception occured. Shutting down the service." + ex.getMessage()); 
     cerr << "Broken connection. Stopped receiving messages." << endl;
     stop();
-    this->iv_pStatistics->shutdown();
+    this->iv_pMonitor->shutdown();
   }
 
   void AMQAnalysisEngineService::onMessage( const Message* message ) {
@@ -1132,7 +1138,7 @@ to receive messages from the input queue. */
       }
     }
     //update the start time
-    iv_pStatistics->setStartTime();
+    iv_pMonitor->setStartTime();
   }
 
   int AMQAnalysisEngineService::stop() {
@@ -1187,6 +1193,24 @@ to receive messages from the input queue. */
       LOGERROR("AMQAnalysisEngineService::cleanup() " +  e.getMessage());
     }  
   }           
+
+
+//===================================================
+//CommonUtils
+//---------------------------------------------------
+void CommonUtils::logError(string msg) {
+    iv_pMonitor->logError(msg);
+    //cerr << "ERROR: " << msg << endl;
+  }
+void CommonUtils::logWarning(string msg) {
+    iv_pMonitor->logWarning(msg);
+    //cout << "WARN: " << msg << endl;
+  }
+void CommonUtils::logMessage(string msg) {
+    iv_pMonitor->logMessage(msg);
+    //cout << "INFO: " << msg << endl;
+  }
+
 
 
 

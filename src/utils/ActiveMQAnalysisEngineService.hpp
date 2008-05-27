@@ -37,13 +37,25 @@ using namespace uima;
 class Monitor;
 class ServiceParameters;
 
+/** common base class */
+class CommonUtils {
+protected:
+  Monitor * iv_pMonitor;
+  
+  void logError(string msg);
+ 
+  void logWarning(string msg);
+ 
+  void logMessage(string msg);
 
+};
 //==========================================================
 // This class wraps a ActiveMQ JMS connection 
 // and provides utility methods to create a MessageProducer
 // and MessageConsumer and to send and receive messages.
 //----------------------------------------------------------
-class AMQConnection : public ExceptionListener {
+class AMQConnection : public ExceptionListener, 
+                      public CommonUtils {
 private:
   string iv_brokerURL;
   Connection* iv_pConnection;
@@ -65,7 +77,7 @@ private:
 public:
 	/** Establish connection to the broker and create a Message Producer session. 
    */
-	AMQConnection ( const char * aBrokerURL);
+	AMQConnection ( const char * aBrokerURL, Monitor * pStatistics);
 
   /** Creates a MessageConsumer session and registers a listener. 
       Caller owns the listener. */
@@ -115,12 +127,12 @@ public:
 // This class is used to cache and reuse connections
 // used to send reply messages.
 //--------------------------------------------------
-class AMQConnectionsCache  {
+class AMQConnectionsCache : public CommonUtils  {
 private:
 	map<string, AMQConnection *> iv_connections; //key is brokerurl
 	
 public:
-	AMQConnectionsCache(); 
+	AMQConnectionsCache(Monitor * pStatistics); 
 
 	~AMQConnectionsCache(); 
 
@@ -140,7 +152,8 @@ public:
 // Records timing and error JMX statistics.
 //
 //------------------------------------------------------
-class AMQListener : public MessageListener {
+class AMQListener : public MessageListener,  
+                    public CommonUtils            {
 private:
 	int iv_id;									    //Listener id
 	string iv_inputQueueName;				//queue this listener gets messages from
@@ -153,7 +166,6 @@ private:
 	int iv_count;                   //num messages processed
 	bool iv_busy;								    //is processing a message
   apr_time_t iv_timeLastRequestCompleted; //used to calculate idle time between requests
-  Monitor * iv_pStatistics;       //JMX statistics
 	AMQConnectionsCache    iv_replyToConnections; //maintain connections cache for
                                                 //sending reply to other brokers.
 	
@@ -211,7 +223,8 @@ public:
 // servcice from Java using the UimacppServiceController bean.
 //------------------------------------------------------------------------
 class AMQAnalysisEngineService : public ExceptionListener,
-	                               public MessageListener  {
+	                               public MessageListener,
+                                 public  CommonUtils {
 private:
   string iv_brokerURL;  
 	string iv_inputQueueName;  
@@ -219,7 +232,6 @@ private:
 	int iv_numInstances;					
 	int iv_prefetchSize;
   size_t iv_initialFSHeapSize;
-  Monitor * iv_pStatistics;
 
 	vector <AMQConnection*> iv_vecpConnections;
   vector <AnalysisEngine *> iv_vecpAnalysisEngines;
@@ -246,6 +258,7 @@ public:
 };
 
 #endif
+
 
 
 

@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     initialize(serviceDesc, pool);   
 
     /*create service*/
-    AMQAnalysisEngineService aeService(serviceDesc,pMonitor);
+    AMQAnalysisEngineService aeService(serviceDesc,singleton_pMonitor);
     aeService.setTraceLevel(serviceDesc.getTraceLevel());
 
     /*start receiving messages*/ 
@@ -100,9 +100,9 @@ int main(int argc, char* argv[]) {
     }
 
     //wait 
-    apr_thread_mutex_lock(pMonitor->cond_mutex);
-    apr_thread_cond_wait(pMonitor->cond, pMonitor->cond_mutex);
-    apr_thread_mutex_unlock(pMonitor->cond_mutex);   
+    apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
+    apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
+    apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);   
   
     /* shutdown */
     uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService shutting down.");
@@ -160,6 +160,7 @@ int main(int argc, char* argv[]) {
 
 
 }  //main
+
 
 
 

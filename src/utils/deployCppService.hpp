@@ -52,6 +52,9 @@ class ServiceParameters;
 #define EXC_PAYLOAD         1003
 #define NO_PAYLOAD          1005
 
+static char * getmeta_selector = "Command = 2001";
+static char * annotator_selector = "Command = 2000 or Command = 2002";
+
 static int initialize(ServiceParameters &, apr_pool_t*);
 static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data);
 static int terminateService();
@@ -74,12 +77,13 @@ class ServiceParameters {
           iv_datapath(), iv_loglevel(0), iv_tracelevel(-1),
           iv_errThreshhold(0), iv_errWindow(0), iv_terminateOnCPCError(false),
           iv_mqHost("localhost"), iv_mqPort(1414), iv_mqChannel(), iv_mqQueueMgr(),
-          iv_user(), iv_password(), iv_initialfsheapsize(0) {
-    }
+          iv_user(), iv_password(), iv_initialfsheapsize(0),
+          iv_wpmEndpoints("localhost:7276:BootstrapBasicMessaging"), 
+          iv_wpmBusname() {}
 
   
 		~ServiceParameters() {
-
+     
 		}
 
    
@@ -100,6 +104,8 @@ class ServiceParameters {
                  << " MQ port " << iv_mqPort
                  << " MQ qmgr " << iv_mqQueueMgr
                  << " MQ channel " << iv_mqChannel
+                 << " WAS bootstrap service address " << iv_wpmEndpoints
+                 << " WAS SIB name " << iv_wpmBusname
                  << " Java port " << iv_javaport 
                  << " logging level " << iv_loglevel 
                  << " trace level " << iv_tracelevel 
@@ -172,6 +178,14 @@ class ServiceParameters {
 
     const string & getPassword() {
 			return iv_password;
+		}
+
+    const string & getWPMEndpoints() {
+			return iv_wpmEndpoints;
+		}
+
+    const string & getWPMBusname() {
+			return iv_wpmBusname;
 		}
 
     const size_t getInitialFSHeapSize() {
@@ -278,6 +292,14 @@ class ServiceParameters {
 				 if (++index < argc) {
 				 		this->iv_password = argv[index];
          }
+       } else if (0 == strcmp(arg, "-wash")) {
+				 if (++index < argc) {
+				 		this->iv_wpmEndpoints = argv[index];
+         }
+       } else if (0 == strcmp(arg, "-wasb")) {
+				 if (++index < argc) {
+				 		this->iv_wpmBusname = argv[index];
+         }
        } else if (0 == strcmp(arg, "-a")) {
 				 if (++index < argc) {
             if (stricmp(argv[index],"true")==0) {
@@ -297,9 +319,26 @@ class ServiceParameters {
 					 }
 				 }
 			 }
-		 }
-	}
-	
+		 }    
+     //This is a temporary fix to enable the service wrapper to 
+     //connect to the WAS messaging engine.
+     if (this->iv_mqHost.find_first_of(":") != string::npos) {
+        this->iv_wpmEndpoints = iv_mqHost;
+        this->iv_mqHost = "";
+        this->iv_wpmBusname = this->iv_mqQueueMgr;
+        this->iv_mqQueueMgr = "";
+     }
+	}	
+
+  string getServiceName() {
+    if (getWPMBusname().length() == 0) {
+      stringstream str;
+      str << getMQPort();
+      return getQueueName() + "@" + getMQHost() + ":" + str.str();
+     } else {
+      return getQueueName() + "@" + getWPMBusname();
+     }
+  }
 		
 	private:
 	
@@ -326,6 +365,9 @@ class ServiceParameters {
     string iv_user;
     string iv_password;
     size_t iv_initialfsheapsize;
+    //Websphere default messaging
+    string iv_wpmEndpoints;
+    string iv_wpmBusname;
 };
 
 /**
@@ -339,33 +381,41 @@ class Monitor {
 		Monitor (apr_pool_t * pool, string brokerURL,
                 string queueName, string aeDesc,
                 int numInstances, int prefetchSize, int processCasErrorThreshhold,
-                int processCasErrorWindow, bool terminateOnCPCError) :
-        iv_brokerURL(brokerURL), iv_queueName(queueName),
-					iv_aeDescriptor(aeDesc),  iv_numInstances(numInstances), iv_prefetchSize(0),
-					iv_cpcErrors(0),
-          iv_getmetaErrors(0), iv_processcasErrors(0),
-          iv_deserTime(0), iv_serTime(0), iv_annotatorTime(0),
-          iv_messageProcessTime(0), iv_cpcTime(0), iv_getmetaTime(0),
-          iv_startTime(apr_time_now()), 
-          iv_numCasProcessed(0), 
-          iv_errorThreshhold(processCasErrorThreshhold),
-          iv_errorWindow(processCasErrorWindow),
-          iv_terminateOnCPCError(terminateOnCPCError),
-          mutex(0), cond(0), cond_mutex(0)
-          
+                int processCasErrorWindow, bool terminateOnCPCError)         
     {
+       iv_brokerURL = brokerURL;
+       iv_queueName = queueName;
+       iv_aeDescriptor = aeDesc;
+       iv_numInstances = numInstances;
+       iv_prefetchSize = 0;
+       iv_cpcErrors = 0;
+       iv_getmetaErrors = 0;
+       iv_processcasErrors = 0;
+       iv_deserTime = 0;
+       iv_serTime = 0;
+       iv_annotatorTime = 0;
+       iv_startTime = apr_time_now();
+       iv_numCasProcessed = 0;
+       iv_errorThreshhold = processCasErrorThreshhold;
+       iv_errorWindow = processCasErrorWindow;
+       iv_terminateOnCPCError = terminateOnCPCError;
+       iv_getmetaId = -1;
+       iv_numRunning = 0;
+       mutex = 0;
+       lmutex = 0;
+       cond = 0;
+       cond_mutex = 0;
        apr_status_t rv = apr_thread_mutex_create(&mutex,APR_THREAD_MUTEX_UNNESTED, pool);
        apr_thread_mutex_create(&cond_mutex,APR_THREAD_MUTEX_UNNESTED, pool);
+       apr_thread_mutex_create(&lmutex,APR_THREAD_MUTEX_UNNESTED, pool);
        apr_thread_cond_create(&cond, pool);
     }
-
-		~Monitor() {
-
-		}
 
 		void print();
 		
 		void shutdown() {
+      //apr_thread_mutex_unlock(mutex);
+      //  apr_thread_mutex_unlock(lmutex);
       apr_thread_cond_signal(this->cond);
       return ;
     }
@@ -400,7 +450,23 @@ class Monitor {
 		
 		void setNumberOfInstances(int num) {
 			iv_numInstances=num;
+      iv_numRunning = num;
 		}
+
+    void listenerStopped(int id) {
+      cout << "listener stopped " << id << endl;
+      if (id == iv_getmetaId || iv_numRunning == 1) {
+        shutdown();
+      } else {
+        apr_thread_mutex_lock(mutex);
+        iv_numRunning--;
+        apr_thread_mutex_unlock(mutex);
+      }
+    }
+
+    void  setGetMetaListenerId(int id) {
+      iv_getmetaId = id;
+    }
 
     void setStartTime() {
 	    apr_thread_mutex_lock(mutex);
@@ -408,6 +474,23 @@ class Monitor {
 	    apr_thread_mutex_unlock(mutex);
     }
 
+    void logMessage(string message) {
+       apr_thread_mutex_lock(lmutex);
+       uima::ResourceManager::getInstance().getLogger().logMessage(message);
+       apr_thread_mutex_unlock(lmutex);
+    }
+
+    void logWarning(string message) {
+       apr_thread_mutex_lock(lmutex);
+       uima::ResourceManager::getInstance().getLogger().logWarning(message);
+       apr_thread_mutex_unlock(lmutex);
+    }
+    void logError(string message) {
+       apr_thread_mutex_lock(lmutex);
+       uima::ResourceManager::getInstance().getLogger().logError(message,-99);
+       apr_thread_mutex_unlock(lmutex);
+    }
+       
     void processingComplete(int command, bool success, apr_time_t totalTime,
                                  apr_time_t deserTime=0,
                                  apr_time_t analyticTime=0,
@@ -424,11 +507,11 @@ class Monitor {
       } else if (command == CPC_COMMAND) {
         iv_cpcTime += totalTime;
       } 
-
+    
       if (!success) {
-        incrementErrorCount(command);
+        incrementErrorCount(command); 
       }
-	    apr_thread_mutex_unlock(mutex);    
+	    apr_thread_mutex_unlock(mutex);
     }
   
     void writeStatistics(apr_socket_t * cs) {
@@ -490,7 +573,8 @@ public:
     apr_thread_mutex_t *cond_mutex;
     apr_thread_cond_t  *cond;
 private:
-	  apr_thread_mutex_t *mutex;
+	  apr_thread_mutex_t *mutex; 
+    apr_thread_mutex_t *lmutex; 
 		string iv_brokerURL;
 		string iv_queueName;
     string iv_aeDescriptor;
@@ -499,6 +583,8 @@ private:
     long iv_cpcErrors;
     long iv_getmetaErrors;
     long iv_processcasErrors;
+    int iv_getmetaId;
+    int iv_numRunning;
 
     apr_time_t iv_deserTime;
     apr_time_t iv_serTime;
@@ -521,27 +607,24 @@ private:
         if (this->iv_errorThreshhold > 0 ) {
            if ( this->iv_errorWindow == 0 && iv_processcasErrors >=
               this->iv_errorThreshhold) {
-                uima::ResourceManager::getInstance().getLogger().logMessage(
-                "number of PROCESSCAS errors exceeded the threshhold. Terminating the service.");
+                cerr << " number of PROCESSCAS errors exceeded the threshhold. Terminating the service." << endl;
                 shutdown();
            } else {
-              //TODO sliding error window
+             //TODO sliding window
+         
            }
         }
       } else if (command == GET_META_COMMAND) {
         iv_getmetaErrors++;
-        uima::ResourceManager::getInstance().getLogger().logMessage(
-               "getMeta Error terminating the service.");
-         shutdown();
+        cerr << "getMeta Error terminating the service." << endl;
+        shutdown();
       } else if (command == CPC_COMMAND) {
         iv_cpcErrors++;
         if (this->iv_terminateOnCPCError) {
-          uima::ResourceManager::getInstance().getLogger().logMessage(
-               "CPC Error terminating the service.");
+          cerr << "CPC Error terminating the service." << endl;
           shutdown();
         }
-      } 
-	   
+      }    
     }
     
 };
@@ -591,8 +674,8 @@ class SocketLogger : public uima::Logger {
 };
 
 
- static SocketLogger * logger =0;
- static Monitor * pMonitor=0;
+ static SocketLogger * singleton_pLogger =0;
+ static Monitor * singleton_pMonitor=0;
  //static ServiceParameters serviceDesc;
 
 
@@ -606,28 +689,31 @@ class SocketLogger : public uima::Logger {
  ///static apr_threadattr_t *thd_attr=0;
 
   static void signal_handler(int signum) {
-    pMonitor->shutdown();
+    stringstream str;
+    str << __FILE__ << __LINE__ << " Received Signal: " << signum;
+    cerr << str.str() << endl;
+    singleton_pMonitor->shutdown();
   }
 
 
  static int terminateService() {
    
-   uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService::terminateService");
+   cout << "deployCppService::terminateService" << endl;
 
    if (cs) {
      apr_socket_close(cs);
      cs=0;
    }
   
-   if (pMonitor) {
-     delete pMonitor;
-     pMonitor=0;
+   if (singleton_pMonitor) {
+     delete singleton_pMonitor;
+     singleton_pMonitor=0;
    }
   
-   if (logger) {
-     uima::ResourceManager::getInstance().unregisterLogger(logger);
-      delete logger;
-      logger =0;
+   if (singleton_pLogger) {
+     uima::ResourceManager::getInstance().unregisterLogger(singleton_pLogger);
+      delete singleton_pLogger;
+      singleton_pLogger =0;
    }
 
    if (s) {
@@ -661,7 +747,7 @@ class SocketLogger : public uima::Logger {
     apr_signal(SIGTERM, signal_handler);
 
       /* create object to collect JMX stats */
-    pMonitor = new Monitor(pool,
+    singleton_pMonitor = new Monitor(pool,
       serviceDesc.getBrokerURL(),serviceDesc.getQueueName(),
       serviceDesc.getAEDescriptor(), serviceDesc.getNumberOfInstances(),
       serviceDesc.getPrefetchSize(),
@@ -669,7 +755,6 @@ class SocketLogger : public uima::Logger {
       serviceDesc.getErrorWindow(),
       serviceDesc.terminatOnCPCError());
 
-     
     /* set up connection to Java controller bean if a port is specified */
     int javaport=serviceDesc.getJavaPort();
     if (javaport > 0) {
@@ -685,7 +770,6 @@ class SocketLogger : public uima::Logger {
         cerr << "ERROR: apr_socket_create() logger connection at port " << javaport << endl;
         return -3;
       }
-
 
       rv = apr_socket_connect(s, sa);
       if (rv != APR_SUCCESS) {
@@ -707,15 +791,15 @@ class SocketLogger : public uima::Logger {
       }
 
       //register SocketLogger
-      logger = new SocketLogger(s,pool);
-      if (logger == NULL) {
+      singleton_pLogger = new SocketLogger(s,pool);
+      if (singleton_pLogger == NULL) {
         cerr << "ERROR: SocketLogger() failed. " << endl;
         return -7;
       }
-      uima::ResourceManager::getInstance().registerLogger(logger);
+      uima::ResourceManager::getInstance().registerLogger(singleton_pLogger);
       uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService::initialize() Registered Java Logger.",0);
     } 
-    uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService::initalize() done");
+    //singleton_pMonitor->logMessage("deployCppService::initialize() done");
     return 0;
  } //initialize
 
@@ -739,19 +823,19 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
         len=8;
         //cout << "apr_socket_recv command=" << command << endl;
         if (command.compare("GETSTATS")==0) {
-          //logger->log(LogStream::EnMessage,"deployCppService","getStats","retrieving stats",0);
-          pMonitor->writeStatistics(cs);
-          //logger->log(LogStream::EnMessage,"deployCppService","getStats","sent statistics",0); 
+          //singleton_pLogger->log(LogStream::EnMessage,"deployCppService","getStats","retrieving stats",0);
+          singleton_pMonitor->writeStatistics(cs);
+          //singleton_pLogger->log(LogStream::EnMessage,"deployCppService","getStats","sent statistics",0); 
         } else if (command.compare("RESET")==0) {
-          logger->log(uima::LogStream::EnMessage,"deployCppService", "RESET",
+          singleton_pLogger->log(uima::LogStream::EnMessage,"deployCppService", "RESET",
             "reset JMX statistics",0);
-          pMonitor->reset();
+          singleton_pMonitor->reset();
         } else if (command.compare("SHUTDOWN")==0) {
-          pMonitor->shutdown();
+          singleton_pMonitor->shutdown();
           break;
         } else {
           if (rv != APR_SUCCESS) {
-            pMonitor->shutdown();
+            singleton_pMonitor->shutdown();
             break;
           } else {
             char * c = new char[256];
@@ -759,14 +843,14 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
             stringstream str;
             str << c;
             str << "deployCppService::handleCommand() aprerror=" << rv << " invalid command=" << command;
-            uima::ResourceManager::getInstance().getLogger().logError(str.str());
+            cerr << str.str() << endl;
             delete c;
           }
          }
       }
       apr_thread_exit(thd, APR_SUCCESS);
-      uima::ResourceManager::getInstance().getLogger().logError("deployCppService::handleCommand() calling shutdown. ");
-      pMonitor->shutdown();
+      cout << "deployCppService::handleCommand() calling shutdown. " << endl;
+      singleton_pMonitor->shutdown();
       return NULL;
  }
 
@@ -776,6 +860,7 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
 
 
 #endif
+
 
 
 
