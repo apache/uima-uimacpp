@@ -14,25 +14,30 @@ using MSVC version 8, and on MacOSX with gcc version 4.0.1.
 
 Setting up the build environment:
 ---------------------------------
-UIMACPP has dependencies on APR, ICU, Xerces-C and activemq-cpp libraries.
-The simplest way to resolve these dependencies is to use the copies
-included in the Apache UIMA C++ runtime package.  Install the
-appropriate image and set the UIMACPP_HOME environmental parameter to
-the location of the runtime.
+UIMACPP has dependencies on APR, ICU, Xerces-C and ActiveMQ-cpp
+libraries.  Dependent libraries must be specified with the
+environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
+ACTIVEMQ_HOME.  For now, the ActiveMQ dependency is optional; if not
+specified the UIMA-AS compatible service wrapper deployCppService is
+not built.
 
 There is also a dependency on JNI headers from a Java JDK. The build
 looks for these headers in the directory specified by JAVA_INCLUDE.
-A typical setting for JAVA_INCLUDE on Linux or Windows would be 
-$JAVA_HOME/include; on MacOSX jni.h and the other headers will be in 
-a "Headers" directory.
+A typical setting for JAVA_INCLUDE on Linux or Windows would be
+$JAVA_HOME/include; on MacOSX jni.h and the other headers will be in a
+"Headers" directory.
 
-To replace one or more of the dependent libraries with different
-versions, download and build the component(s) and specify their use
-with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME, and
-ACTIVEMQ_HOME, pointing at the install directory for each
-component. That is, under each should be lib and include
-directories. Additional instructions for building the dependent
-libraries are found below.
+On Unix, dependent headers are expected under $dependent_HOME/include and
+dependent libraries under $dependent_HOME/lib.
+
+The build of dependent libraries on Windows is less consistent.
+APR libraries are expected in %APR_HOME%\Release. ActiveMQ libraries 
+are in %ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL (or DebugDLL) and 
+ActiveMQ headers are expected in %ACTIVEMQ_HOME%\src\main.
+
+On Windows, buildsdk command tries to copy the msvc*.dll runtime libs from
+C:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT
+To override the location for MSCV redistributable libraries, use MSVCRT_HOME.
 
 
 Building, testing and packaging on Linux:

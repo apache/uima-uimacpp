@@ -38,6 +38,10 @@ if not "%UIMACPP_HOME%"=="" (
   if "%XERCES_HOME%"==""  goto noxerces
 )
 
+if "%ACTIVEMQ_HOME%"==""  (
+  echo WARNING: ACTIVEMQ_HOME not set, deployCppService will fail to build.
+)
+
 REM Start project build
 if "%~1" == "" (
  set OPERATION=/build release
