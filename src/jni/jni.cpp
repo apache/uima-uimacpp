@@ -70,7 +70,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Forward declarations                                              */
 /* ----------------------------------------------------------------------- */
-
+static JNILogger * iv_logger = 0;
 static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhichData, uima::internal::SerializedCAS & crSerializedCAS);
 
 /* ----------------------------------------------------------------------- */
@@ -88,6 +88,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
   JNILogger::JNILogger(JNIEnv * env) : iv_jnienv(env), cv_clazz(0), cv_logMethod(0) {
     assert( EXISTS(iv_jnienv) );
     try {
+
     cv_clazz = iv_jnienv->FindClass(JAVA_LOGGER_PROXY);
     if (cv_clazz == NULL ) {
         uima::ResourceManager::getInstance().getLogger().logError( 
@@ -164,7 +165,6 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
                  string methodname,
                  string message,
                  long lUserCode) {
-
       stringstream str;
       if (entype == uima::LogStream::EnMessage) {
         if (lUserCode != 0) {
@@ -175,7 +175,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       } else {
         str << lUserCode << " " << message;
       }
-
+      
       UnicodeString msg(str.str().c_str());
       // Convert the std::strings to Unicode using the default converter
       UnicodeString ustrsource(classname.c_str(), classname.length());
@@ -194,6 +194,19 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
         loglevel = 1;
       }
 
+      //get jnienv handle for the current thread
+      apr_os_thread_t threadid = apr_os_thread_current();
+      map<apr_os_thread_t, JNIEnv*>::iterator ite = this->threadid2jnienv.find(threadid);
+      if (ite == this->threadid2jnienv.end() ) {
+        cerr << "JNILogger::log() failed to get handle to JNI env for current thread." << endl;
+        return;
+      }
+      iv_jnienv = ite->second;
+
+      if (iv_jnienv == 0) {
+        cerr << "JNILogger::log() failed to get JNI env handle." << endl;
+        return;
+      }
       // Call exception clear
       iv_jnienv->ExceptionClear();
 
@@ -210,6 +223,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
         iv_jnienv->ExceptionDescribe();
         iv_jnienv->ExceptionClear();
       }
+      //cout << "ThreadId: " << threadid << " JNILogger::log() DONE" << endl;
     } catch (...) {
       cout << "JNILogger::log(...) Exception in JavaLogging()" << endl;
     }
@@ -273,7 +287,7 @@ JNIEXPORT void JNICALL JAVA_PREFIX(configureResourceManagerJNI) (JNIEnv* jeEnv,
     jstring jsDataDirectory) {
   try {
     UIMA_TPRINT("configureResourceManagerJNI entered");
-
+ 
     uima::ResourceManager& rResourceManager = uima::ResourceManager::getInstance();
 
     JNIUString workDir(jeEnv, jsWorkDirectory);
@@ -341,8 +355,13 @@ JNIEXPORT void JNICALL JAVA_PREFIX(constructorJNI) (JNIEnv* jeEnv,
       return;
     }
     //setup JNI logger
-    pInstance->iv_logger = new JNILogger(jeEnv);
-    uima::ResourceManager::getInstance().registerLogger(pInstance->iv_logger);
+    if (iv_logger == NULL) {
+      cout << "creating JNILogger" << endl;
+      iv_logger = new JNILogger(jeEnv);
+      uima::ResourceManager::getInstance().registerLogger(iv_logger);
+    }
+    cout << "set JNILogger in JNIInstance " << endl;
+    pInstance->iv_logger = iv_logger;
 
     // setting engine
     JNIUtils::setCppInstance(jeEnv, joJTaf, pInstance);
@@ -1263,6 +1282,7 @@ JNIEXPORT void JNICALL JAVA_PREFIX(releaseSegmentJNI) (JNIEnv* jeEnv, jobject jo
     return;
   }
 }
+
 
 
 

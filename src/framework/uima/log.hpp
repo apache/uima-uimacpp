@@ -46,6 +46,8 @@
 #include "uima/strtools.hpp"
 #include "unicode/unistr.h"
 #include "uima/exceptions.hpp"
+#include "apr_pools.h"
+#include "apr_proc_mutex.h"
 #include <sstream>
 
 /* ----------------------------------------------------------------------- */
@@ -265,6 +267,8 @@ namespace uima {
     LogStream         iv_logStream;
     LogStream::EnEntryType   iv_logLevel;
     vector<Logger*> & vecLoggers;
+    apr_pool_t        * iv_logPool;
+    apr_thread_mutex_t *mutex;
 
     /* --- functions --- */
     TyMessageId       getTypeAsMessageId(LogStream::EnEntryType enType) const;
@@ -382,5 +386,6 @@ namespace uima {
 #endif /* UIMA_LOG_HPP */
 
 /* <EOF> */
+
 
 

@@ -39,6 +39,7 @@
 #include "uima/engine.hpp"
 #include "uima/annotator_context.hpp"
 #include "uima/casiterator.hpp"
+#include "apr_portable.h"
 #include <jni.h>
 
 /* ----------------------------------------------------------------------- */
@@ -79,6 +80,8 @@ class UIMA_LINK_IMPORTSPEC JNILogger : public  uima::Logger {
                   string message,
                   long errorCode)  ;
       void setJNIEnv(JNIEnv * env) {
+         apr_os_thread_t threadid = apr_os_thread_current();
+         threadid2jnienv[threadid] = env;
          iv_jnienv=env;
       }
     private:
@@ -86,10 +89,10 @@ class UIMA_LINK_IMPORTSPEC JNILogger : public  uima::Logger {
       std::string format(uima::LogStream::EnEntryType enType,
                         const string & cpszMsg, 
                         long lUserCode) const;
-
       JNIEnv * iv_jnienv;     //handle to Java environment
       jclass   cv_clazz ;    //proxy class on java side
       jmethodID cv_logMethod; //log method
+      map<apr_os_thread_t, JNIEnv*> threadid2jnienv;
   };
     
 
