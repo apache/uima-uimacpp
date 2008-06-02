@@ -74,13 +74,18 @@ static bool PyStringConvert(PyObject *obj, UnicodeString &rv) {
 }
 
 static bool ConvertUnicodeStringRef(const UnicodeStringRef &ref,
-	PyObject **rv) {
+        PyObject **rv) {
   if (sizeof(Py_UNICODE) == sizeof(UChar)) {
     *rv = PyUnicode_FromUnicode((const Py_UNICODE*) ref.getBuffer(),
-	ref.length());
+        ref.length());
   } else {
+    // test for big-endian, preset python decoder for native order
+    // this will prevent PyUnicode_DecodeUTF16 from deleting byte order marks
+    union { long l; char c[sizeof(long)]; } u;
+    u.l = 1;
+    int byteorder = (u.c[sizeof(long) - 1] == 1) ? 1 : -1;
     PyObject *r = PyUnicode_DecodeUTF16(
-       (const char *) ref.getBuffer(), ref.getSizeInBytes(), 0, 0);
+       (const char *) ref.getBuffer(), ref.getSizeInBytes(), 0, &byteorder);
     if (r==0) return false;
     *rv = r;
   }
