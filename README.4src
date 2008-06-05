@@ -18,8 +18,8 @@ UIMACPP has dependencies on APR, ICU, Xerces-C and ActiveMQ-cpp
 libraries.  Dependent libraries must be specified with the
 environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
 ACTIVEMQ_HOME.  For now, the ActiveMQ dependency is optional; if not
-specified the UIMA-AS compatible service wrapper deployCppService is
-not built.
+specified the UIMA-AS compatible service wrapper deployCppService will
+fail to build.
 
 There is also a dependency on JNI headers from a Java JDK. The build
 looks for these headers in the directory specified by JAVA_INCLUDE.
@@ -135,7 +135,11 @@ after building APR, install using:
 
   DESTDIR=`pwd` make install
 
-On Windows, the activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL.
+On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
+ e.g. devenv vs2005-build/vs2005-activemq.vcproj /build ReleaseDLL
+
+Also, the APR library can be built by launching libapr.dsp or by following the
+instructions in Makefile.win.
 
 
 Disclaimer

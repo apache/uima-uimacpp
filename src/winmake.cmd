@@ -19,25 +19,18 @@ REM   under the License.
 
 setlocal
 
-REM default behavior is to build against uima-cpp SDK image, specified by UIMACPP_HOME
-REM alternate behavior is to override any or all of the dependent libraries
+REM Unset UIMACPP_HOME to avoid build problems
+set UIMACPP_HOME=
 
 REM need a Java JRE for the JNI interface
 if not exist %JAVA_INCLUDE%\jni.h goto nojava
 
-REM If UIMACPP_HOME undefined, all dependencies must be defined
-if not "%UIMACPP_HOME%"=="" (
-  REM default the overrides if not set
-  if "%APR_HOME%"==""     set APR_HOME=%UIMACPP_HOME%/noPlace
-  if "%ICU_HOME%"==""     set ICU_HOME=%UIMACPP_HOME%/noPlace
-  if "%XERCES_HOME%"==""  set XERCES_HOME=%UIMACPP_HOME%/noPlace
-)else (
-  REM UIMACPP_HOME undefined, all dependencies must be defined
-  if "%APR_HOME%"==""     goto noapr
-  if "%ICU_HOME%"==""     goto noicu
-  if "%XERCES_HOME%"==""  goto noxerces
-)
+REM Other requied dependencies
+if "%APR_HOME%"==""     goto noapr
+if "%ICU_HOME%"==""     goto noicu
+if "%XERCES_HOME%"==""  goto noxerces
 
+REM Optional dependency
 if "%ACTIVEMQ_HOME%"==""  (
   echo WARNING: ACTIVEMQ_HOME not set, deployCppService will fail to build.
 )
@@ -53,15 +46,15 @@ devenv uimacpp.sln %OPERATION%
 goto end
 
 :noapr
-echo need UIMACPP_HOME or APR_HOME to be set
+echo need APR_HOME to be set
 goto end
 
 :noicu
-echo need UIMACPP_HOME or ICU_HOME to be set
+echo need ICU_HOME to be set
 goto end
 
 :noxerces
-echo need UIMACPP_HOME or XERCES_HOME to be set
+echo need XERCES_HOME to be set
 goto end
 
 :nojava
