@@ -70,7 +70,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Forward declarations                                              */
 /* ----------------------------------------------------------------------- */
-static JNILogger * iv_logger = 0;
+static JNILogger * singleton_jni_logger = 0;
 static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhichData, uima::internal::SerializedCAS & crSerializedCAS);
 
 /* ----------------------------------------------------------------------- */
@@ -85,41 +85,42 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
 /********************************************************************
  ***** JNILogger
  ********************************************************************/
-  JNILogger::JNILogger(JNIEnv * env) : iv_jnienv(env), cv_clazz(0), cv_logMethod(0) {
-    assert( EXISTS(iv_jnienv) );
+  JNILogger::JNILogger(JNIEnv * env) : /*iv_jnienv(env),*/ cv_clazz(0), cv_logMethod(0) {
+    assert( EXISTS(env) );
     try {
+    env->GetJavaVM(&iv_jvm);
 
-    cv_clazz = iv_jnienv->FindClass(JAVA_LOGGER_PROXY);
+    cv_clazz = env->FindClass(JAVA_LOGGER_PROXY);
     if (cv_clazz == NULL ) {
         uima::ResourceManager::getInstance().getLogger().logError( 
         JAVA_LOGGER_PROXY " class not found. Could not setup Java logging. ");
-      iv_jnienv->ExceptionClear();
+      env->ExceptionClear();
       return;
     }
 
-    cv_clazz = (jclass) iv_jnienv->NewGlobalRef(cv_clazz);
+    cv_clazz = (jclass) env->NewGlobalRef(cv_clazz);
     if (cv_clazz == NULL) {
       uima::ResourceManager::getInstance().getLogger().logError( 
                   "Setup global reference to " JAVA_LOGGER_PROXY " class failed. Could not setup Java logging. ");
       cerr << "JNILogger() ERROR: CPPJEDIIEngine could not construct " << endl;
-      iv_jnienv->ExceptionClear();
+      env->ExceptionClear();
       return;
     }
 
      //query the current logging level
-     jmethodID iv_getLoggingLevelMethod = iv_jnienv->GetStaticMethodID(cv_clazz,
+     jmethodID iv_getLoggingLevelMethod = env->GetStaticMethodID(cv_clazz,
                                              "getLoggingLevel",
                                              "()I");
      if (iv_getLoggingLevelMethod == NULL) {
        uima::ResourceManager::getInstance().getLogger().logError( 
             JAVA_LOGGER_PROXY ".getLoggingLevel() not found. Could not setup Java logging. " );
        cout << "JNILogger() ERROR: CPPJEDIIEngine.getLoggingLevel() not found " << endl;
-       iv_jnienv->ExceptionClear();
+       env->ExceptionClear();
        return;
       }
 
       //log method
-      cv_logMethod = iv_jnienv->GetStaticMethodID(cv_clazz, "log", "("
+      cv_logMethod = env->GetStaticMethodID(cv_clazz, "log", "("
                        "I"       // level
                        "Ljava/lang/String;"  // source class
                        "Ljava/lang/String;" // source method
@@ -130,18 +131,18 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
         uima::ResourceManager::getInstance().getLogger().logError( 
             JAVA_LOGGER_PROXY ".log(int,string,string,string) not found. Could not setup Java logging. " );
           cout << "JNILogger() ERROR: CPPJEDIIEngine.log() not found " << endl;
-          iv_jnienv->ExceptionClear();
+          env->ExceptionClear();
           return;
       }
 
       //get the current logging level
-      jint logginglevel = iv_jnienv->CallStaticIntMethod(cv_clazz, iv_getLoggingLevelMethod);
+      jint logginglevel = env->CallStaticIntMethod(cv_clazz, iv_getLoggingLevelMethod);
 
       if (logginglevel == 0) {
         uima::ResourceManager::getInstance().getLogger().logError( 
             "JNILogger() Could not determine current logging level. Setup Java logging failed. " );
           cout << "JNILogger() ERROR: calling CPPJEDIIEngine.getLoggingLevel() " << endl;
-          iv_jnienv->ExceptionClear();
+          env->ExceptionClear();
           return;
       }
 
@@ -155,7 +156,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
 
     } catch (...) {
       cout << "Exception in JNILogger() " << endl;
-      iv_jnienv->ExceptionDescribe();
+      env->ExceptionDescribe();
     }
   }
   
@@ -165,6 +166,17 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
                  string methodname,
                  string message,
                  long lUserCode) {
+
+      //get JNI env associated with the current thread
+      JNIEnv * jnienv=0;
+      try {
+      iv_jvm->AttachCurrentThread((void**)&jnienv, NULL);
+
+      if (jnienv == 0) {
+        cerr << "JNILogger::log() failed to get JNI env handle." << endl;
+        return;
+      }
+
       stringstream str;
       if (entype == uima::LogStream::EnMessage) {
         if (lUserCode != 0) {
@@ -180,10 +192,9 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       // Convert the std::strings to Unicode using the default converter
       UnicodeString ustrsource(classname.c_str(), classname.length());
       UnicodeString ustrmethod(methodname.c_str(), methodname.length());
-      try {
-      jstring jsrcclass = iv_jnienv->NewString((jchar const *) ustrsource.getBuffer(), ustrsource.length());
-      jstring jsrcmethod = iv_jnienv->NewString((jchar const *) ustrmethod.getBuffer(), ustrmethod.length());
-      jstring jmessage = iv_jnienv->NewString((jchar const *) msg.getBuffer(), msg.length());
+      jstring jsrcclass = jnienv->NewString((jchar const *) ustrsource.getBuffer(), ustrsource.length());
+      jstring jsrcmethod = jnienv->NewString((jchar const *) ustrmethod.getBuffer(), ustrmethod.length());
+      jstring jmessage = jnienv->NewString((jchar const *) msg.getBuffer(), msg.length());
 
       jint loglevel;
       if ( entype == uima::LogStream::EnError) {
@@ -194,23 +205,10 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
         loglevel = 1;
       }
 
-      //get jnienv handle for the current thread
-      apr_os_thread_t threadid = apr_os_thread_current();
-      map<apr_os_thread_t, JNIEnv*>::iterator ite = this->threadid2jnienv.find(threadid);
-      if (ite == this->threadid2jnienv.end() ) {
-        cerr << "JNILogger::log() failed to get handle to JNI env for current thread." << endl;
-        return;
-      }
-      iv_jnienv = ite->second;
-
-      if (iv_jnienv == 0) {
-        cerr << "JNILogger::log() failed to get JNI env handle." << endl;
-        return;
-      }
       // Call exception clear
-      iv_jnienv->ExceptionClear();
+      jnienv->ExceptionClear();
 
-      iv_jnienv->CallStaticVoidMethod(cv_clazz,
+      jnienv->CallStaticVoidMethod(cv_clazz,
                                    cv_logMethod,
                                    loglevel,
                                    jsrcclass,
@@ -218,13 +216,15 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
                                    jmessage);
 
       // Check for exceptions :
-      jthrowable exc = iv_jnienv->ExceptionOccurred();
+      jthrowable exc = jnienv->ExceptionOccurred();
       if (exc != NULL) {
-        iv_jnienv->ExceptionDescribe();
-        iv_jnienv->ExceptionClear();
+        jnienv->ExceptionDescribe();
+        jnienv->ExceptionClear();
       }
+      iv_jvm->DetachCurrentThread();
       //cout << "ThreadId: " << threadid << " JNILogger::log() DONE" << endl;
     } catch (...) {
+      iv_jvm->DetachCurrentThread();
       cout << "JNILogger::log(...) Exception in JavaLogging()" << endl;
     }
   }
@@ -355,13 +355,11 @@ JNIEXPORT void JNICALL JAVA_PREFIX(constructorJNI) (JNIEnv* jeEnv,
       return;
     }
     //setup JNI logger
-    if (iv_logger == NULL) {
+    if (singleton_jni_logger == NULL) {
       cout << "creating JNILogger" << endl;
-      iv_logger = new JNILogger(jeEnv);
-      uima::ResourceManager::getInstance().registerLogger(iv_logger);
+      singleton_jni_logger = new JNILogger(jeEnv);
+      uima::ResourceManager::getInstance().registerLogger(singleton_jni_logger);
     }
-    cout << "set JNILogger in JNIInstance " << endl;
-    pInstance->iv_logger = iv_logger;
 
     // setting engine
     JNIUtils::setCppInstance(jeEnv, joJTaf, pInstance);
@@ -426,8 +424,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(initializeJNI) (JNIEnv* jeEnv,
 
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
-
-    pInstance->iv_logger->setJNIEnv(jeEnv);
 
     uima::ErrorInfo errInfo;
 
@@ -548,8 +544,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(typeSystemInitJNI) (JNIEnv* jeEnv,
     deSerializer.deserializeDefinitions( rSerCAS, casDef );
     UIMA_TPRINT("   done deserializing definitions");
 
-    pInstance->iv_logger->setJNIEnv(jeEnv);
-
     engineBase.reinitTypeSystem();
 
     uima::CAS * pCAS = pInstance->getCAS();
@@ -653,8 +647,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(destroyJNI) (JNIEnv* jeEnv, jobject joJTaf) {
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
 
-    pInstance->iv_logger->setJNIEnv(jeEnv);
-
     uima::AnalysisEngine * pEngine =  pInstance->getEngine();
 
     uima::TyErrorId tyErrorId = pEngine->destroy();
@@ -712,8 +704,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(processJNI) (JNIEnv* jeEnv,
 
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
-
-    pInstance->iv_logger->setJNIEnv(jeEnv);
 
     uima::AnalysisEngine * pEngine = pInstance->getEngine();
     assert( EXISTS(pEngine) );
@@ -1122,8 +1112,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(batchProcessCompleteJNI) (JNIEnv* jeEnv, jobj
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
 
-    pInstance->iv_logger->setJNIEnv(jeEnv);
-
     uima::AnalysisEngine * pEngine =  pInstance->getEngine();
 
     uima::TyErrorId tyErrorId = pEngine->batchProcessComplete();
@@ -1156,8 +1144,6 @@ JNIEXPORT void JNICALL JAVA_PREFIX(collectionProcessCompleteJNI) (JNIEnv* jeEnv,
 
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
-
-    pInstance->iv_logger->setJNIEnv(jeEnv);
 
     uima::AnalysisEngine * pEngine =  pInstance->getEngine();
 
@@ -1282,6 +1268,7 @@ JNIEXPORT void JNICALL JAVA_PREFIX(releaseSegmentJNI) (JNIEnv* jeEnv, jobject jo
     return;
   }
 }
+
 
 
 

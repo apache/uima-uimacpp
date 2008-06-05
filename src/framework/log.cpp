@@ -49,6 +49,8 @@
 
 #define UIMA_LOG_APPLICATION_KEY_UNKNOWN      _TEXT("???")
 const size_t                  UIMA_LOG_STATIC_CONVERSION_BUFSIZE = 1024;
+static apr_pool_t         * logPool=0;
+static apr_thread_mutex_t * logMutex=0;
 
 /* ----------------------------------------------------------------------- */
 /*       Forward declarations                                              */
@@ -146,7 +148,7 @@ namespace uima {
   void LogFacility::doLog(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode) const
   /* ----------------------------------------------------------------------- */
   {
-    apr_thread_mutex_lock(mutex);
+    apr_thread_mutex_lock(logMutex);
     string method="";
     if (isLoggable(enType)) {
       for (int i=0; i < vecLoggers.size(); i++) {
@@ -154,7 +156,7 @@ namespace uima {
                                      method,cpszMsg,lUserCode);
       }
     }
-    apr_thread_mutex_unlock(mutex);
+    apr_thread_mutex_unlock(logMutex);
   }
 
   bool LogFacility::isLoggable(LogStream::EnEntryType enType) const {
@@ -242,20 +244,21 @@ namespace uima {
       iv_lLastUserCode(0),
       iv_logStream(*this, LogStream::EnMessage),
       vecLoggers(ResourceManager::getInstance().getLoggers()),
-      iv_logLevel(ResourceManager::getInstance().getLoggingLevel()),
-      iv_logPool(NULL) {
-    apr_status_t rv = apr_pool_create( &iv_logPool,NULL );
-    if ( rv == APR_SUCCESS ) {
-      UnicodeStringRef ref(crEngineName);
-      ref.extract(iv_strOrigin, CCSID::getDefaultName()  );
-      apr_thread_mutex_create(&mutex,APR_THREAD_MUTEX_UNNESTED, iv_logPool);
-    } else {
-      UIMA_EXC_THROW_NEW(ExcOutOfMemory,
+      iv_logLevel(ResourceManager::getInstance().getLoggingLevel()) {
+   if (logPool == NULL) {
+      apr_status_t rv = apr_pool_create( &logPool,NULL );
+      if ( rv == APR_SUCCESS ) {
+        UnicodeStringRef ref(crEngineName);
+        ref.extract(iv_strOrigin, CCSID::getDefaultName()  );
+        apr_thread_mutex_create(&logMutex,APR_THREAD_MUTEX_UNNESTED, logPool);
+      } else {
+        UIMA_EXC_THROW_NEW(ExcOutOfMemory,
           UIMA_ERR_ENGINE_OUT_OF_MEMORY,
           UIMA_MSG_ID_EXC_OUT_OF_MEMORY,
           ErrorMessage(UIMA_MSG_ID_EXCON_CREATING_POOL_FOR_CLASS,"uima::LogFacility"),
           ErrorInfo::unrecoverable);
-    }
+      }
+   }
   }
 
   LogFacility::LogFacility(icu::UnicodeString const & crEngineName,
@@ -263,19 +266,21 @@ namespace uima {
       iv_lLastUserCode(0),
       iv_logStream(*this, crLoggingLevel),
       vecLoggers(ResourceManager::getInstance().getLoggers()),
-      iv_logLevel(crLoggingLevel),
-      iv_logPool(0) {
-    apr_status_t rv = apr_pool_create( &iv_logPool,NULL );
-    if ( rv == APR_SUCCESS ) {
-      UnicodeStringRef ref(crEngineName);
-      ref.extract(iv_strOrigin, CCSID::getDefaultName()  );
-      apr_thread_mutex_create(&mutex,APR_THREAD_MUTEX_UNNESTED, iv_logPool);
-    } else {
-      UIMA_EXC_THROW_NEW(ExcOutOfMemory,
+      iv_logLevel(crLoggingLevel) {
+
+    if (logPool == NULL) {
+      apr_status_t rv = apr_pool_create( &logPool,NULL );
+      if ( rv == APR_SUCCESS ) {
+        UnicodeStringRef ref(crEngineName);
+        ref.extract(iv_strOrigin, CCSID::getDefaultName()  );
+        apr_thread_mutex_create(&logMutex,APR_THREAD_MUTEX_UNNESTED, logPool);
+      } else {
+        UIMA_EXC_THROW_NEW(ExcOutOfMemory,
           UIMA_ERR_ENGINE_OUT_OF_MEMORY,
           UIMA_MSG_ID_EXC_OUT_OF_MEMORY,
           ErrorMessage(UIMA_MSG_ID_EXCON_CREATING_POOL_FOR_CLASS,"uima::LogFacility"),
           ErrorInfo::unrecoverable);
+      }
     }
   }
 
@@ -339,6 +344,7 @@ namespace uima {
 
 } //namespace uima
 /* <EOF> */
+
 
 
 

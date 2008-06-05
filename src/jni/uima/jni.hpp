@@ -79,20 +79,15 @@ class UIMA_LINK_IMPORTSPEC JNILogger : public  uima::Logger {
                   string methodname,
                   string message,
                   long errorCode)  ;
-      void setJNIEnv(JNIEnv * env) {
-         apr_os_thread_t threadid = apr_os_thread_current();
-         threadid2jnienv[threadid] = env;
-         iv_jnienv=env;
-      }
+   
     private:
       /** Format the log message */
       std::string format(uima::LogStream::EnEntryType enType,
                         const string & cpszMsg, 
                         long lUserCode) const;
-      JNIEnv * iv_jnienv;     //handle to Java environment
+      JavaVM * iv_jvm;
       jclass   cv_clazz ;    //proxy class on java side
       jmethodID cv_logMethod; //log method
-      map<apr_os_thread_t, JNIEnv*> threadid2jnienv;
   };
     
 
@@ -109,22 +104,17 @@ private:
   bool iv_hasNext;
 
 public:
-  JNILogger * iv_logger;
+  //JNILogger * iv_logger;
   JNIInstance() :
       iv_pEngine(NULL),
       iv_pCAS(NULL),
       iv_serializedCAS(),
       iv_pSegment(NULL),
       iv_serializedSegment(),
-      iv_hasNext(false),
-      iv_logger(0) {}
+      iv_hasNext(false){}
 
   ~JNIInstance() {
-    if (iv_logger != NULL) {
-      uima::ResourceManager::getInstance().unregisterLogger(iv_logger);
-      delete iv_logger;
-      iv_logger=NULL;
-    }
+ 
   }
 
   uima::AnalysisEngine * getEngine() {

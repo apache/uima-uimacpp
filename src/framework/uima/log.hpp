@@ -267,9 +267,7 @@ namespace uima {
     LogStream         iv_logStream;
     LogStream::EnEntryType   iv_logLevel;
     vector<Logger*> & vecLoggers;
-    apr_pool_t        * iv_logPool;
-    apr_thread_mutex_t *mutex;
-
+    
     /* --- functions --- */
     TyMessageId       getTypeAsMessageId(LogStream::EnEntryType enType) const;
     void              doLog(LogStream::EnEntryType enType, const TCHAR * cpszMsg, long lUserCode = 0) const;
@@ -386,6 +384,7 @@ namespace uima {
 #endif /* UIMA_LOG_HPP */
 
 /* <EOF> */
+
 
 
 
