@@ -89,6 +89,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
     assert( EXISTS(env) );
     try {
     env->GetJavaVM(&iv_jvm);
+    CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
     cv_clazz = env->FindClass(JAVA_LOGGER_PROXY);
     if (cv_clazz == NULL ) {
@@ -97,6 +98,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       env->ExceptionClear();
       return;
     }
+    CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
     cv_clazz = (jclass) env->NewGlobalRef(cv_clazz);
     if (cv_clazz == NULL) {
@@ -106,6 +108,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       env->ExceptionClear();
       return;
     }
+    CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
      //query the current logging level
      jmethodID iv_getLoggingLevelMethod = env->GetStaticMethodID(cv_clazz,
@@ -118,6 +121,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
        env->ExceptionClear();
        return;
       }
+     CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
       //log method
       cv_logMethod = env->GetStaticMethodID(cv_clazz, "log", "("
@@ -134,6 +138,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
           env->ExceptionClear();
           return;
       }
+      CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
       //get the current logging level
       jint logginglevel = env->CallStaticIntMethod(cv_clazz, iv_getLoggingLevelMethod);
@@ -145,6 +150,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
           env->ExceptionClear();
           return;
       }
+      CHECK_FOR_JNI_EXCEPTION(env, NULL);
 
       if (logginglevel == 3) {
         uima::ResourceManager::getInstance().setLoggingLevel(uima::LogStream::EnError);
@@ -922,14 +928,7 @@ JNIEXPORT jobject JNICALL JAVA_PREFIX(getSerializedDataJNI) (JNIEnv* jeEnv, jobj
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
     uima::internal::SerializedCAS & crSerializedCAS = pInstance->getSerializedCAS();
-
-    {
-      jeEnv->PushLocalFrame( crSerializedCAS.getNumberOfJavaObjectsToBeCreatedData() );
-      CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
-      joResult = getSerializedCasData(jeEnv, joJTaf, jiWhichData, crSerializedCAS);
-      jeEnv->PopLocalFrame(NULL);
-      CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
-    }
+    joResult = getSerializedCasData(jeEnv, joJTaf, jiWhichData, crSerializedCAS);
     UIMA_TPRINT("getSerializedDataJNI() finished");
   } catch (uima::Exception & rException) {
     UIMA_TPRINT("Exception: " << rException.asString() );
@@ -952,14 +951,7 @@ JNIEXPORT jobject JNICALL JAVA_PREFIX(getSerializedSegmentDataJNI) (JNIEnv* jeEn
     uima::JNIInstance* pInstance = JNIUtils::getCppInstance(jeEnv, joJTaf);
     assert( EXISTS(pInstance) );
     uima::internal::SerializedCAS & crSerializedCAS = pInstance->getSerializedSegment();
-
-    {
-      jeEnv->PushLocalFrame( crSerializedCAS.getNumberOfJavaObjectsToBeCreatedData() );
-      CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
-      joResult = getSerializedCasData(jeEnv, joJTaf, jiWhichData, crSerializedCAS);
-      jeEnv->PopLocalFrame(NULL);
-      CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
-    }
+    joResult = getSerializedCasData(jeEnv, joJTaf, jiWhichData, crSerializedCAS);
     UIMA_TPRINT("getSerializedDataJNI() finished");
   } catch (uima::Exception & rException) {
     UIMA_TPRINT("Exception: " << rException.asString() );
@@ -986,8 +978,6 @@ jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhichData, u
     //////uima::internal::SerializedCAS const & crSerializedCAS = pInstance->getSerializedCAS();
 
     {
-      ///////jeEnv->PushLocalFrame( crSerializedCAS.getNumberOfJavaObjectsToBeCreatedData() );
-      ///////CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
 
       // the C++ objects created for TOPTYPE and DOCUMENT are destroyed after the switch
       // but the created Java object inside is still alive
@@ -1059,8 +1049,6 @@ jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhichData, u
       default:
         assert(false);
       }
-      ///////jeEnv->PopLocalFrame(NULL);
-      /////////CHECK_FOR_JNI_EXCEPTION_WITH_RETURN_VALUE(jeEnv, NULL);
     }
     UIMA_TPRINT("getSerializedDataJNI() finished");
   } catch (uima::Exception & rException) {

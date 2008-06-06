@@ -203,13 +203,16 @@ jintArray JNIUtils::createIntArray(JNIEnv* jeEnv, vector<uima::internal::Seriali
 void JNIUtils::createIntVector(JNIEnv* jeEnv, jintArray array, vector<uima::internal::SerializedCAS::TyNum> & rResult) {
   size_t uiLen = jeEnv->GetArrayLength(array);
   rResult.resize(uiLen);
+
+  jeEnv->PushLocalFrame( uiLen );
   jboolean jbCopy;
   jint * pArray = jeEnv->GetIntArrayElements(array, & jbCopy);
   size_t i;
   for (i=0; i<uiLen; ++i) {
     rResult[i] = pArray[i];
   }
-  // ReleaseIntArrayElements need not be called since nothing is modified
+  jeEnv->ReleaseIntArrayElements(array, pArray, JNI_ABORT);
+  jeEnv->PopLocalFrame(NULL);
 }
 
 
@@ -217,6 +220,7 @@ void JNIUtils::createStringVector(JNIEnv* jeEnv, jobjectArray joArray, vector<ui
   size_t uiLen = jeEnv->GetArrayLength(joArray);
   rResult.resize(uiLen);
   rStringPool.resize(uiLen);
+  jeEnv->PushLocalFrame( uiLen );
 //   cout << __FILE__ << __LINE__ << ": len: " << uiLen << endl;
   size_t i;
   for (i=0; i<uiLen; ++i) {
@@ -233,6 +237,7 @@ void JNIUtils::createStringVector(JNIEnv* jeEnv, jobjectArray joArray, vector<ui
       rResult[i] = uima::UnicodeStringRef();
     }
   }
+   jeEnv->PopLocalFrame(NULL);
 }
 
 jbyteArray JNIUtils::createByteArray(JNIEnv* jeEnv, vector<char> const & crVec) {
@@ -347,37 +352,43 @@ jlongArray JNIUtils::createLongArray(JNIEnv* jeEnv, vector<INT64> const & crVec)
 void JNIUtils::createByteVector(JNIEnv* jeEnv, jbyteArray array, vector<char> & rResult) {
   size_t uiLen = jeEnv->GetArrayLength(array);
   rResult.resize(uiLen);
+  jeEnv->PushLocalFrame( uiLen );
   jboolean jbCopy;
   jbyte * pArray = jeEnv->GetByteArrayElements(array, & jbCopy);
   size_t i;
   for (i=0; i<uiLen; ++i) {
     rResult[i] = pArray[i];
   }
-  // ReleaseIntArrayElements need not be called since nothing is modified
+  jeEnv->ReleaseByteArrayElements(array,pArray, JNI_ABORT);
+  jeEnv->PopLocalFrame(NULL);
 }
 
 void JNIUtils::createShortVector(JNIEnv* jeEnv, jshortArray array, vector<short> & rResult) {
   size_t uiLen = jeEnv->GetArrayLength(array);
   rResult.resize(uiLen);
+  jeEnv->PushLocalFrame( uiLen );
   jboolean jbCopy;
   jshort * pArray = jeEnv->GetShortArrayElements(array, & jbCopy);
   size_t i;
   for (i=0; i<uiLen; ++i) {
     rResult[i] = pArray[i];
   }
-  // ReleaseIntArrayElements need not be called since nothing is modified
+  jeEnv->ReleaseShortArrayElements(array,pArray, JNI_ABORT);
+  jeEnv->PopLocalFrame(NULL);
 }
 
 void JNIUtils::createLongVector(JNIEnv* jeEnv, jlongArray array, vector<INT64> & rResult) {
   size_t uiLen = jeEnv->GetArrayLength(array);
   rResult.resize(uiLen);
+  jeEnv->PushLocalFrame( uiLen );
   jboolean jbCopy;
   jlong * pArray = jeEnv->GetLongArrayElements(array, & jbCopy);
   size_t i;
   for (i=0; i<uiLen; ++i) {
     rResult[i] = pArray[i];
   }
-  // ReleaseIntArrayElements need not be called since nothing is modified
+  jeEnv->ReleaseLongArrayElements(array,pArray, JNI_ABORT);
+  jeEnv->PopLocalFrame(NULL);
 }
 
 
