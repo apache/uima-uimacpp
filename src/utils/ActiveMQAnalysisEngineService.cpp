@@ -898,7 +898,7 @@ to receive messages from the input queue. */
            reply->setLongProperty("TimeToSerializeCAS", timeToSerialize*1000);
            reply->setLongProperty("TimeToDeserializeCAS", timeToDeserialize*1000);
            reply->setLongProperty("TimeInAnalytic", timeInAnalytic*1000);
-           reply->setLongProperty("TimeInProcessCas", timeInAnalytic*1000);
+           reply->setLongProperty("TimeInProcessCAS", timeInAnalytic*1000);
          }
        }
        if (isExceptionMsg) {
@@ -1210,6 +1210,7 @@ void CommonUtils::logMessage(string msg) {
     iv_pMonitor->logMessage(msg);
     //cout << "INFO: " << msg << endl;
   }
+
 
 
 
