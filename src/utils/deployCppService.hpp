@@ -797,9 +797,9 @@ class SocketLogger : public uima::Logger {
         return -7;
       }
       uima::ResourceManager::getInstance().registerLogger(singleton_pLogger);
-      uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService::initialize() Registered Java Logger.",0);
+      cout << "deployCppService::initialize() Registered Java Logger." << endl;
     } 
-    //singleton_pMonitor->logMessage("deployCppService::initialize() done");
+   
     return 0;
  } //initialize
 
@@ -860,6 +860,7 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
 
 
 #endif
+
 
 
 
