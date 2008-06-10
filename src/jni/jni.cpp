@@ -89,7 +89,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
     assert( EXISTS(env) );
     try {
     env->GetJavaVM(&iv_jvm);
-    CHECK_FOR_JNI_EXCEPTION(env, NULL);
+    CHECK_FOR_JNI_EXCEPTION(env);
 
     cv_clazz = env->FindClass(JAVA_LOGGER_PROXY);
     if (cv_clazz == NULL ) {
@@ -98,7 +98,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       env->ExceptionClear();
       return;
     }
-    CHECK_FOR_JNI_EXCEPTION(env, NULL);
+    CHECK_FOR_JNI_EXCEPTION(env);
 
     cv_clazz = (jclass) env->NewGlobalRef(cv_clazz);
     if (cv_clazz == NULL) {
@@ -108,7 +108,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
       env->ExceptionClear();
       return;
     }
-    CHECK_FOR_JNI_EXCEPTION(env, NULL);
+    CHECK_FOR_JNI_EXCEPTION(env);
 
      //query the current logging level
      jmethodID iv_getLoggingLevelMethod = env->GetStaticMethodID(cv_clazz,
@@ -121,7 +121,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
        env->ExceptionClear();
        return;
       }
-     CHECK_FOR_JNI_EXCEPTION(env, NULL);
+     CHECK_FOR_JNI_EXCEPTION(env);
 
       //log method
       cv_logMethod = env->GetStaticMethodID(cv_clazz, "log", "("
@@ -138,7 +138,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
           env->ExceptionClear();
           return;
       }
-      CHECK_FOR_JNI_EXCEPTION(env, NULL);
+      CHECK_FOR_JNI_EXCEPTION(env);
 
       //get the current logging level
       jint logginglevel = env->CallStaticIntMethod(cv_clazz, iv_getLoggingLevelMethod);
@@ -150,7 +150,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
           env->ExceptionClear();
           return;
       }
-      CHECK_FOR_JNI_EXCEPTION(env, NULL);
+      CHECK_FOR_JNI_EXCEPTION(env);
 
       if (logginglevel == 3) {
         uima::ResourceManager::getInstance().setLoggingLevel(uima::LogStream::EnError);
