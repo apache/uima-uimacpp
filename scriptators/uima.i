@@ -255,18 +255,22 @@ public:
 %nodefault CAS;
 class CAS {
 public:
-//  bool isTCAS() const;
   FSIterator iterator();
-  FSIndexRepository &getIndexRepository();
-  FeatureStructure createFS(Type const &);
+  FSIndexRepository &getIndexRepository() throw (CASException);
+  FeatureStructure createFS(Type const &) throw (CASException);
   TypeSystem const &getTypeSystem() const;
   ANIndex getAnnotationIndex(Type const &type);
+  void setDocumentText(UnicodeStringRef const &text) throw (CASException);
   UnicodeStringRef getDocumentText() const;
-  AnnotationFS createAnnotation(Type const &type, size_t uiBeginPos, size_t uiEndPos);
+  void setSofaDataString(UnicodeStringRef const &text, UnicodeString const &mimetype) throw (CASException);
+  void setSofaDataArray(FeatureStructure array, UnicodeString const &mime) throw (CASException);
+  void setSofaDataURI(UnicodeString const &uri, UnicodeString const &mime) throw (CASException);
+  UnicodeStringRef getSofaDataURI();
+  AnnotationFS createAnnotation(Type const &type, size_t uiBeginPos, size_t uiEndPos) throw (CASException);
   SofaFS getSofa();
-//  SofaFS createSofa(const char* sofaName, const char* mimeType);
-  CAS* getView(const char* viewName);
-  CAS* createView(const char* sofaName);
+//Deprecated  SofaFS createSofa(const char* sofaName, const char* mimeType);
+  CAS* getView(const char* viewName) throw (CASException);
+  CAS* createView(const char* sofaName) throw (CASException);
   %extend {
     SofaFS getSofa(AnnotatorContext &ac, const UnicodeString &sofaName) {
       return self->getSofa(ac.mapToSofaID(sofaName));
@@ -298,7 +302,7 @@ public:
   size_t getBeginPosition() const;
   size_t getEndPosition() const;
   size_t getLength() const;
-  UnicodeStringRef getCoveredText() const;
+  UnicodeStringRef getCoveredText() const throw (CASException);
 };
 
 class SofaFS : public FeatureStructure {

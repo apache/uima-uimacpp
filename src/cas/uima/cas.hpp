@@ -499,6 +499,8 @@ namespace uima {
 
     /**
      * Return the index repository for index use
+     * @throws CASException
+     *           if View is the base CAS
      */
     FSIndexRepository & getIndexRepository( void );
 
@@ -549,7 +551,7 @@ namespace uima {
      *          same as the associated Sofa name).
      * 
      * @return The view corresponding to this local name.
-     * @throws CASRuntimeException
+     * @throws CASException
      *           if no View with this name exists in this CAS
      */
     CAS* getView(const icu::UnicodeString & localViewName);
@@ -576,7 +578,7 @@ namespace uima {
      *          same as the associated Sofa name).
      * 
      * @return The view corresponding to this local name.
-     * @throws CASRuntimeException
+     * @throws CASException
      *           if a View with this name already exists in this CAS
      */
     CAS * createView(icu::UnicodeString const & localViewName);
@@ -595,8 +597,8 @@ namespace uima {
      * 
      * @param text
      *          The text to be analyzed.
-     * @exception CASRuntimeException
-     *              If the Sofa data has already been set.
+     * @exception CASException
+     *              If the Sofa data has already been set, or View is base CAS.
      */
     void setDocumentText(UnicodeStringRef const text);
 
@@ -614,8 +616,8 @@ namespace uima {
      *          The text to be analyzed.
      * @param mime
      *          The mime type of the data
-     * @exception CASRuntimeException
-     *              If the Sofa data has already been set.
+     * @exception CASException
+     *              If the Sofa data has already been set, or View is base CAS.
      */
     virtual void setSofaDataString(UnicodeStringRef const text, icu::UnicodeString const & mimetype);
 
@@ -641,8 +643,8 @@ namespace uima {
      *          The ArrayFS to be analyzed.
      * @param mime
      *          The mime type of the data
-     * @exception CASRuntimeException
-     *              If the Sofa data has already been set.
+     * @exception CASException
+     *              If the Sofa data has already been set, or View is base CAS.
      */
     virtual void setSofaDataArray(FeatureStructure array, icu::UnicodeString const & mime);
 
@@ -661,8 +663,8 @@ namespace uima {
      *          The URI of the data to be analyzed.
      * @param mime
      *          The mime type of the data
-     * @exception CASRuntimeException
-     *              If the Sofa data has already been set.
+     * @exception CASException
+     *              If the Sofa data has already been set, or View is base CAS.
      */
     virtual void setSofaDataURI(icu::UnicodeString const & uri, icu::UnicodeString const & mime);
 
@@ -707,6 +709,8 @@ namespace uima {
      * <code>type</code> must be a subtype of type Annotation.
      * Note that this will not commit the new feature structure to the
      * appropriate indexes. To do this CAS::commitFS() has to be called.
+     * @throws CASException
+     *           if specified type is not an annotation, or View is base CAS.
      */
     virtual AnnotationFS createAnnotation( Type const & type, size_t uiBeginPos, size_t uiEndPos );
 
@@ -1215,6 +1219,8 @@ namespace uima {
     size_t getLength( void ) const;
     /**
      * Get a reference to the text spanned by this annotation feature structure.
+     * @throws CASException
+     *           if FS is not a valid annotation.
      */
     UnicodeStringRef getCoveredText( void ) const;
 
