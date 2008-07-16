@@ -110,6 +110,7 @@ namespace uima {
       iv_name = crOther.getName();
       iv_description = crOther.getDescription();
       iv_rangeType = crOther.getRangeTypeName();
+      iv_multipleRefsAllowed =  crOther.isMultipleReferencesAllowed();
     }
 
     TyErrorId setName(const icu::UnicodeString & featName) {
@@ -432,5 +433,6 @@ namespace uima {
 
 }
 #endif
+
 
 

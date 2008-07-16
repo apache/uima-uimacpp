@@ -42,6 +42,7 @@
 #include "uima/capability.hpp"
 #include "uima/config_param.hpp"
 #include "uima/taespecifier.hpp"
+#include "uima/caswriter_abase.hpp"
 
 namespace uima {
   UIMA_EXC_CLASSIMPLEMENT(ConfigParamLookupException, ConfigException);
@@ -902,23 +903,27 @@ namespace uima {
         for (j=0; j<keyVec.size(); ++j) {
           s.append("<fsIndexKey>");
           FSIndexKeyDescription const * ixKeyDesc = keyVec[j];
-          s.append("<featureName>");
-          s.append(ixKeyDesc->getFeatureName());
-          s.append("</featureName>");
+          if (ixKeyDesc->isTypePriority() ) {
+            s.append("<typePriority/>");
+          } else {
+              s.append("<featureName>");
+              s.append(ixKeyDesc->getFeatureName());
+              s.append("</featureName>");
 
-          s.append("<comparator>");
-          FSIndexKeyDescription::EnComparatorType comp = ixKeyDesc->getComparator();
-          switch (comp) {
-          case FSIndexKeyDescription::STANDARD:
-            s.append("standard");
-            break;
-          case FSIndexKeyDescription::REVERSE:
-            s.append("reverse");
-            break;
-          default:
-            assert(false);
+              s.append("<comparator>");
+              FSIndexKeyDescription::EnComparatorType comp = ixKeyDesc->getComparator();
+              switch (comp) {
+              case FSIndexKeyDescription::STANDARD:
+                s.append("standard");
+                break;
+              case FSIndexKeyDescription::REVERSE:
+                s.append("reverse");
+                break;
+              default:
+                assert(false);
+              }
+            s.append("</comparator>");
           }
-          s.append("</comparator>");
           s.append("</fsIndexKey>");
         }
         s.append("</keys>");
@@ -1189,19 +1194,23 @@ namespace uima {
 	
     if (isCasConsumer) {
       s.append("<processingResourceMetaData>");
-    } else s.append("<analysisEngineMetaData>");
+    } else s.append("<analysisEngineMetaData xmlns=\"http://uima.apache.org/resourceSpecifier\">");
     
 
     ///AnalysisEngineMetaData const & md = * getAnalysisEngineMetaData();
     
     //    name
+    UnicodeString out;
     s.append("<name>");
-    s.append(md.getName());
+    XMLWriterABase::normalize(UnicodeStringRef(md.getName()), out);
+    s.append(out);
     s.append("</name>");
 
     //   description
     s.append("<description>");
-    s.append( md.getDescription() );
+    out.setTo("");
+    XMLWriterABase::normalize(UnicodeStringRef(md.getDescription()), out);
+    s.append( out );
     s.append("</description>");
 
     //   version
@@ -1211,7 +1220,9 @@ namespace uima {
 
     //   vendor
     s.append("<vendor>");
-    s.append( md.getVendor() );
+    out.setTo("");
+     XMLWriterABase::normalize(UnicodeStringRef(md.getVendor()), out);
+    s.append( out );
     s.append("</vendor>");
 
 
@@ -1331,6 +1342,26 @@ namespace uima {
       s.append("</flowConstraints>");
     }
 
+    //type priorites
+    const AnalysisEngineMetaData::TyVecpTypePriorities  & prioDesc =  
+                    md.getTypePriorities();
+     if (prioDesc.size() > 0) {
+      s.append("<typePriorities>");
+      for (i=0; i<prioDesc.size() ;++i) {
+        s.append("<priorityList>");
+        TypePriority * prio = prioDesc[i];
+        vector <icu::UnicodeString> vecTypeOrder = prio->getTypeOrder();
+        for ( j = 0; j < vecTypeOrder.size();  ++j) {
+
+          s.append("<type>");
+          s.append(vecTypeOrder[j]);
+          s.append("</type>");
+        }
+        s.append("</priorityList>");
+      }
+      s.append("</typePriorities>");
+    }
+
     // type system
 
     if (isPrimitive()) {
@@ -1362,7 +1393,9 @@ namespace uima {
           s.append("</name>");
 
           s.append("<description>");
-          s.append(td->getDescription());
+          out.setTo("");
+          XMLWriterABase::normalize(UnicodeStringRef(td->getDescription()), out);
+          s.append(out);
           s.append("</description>");
 
           s.append("<supertypeName>");
@@ -1379,16 +1412,18 @@ namespace uima {
               s.append(fs->getName());
               s.append("</name>");
               s.append("<description>");
-              s.append(fs->getDescription());
+              out.setTo("");
+              XMLWriterABase::normalize(UnicodeStringRef(fs->getDescription()), out);
+              s.append(out);
               s.append("</description>");
               s.append("<rangeTypeName>");
               s.append(fs->getRangeTypeName());
               s.append("</rangeTypeName>");
-			  if (fs->isMultipleReferencesAllowed() ) {
-				s.append("<multipleReferencesAllowed>");
+			        if (fs->isMultipleReferencesAllowed() ) {
+				        s.append("<multipleReferencesAllowed>");
                 s.append("true");
                 s.append("</multipleReferencesAllowed>");
-			  }
+			        }
               s.append("</featureDescription>");
             }
             s.append("</features>");
@@ -1404,7 +1439,9 @@ namespace uima {
               s.append(value->getName());
               s.append("</string>");
               s.append("<description>");
-              s.append(value->getDescription());
+              out.setTo("");
+              XMLWriterABase::normalize(UnicodeStringRef(value->getDescription()), out);
+              s.append(out);
               s.append("</description>");
               s.append("</value>");
             }
@@ -1473,23 +1510,27 @@ namespace uima {
         for (j=0; j<keyVec.size(); ++j) {
           s.append("<fsIndexKey>");
           FSIndexKeyDescription const * ixKeyDesc = keyVec[j];
-          s.append("<featureName>");
-          s.append(ixKeyDesc->getFeatureName());
-          s.append("</featureName>");
+          if (ixKeyDesc->isTypePriority() ) {
+            s.append("<typePriority/>");
+          } else {
+            s.append("<featureName>");
+            s.append(ixKeyDesc->getFeatureName());
+            s.append("</featureName>");
 
-          s.append("<comparator>");
-          FSIndexKeyDescription::EnComparatorType comp = ixKeyDesc->getComparator();
-          switch (comp) {
-          case FSIndexKeyDescription::STANDARD:
-            s.append("standard");
-            break;
-          case FSIndexKeyDescription::REVERSE:
-            s.append("reverse");
-            break;
-          default:
-            assert(false);
+            s.append("<comparator>");
+            FSIndexKeyDescription::EnComparatorType comp = ixKeyDesc->getComparator();
+            switch (comp) {
+            case FSIndexKeyDescription::STANDARD:
+              s.append("standard");
+              break;
+            case FSIndexKeyDescription::REVERSE:
+              s.append("reverse");
+              break;
+            default:
+              assert(false);
+            }
+            s.append("</comparator>");
           }
-          s.append("</comparator>");
           s.append("</fsIndexKey>");
         }
         s.append("</keys>");
@@ -1552,6 +1593,12 @@ namespace uima {
       appendBool(this->getAnalysisEngineMetaData()->getOperationalProperties()->getOutputsNewCASes(), s);
       s.append("</outputsNewCASes>");
       s.append("</operationalProperties>");
+    } else {
+      s.append("<operationalProperties>"); 
+      s.append ("<modifiesCas>true</modifiesCas>");
+      s.append("<multipleDeploymentAllowed>true</multipleDeploymentAllowed>");
+      s.append("<outputsNewCASes>false</outputsNewCASes>");
+      s.append("</operationalProperties>");
     }
     if (isCasConsumer) {
       s.append("</processingResourceMetaData>");
@@ -1561,5 +1608,6 @@ namespace uima {
 
     
 } //namespace
+
 
 

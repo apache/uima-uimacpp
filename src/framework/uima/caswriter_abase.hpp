@@ -79,8 +79,8 @@ namespace uima {
 
 
   class UIMA_LINK_IMPORTSPEC XMLWriterABase : public CASWriterABase {
-  protected:
-    void normalize(UnicodeStringRef const & in, icu::UnicodeString& out) const;
+  public:
+    static void normalize(UnicodeStringRef const & in, icu::UnicodeString& out);
   public:
     XMLWriterABase(CAS const & crCAS, bool bAddDocBuffer);
     virtual ~XMLWriterABase();

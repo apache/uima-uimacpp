@@ -546,7 +546,7 @@ to receive messages from the input queue. */
     //get AE descriptor as XML to use when processing GETMETA requests.
     const AnalysisEngineMetaData & aeMetaData = iv_pEngine->getAnalysisEngineMetaData();			
     icu::UnicodeString xmlBuffer;
-    xmlBuffer.insert(0, "<?xml version=\"1.0\"?>");
+    xmlBuffer.insert(0, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     iv_pEngine->getAnnotatorContext().getTaeSpecifier().toXMLBuffer(aeMetaData,
       false, xmlBuffer);
     UnicodeStringRef uref(xmlBuffer.getBuffer(), xmlBuffer.length());
@@ -880,12 +880,9 @@ to receive messages from the input queue. */
        }
 
        //construct the reply message
-       if (request->propertyExists("MessageFrom") ) {
-         reply->setStringProperty("MessageFrom", this->iv_inputQueueName);
-       }
-       if (request->propertyExists("ServerURI") ) {
-         reply->setStringProperty("ServerURI", serverURI);
-       }
+       reply->setStringProperty("MessageFrom", this->iv_pConnection->getInputQueueName() );
+       reply->setStringProperty("ServerURI", this->iv_brokerURL);
+
        reply->setIntProperty("MessageType",RESPONSE);
        reply->setLongProperty("TimeInService", elapsedTime*1000);
        reply->setLongProperty("IdleTime", idleTime*1000);
@@ -1210,6 +1207,7 @@ void CommonUtils::logMessage(string msg) {
     iv_pMonitor->logMessage(msg);
     //cout << "INFO: " << msg << endl;
   }
+
 
 
 

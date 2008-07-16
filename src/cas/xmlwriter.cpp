@@ -72,7 +72,7 @@ namespace uima {
 
   XMLWriterABase::~XMLWriterABase() {}
 
-  void XMLWriterABase::normalize(UnicodeStringRef const & in, icu::UnicodeString& out) const {
+  void XMLWriterABase::normalize(UnicodeStringRef const & in, icu::UnicodeString& out)  {
     //cout << "normalize() input " << in << endl;
     static icu::UnicodeString const ustrAMP_ESC("&amp;");
     static icu::UnicodeString const ustrGT_ESC("&gt;");
@@ -740,6 +740,7 @@ namespace uima {
 
 
 /* ----------------------------------------------------------------------- */
+
 
 
 
