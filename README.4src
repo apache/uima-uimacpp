@@ -141,17 +141,6 @@ On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and D
 Also, the APR library can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
-Note:
-  The Activemq-cpp library distributed with uimacpp contains a patch 
-  to disable message expiration. This is done to be consistent with the Java
-  version of ActiveMQ v4.1.1, used by UIMA AS v2.2.2. Without this patch,
-  requests with a timeout made to UIMA C++ services are not handled properly
-  unless the system clocks are synchronized on both client and service nodes.
-
-  To apply the patch, in
-    src/main/activemq/connector/openwire/commands/ActiveMQMessageBase.h
-  always return false from isExpired().
-
 
 Disclaimer
 -----------
