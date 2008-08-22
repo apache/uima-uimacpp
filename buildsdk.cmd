@@ -245,10 +245,11 @@ echo copying licenses...
 REM copy Apache licences
 xcopy /Q /Y %UIMA_SOURCE%\NOTICE.4sdk %UIMA_DIR%
 ren %UIMA_DIR%\NOTICE.4sdk NOTICE
-xcopy /Q /Y %UIMA_SOURCE%\LICENSE %UIMA_DIR%
-xcopy /Q /Y %UIMA_SOURCE%\RELEASE_NOTES.* %UIMA_DIR%
+xcopy /Q /Y %UIMA_SOURCE%\LICENSE.4sdk %UIMA_DIR%
+ren %UIMA_DIR%\LICENSE.4sdk LICENSE
 xcopy /Q /Y %UIMA_SOURCE%\README.4sdk %UIMA_DIR%
 ren %UIMA_DIR%\README.4sdk README
+xcopy /Q /Y %UIMA_SOURCE%\RELEASE_NOTES.* %UIMA_DIR%
 xcopy /Q /Y %UIMA_SOURCE%\DISCLAIMER %UIMA_DIR%
 
 REM mkdir %UIMA_DIR%\licenses\apr

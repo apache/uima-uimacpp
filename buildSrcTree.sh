@@ -83,11 +83,12 @@ mkdir $target_dir/src/test
 print -u2 "copying from $UIMACPP_SOURCE"
 cp $CPL  $UIMACPP_SOURCE/buildsdk.sh $target_dir/
 cp $CPL  $UIMACPP_SOURCE/NOTICE.4src $target_dir/NOTICE
-cp $CPL  $UIMACPP_SOURCE/LICENSE $target_dir/
-cp $CPL  $UIMACPP_SOURCE/RELEASE_NOTES* $target_dir/
+cp $CPL  $UIMACPP_SOURCE/NOTICE.4sdk $target_dir/
+cp $CPL  $UIMACPP_SOURCE/LICENSE.4src $target_dir/LICENSE
+cp $CPL  $UIMACPP_SOURCE/LICENSE.4sdk $target_dir/
 cp $CPL  $UIMACPP_SOURCE/README.4src $target_dir/README
 cp $CPL  $UIMACPP_SOURCE/README.4sdk $target_dir/
-cp $CPL  $UIMACPP_SOURCE/NOTICE.4sdk $target_dir/
+cp $CPL  $UIMACPP_SOURCE/RELEASE_NOTES* $target_dir/
 cp $CPL  $UIMACPP_SOURCE/DISCLAIMER $target_dir/
 
 print -u2 "copying from $UIMACPP_SOURCE/data"
