@@ -28,11 +28,11 @@ else
 fi
 if [ $cmd  = "build" ] ; then 
 	echo "building docs... "
-	make -f uimacppdocs.mak build DEL=rm RD='rm -rf' MDFILES=../docs/html/*.md5  MAPFILES=../docs/html/*.map DOCDIR=../docs 
+	make -f uimacppdocs.mak build DEL=rm RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot DOCDIR=.
 elif [ $cmd = "rebuild" ] ; then
 	echo "rebuilding docs..."
-	make -f uimacppdocs.mak rebuild DEL=rm  RD='rm -rf' MDFILES=../docs/html/*.md5  MAPFILES=../docs/html/*.map DOCDIR=../docs
+	make -f uimacppdocs.mak rebuild DEL=rm  RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot DOCDIR=.
 elif [ $cmd = "clean" ] ; then
 	echo "cleaning docs dir..."
-	make -f uimacppdocs.mak clean DEL=rm  RD='rm -rf' DOCDIR=../docs
+	make -f uimacppdocs.mak clean DEL=rm  RD='rm -rf' DOCDIR=.
 fi

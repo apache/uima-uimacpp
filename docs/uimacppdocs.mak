@@ -19,21 +19,23 @@
 #Requires Doxygen 1.3.6 and Graphviz 1.8.10 installed and 
 #PATH environment variable must include
 #doxygen/bin;graphviz/bin;graphviz/bin/tools
-#Must be run from the uimacpp/build subdirectory
+#Must be run from the uimacpp/docs subdirectory
 
 #use these to run in WIN environment
 #RM=RD /s /q
 #DEL=del
 #MDFILES=..\docs\html\*.md5
 #MAPFILES=..\docs\html\*.map
+#DOTFILES=..\docs\html\*.dot
 #DOCDIR=..\docs
 
 #use these to run in LINUX environment
-RM=rm -rf
-DEL=rm
-MDFILES=../docs/html/*.md5
-MAPFILES=../docs/html/*.map
-DOCDIR=../docs
+#RM=rm -rf
+#DEL=rm
+#MDFILES=../docs/html/*.md5
+#MAPFILES=../docs/html/*.map
+#DOTFILES=../docs/html/*.dot
+#DOCDIR=../docs
 
 DOXYGENCMD=doxygen
 
@@ -44,6 +46,7 @@ build : ../docs/html/index.html
 	$(DOXYGENCMD) uimacpp.dox
 	$(DEL) $(MDFILES)
 	$(DEL) $(MAPFILES)
+	$(DEL) $(DOTFILES)
 
 rebuild : clean build
 
