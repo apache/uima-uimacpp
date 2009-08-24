@@ -43,9 +43,9 @@ void printUsage() {
 }
 
 int main(int argc, char* argv[]) {
-  cout << "=====================================================\n";    
-  cout << "Starting the UIMA C++ Remote Service using ActiveMQ broker." << std::endl;
-  cout << "-----------------------------------------------------\n";
+ // cout << "=====================================================\n";    
+  cout << __FILE__ << " Starting the UIMA C++ Remote Service using ActiveMQ broker." << std::endl;
+ // cout << "-----------------------------------------------------\n";
   // _CrtSetBreakAlloc(1988);
 
   try {
@@ -82,10 +82,10 @@ int main(int argc, char* argv[]) {
     aeService.setTraceLevel(serviceDesc.getTraceLevel());
 
     /*start receiving messages*/ 
-    cout << "Start receiving messages " << endl;
+    cout << __FILE__ << " Start receiving messages " << endl;
     aeService.start();
 
-    cout << "UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
+    cout << __FILE__ << " UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
       serviceDesc.getBrokerURL() << " Ready to process..." << endl;
     
     /* connect to java proxy if called from java */  
@@ -102,11 +102,12 @@ int main(int argc, char* argv[]) {
     //wait 
     apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
     apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
+    cerr << __FILE__ << " Received SHUTDOWN signal " << endl;
     apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);   
   
     /* shutdown */
-    uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService shutting down.");
-   
+   // uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService shutting down.");
+    cout << __FILE__ << " shutting down." << endl;
     aeService.stop();
     terminateService();
     
@@ -117,49 +118,59 @@ int main(int argc, char* argv[]) {
   }  catch (CMSException& e) {
     stringstream str; 
     str << e.getMessage() << endl;
+    cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    /***
     if (cs) {
       apr_size_t len = str.str().length();
       rv = apr_socket_send(cs, str.str().c_str(), &len);
       len = 1;
       apr_socket_send(cs,"\n", &len);
     }
+    ***/
   } catch (XMLException& e) {
     stringstream str; 
     str << e.getMessage() << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    /***
     if (cs) {
       apr_size_t len = str.str().length();
       rv = apr_socket_send(cs, str.str().c_str(), &len);
       len = 1;
       apr_socket_send(cs,"\n", &len);
     }
+    ***/
   } catch (uima::Exception e) {
     stringstream str;
     str << e.getErrorInfo().getMessage().asString() << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    /***
     if (cs) {
       apr_size_t len = str.str().length();
       rv = apr_socket_send(cs, str.str().c_str(), &len);
       len = 1;
       apr_socket_send(cs,"\n", &len);
     }
+    ***/
   } catch (...) {
     stringstream str;
     str <<  "Unknown Exception" << endl;
     cerr << __FILE__ << __LINE__ << " " << str.str() << endl;
+    /***
     if (cs) {
       apr_size_t len = str.str().length();
       rv = apr_socket_send(cs, str.str().c_str(), &len);
       len = 1;
       apr_socket_send(cs,"\n", &len);
     }
+    ***/
   }
-  cout << "-----------------------------------------------------\n";    
-  cout << " UIMA C++ Remote Service terminated:\n";
-  cout << "=====================================================\n";    
-
+  //cout << "-----------------------------------------------------\n";    
+  cout << __FILE__ " UIMA C++ Remote Service terminated:\n";
+  //cout << "=====================================================\n";    
+   exit(0);
 
 }  //main
+
 
 
 

@@ -946,6 +946,7 @@ to receive messages from the input queue. */
 //AMQAnalysisEngineService
 //---------------------------------------------------
   AMQAnalysisEngineService::~AMQAnalysisEngineService() {
+    //stop();
     cleanup();
   }
 
@@ -1157,7 +1158,17 @@ to receive messages from the input queue. */
           errInfo.getMessage().getMessageID(),
           ErrorInfo::unrecoverable);
       }
+      //cout << __FILE__ << " Delete Analysis Engine  " << endl;
+      if (iv_vecpAnalysisEngines.at(i) != NULL) {
+        delete iv_vecpAnalysisEngines.at(i);
+      }
+      if (iv_vecpCas.at(i) != NULL) {
+          delete iv_vecpCas.at(i);
+      }
+
     }
+    iv_vecpAnalysisEngines.clear();
+    iv_vecpCas.clear();
     return 0;
   }	
   void AMQAnalysisEngineService::cleanup() {
@@ -1170,12 +1181,14 @@ to receive messages from the input queue. */
           iv_vecpConnections.at(i)->stop();
           delete iv_vecpConnections.at(i);
         }
+        /**
         if (iv_vecpAnalysisEngines.at(i) != NULL) {
           delete iv_vecpAnalysisEngines.at(i);
         }
         if (iv_vecpCas.at(i) != NULL) {
           delete iv_vecpCas.at(i);
-        }     
+        } 
+        **/    
       }  
       iv_vecpAnalysisEngines.clear();
       iv_vecpCas.clear();
@@ -1207,6 +1220,7 @@ void CommonUtils::logMessage(string msg) {
     iv_pMonitor->logMessage(msg);
     //cout << "INFO: " << msg << endl;
   }
+
 
 
 
