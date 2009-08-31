@@ -63,9 +63,10 @@ namespace uima {
 // ---------------------------------------------------------------------------
 
 	XmiDeserializerHandler::XmiDeserializerHandler(CAS & cas,
-		XmiSerializationSharedData * xmiSharedData) : iv_cas(cas.getBaseCas() ),
+		XmiSerializationSharedData * xmiSharedData, bool len) : iv_cas(cas.getBaseCas() ),
 		iv_locator(NULL), iv_casimpl( uima::internal::CASImpl::promoteCAS(*iv_cas)),
-		sharedData(xmiSharedData), ownsSharedData(false), lenient(false), outOfTypeSystemElement(NULL) {
+		sharedData(xmiSharedData), ownsSharedData(false), outOfTypeSystemElement(NULL) {
+	        lenient = len;
 			if (this->sharedData==NULL) {
 				this->sharedData = new XmiSerializationSharedData();
 				ownsSharedData=true;

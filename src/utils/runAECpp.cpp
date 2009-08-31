@@ -59,7 +59,7 @@ static void tafCheckError(TyErrorId utErrorId,
 static void tafCheckError(ErrorInfo const &);
 
 // sofa to use for creating a tcas
-bool useSofa;
+bool useSofa, lenient;
 const char* sofaName;
 
 // input data types
@@ -77,6 +77,7 @@ void tell() {
   cerr << "  OutputDir           Existing directory for Xmi outputs (optional)" << endl;
   cerr << "       Options:" << endl;
   cerr << "   -x [-xmi]     Input(s) must be in XCAS [XMI] format (default is raw text)" << endl;
+  cerr << "   -lenient      For -xmi, ignore unknown types & features" << endl;
   cerr << "   -s Sofa       Name of a Sofa to process (input must be an XCAS or XMI)" << endl;
   cerr << "   -l logLevel   Set to 0, 1, or 2 for Message, Warning, or Error" << endl;
 }
@@ -94,6 +95,7 @@ int main(int argc, char * argv[]) {
       return 1;
     }
     useSofa = false;
+	lenient = false;
     xcasInput = textFormat;
     /* input/output dir arg */
     std::string in;
@@ -111,6 +113,8 @@ int main(int argc, char * argv[]) {
         xcasInput = xcasFormat;
       } else if (0 == strcmp(arg, "-xmi")) {
         xcasInput = xmiFormat;
+      } else if (0 == strcmp(arg, "-lenient")) {
+        lenient = true;
       } else if (0 == strcmp(arg, "-s")) {
         if ( ++index < argc ) {
           sofaName = argv[index];
@@ -261,7 +265,7 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
 		XCASDeserializer::deserialize(fileIS, *cas);
 	  }
 	  else {
-		XmiDeserializer::deserialize(fileIS, *cas);
+		XmiDeserializer::deserialize(fileIS, *cas, lenient);
 	  }
     } else {
       /* read as text file and set document text of default view */

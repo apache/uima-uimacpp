@@ -74,30 +74,30 @@ namespace uima {
 
   XmiDeserializer::~XmiDeserializer() {}
 
-  void XmiDeserializer::deserialize(char const * xmiFilename, CAS & cas) {
+  void XmiDeserializer::deserialize(char const * xmiFilename, CAS & cas, bool lenient) {
 
     XMLCh* native = XMLString::transcode(xmiFilename);
 	LocalFileInputSource fileIS (native);
 	XMLString::release(&native);
-    XmiDeserializer::deserialize(fileIS, cas);
+    XmiDeserializer::deserialize(fileIS, cas, lenient);
 
   }
 
-  void XmiDeserializer::deserialize(UnicodeString & xmiFilename, CAS & cas) {
+  void XmiDeserializer::deserialize(UnicodeString & xmiFilename, CAS & cas, bool lenient) {
     char buff[1024];
     xmiFilename.extract(0, xmiFilename.length(), buff);
     XMLCh* native = XMLString::transcode(buff);
     LocalFileInputSource fileIS (native);
 	XMLString::release(&native);
-    XmiDeserializer::deserialize(fileIS, cas);
+    XmiDeserializer::deserialize(fileIS, cas, lenient);
   }
 
-  void XmiDeserializer::deserialize(InputSource const & crInputSource, CAS & cas) {
+  void XmiDeserializer::deserialize(InputSource const & crInputSource, CAS & cas, bool lenient) {
     // Create a SAX2 parser object.
     SAX2XMLReader* parser = XMLReaderFactory::createXMLReader();
 
     //register content handler
-    XmiDeserializerHandler * contentHandler = new XmiDeserializerHandler(cas, NULL);
+    XmiDeserializerHandler * contentHandler = new XmiDeserializerHandler(cas, NULL, lenient);
     parser->setContentHandler(contentHandler);
 
     //register error handler

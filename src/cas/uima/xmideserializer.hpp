@@ -95,17 +95,17 @@ namespace uima {
     /**
      * Deserialize given an XMI filename and input CAS 
      */
-    static void deserialize(char const * xmifilename, CAS &);
+    static void deserialize(char const * xmifilename, CAS &, bool lenient=false);
 
     /**
      * Deserialize given an XMI filename UnicodeString and input CAS 
      */
-    static void deserialize(UnicodeString & xmifilename, CAS &);
+    static void deserialize(UnicodeString & xmifilename, CAS &, bool lenient=false);
 
     /**
      * Deserialize given an XMI InputSource and input CAS 
      */
-    static void deserialize(InputSource const & crInputSource, CAS &);
+    static void deserialize(InputSource const & crInputSource, CAS &, bool lenient=false);
   
     /**
      * Deserialize given an XMI InputSource and input CAS and XmiSerializationSharedData 
