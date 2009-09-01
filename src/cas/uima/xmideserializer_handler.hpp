@@ -78,7 +78,7 @@ namespace uima {
     // -----------------------------------------------------------------------
     //  Constructors and Destructor
     // -----------------------------------------------------------------------  
-    XmiDeserializerHandler(CAS & cas, XmiSerializationSharedData * xmiSharedData);   
+    XmiDeserializerHandler(CAS & cas, XmiSerializationSharedData * xmiSharedData, bool lenient=true);   
 		~XmiDeserializerHandler();
 
     void startDocument();
