@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
     apr_pool_t *pool;
     rv = apr_pool_create(&pool, NULL);
     if (rv != APR_SUCCESS) {
-      cerr << "ERROR: apr_pool_create() failed. " << endl;
+      cerr << __FILE__ << " ERROR: apr_pool_create() failed. " << endl;
       return -1;
     }
 
@@ -78,7 +78,7 @@ int main(int argc, char* argv[]) {
     initialize(serviceDesc, pool);   
 
     /*create service*/
-    AMQAnalysisEngineService aeService(serviceDesc,singleton_pMonitor);
+    AMQAnalysisEngineService aeService(serviceDesc,singleton_pMonitor, pool);
     aeService.setTraceLevel(serviceDesc.getTraceLevel());
 
     /*start receiving messages*/ 
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
     /* shutdown */
    // uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService shutting down.");
     cout << __FILE__ << " shutting down." << endl;
-    aeService.stop();
+    aeService.shutdown();
     terminateService();
     
     if (pool) {
