@@ -983,7 +983,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
                       timeIdle, endTime-startTime,
                       xmlstr.str(),false);
         endTime=apr_time_now();
-        iv_pMonitor->processingComplete(command,true,endTime-startTime,
+        iv_pMonitor->processingComplete(iv_id, command,true,endTime-startTime,
           timeToDeserializeCAS, timeInAnalytic, timeToSerializeCAS,
           endTime-startSendResponse);
         LOGINFO(FINE,"Process CAS finished.");		

@@ -518,10 +518,10 @@ class Monitor {
     //All times are in microseconds.
     void processingComplete(int id, int command, bool success, 
       apr_time_t totalTime,
-      apr_time_t deserTime=0,
-      apr_time_t analyticTime=0,
-      apr_time_t serTime=0,
-      apr_time_t sendTime=0) {		  
+      apr_time_t deserTime,
+      apr_time_t analyticTime,
+      apr_time_t serTime,
+      apr_time_t sendTime) {		  
         apr_thread_mutex_lock(mutex);
         iv_messageProcessTime += totalTime;
         iv_sendTime += sendTime;
