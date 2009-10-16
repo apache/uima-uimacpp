@@ -462,7 +462,6 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
 
 //stops receiving messages
   void AMQConnection::stop() {
-    LOGINFO(0,"AMQConnection::stop(). ");
     if (this->iv_pConnection != NULL) {
       this->iv_pConnection->stop();
     } else {
@@ -793,7 +792,8 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
     this->thd = thd;
     cout << "Instance: " << iv_id << " ThreadId: " << apr_os_thread_current() <<  " started." << endl;
     //start receiving messages
-    this->iv_pConnection->start();
+    //this->iv_pConnection->start();
+
     this->iv_stopProcessing = false;
     apr_time_t lastStatsTime = apr_time_now(); 
     while (!iv_stopProcessing) {
@@ -1387,7 +1387,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
     cout << "tracelevel=" << uimacpp_ee_tracelevel << endl;
   }
 
-  void AMQAnalysisEngineService::start() {
+  void AMQAnalysisEngineService::startProcessingThreads() {
     LOGINFO(FINER,"AMQAnalysisEngineService::start() create listener threads.");
     //create the listener threads
     thd_attr=0;
@@ -1406,8 +1406,35 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
 }
 
 
+void AMQAnalysisEngineService::start() {
+  
+  if (iv_pgetMetaConnection != NULL) {
+    cerr << "Startinging GetMetaData instance" << endl;
+    this->iv_pgetMetaConnection->start();
+  }
+  for (size_t i=0; i < iv_vecpConnections.size(); i++) {
+    cerr << "Starting Annotator instance " << i << endl;
+    AMQConnection * connection = iv_vecpConnections.at(i);
+    if (connection != NULL) {
+      connection->start();
+    } else {
+      LOGERROR("AMQAnalysisEngineService::start() Connection object is NULL.");
+      ErrorInfo errInfo;
+      errInfo.setMessage(ErrorMessage(UIMA_MSG_ID_LOG_ERROR, "connection object is NULL."));
+      UIMA_EXC_THROW_NEW(uima::Uima_runtime_error, 
+        UIMA_ERR_RESMGR_COULD_NOT_INITIALIZE_RESOURCE,
+        errInfo.getMessage(),
+        errInfo.getMessage().getMessageID(),
+        ErrorInfo::unrecoverable);
+    }
+  } 
+}	
+
 void AMQAnalysisEngineService::shutdown() {
   //LOGWARN("AMQAnalysisEngineService::shutdown()");
+
+  stop();
+
   cout << "AMQAnalysisEngineService::shutdown() going to terminate threads " << endl;;
   //terminate the threads
   apr_status_t rv;
@@ -1418,10 +1445,10 @@ void AMQAnalysisEngineService::shutdown() {
       apr_thread_join(&rv, this->iv_listenerThreads.at(i));
     }
   }
-  stop();
-  //cout << "AMQAnalysisEngineService::shutdown stopped all connection" << endl;
+  
+  cout << "AMQAnalysisEngineService::shutdown stopped all connection" << endl;
   cleanup();
-  //cout << "AMQAnalysisEngineService::shutdown shutdown done" << endl;
+  cout << "AMQAnalysisEngineService::shutdown shutdown done" << endl;
 }
 
 int AMQAnalysisEngineService::stop() {
@@ -1430,11 +1457,11 @@ int AMQAnalysisEngineService::stop() {
   //stop messages notification
 
   if (iv_pgetMetaConnection != NULL) {
-    cout << "Stopping GetMetaData instance" << endl;
+    cerr << "Stopping GetMetaData instance" << endl;
     this->iv_pgetMetaConnection->stop();
   }
   for (size_t i=0; i < iv_vecpConnections.size(); i++) {
-    cout << "Stopping Annotator instance " << i << endl;
+    cerr << "Stopping Annotator instance " << i << endl;
     AMQConnection * connection = iv_vecpConnections.at(i);
     if (connection != NULL) {
       connection->stop();
@@ -1452,6 +1479,42 @@ int AMQAnalysisEngineService::stop() {
   return 0;
 }	
 
+void  AMQAnalysisEngineService::quiesceAndStop() {
+  
+  quiesce();
+  
+  //shutdown worker threads.
+   cout << "AMQAnalysisEngineService::quiesceAndStop() going to terminate threads " << endl;;
+  if (this->iv_pMonitor->getQuiesceAndStop() ) {
+    for (size_t i=0; i < this->iv_listenerThreads.size(); i++) {
+      //cout << "wait for thread " << i << " to end " << endl;
+      this->iv_listeners[i]->stopProcessing();
+      apr_thread_join(&rv, this->iv_listenerThreads.at(i));
+    }
+  }
+
+  cleanup();
+}
+
+void  AMQAnalysisEngineService::quiesce() {
+  //stop connections - does not work
+  stop();
+
+  //check whether processing threads are finished.
+  bool allfinished = false;
+  while (!allfinished) {
+    allfinished = true;
+    map<int, AMQListener*>::iterator ite; 
+    for (ite= iv_listeners.begin();ite !=  iv_listeners.end();ite++) {
+      if (ite->second->isBusy()) { 
+        allfinished  = false;
+        break;
+      }
+    }
+    Thread::sleep(1000);
+  }
+}
+
   void AMQAnalysisEngineService::cleanup() {
     // Destroy resources.
     try { 
@@ -1463,7 +1526,6 @@ int AMQAnalysisEngineService::stop() {
         this->iv_pgetMetaConnection = 0;
       }
 
-      //cout << "num consumerConnections " << consumerConnections.size() << endl;
       for (size_t i=0; i < iv_vecpConnections.size(); i++) {
         //cout << "deleting consumerConnection " << i << endl;	
         if (iv_vecpConnections.at(i) != NULL) {

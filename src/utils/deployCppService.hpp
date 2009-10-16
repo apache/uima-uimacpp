@@ -60,6 +60,8 @@ static int initialize(ServiceParameters &, apr_pool_t*);
 static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data);
 static int terminateService();
 static void signal_handler(int signum);
+static void* APR_THREAD_FUNC readstdin(apr_thread_t *thd, void *data);
+
 
 
 /**
@@ -317,7 +319,7 @@ class SocketLogger : public uima::Logger {
       rv = apr_socket_send(socket, str.str().c_str(), &len);
 
       if (rv != APR_SUCCESS) {
-        cerr << "apr_socket_send() failed " <<  str.str() << endl;
+        cerr << __FILE__ << __LINE__ <<   " apr_socket_send() failed " <<  str.str() << endl;
       }
       apr_thread_mutex_unlock(mutex);
     }
@@ -349,6 +351,7 @@ class Monitor {
       SocketLogger * logger)         
     {
       iv_status = "Initializing";
+      iv_quiesceandstop=false;
       iv_brokerURL = brokerURL;
       iv_queueName = queueName;
       iv_aeDescriptor = aeDesc;
@@ -389,6 +392,18 @@ class Monitor {
       //  apr_thread_mutex_unlock(lmutex);
       apr_thread_cond_signal(this->cond);
       return ;
+    }
+
+    void setQuiesceAndStop() {
+      //apr_thread_mutex_unlock(mutex);
+      //  apr_thread_mutex_unlock(lmutex);
+      this->iv_quiesceandstop = true;
+      apr_thread_cond_signal(this->cond);
+      return ;
+    }
+
+    bool getQuiesceAndStop() {
+      return iv_quiesceandstop;
     }
 
     const string & getBrokerURL() const {
@@ -668,6 +683,7 @@ class Monitor {
     string iv_status;
     int iv_numInstances;
     int iv_prefetchSize;
+    bool iv_quiesceandstop;
 
     INT64 iv_cpcErrors;
     INT64 iv_getmetaErrors;
@@ -732,7 +748,8 @@ static void signal_handler(int signum) {
   stringstream str;
   str << __FILE__ << __LINE__ << " Received Signal: " << signum;
   cerr << str.str() << endl;
-  singleton_pMonitor->shutdown();
+  //singleton_pMonitor->shutdown();
+  singleton_pMonitor->setQuiesceAndStop();
 }
 
 
@@ -853,14 +870,14 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
   apr_socket_send(cs,"\n", &len);
   cout << "sent 0 to controller " << endl;
   //receive JMX, admin requests from controller 
-  char buf[9];
-  memset(buf,0,9);
-  len = 8;
+  char buf[16];
+  memset(buf,0,16);
+  len = 16;
   while ( (rv = apr_socket_recv(cs, buf, &len)) != APR_EOF) {
     string command = buf;
-    memset(buf,0,9);
-    len=8;
-    //cout << "apr_socket_recv command=" << command << endl;
+    memset(buf,0,16);
+    cout << len << " apr_socket_recv command=" << command << endl;
+    len=16;
     if (command.compare("GETSTATS")==0) {
       //singleton_pLogger->log(LogStream::EnMessage,"deployCppService","getStats","retrieving stats",0);
       singleton_pMonitor->writeStatistics(cs);
@@ -869,6 +886,11 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
       singleton_pLogger->log(uima::LogStream::EnMessage,"deployCppService", "RESET",
         "reset JMX statistics",0);
       singleton_pMonitor->reset();
+    } else if (command.compare("QUIESCEANDSTOP")==0) {
+      singleton_pLogger->log(uima::LogStream::EnMessage,"deployCppService", "QUIESCEANDSTOP",
+        "quiesce and shutdown",0);
+      singleton_pMonitor->setQuiesceAndStop();
+      break;
     } else if (command.compare("SHUTDOWN")==0) {
       singleton_pMonitor->shutdown();
       break;
@@ -891,6 +913,30 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
   cout << "deployCppService::handleCommand() calling shutdown. " << endl;
   singleton_pMonitor->shutdown();
   return NULL;
+}
+
+
+static void* APR_THREAD_FUNC readstdin(apr_thread_t *thd, void *data) {
+  
+  printf ("Enter 'q' to quiesce and stop or 's' to stop:\n ");
+  char str[2];
+  str[0] = '\n';
+
+  
+  while( str[0] == '\n' ) {
+    scanf("%s", str);
+
+    if (str[0] == 's') {
+      singleton_pMonitor->shutdown();
+    } else if (str[0] == 'q') {
+      singleton_pMonitor->setQuiesceAndStop();
+    } else {
+       apr_sleep(1000000);
+       str[0] = '\n';
+       printf ("Enter 'q' to quiesce and stop or 's' to stop:\n ");
+    }
+  }
+  return 0;
 }
 
 #endif

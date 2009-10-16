@@ -328,10 +328,16 @@ public:
 	AMQAnalysisEngineService(ServiceParameters & desc, Monitor * pStatistics, apr_pool_t * pool);
 
 	void setTraceLevel(int level);
+
+  void startProcessingThreads();
 	
 	void start();
 		
 	int stop(); 	
+
+  void quiesce();
+
+  void quiesceAndStop();
 
   void shutdown();
 };

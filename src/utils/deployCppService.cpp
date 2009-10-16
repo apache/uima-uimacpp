@@ -81,12 +81,15 @@ int main(int argc, char* argv[]) {
     AMQAnalysisEngineService aeService(serviceDesc,singleton_pMonitor, pool);
     aeService.setTraceLevel(serviceDesc.getTraceLevel());
 
+    /* create processing threads */
+    aeService.startProcessingThreads();
+
     /*start receiving messages*/ 
     cout << __FILE__ << " Start receiving messages " << endl;
     aeService.start();
 
     cout << __FILE__ << " UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
-      serviceDesc.getBrokerURL() << " Ready to process..." << endl;
+    serviceDesc.getBrokerURL() << " Ready to process..." << endl;
     
     /* connect to java proxy if called from java */  
     apr_thread_t *thread=0;
@@ -97,18 +100,41 @@ int main(int argc, char* argv[]) {
       assert(rv == APR_SUCCESS);
       //rv = apr_thread_join(&rv, thread);
       //assert(rv == APR_SUCCESS);
-    }
+    }  else {
+      apr_thread_t *stdinthread=0;
+      rv = apr_thread_create(&stdinthread, thd_attr, readstdin, 0, pool);
+    }  
 
     //wait 
     apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
     apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
-    cerr << __FILE__ << " Received SHUTDOWN signal " << endl;
-    apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);   
-  
-    /* shutdown */
-   // uima::ResourceManager::getInstance().getLogger().logMessage("deployCppService shutting down.");
-    cout << __FILE__ << " shutting down." << endl;
-    aeService.shutdown();
+    apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);    
+    
+    if (singleton_pMonitor->getQuiesceAndStop()) {
+      cerr << __FILE__ << " " << serviceDesc.getServiceName() << " Quiesce started. " << endl;
+
+      //quiesce 
+      aeService.quiesceAndStop();
+      
+      cerr << __FILE__ << " " << serviceDesc.getServiceName() << " quiesced. " << endl;
+    } else {
+      cerr << __FILE__ << " Shutdown started. " << endl;
+      aeService.shutdown();
+      cerr << __FILE__ << " Shutdown done. " << endl;
+    }
+
+    //notify java controller
+    if (cs) {
+      apr_size_t len = 4;
+      apr_status_t rv = apr_socket_send(cs, "DONE" , &len);
+      len = 1;
+      apr_socket_send(cs,"\n", &len);
+      if (rv != APR_SUCCESS) {
+        cerr << " apr_socket_send() failed sending shutdown notification." << endl;
+      }
+    }  
+
+    /* cleanup */
     terminateService();
     
     if (pool) {
