@@ -63,7 +63,9 @@ UNAME = $(shell uname -s)
 ifeq ($(UNAME), Darwin)
   DLL_SUFFIX=dylib
   SHARED_FLAG=-dynamiclib
-  EXTRA_LINK_LIBS=-lxerces-c -lapr-1.0 -licui18n -licuuc -licuio -licudata
+  EXTRA_LINK_LIBS=-lapr-1.0
+else
+  EXTRA_LINK_LIBS=-lapr-1
 endif
 
 # Uncomment the next line to build 32-bit annotators on a 64-bit OS
