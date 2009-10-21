@@ -1419,11 +1419,16 @@ namespace uima {
               s.append("<rangeTypeName>");
               s.append(fs->getRangeTypeName());
               s.append("</rangeTypeName>");
-			        if (fs->isMultipleReferencesAllowed() ) {
-				        s.append("<multipleReferencesAllowed>");
+              if (0 < fs->getElementType().length() ) {
+                s.append("<elementType>");
+                s.append(fs->getElementType());
+                s.append("</elementType>");
+              }
+              if (fs->isMultipleReferencesAllowed() ) {
+                s.append("<multipleReferencesAllowed>");
                 s.append("true");
                 s.append("</multipleReferencesAllowed>");
-			        }
+              }
               s.append("</featureDescription>");
             }
             s.append("</features>");

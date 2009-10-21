@@ -319,6 +319,7 @@ namespace uima {
     static char const * TAG_TYPE_DESC_FEAT_DESC;
     static char const * TAG_TYPE_DESC_FEAT_DESC_NAME;
     static char const * TAG_TYPE_DESC_FEAT_DESC_RANGE;
+    static char const * TAG_TYPE_DESC_FEAT_DESC_ELEMENT;
     static char const * TAG_TYPE_DESC_FEAT_DESC_DESC;
 	static char const * TAG_TYPE_DESC_FEAT_DESC_MULTREFS;
     static char const * TAG_TYPE_PRIORITIES;

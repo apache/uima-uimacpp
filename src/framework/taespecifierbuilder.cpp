@@ -1101,6 +1101,8 @@ namespace uima {
         featureDesc->setName(getSpannedText(child));
       } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_RANGE) == 0) {
         featureDesc->setRangeTypeName(getSpannedText(child));
+      } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_ELEMENT) == 0) {
+        featureDesc->setElementType(getSpannedText(child));
       } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_DESC) == 0) {
         featureDesc->setDescription(getSpannedText(child));
 	  } else if (childTag.compare(TAG_TYPE_DESC_FEAT_DESC_MULTREFS) == 0) {
@@ -2376,6 +2378,7 @@ void XMLParser::buildFSIndexFromImportLocation(AnalysisEngineMetaData& fsDesc,
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC="featureDescription";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_NAME="name";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_RANGE="rangeTypeName";
+  char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_ELEMENT="elementType";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_DESC="description";
   char const * XMLParser::TAG_TYPE_DESC_FEAT_DESC_MULTREFS="multipleReferencesAllowed";
 
