@@ -1,0 +1,159 @@
+Instructions for creating a uimacpp release or a new build
+
+
+For a new release
+
+1. create a branch for the new release, e.g.
+	svn copy https://svn.apache.org/repos/asf/incubator/uima/uimacpp/trunk https://svn.apache.org/repos/asf/incubator/uima/uimacpp/branches/uimacpp-2.3.0 -m"create branch for 2.3.0 release"
+
+2. if changes are needed, update branch
+
+3. when approved, create a tag for the branch, and merge branch into trunk
+
+
+
+For a new build on Linux
+
+1. create new directory for release candidate and cd there
+	mkdir uimacpp-2.3.0
+	cd uimacpp-2.3.0
+
+2. checkout source from current release branch
+	svn co https://svn.apache.org/repos/asf/incubator/uima/uimacpp/branches/uimacpp-2.3.0
+
+3. do prebuild and create source tree
+	cd uimacpp-2.3.0/src
+	make -f Makefile.prebuild
+	cd ..
+	./buildSrcTree.sh ..
+
+4. create src tarball
+	cd ..
+	tar -czf uimacpp-2.3.0-incubating-src.tgz  uimacpp-2.3.0-incubating
+
+5. rat scan of source
+	java -jar apache-rat-0.6.jar uimacpp-2.3.0-incubating > uimacpp-src-linux-report.txt
+
+6. build, test and create sdk tree
+	cd uimacpp-2.3.0-incubating/src
+	[setup env for the build]
+	make -f Makefile.unix install
+	cd ../docs
+	./builddocs.sh
+	cd ../src/test
+	UIMA_HOME=someGoodUimaSDK ./fvt.sh
+	cd ../..
+	./buildsdk.sh ..
+
+7. create bin tarball
+	cd ..
+	tar -czf uimacpp-2.3.0-incubating-bin.tgz uimacpp
+
+8. rat scan of bin
+	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-linux-report.txt
+
+9. sniff test of base sdk
+	cd uimacpp
+	export UIMACPP_HOME=`pwd`
+	PATH=$PATH:`pwd`/bin
+	export LD_LIBRARY_PATH=`pwd`/lib:`pwd`/examples/src
+	cd examples/src
+	make -f all.mak
+	cd ..
+	./runall.sh
+
+10. sniff test of scriptators (following base sniff test)
+	cd ../scriptators/perl
+	make
+	PATH=$PATH:`pwd`
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
+	runAECpp PerlSample.xml ../../examples/data/
+
+	cd ../python
+	make
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
+	export PYTHONPATH=`pwd`
+	runAECpp PythonSample.xml ../../examples/data/
+
+	cd ../tcl
+	make
+	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
+	runAECpp TclSample.xml ../../examples/data/
+
+11. sniff test of uimacpp service wrapper
+	in a "Uima AS window", run:
+	  startBroker.sh
+	back in the UimaCpp test window:
+	  cd ../../examples
+	  runRemoteAsyncAE.sh tcp://localhost:61616 MeetingAnnotator \
+	  -d tutorial/descriptors/Deploy_MeetingAnnotator.xml
+
+
+
+For a new build on Windows
+
+1. checkout source from current release branch
+	svn co https://svn.apache.org/repos/asf/incubator/uima/uimacpp/branches/uimacpp-2.3.0
+
+3. create source tree
+	./buildSrcTree buildDir
+
+4. create src zipfile of buildDir\uimacpp-2.3.0-incubating as
+	uimacpp-2.3.0-incubating-src.zip
+
+5. rat scan of source
+	cd buildDir
+	java -jar apache-rat-0.6.jar uimacpp-2.3.0-incubating > uimacpp-src-windows-report.txt
+
+6. build, test and create sdk tree
+	cd uimacpp-2.3.0-incubating\src
+	[setup env for the build]
+	winmake /build release
+	winmake /build debug
+	cd ..\docs
+	builddocs
+	cd ..\src\test
+	devenv test.sln /build release
+	set UIMA_HOME=someGoodUimaSDK
+	fvt
+	devenv test.sln /build debug
+	fvt debug
+	cd ..\..
+	buildsdk ..
+
+7. create bin zipfile of buildDir\uimacpp as
+	uimacpp-2.3.0-incubating-bin.zip
+
+8. rat scan of bin
+	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-windows-report.txt
+
+9. sniff test of base sdk
+	cd uimacpp
+	set UIMACPP_HOME=%cd%
+	path=%path%;%cd%\bin;%cd%\examples\src
+	cd examples\src
+	devenv uimacpp-examples.sln /build release
+	cd ..
+	runall
+
+10. sniff test of scriptators (following base sniff test)
+	cd ..\scriptators\perl
+	winmake
+	runAECpp PerlSample.xml ..\..\examples\data\
+
+	cd ..\python
+	winmake
+	runAECpp PythonSample.xml ..\..\examples\data\
+
+	cd ..\tcl
+	winmake
+	runAECpp TclSample.xml ..\..\examples\data\
+
+11. sniff test of uimacpp service wrapper
+	in a "Uima AS window", run:
+	  startBroker
+	back in the UimaCpp test window:
+	  cd ..\..\examples
+	  runRemoteAsyncAE tcp://localhost:61616 MeetingAnnotator \
+	  -d tutorial\descriptors\Deploy_MeetingAnnotator.xml
+
