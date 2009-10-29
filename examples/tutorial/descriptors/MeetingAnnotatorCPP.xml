@@ -61,7 +61,7 @@
 
 		<typeSystemDescription>
 		  <imports>
-		    <import location="../../../../examples/descriptors/tutorial/ex4/TutorialTypeSystem.xml"/>
+		    <import location="TutorialTypeSystem.xml"/>
 		  </imports>
 		</typeSystemDescription>
 
