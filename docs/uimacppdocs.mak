@@ -16,26 +16,9 @@
 # ---------------------------------------------------------------------------
 
 #This makefile builds the UIMACPP documentation
-#Requires Doxygen 1.3.6 and Graphviz 1.8.10 installed and 
-#PATH environment variable must include
-#doxygen/bin;graphviz/bin;graphviz/bin/tools
+#Requires Doxygen 1.3.6
+#PATH must include doxygen command
 #Must be run from the uimacpp/docs subdirectory
-
-#use these to run in WIN environment
-#RM=RD /s /q
-#DEL=del
-#MDFILES=..\docs\html\*.md5
-#MAPFILES=..\docs\html\*.map
-#DOTFILES=..\docs\html\*.dot
-#DOCDIR=..\docs
-
-#use these to run in LINUX environment
-#RM=rm -rf
-#DEL=rm
-#MDFILES=../docs/html/*.md5
-#MAPFILES=../docs/html/*.map
-#DOTFILES=../docs/html/*.dot
-#DOCDIR=../docs
 
 DOXYGENCMD=doxygen
 
@@ -47,14 +30,14 @@ build : ../docs/html/index.html
 	$(DEL) $(MDFILES)
 	$(DEL) $(MAPFILES)
 	$(DEL) $(DOTFILES)
+# can't get doxygen to build correctly without graphical hierarchy
+	$(CP) $(HTMLDIR)hierarchy.html $(HTMLDIR)inherits.html
 
 rebuild : clean build
 
 clean : 
 	@echo deleting $(DOCDIR)/html 
-	$(RM) $(DOCDIR)/html
+	$(RD) $(HTMLDIR)
 	@echo deleting tags file
-	$(RM) $(DOCDIR)/uimadoxytags.tag
-
-
+	$(DEL) uimadoxytags.tag
 

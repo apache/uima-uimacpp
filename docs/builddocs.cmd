@@ -29,17 +29,17 @@ REM   under the License.
 
 :build
 	@echo building uimacpp docs in ..\docs
-	nmake -f uimacppdocs.mak build DEL=DEL RD="RM /s /q" MDFILES=html\*.md5  MAPFILES=html\*.map DOTFILES=html\*.dot DOCDIR=.
+	nmake -f uimacppdocs.mak build CP=copy DEL=DEL RD="RM /s /q" MDFILES=html\*.md5  MAPFILES=html\*.map DOTFILES=html\*.dot HTMLDIR=.\html\
 	goto TheEnd
 
 :rebuild
 	@echo rebuilding uimacpp docs in ..\docs
-	nmake -f uimacppdocs.mak rebuild DEL=DEL RD="RM /s /q" MDFILES=html\*.md5  MAPFILES=html\*.map DOTFILES=html\*.dot DOCDIR=.
+	nmake -f uimacppdocs.mak rebuild CP=copy DEL=DEL RD="RM /s /q" MDFILES=html\*.md5  MAPFILES=html\*.map DOTFILES=html\*.dot HTMLDIR=.\html\
 	goto TheEnd
 
 :clean
 	@echo cleaning uimacpp docs in ..\docs
-	nmake -f uimacppdocs.mak clean DEL=DEL RD="RM /s /q" DOCDIR=.
+	nmake -f uimacppdocs.mak clean RD="RM /s /q" HTMLDIR=.\html\
 	goto TheEnd
 
 :TheEnd
