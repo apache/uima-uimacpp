@@ -17,7 +17,7 @@
 
 #!/bin/sh
 #REM  Builds the UIMACPP doxygen docs.
-#REM	Requires Doxygen 1.3.6 and Graphviz 1.8.10 installed and in the PATH
+#REM	Requires Doxygen 1.3.6 installed and in the PATH
 #REM  This script must be run from the uimacpp/docs subdirectory
 
 if [ -z "$1" ] ; then
@@ -28,11 +28,11 @@ else
 fi
 if [ $cmd  = "build" ] ; then 
 	echo "building docs... "
-	make -f uimacppdocs.mak build DEL=rm RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot DOCDIR=.
+	make -f uimacppdocs.mak build CP=cp DEL='rm -f' RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot HTMLDIR=./html/
 elif [ $cmd = "rebuild" ] ; then
 	echo "rebuilding docs..."
-	make -f uimacppdocs.mak rebuild DEL=rm  RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot DOCDIR=.
+	make -f uimacppdocs.mak rebuild CP=cp DEL='rm -f'  RD='rm -rf' MDFILES=html/*.md5  MAPFILES=html/*.map DOTFILES=html/*.dot HTMLDIR=./html/
 elif [ $cmd = "clean" ] ; then
 	echo "cleaning docs dir..."
-	make -f uimacppdocs.mak clean DEL=rm  RD='rm -rf' DOCDIR=.
+	make -f uimacppdocs.mak clean  DEL='rm -f' RD='rm -rf' HTMLDIR=./html/
 fi
