@@ -74,6 +74,17 @@
            <name>stringArrayFeature</name>
            <description></description>
            <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+           </featureDescription>
+         <featureDescription>
+           <name>stringArrayFeatureMultiRef</name>
+           <description></description>
+           <rangeTypeName>uima.cas.StringArray</rangeTypeName>
+           <multipleReferencesAllowed> true </multipleReferencesAllowed>
+         </featureDescription>
+         <featureDescription>
+          <name>otherAnnotation</name>
+          <description></description>
+          <rangeTypeName>uima.tcas.Annotation</rangeTypeName>
          </featureDescription>
          <featureDescription>
            <name>boolArrayFeature</name>

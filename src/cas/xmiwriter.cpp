@@ -974,6 +974,11 @@ void XmiWriter::write(ostream & os) {
       }
       indexes->push_back(sofa);
       enqueuedFS[tyfs] = indexes;
+      // and look for references
+      // currently this is done for every FS.
+      // This could be done more efficiently 
+      // when enqueueing the incoming FS.
+      findReferencedFSs(fs, false);
       return false;
     }
     // new FS, enqueue it and note the indexed Sofa
