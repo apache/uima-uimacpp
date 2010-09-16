@@ -33,12 +33,11 @@
 
 #include <fstream>
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 #define ASSERT_OR_THROWEXCEPTION(x) assert(x)
 #else
 #define ASSERT_OR_THROWEXCEPTION(x) if (!(x)) { cerr << __FILE__ << ": Error in line " << __LINE__ << endl; exit(1); }
 #endif
-
 #define LOG(x) cout << __FILE__ << __LINE__ << ": " << x << endl
 
 using namespace uima;
@@ -511,6 +510,115 @@ void testOotsComplexCas(internal::CASDefinition * partialCasDef,
   delete cas2;
   delete cas3;
 }  
+
+
+void doTestFSRefReserialization(internal::CASDefinition * casDef) {
+
+  ErrorInfo errInfo;
+  XmiSerializationSharedData sharedData;
+  
+  CAS * cas = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas) );
+  CAS * view = cas->createView("AView");
+  view->setDocumentText(UnicodeString("sample text for AView"));
+
+  Type testType = view->getTypeSystem().getType("test.primitives.Example");
+  ASSERT_OR_THROWEXCEPTION( testType.isValid() );
+  Feature stringF = testType.getFeatureByBaseName("stringFeature");
+  ASSERT_OR_THROWEXCEPTION( stringF.isValid() );
+  Feature beginF = testType.getFeatureByBaseName("begin");
+  ASSERT_OR_THROWEXCEPTION( beginF.isValid() );
+  Feature endF = testType.getFeatureByBaseName("end");
+  ASSERT_OR_THROWEXCEPTION( endF.isValid() );
+  Feature stringArrayF = testType.getFeatureByBaseName("stringArrayFeatureMultiRef");
+  ASSERT_OR_THROWEXCEPTION( stringArrayF.isValid() );
+  Feature otherF = testType.getFeatureByBaseName("otherAnnotation");
+  ASSERT_OR_THROWEXCEPTION( otherF.isValid() );
+  Type annotType = cas->getTypeSystem().getType(CAS::TYPE_NAME_ANNOTATION);
+
+  //get index repository
+  FSIndexRepository & indexRep = view->getIndexRepository();
+
+  //create FS but festures that are FS refs unset
+  FeatureStructure fs = view->createFS(testType);
+  ASSERT_OR_THROWEXCEPTION( fs.isValid() );
+  fs.setStringValue(stringF, "example");
+  indexRep.addFS(fs);
+
+  // Serialize Xmi
+  ofstream outputStream;
+  outputStream.open("temp.xmi");
+  ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
+  XmiWriter xmiwriter(*cas, false);
+  xmiwriter.write(outputStream);
+  outputStream.close();
+
+  // deserialize XMI into another CAS
+  CAS * cas1 = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas1) );
+  XmiDeserializer::deserialize("temp.xmi",*cas1, sharedData);
+
+  CAS * view1 = cas1->getView("AView");
+  // compare
+  ASSERT_OR_THROWEXCEPTION(view1->getAnnotationIndex().getSize() == view->getAnnotationIndex().getSize());
+  ANIterator iter = view1->getAnnotationIndex().iterator();
+  ASSERT_OR_THROWEXCEPTION(iter.isValid());
+  FeatureStructure fs1;
+
+  fs1 = (FeatureStructure) iter.get(); //document  annotation
+  ASSERT_OR_THROWEXCEPTION(fs1.isValid());
+  iter.moveToNext();
+  fs1 = (FeatureStructure) iter.get(); //example fs
+  ASSERT_OR_THROWEXCEPTION(fs1.isValid());
+  ASSERT_OR_THROWEXCEPTION(fs1.getIntValue(beginF) == fs.getIntValue(beginF));
+  ASSERT_OR_THROWEXCEPTION(fs1.getStringValue(stringF).compare(fs.getStringValue(stringF)) == 0);
+  
+  //create FS and set FS ref feature
+  AnnotationFS otherFS = view1->createAnnotation(annotType, 0,10);
+  fs1.setFSValue(otherF, otherFS);
+  //create a StringArray FS and set StringArrayFS ref feature
+  StringArrayFS strArrayFS = view1->createStringArrayFS(5);
+  strArrayFS.set(0,UnicodeString("first string"));
+  strArrayFS.set(1, UnicodeString("second string"));
+  fs1.setFSValue(stringArrayF, strArrayFS);
+
+  //serialize
+  outputStream.open("temp.xmi");
+  ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
+  XmiWriter xmiwriter1(*cas1, false, &sharedData);
+  xmiwriter1.write(outputStream);
+  outputStream.close();
+
+  //deserialize and check that FS reference feature is as expected.
+  CAS * cas2 = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas2) );
+  XmiSerializationSharedData sharedData1;
+  XmiDeserializer::deserialize("temp.xmi",*cas2, sharedData1);
+  CAS * view2 = cas2->getView("AView");
+
+  // check that array refs are not null
+  ASSERT_OR_THROWEXCEPTION(view2->getAnnotationIndex().getSize() == view1->getAnnotationIndex().getSize());
+  iter = view2->getAnnotationIndex().iterator();
+  ASSERT_OR_THROWEXCEPTION(iter.isValid());
+  FeatureStructure fs2;
+  fs2 = (FeatureStructure) iter.get();
+  ASSERT_OR_THROWEXCEPTION(fs2.isValid());
+  iter.moveToNext();
+  fs2 = (FeatureStructure) iter.get();
+  ASSERT_OR_THROWEXCEPTION(fs2.isValid());
+  ASSERT_OR_THROWEXCEPTION(fs2.getStringValue(stringF).compare("example") == 0);
+  AnnotationFS otherfs2 = (AnnotationFS) fs2.getFSValue(otherF);
+  ASSERT_OR_THROWEXCEPTION(otherfs2.isValid());
+  StringArrayFS strArrayFS1 = fs2.getStringArrayFSValue(stringArrayF);
+  ASSERT_OR_THROWEXCEPTION(strArrayFS1.isValid());
+  ASSERT_OR_THROWEXCEPTION(strArrayFS1.size() == 5);
+
+  delete cas;
+  delete cas1;
+  delete cas2;
+}
+
+
 /* ----------------------------------------------------------------------- */
 /*       Main routine                                                      */
 /* ----------------------------------------------------------------------- */
@@ -526,7 +634,6 @@ int main(int argc, char * argv[]) /*
 //   iRetVal = _CrtSetBreakAlloc(662909);
 //#endif
   try {
-
     ResourceManager::createInstance("testxmi");
     ofstream outputStream;
     ErrorInfo errorInfo;
@@ -637,12 +744,12 @@ int main(int argc, char * argv[]) /*
 	  LOG("UIMACPP_XMITEST OOTS Complex CAS with partial typesystem Finished");
 
  		//test that some xml doc fails
-     LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Start");
+    LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Start");
  		UnicodeString someXmlFile("ExampleCas/cas.xml");
-     UnicodeString xmlfn = ResourceManager::resolveFilename(someXmlFile, someXmlFile);
+    UnicodeString xmlfn = ResourceManager::resolveFilename(someXmlFile, someXmlFile);
  		CAS * pCas = Framework::createCAS(*casDef,errorInfo);
 
-     bool bExceptionThrown = false;
+    bool bExceptionThrown = false;
  		try {
  			XmiDeserializer::deserialize(xmlfn, *pCas);
  		} catch (Exception e)  {
@@ -651,9 +758,15 @@ int main(int argc, char * argv[]) /*
  			bExceptionThrown =true;
  		}
  	  ASSERT_OR_THROWEXCEPTION(bExceptionThrown); 
-     LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Finished");
-  	 delete pCas;
+    LOG("UIMACPP_XMITEST Valid XML but not Xmi Cas doc Finished");
+  	delete pCas;
 		
+    //test serialization of FS reference in incoming FS
+    //when reserializing the CAS
+    doTestFSRefReserialization(primitivesCasDef);   
+    LOG("UIMACPP_XMITEST Test reserialization of FS reference Finished");
+
+
     delete partialts;
     delete partialTSCasDef;
     delete primitivests;

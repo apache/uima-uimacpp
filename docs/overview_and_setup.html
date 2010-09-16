@@ -110,6 +110,11 @@ of the annotator is done via the JVM.
 <li>No custom flow controller for aggregates.</li>
 <li>No support for remote delegates in a C++ aggregate.</li>
 <li>No UIMA AS client API</li>
+<li>Import by name not supported when run as a native process
+<ul>
+<b>Note:</b> Import by location supports absolute and relative paths. Relative paths are with respect to the directory of the descriptor doing the import. When run as a native process, relative paths are also searched off directories specified in UIMACPP_DATAPATH.
+</ul>
+</li>
 </ul>
 </p>
 

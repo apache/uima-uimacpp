@@ -741,7 +741,10 @@ namespace uima {
       //attributes
       for (size_t a=0; a < oed->attributes.size(); a++) {
         XmlAttribute * attr = oed->attributes.at(a);
-        os << " " << attr->name << "=\"" << attr->value << "\"";
+        icu::UnicodeString us;
+        icu::UnicodeString av(attr->value.c_str());
+        normalize( av, us );
+        os << " " << attr->name << "=\"" << us << "\"";
       }
       //child elements
       map<string,vector<string>*>::iterator ite ;
@@ -749,8 +752,11 @@ namespace uima {
         ite != oed->childElements.end(); ite++) {
           vector<string> * values = ite->second;
           for (size_t v=0; v < values->size();v++) {
+            icu::UnicodeString us;
+            icu::UnicodeString av(values->at(v).c_str());
+            normalize( av, us );
             strcontent << " <" << ite->first 
-              << ">" << values->at(v) 
+              << ">" << us
               << "</" << ite->first << ">";
           }
         }
@@ -974,6 +980,11 @@ void XmiWriter::write(ostream & os) {
       }
       indexes->push_back(sofa);
       enqueuedFS[tyfs] = indexes;
+      // and look for references
+      // currently this is done for every FS.
+      // This could be done more efficiently 
+      // when enqueueing the incoming FS.
+      findReferencedFSs(fs, false);
       return false;
     }
     // new FS, enqueue it and note the indexed Sofa
@@ -1192,7 +1203,10 @@ void XmiWriter::serializeOutOfTypeSystemElements(ostream & os)  {
     // Add other attributes
     for (size_t a=0; a < oed->attributes.size();a++) {
       XmlAttribute * attr = oed->attributes.at(a);
-      os << " " << attr->name << "=\"" << attr->value << "\"";
+      icu::UnicodeString us;
+      icu::UnicodeString av(attr->value.c_str());
+      normalize( av, us );
+      os << " " << attr->name << "=\"" << us << "\"";
     }
     if (oed->childElements.size() > 0) {
       os << ">";
@@ -1201,8 +1215,11 @@ void XmiWriter::serializeOutOfTypeSystemElements(ostream & os)  {
       for (ite = oed->childElements.begin(); ite != oed->childElements.end();ite++ ) {
         vector<string> * values = ite->second;
         for (size_t v=0; v < values->size(); v++) {
+	        icu::UnicodeString us;
+			icu::UnicodeString av(values->at(v).c_str());
+			normalize( av, us );
           os << " <" << ite->first << ">";
-          os << values->at(v); 
+          os << us;
           os << "</" << ite->first << ">";
         }
       }
