@@ -78,6 +78,7 @@ double doubles[] = {
 bool val = false;
 UnicodeString ustr("this beer is good");
 UnicodeString ustrWithXmlEscapeChars("TestingXmlEscapeChars'\"&><\r\n");
+icu::UnicodeString ustrEmptyString("");
 int begin = 1;
 int end = 5;
 char * viewName = "EnglishDocument";
@@ -266,6 +267,108 @@ void doTestXmlEscapeChars(internal::CASDefinition * casDef) {
   delete cas2;
 }
 
+
+void doTestSetToEmptyString(internal::CASDefinition * casDef, bool settoemptystring) {
+
+  ErrorInfo errInfo;
+  XmiSerializationSharedData sharedData;
+  
+  CAS * cas = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas) );
+  CAS * view = cas->createView("AView");
+  view->setDocumentText(UnicodeString("sample text for AView"));
+
+  Type testType = view->getTypeSystem().getType("test.primitives.Example");
+  ASSERT_OR_THROWEXCEPTION( testType.isValid() );
+  Feature stringF = testType.getFeatureByBaseName("stringFeature");
+  ASSERT_OR_THROWEXCEPTION( stringF.isValid() );
+  Feature beginF = testType.getFeatureByBaseName("begin");
+  ASSERT_OR_THROWEXCEPTION( beginF.isValid() );
+  Feature endF = testType.getFeatureByBaseName("end");
+  ASSERT_OR_THROWEXCEPTION( endF.isValid() );
+  Feature stringArrayF = testType.getFeatureByBaseName("stringArrayFeatureMultiRef");
+  ASSERT_OR_THROWEXCEPTION( stringArrayF.isValid() );
+  Feature otherF = testType.getFeatureByBaseName("otherAnnotation");
+  ASSERT_OR_THROWEXCEPTION( otherF.isValid() );
+  Type annotType = cas->getTypeSystem().getType(CAS::TYPE_NAME_ANNOTATION);
+
+  //get index repository
+  FSIndexRepository & indexRep = view->getIndexRepository();
+
+  //create FS 
+  FeatureStructure fs = view->createFS(testType);
+  ASSERT_OR_THROWEXCEPTION( fs.isValid() );
+  //set value of string fs to emptystring if specified
+  if (settoemptystring)
+    fs.setStringValue(stringF, ustrEmptyString);
+  indexRep.addFS(fs);
+
+  // Serialize Xmi
+  ofstream outputStream;
+  outputStream.open("emptytemp.xmi");
+  ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
+  XmiWriter xmiwriter(*cas, false);
+  xmiwriter.write(outputStream);
+  outputStream.close();
+
+  // deserialize XMI into another CAS
+  CAS * cas1 = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas1) );
+  XmiDeserializer::deserialize("emptytemp.xmi",*cas1, sharedData);
+
+  CAS * view1 = cas1->getView("AView");
+  // compare
+  ASSERT_OR_THROWEXCEPTION(view1->getAnnotationIndex().getSize() == view->getAnnotationIndex().getSize());
+  ANIterator iter = view1->getAnnotationIndex().iterator();
+  ASSERT_OR_THROWEXCEPTION(iter.isValid());
+  FeatureStructure fs1;
+  fs1 = (FeatureStructure) iter.get(); //document  annotation
+  ASSERT_OR_THROWEXCEPTION(fs1.isValid());
+  iter.moveToNext();
+  fs1 = (FeatureStructure) iter.get(); //example fs
+  ASSERT_OR_THROWEXCEPTION(fs1.isValid());
+  ASSERT_OR_THROWEXCEPTION(fs1.getIntValue(beginF) == fs.getIntValue(beginF));
+  ASSERT_OR_THROWEXCEPTION(fs1.isUntouchedFSValue(stringF) == fs.isUntouchedFSValue(stringF));
+  if (settoemptystring) {
+    ASSERT_OR_THROWEXCEPTION( 0==fs1.getStringValue(stringF).compare(fs.getStringValue(stringF)));
+  } else {
+    ASSERT_OR_THROWEXCEPTION(fs1.getStringValue(stringF).getBuffer() == fs.getStringValue(stringF).getBuffer());
+  }
+
+  //reserialize
+  outputStream.open("temp.xmi");
+  ASSERT_OR_THROWEXCEPTION(outputStream.is_open());
+  XmiWriter xmiwriter1(*cas1, false);
+  xmiwriter1.write(outputStream);
+  outputStream.close();
+
+  //deserialize again
+  CAS * cas2 = uima::Framework::createCAS(*casDef, errInfo);
+  ASSERT_OR_THROWEXCEPTION( EXISTS(cas2) );
+  XmiDeserializer::deserialize("temp.xmi",*cas2, sharedData);
+  // compare
+  CAS * view2 = cas2->getView("AView");
+  ASSERT_OR_THROWEXCEPTION(view2->getAnnotationIndex().getSize() == view->getAnnotationIndex().getSize());
+  ANIterator iter2 = view2->getAnnotationIndex().iterator();
+  ASSERT_OR_THROWEXCEPTION(iter2.isValid());
+  FeatureStructure fs2;
+  fs2 = (FeatureStructure) iter2.get(); //document  annotation
+  ASSERT_OR_THROWEXCEPTION(fs2.isValid());
+  iter2.moveToNext();
+  fs2 = (FeatureStructure) iter2.get(); //example fs
+  ASSERT_OR_THROWEXCEPTION(fs2.isValid());
+  ASSERT_OR_THROWEXCEPTION(fs2.getIntValue(beginF) == fs.getIntValue(beginF));
+  ASSERT_OR_THROWEXCEPTION(fs2.isUntouchedFSValue(stringF) == fs.isUntouchedFSValue(stringF));
+  if (settoemptystring) {
+    ASSERT_OR_THROWEXCEPTION( fs1.getStringValue(stringF).compare(fs.getStringValue(stringF)) == 0 );
+  } else {
+    ASSERT_OR_THROWEXCEPTION(fs2.getStringValue(stringF).getBuffer() == fs.getStringValue(stringF).getBuffer());
+  }
+  delete cas;
+  delete cas1;
+  delete cas2;
+
+}
 
 
 void testMultipleSofas(internal::CASDefinition * casDef)  {
@@ -693,7 +796,6 @@ int main(int argc, char * argv[]) /*
 	  doTestXmlEscapeChars(casDef);
 	  LOG("UIMACPP_XMITEST doTestXmlEscapeChars Finished"); 
 
-    
 	  //test OOTS Missing Type 1
 	  TypeSystemDescription * baseTSDesc = new TypeSystemDescription();
 	  TypeSystem * baseTS = Framework::createTypeSystem(*baseTSDesc,"base",errorInfo);
@@ -705,6 +807,12 @@ int main(int argc, char * argv[]) /*
 										errorInfo );
 	  internal::CASDefinition * primitivesCasDef = 
 	  internal::CASDefinition::createCASDefinition(*primitivests);
+
+  //test string feature set to empty string
+	  LOG("UIMACPP_XMITEST doTestSetToEmptyString Start"); 
+	  doTestSetToEmptyString(primitivesCasDef, true);
+	   doTestSetToEmptyString(primitivesCasDef, false);
+	  LOG("UIMACPP_XMITEST doTestSetToEmptyString Finished"); 
 
     LOG("UIMACPP_XMITEST OOTS new primitives missing type Start");
 	  UnicodeString newpxcasFile("ExampleCas/newprimitives.xcas");

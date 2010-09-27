@@ -839,9 +839,10 @@ namespace uima {
         break;
       }
       case internal::gs_tyStringType: {
-        if (featVal.length() > 0) {
+       
+	   // if (featVal.length() > 0) {
           fs.setStringValue(feat, featVal);
-        }
+       // }
         break;
       }
       case internal::gs_tyByteType: {
