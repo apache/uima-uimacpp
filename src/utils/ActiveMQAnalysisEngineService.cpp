@@ -24,12 +24,10 @@
 #include "ActiveMQAnalysisEngineService.hpp"
 #include "deployCppService.hpp"
 
-#include <activemq/concurrent/Thread.h>
-#include <activemq/concurrent/Runnable.h>
-#include <activemq/concurrent/Concurrent.h>
 #include <activemq/core/ActiveMQConnectionFactory.h>
+#include <activemq/core/ActiveMQProducer.h>
 #include <activemq/core/ActiveMQConstants.h>
-#include <activemq/util/Integer.h>
+#include <activemq/core/ActiveMQConnection.h>
 
 #include "uima/xmlwriter.hpp"
 #include "uima/xcasdeserializer.hpp"
@@ -38,14 +36,11 @@
 #include "uima/xmlerror_handler.hpp"
 
 using namespace activemq::core;
-using namespace activemq::util;
-using namespace activemq::exceptions;
-using namespace activemq::concurrent;
 using namespace uima;
 
 enum traceLevels {NONE, INFO, FINE, FINER, FINEST };
 traceLevels uimacpp_ee_tracelevel=INFO;
-#define MSGHEADER   apr_time_now() << " ThreadId: " << Thread::getId() << __FILE__ << ":" << __LINE__ 
+#define MSGHEADER   apr_time_now() << " ThreadId: " << apr_os_thread_current() << __FILE__ << ":" << __LINE__ 
 #define FORMATMSG(x)  stringstream lstr; lstr << MSGHEADER << " " << x;
 
 #define LOGINFO(n,x) { if (n > uimacpp_ee_tracelevel) {} else { FORMATMSG(x); logMessage(lstr.str().c_str()); } }
@@ -76,10 +71,19 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
 //AMQConnection
 //---------------------------------------------------
  ConnectionFactory * AMQConnection::createConnectionFactory(ServiceParameters & params) {
+
+   //encode prefetch size in the broker url as there is no api to set it.
    stringstream str;
-   str << params.getBrokerURL() << "?jms.prefetchPolicy.queuePrefetch=" << params.getPrefetchSize() << endl;
-   ConnectionFactory * pConnFactory = ConnectionFactory::createCMSConnectionFactory(str.str());
-   cout << "AMQConnection()::createConnectionFactory " <<  params.getBrokerURL() << " prefetch=" << params.getPrefetchSize() << endl;
+   str << params.getBrokerURL();
+   if (str.str().find("?") == std::string::npos)
+     str << "?jms.prefetchPolicy.queuePrefetch=" << params.getPrefetchSize() ;
+   else 
+      str << "&jms.prefetchPolicy.queuePrefetch=" << params.getPrefetchSize() ;
+  
+   //str << params.getBrokerURL() << "?consumer.prefetchSize=" << params.getPrefetchSize() << endl;
+   //str << "tcp://127.0.0.1:61616";
+   ConnectionFactory * pConnFactory = ConnectionFactory::createCMSConnectionFactory(params.getBrokerURL());
+   cout << "AMQConnection()::createConnectionFactory " <<  str.str() << endl;
    return pConnFactory;
  };
 
@@ -148,6 +152,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
             stringstream str;
             str << "AMQConnection::initialize() Failed to connect to " << iv_brokerURL
                          << e.getMessage() << ". Retrying..." << endl;
+			cout << e.getMessage() << endl;
             LOGWARN(str.str());
             retrying = true;
             apr_sleep(30000000); //wait 30 seconds to reconnect
@@ -161,7 +166,6 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
 
       //default exception listener
       this->iv_pConnection->setExceptionListener(this);	
-      
       // Create a Producer Session
       LOGINFO(FINEST,"AMQConnection() create Producer Session " + iv_brokerURL);
       this->iv_pProducerSession = this->iv_pConnection->createSession( Session::AUTO_ACKNOWLEDGE );
@@ -192,8 +196,11 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
           ErrorInfo::unrecoverable);
       }
       this->iv_pProducer->setDeliveryMode( DeliveryMode::NON_PERSISTENT );
-
-      //create TextMessage
+	  
+	  //TODO set sendTimeout ?
+      ////((ActiveMQProducer*)this->iv_pProducer)->setSendTimeout(3000);
+      
+	  //create TextMessage
       this->iv_pReplyMessage = this->iv_pProducerSession->createTextMessage();
       if (this->iv_pReplyMessage == NULL) {
         LOGERROR("AMQConnection() create textMessage failed. ");
@@ -278,7 +285,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
 
 /* create a MessageConsumer session and register a MessageListener
    to receive messages from the input queue. */
-  void AMQConnection::createMessageConsumer(string queueName, string selector) {
+  void AMQConnection::createMessageConsumer(string queueName, string selector, int prefetchSize) {
     LOGINFO(FINEST, "AMQConnection::createMessageConsumer() consumer start " + queueName);
     this->iv_inputQueueName = queueName;
     stringstream str;
@@ -327,6 +334,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
     }
 
     iv_selector = selector;
+	this->iv_prefetchSize = prefetchSize;
     if (selector.length() > 0) {
       this->iv_pConsumer = this->iv_pConsumerSession->createConsumer(this->iv_pInputQueue, iv_selector);
     } else {
@@ -345,7 +353,9 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
         errInfo.getMessage().getMessageID(),
         ErrorInfo::unrecoverable);
     }
-    
+    //set prefetch size
+	//no api to set prefetchsize so encode in broker url;
+
     LOGINFO(FINEST, "AMQConnection::createMessageConsumer() " + queueName + " successful.");
   }
 
@@ -359,7 +369,6 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
                        << iv_brokerURL << " is broken. Reconnecting ... " << ex.getMessage() << endl;
     LOGWARN(str.str());
   }
- 
 
   TextMessage * AMQConnection::getTextMessage() {
     if (this->iv_pReplyMessage == NULL) {
@@ -423,7 +432,9 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
   }
 
   void AMQConnection::sendMessage(const Destination * cmsReplyTo) {
-    LOGINFO(FINEST, "AMQConnection::sendMessage() to " + cmsReplyTo->toProviderString());
+    LOGINFO(FINEST, "AMQConnection::sendMessage() to " +
+ ((Queue*)cmsReplyTo)->getQueueName() );
+    //LOGINFO(FINEST, "AMQConnection::sendMessage() to " + cmsReplyTo->toProviderString());
     if (this->iv_pProducer == NULL) {
       LOGERROR("AMQConnection::getTextMessage Invalid message producer. ");
       ErrorInfo errInfo;
@@ -435,11 +446,11 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
         ErrorInfo::unrecoverable);
     }
     this->iv_pProducer->send(cmsReplyTo,this->iv_pReplyMessage);
-
     //cout << "producer->send elapsed time " << (apr_time_now() - stime) << endl;
     this->iv_pReplyMessage->clearBody();
     this->iv_pReplyMessage->clearProperties();
-    LOGINFO(4, "AMQConnection::sendMessage() successful to " + cmsReplyTo->toProviderString());
+    LOGINFO(4, "AMQConnection::sendMessage() successful to " + ((Queue*)cmsReplyTo)->getQueueName());
+	//LOGINFO(4, "AMQConnection::sendMessage() successful to " + cmsReplyTo->toProviderString());
   }
 
 // must be called to start receiving messages 
@@ -524,7 +535,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
         apr_sleep(30000000); //wait 30 seconds to reconnect
         //cout << "AMQConnection::reconnect() calling initialize >>>" << endl;
         this->initialize();
-        this->createMessageConsumer(this->iv_inputQueueName,this->iv_selector);
+        this->createMessageConsumer(this->iv_inputQueueName,this->iv_selector, this->iv_prefetchSize);
         this->start();
         stringstream str;
         str << "AMQConnection::reconnect() Successfully reconnected to >>> " <<  iv_brokerURL << endl;
@@ -773,12 +784,19 @@ bool AMQListener::validateRequest(const TextMessage * textMessage, string & errm
            LOGERROR("AMQListener::validateRequest " + errmsg);
            valid=false;
         } 
-        string text = textMessage->getText().c_str();
-        if (text.length() == 0) {
-          errmsg = "There is no payload data. Nothing to process.";
-          LOGERROR("AMQListener::validateRequest " + errmsg);
-          valid = false;  
-        }
+		
+		try {
+          string text = textMessage->getText().c_str();
+          if (text.length() == 0) {
+            errmsg = "There is no payload data. Nothing to process.";
+            LOGERROR("AMQListener::validateRequest " + errmsg);
+            valid = false;  
+          }
+		} catch (CMSException& e) {
+			errmsg = e.getMessage();
+			LOGERROR("AMQListener::validateRequest " + e.getMessage());
+			valid = false;
+		}
       }
     }
   }
@@ -918,7 +936,8 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
         int payload = textMessage->getIntProperty("Payload");
         //get the text in the payload 
         string text = textMessage->getText().c_str();
-
+        UnicodeString utext(text.c_str());
+		text = UnicodeStringRef(utext).asUTF8();
         astr.str("");
         astr << "Payload: " << payload << " Content: " << text ;
         LOGINFO(FINER, astr.str());
@@ -930,6 +949,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
 
         //reset the CAS
         iv_pCas->reset();
+        ios::openmode mode = ios::binary;
         stringstream xmlstr;  
         //deserialize payload data into the CAS,
         //call AE process method and serialize
@@ -969,6 +989,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
           LOGINFO(FINEST, "AMQListener::handleRequest() calling serialize.");
           XmiWriter xmiwriter(*iv_pCas, true, &sharedData);
           xmiwriter.write(xmlstr);
+          //cout << "SERIALIZED CAS " << xmlstr.str() << endl;
           timeToSerializeCAS = apr_time_now() - startSerialize;
           LOGINFO(FINEST, "AMQListener::handleRequest() done processing CAS.");
         }
@@ -1149,12 +1170,13 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
        LOGINFO(INFO,str.str());
 
        if (cmsReplyTo != NULL) {
-         str << " to " << cmsReplyTo->toProviderString();
+         str << " to " << ((Queue*)cmsReplyTo)->getQueueName();
        } else {
          str << " to " << request->getStringProperty("MessageFrom") 
            << " at " << serverURI;
        }
        str << " Message text: " << msgContent;
+       //std::cout << "****Reply" << msgContent << std::endl;
        LOGINFO(FINEST,"PRINT Reply message:\n" + str.str());	
 
        //send
@@ -1218,6 +1240,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
       //create connection factory
       LOGINFO(FINEST,"AMQAnalysisEngineService::initialize() Create connection factory");
       this->iv_pConnFact = AMQConnection::createConnectionFactory(params);
+	  
       if (iv_pConnFact == NULL) {
         ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
         msg.addParam("AMQAnalysisEngineService::initialize() Failed to create connection factory.");
@@ -1318,7 +1341,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
         this->iv_listeners[i] = newListener;
         //cout << __FILE__ << __LINE__ << "AMQAnalysisEngineService::initialize() create message consumer " << endl;
         //create MessageConsumer session and register Listener       
-        this->iv_vecpConnections.at(i)->createMessageConsumer(iv_inputQueueName,annotator_selector);  
+        this->iv_vecpConnections.at(i)->createMessageConsumer(iv_inputQueueName,annotator_selector, params.getPrefetchSize());  
      } 
      
      iv_pMonitor->setNumberOfInstances(iv_numInstances);
@@ -1360,7 +1383,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
       }
       this->iv_listeners[this->iv_numInstances] = newListener; 
       iv_pgetMetaConnection->createMessageConsumer(iv_inputQueueName, 
-                      getmeta_selector); 
+                      getmeta_selector,0); 
       this->iv_pMonitor->setGetMetaListenerId(iv_numInstances);
       //cout <<  __FILE__ << __LINE__ << "AMQAnalysisEngineService::initialize() done" << endl;
     } catch (uima::Exception e) {
@@ -1511,7 +1534,8 @@ void  AMQAnalysisEngineService::quiesce() {
         break;
       }
     }
-    Thread::sleep(1000);
+    //Thread::sleep(1000);
+	apr_sleep(1000000);
   }
 }
 

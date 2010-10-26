@@ -84,6 +84,7 @@ private:
   MessageListener * iv_pListener;
   TextMessage * iv_pReceivedMessage;
   string iv_selector;
+  int iv_prefetchSize;
 	
   //producer session
   Session * iv_pProducerSession;
@@ -93,7 +94,6 @@ private:
   
   void initialize();
 public:
-
   static ConnectionFactory * createConnectionFactory(ServiceParameters & params);
   
 	/** Establish connection to the broker and create a Message Producer session. 
@@ -103,7 +103,7 @@ public:
   /** Creates a MessageConsumer session and registers a listener. 
       Caller owns the listener. */
 	//void createMessageConsumer(string aQueueName); 
-  void createMessageConsumer(string aQueueName, string selector); 
+  void createMessageConsumer(string aQueueName, string selector, int prefetchSize); 
  	
   /** destructor */
 	~AMQConnection();

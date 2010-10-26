@@ -25,7 +25,7 @@
 #include "deployCppService.hpp"
 #include <activemq/core/ActiveMQConsumer.h>
 using namespace activemq::exceptions;
-using namespace std;
+
 int shutdown_service;
 //===================================================
 //Main
@@ -47,7 +47,6 @@ int main(int argc, char* argv[]) {
   cout << __FILE__ << " Starting the UIMA C++ Remote Service using ActiveMQ broker." << std::endl;
  // cout << "-----------------------------------------------------\n";
   // _CrtSetBreakAlloc(1988);
-
   try {
     if (argc < 3) {
       printUsage();
@@ -85,7 +84,7 @@ int main(int argc, char* argv[]) {
     aeService.startProcessingThreads();
 
     /*start receiving messages*/ 
-    cout << __FILE__ << " Start receiving messages " << endl;
+    cout << __FILE__ << __LINE__  << " Start receiving messages " << endl;
     aeService.start();
 
     cout << __FILE__ << " UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
@@ -193,6 +192,7 @@ int main(int argc, char* argv[]) {
   //cout << "-----------------------------------------------------\n";    
   cout << __FILE__ " UIMA C++ Remote Service terminated:\n";
   //cout << "=====================================================\n";    
+
    exit(0);
 
 }  //main
