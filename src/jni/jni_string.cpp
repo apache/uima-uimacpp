@@ -62,7 +62,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 //CosClCCSID::CosEnCCSID JNIUString::iv_enSystemCCSID = CosClCCSID::getSystemCCSID();
 
 JNIStringABase::JNIStringABase(JNIEnv* jeEnv, jstring jsString) :

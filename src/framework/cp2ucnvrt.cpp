@@ -58,7 +58,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 namespace uima {
 
   CodePage2UnicodeConverter::CodePage2UnicodeConverter( const char * crConverterName) :

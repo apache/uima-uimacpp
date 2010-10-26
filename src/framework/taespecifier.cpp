@@ -43,7 +43,7 @@
 #include "uima/config_param.hpp"
 #include "uima/taespecifier.hpp"
 #include "uima/caswriter_abase.hpp"
-
+using namespace std;
 namespace uima {
   UIMA_EXC_CLASSIMPLEMENT(ConfigParamLookupException, ConfigException);
 

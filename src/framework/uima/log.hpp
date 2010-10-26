@@ -125,9 +125,9 @@ namespace uima {
     virtual ~Logger() { }
 
     virtual void log(LogStream::EnEntryType entrytype, 
-                  string classname,
-                  string methodname,
-                  string message,
+                  std::string classname,
+                  std::string methodname,
+                  std::string message,
                   long errorCode)  =0;
 
   };
@@ -140,19 +140,19 @@ namespace uima {
     */
   class UIMA_LINK_IMPORTSPEC FileLogger : public  Logger {
     public:
-      FileLogger(string filename);
+      FileLogger(std::string filename);
       ~FileLogger() {fclose(iv_logfile);}
       
       virtual void log(LogStream::EnEntryType entrytype, 
-                  string classname,
-                  string methodname,
-                  string message,
+                  std::string classname,
+                  std::string methodname,
+                  std::string message,
                   long errorCode) ;
       
     private:
       /** Format the log message */
       std::string format(LogStream::EnEntryType enType,
-                        const string & cpszMsg, 
+                        const std::string & cpszMsg, 
                         long lUserCode) ;
 
       FILE * iv_logfile;
@@ -266,7 +266,7 @@ namespace uima {
     ErrorInfo         iv_errInfo;
     LogStream         iv_logStream;
     LogStream::EnEntryType   iv_logLevel;
-    vector<Logger*> & vecLoggers;
+    std::vector<Logger*> & vecLoggers;
     
     /* --- functions --- */
     TyMessageId       getTypeAsMessageId(LogStream::EnEntryType enType) const;

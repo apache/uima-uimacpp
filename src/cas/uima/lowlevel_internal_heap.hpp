@@ -93,11 +93,11 @@ namespace uima {
         // end of current allocated heap segment
         T* iv_pTLastHeapCell;
         // all starts of all used segments so far (most recently allocated first)
-        vector<T*> iv_vecUsedSegments;
+	std::vector<T*> iv_vecUsedSegments;
         // all ends of all used segments so far (most recently allocated first)
-        vector<T*> iv_vecUsedSegmentEnds;
+	std::vector<T*> iv_vecUsedSegmentEnds;
         // all tops of all used segments so far (most recently allocated first)
-        vector<T*> iv_vecUsedSegmentTops;
+	std::vector<T*> iv_vecUsedSegmentTops;
 
         // next available cell on heap
         WORD32 iv_topOfHeap;

@@ -60,7 +60,7 @@
 /*       Types / Classes                                                   */
 /* ----------------------------------------------------------------------- */
 
-
+using namespace std;
 namespace uima {
 
   ////////////////////////////////////////////////////////////////////////
@@ -350,12 +350,14 @@ namespace uima {
     f.getRangeType(t); 
     assert( t.isValid() );
     if ( t == iv_stringType || t.isStringSubType() ) {
+      if (!fs.isUntouchedFSValue(f) ) {
       UnicodeStringRef ref = fs.getStringValue(f);
       if (ref.getBuffer() != NULL) {
         icu::UnicodeString us;
         normalize( ref, us );
         os << " " << f.getName() << "=\"";
         os << us << "\"";
+      }
       }
     } else if (t == iv_integerType) {
       os << " " << f.getName() << "=\"";

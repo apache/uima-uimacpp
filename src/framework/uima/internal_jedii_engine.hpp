@@ -97,7 +97,7 @@ namespace uima {
 
 
       // temporary string pool for deserialized strings
-      vector<icu::UnicodeString> iv_stringPool;
+      std::vector<icu::UnicodeString> iv_stringPool;
 
       // 0: not set, 1: primitive, 2: aggregate
       int iv_isPrimitive;
@@ -125,19 +125,19 @@ namespace uima {
       void checkForUnexpectedJNIException();
 
       // functions to convert C++ data structures to the Java equivalent
-      jintArray createJIntArray(vector<uima::internal::SerializedCAS::TyNum> const & v);
-      jbyteArray createJByteArray(vector<char> const & v);
-      jshortArray createJShortArray(vector<short> const & v);
-      jlongArray createJLongArray(vector<INT64> const & v);
+      jintArray createJIntArray(std::vector<uima::internal::SerializedCAS::TyNum> const & v);
+      jbyteArray createJByteArray(std::vector<char> const & v);
+      jshortArray createJShortArray(std::vector<short> const & v);
+      jlongArray createJLongArray(std::vector<INT64> const & v);
 
 
-      jobjectArray createJStringArray(vector<UnicodeStringRef> const & v);
+      jobjectArray createJStringArray(std::vector<UnicodeStringRef> const & v);
       jstring createJString(UnicodeStringRef const & ref);
-      void createIntVector(jintArray ar, vector<uima::internal::SerializedCAS::TyNum>& result);
-      void createStringVector(jobjectArray ar, vector<UnicodeStringRef>& result, vector<icu::UnicodeString> & pool);
-      void createByteVector(jbyteArray ar, vector<char>& result);
-      void createShortVector(jshortArray ar, vector<short>& result);
-      void createLongVector(jlongArray ar, vector<long>& result);
+      void createIntVector(jintArray ar, std::vector<uima::internal::SerializedCAS::TyNum>& result);
+      void createStringVector(jobjectArray ar, std::vector<UnicodeStringRef>& result, std::vector<icu::UnicodeString> & pool);
+      void createByteVector(jbyteArray ar,std:: vector<char>& result);
+      void createShortVector(jshortArray ar, std::vector<short>& result);
+      void createLongVector(jlongArray ar, std::vector<long>& result);
       // initialize a Java VM to iv_obj
       void initializeJavaVM();
       // destroy the Java VM

@@ -53,7 +53,7 @@
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
 
-
+using namespace std;
 namespace uima {
   UIMA_EXC_CLASSIMPLEMENT(InvalidFSTypeObjectException, CASException);
   UIMA_EXC_CLASSIMPLEMENT(InvalidFSFeatureObjectException, CASException);

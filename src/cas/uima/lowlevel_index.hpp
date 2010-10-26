@@ -117,7 +117,7 @@ namespace uima {
        * Precondition: All types must be subsumed by the type of this index
        * (i.e. <code>getType()</code>.
        */
-      virtual IndexIterator* createTypeSetIterator(set<uima::lowlevel::TyFSType> const & crTypes) const = 0;
+      virtual IndexIterator* createTypeSetIterator(std::set<uima::lowlevel::TyFSType> const & crTypes) const = 0;
 
       /**
        * create a filtered iterator over this index which filter
@@ -133,7 +133,7 @@ namespace uima {
        * A value != NULL is returned _only_ if the implementing class actually
        * uses a vector internally to store the FSs.
        */
-      virtual vector<uima::lowlevel::TyFS> const * getVector() const {
+      virtual std::vector<uima::lowlevel::TyFS> const * getVector() const {
         return NULL;
       }
 

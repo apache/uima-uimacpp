@@ -206,14 +206,14 @@ namespace uima {
 	void buildTypePriorityFromImportLocation(AnalysisEngineMetaData  & aeDesc,
         icu::UnicodeString const & fileName,
         icu::UnicodeString const & lastFileName,
-        vector<icu::UnicodeString> & alreadyImported);
+						 std::vector<icu::UnicodeString> & alreadyImported);
 	void buildFSIndexFromImportLocation(AnalysisEngineMetaData  &aeMetaData,
                                         icu::UnicodeString const &  importfn,
-                                        vector<icu::UnicodeString> & alreadyImported,
+					    std::vector<icu::UnicodeString> & alreadyImported,
                                         icu::UnicodeString const &  lastFileName);
     void buildFSIndexCollection(AnalysisEngineMetaData & aeMetaData,
                                 DOMElement * specElem,
-                                vector<icu::UnicodeString> & alreadyImported,
+                                std::vector<icu::UnicodeString> & alreadyImported,
                                 icu::UnicodeString const &  lastFileName);
     FSIndexDescription * buildFSIndexDesc(DOMElement * specElem);
     FSIndexKeyDescription * buildFSIndexKeyDesc(DOMElement * specElem);
@@ -244,7 +244,7 @@ namespace uima {
 	void buildTypePriorities(AnalysisEngineMetaData & aeMetaData,
                                 DOMElement * specElem,
 								icu::UnicodeString const & lastFileName,
-                                vector<icu::UnicodeString> & alreadyImported);
+				 std::vector<icu::UnicodeString> & alreadyImported);
    
 	void buildFSIndexes(AnalysisEngineMetaData & aeDesc, DOMElement * specElem);
 	void buildFSIndexes(AnalysisEngineMetaData::TyVecpFSIndexDescriptions & desc, DOMElement * specElem);
@@ -425,7 +425,7 @@ namespace uima {
      /**@deprecated*/
     void buildConfigParamSettings(AnalysisEngineMetaData & aeDesc, DOMElement * specElem);
      /**@deprecated*/
-    void buildTypePriorities(AnalysisEngineMetaData & aeDesc, DOMElement * specElem, icu::UnicodeString const & xmlFileLoc, vector<icu::UnicodeString> & alreadyImported);
+    void buildTypePriorities(AnalysisEngineMetaData & aeDesc, DOMElement * specElem, icu::UnicodeString const & xmlFileLoc, std::vector<icu::UnicodeString> & alreadyImported);
      /**@deprecated*/
     void buildTypePriorities(AnalysisEngineMetaData::TyVecpTypePriorities & typePriorityDesc, DOMElement * specElem);
 	 /**@deprecated*/

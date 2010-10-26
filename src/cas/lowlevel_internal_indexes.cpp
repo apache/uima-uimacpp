@@ -59,6 +59,7 @@
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
 
+using namespace std;
 namespace uima {
   namespace lowlevel {
     namespace internal {

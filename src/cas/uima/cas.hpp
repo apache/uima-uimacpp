@@ -220,9 +220,9 @@ namespace uima {
     // absolute Sofa counter
     int iv_sofaCount;
     // maps sofaNum to Cas views
-    map<int, CAS*> iv_sofa2tcasMap;
+    std::map<int, CAS*> iv_sofa2tcasMap;
     // maps sofaNum to index repository
-    vector<uima::lowlevel::IndexRepository *> iv_sofa2indexMap;
+    std::vector<uima::lowlevel::IndexRepository *> iv_sofa2indexMap;
     // reference to one-and-only base CAS
     CAS* iv_baseCas;
     // reference to one-and-only initial View

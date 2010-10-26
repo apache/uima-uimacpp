@@ -149,30 +149,30 @@ namespace uima {
     public:
       UnicodeStringRef iv_ulstrDocument;
 
-      vector<TyNum> iv_vecTypeInheritanceTable;
-      vector<TyNum> iv_vecFeatureDefinitionTable;
-      vector<UnicodeStringRef> iv_vecTypeSymbolTable;
-      vector<UnicodeStringRef> iv_vecFeatureSymbolTable;
-      vector<TyNum> iv_vecFeatureOffsetTable;
-      vector<TyNum> iv_vecTypePriorityTable;
+      std::vector<TyNum> iv_vecTypeInheritanceTable;
+      std::vector<TyNum> iv_vecFeatureDefinitionTable;
+      std::vector<UnicodeStringRef> iv_vecTypeSymbolTable;
+      std::vector<UnicodeStringRef> iv_vecFeatureSymbolTable;
+      std::vector<TyNum> iv_vecFeatureOffsetTable;
+      std::vector<TyNum> iv_vecTypePriorityTable;
 
-      vector<TyNum> iv_stringSubTypes;
-      vector<UnicodeStringRef> iv_stringSubTypeValues;
-      vector<TyNum> iv_stringSubTypeValuePos;
+      std::vector<TyNum> iv_stringSubTypes;
+      std::vector<UnicodeStringRef> iv_stringSubTypeValues;
+      std::vector<TyNum> iv_stringSubTypeValuePos;
 
-      vector<UnicodeStringRef> iv_vecIndexIDTable;
-      vector<TyNum> iv_vecComparatorDefinitionTable;
-      vector<TyNum> iv_vecComparatorStartTable;
-      vector<TyNum> iv_vecIndexKindTable;
+      std::vector<UnicodeStringRef> iv_vecIndexIDTable;
+      std::vector<TyNum> iv_vecComparatorDefinitionTable;
+      std::vector<TyNum> iv_vecComparatorStartTable;
+      std::vector<TyNum> iv_vecIndexKindTable;
 
-      vector<TyNum> iv_vecFSHeapArray;
-      vector<UnicodeStringRef> iv_vecStringSymbolTable;
+      std::vector<TyNum> iv_vecFSHeapArray;
+      std::vector<UnicodeStringRef> iv_vecStringSymbolTable;
 
-      vector<TyNum> iv_vecIndexedFSs;
+      std::vector<TyNum> iv_vecIndexedFSs;
 
-      vector<char> iv_vecByteHeapArray;
-      vector<short> iv_vecShortHeapArray;
-      vector<INT64> iv_vecLongHeapArray;
+      std::vector<char> iv_vecByteHeapArray;
+      std::vector<short> iv_vecShortHeapArray;
+      std::vector<INT64> iv_vecLongHeapArray;
 
 
     public:
@@ -181,56 +181,56 @@ namespace uima {
       ~SerializedCAS();
 
       // type system
-      vector<TyNum> const & getTypeInheritanceTable() const {
+      std::vector<TyNum> const & getTypeInheritanceTable() const {
         return iv_vecTypeInheritanceTable;
       }
 
-      vector<TyNum> const & getFeatureDefinitionTable() const {
+      std::vector<TyNum> const & getFeatureDefinitionTable() const {
         return iv_vecFeatureDefinitionTable;
       }
 
-      vector<UnicodeStringRef> const & getTypeSymbolTable() const {
+      std::vector<UnicodeStringRef> const & getTypeSymbolTable() const {
         return iv_vecTypeSymbolTable;
       }
 
-      vector<UnicodeStringRef> const & getFeatureSymbolTable() const {
+      std::vector<UnicodeStringRef> const & getFeatureSymbolTable() const {
         return iv_vecFeatureSymbolTable;
       }
 
-      vector<TyNum> const & getFeatureOffsetTable() const {
+      std::vector<TyNum> const & getFeatureOffsetTable() const {
         return iv_vecFeatureOffsetTable;
       }
 
-      vector<TyNum> const & getTypePriorityTable() const {
+      std::vector<TyNum> const & getTypePriorityTable() const {
         return iv_vecTypePriorityTable;
       }
 
-      vector<TyNum> const & getStringSubTypes() const {
+      std::vector<TyNum> const & getStringSubTypes() const {
         return iv_stringSubTypes;
       }
 
-      vector<UnicodeStringRef> const & getStringSubTypeValues() const {
+      std::vector<UnicodeStringRef> const & getStringSubTypeValues() const {
         return iv_stringSubTypeValues;
       }
 
-      vector<TyNum> const & getStringSubTypeValuePos() const {
+      std::vector<TyNum> const & getStringSubTypeValuePos() const {
         return iv_stringSubTypeValuePos;
       }
 
       // index definition
-      vector<UnicodeStringRef> const & getIndexIDTable() const {
+      std::vector<UnicodeStringRef> const & getIndexIDTable() const {
         return iv_vecIndexIDTable;
       }
 
-      vector<TyNum> const & getComparatorDefinitionTable() const {
+      std::vector<TyNum> const & getComparatorDefinitionTable() const {
         return iv_vecComparatorDefinitionTable;
       }
 
-      vector<TyNum> const & getComparatorStartTable() const {
+      std::vector<TyNum> const & getComparatorStartTable() const {
         return iv_vecComparatorStartTable;
       }
 
-      vector<TyNum> const & getIndexKindTable() const {
+      std::vector<TyNum> const & getIndexKindTable() const {
         return iv_vecIndexKindTable;
       }
 
@@ -240,33 +240,33 @@ namespace uima {
       }
 
       // fsheap
-      vector<TyNum> const & getFSHeapArray() const {
+      std::vector<TyNum> const & getFSHeapArray() const {
         return iv_vecFSHeapArray;
       }
 
       // 8bit heap
-      vector<char> const & getByteHeapArray() const {
+      std::vector<char> const & getByteHeapArray() const {
         return iv_vecByteHeapArray;
       }
 
       // 16bit heap
-      vector<short> const & getShortHeapArray() const {
+      std::vector<short> const & getShortHeapArray() const {
         return iv_vecShortHeapArray;
       }
 
       // 8bit heap
-      vector<INT64> const & getLongHeapArray() const {
+      std::vector<INT64> const & getLongHeapArray() const {
         return iv_vecLongHeapArray;
       }
 
 
 
-      vector<UnicodeStringRef> const & getStringSymbolTable() const {
+      std::vector<UnicodeStringRef> const & getStringSymbolTable() const {
         return iv_vecStringSymbolTable;
       }
 
       // indexes
-      vector<TyNum> const & getIndexedFSs() const {
+      std::vector<TyNum> const & getIndexedFSs() const {
         return iv_vecIndexedFSs;
       }
 
@@ -286,7 +286,7 @@ namespace uima {
         return iv_vecStringSymbolTable.size() + 64;
       }
 
-      void print(ostream &) const;
+      void print(std::ostream &) const;
     };
 
   }

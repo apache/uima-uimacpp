@@ -86,29 +86,29 @@ namespace uima {
       CAS & iv_cas;
 
       // iv_indexes[t][i] is the ith index registered for type t.
-      vector<vector<internal::SingleIndex*> > iv_indexes;
+      std::vector<std::vector<internal::SingleIndex*> > iv_indexes;
 
       // idMaximalTypeMapping[t][id] is the position of the index with id
       //  at indexes[t]
-      vector<map<IndexDefinition::TyIndexID, size_t> > iv_idMaximalTypeMapping;
+      std::vector<std::map<IndexDefinition::TyIndexID, size_t> > iv_idMaximalTypeMapping;
 
       // idNonMaximalTypeIndexes[t][i] is the composite index for a nonmaximal type
       //  with id
-      vector<map<IndexDefinition::TyIndexID, internal::CompositeIndex*> > iv_idNonMaximalTypeIndexes;
+      std::vector<std::map<IndexDefinition::TyIndexID, internal::CompositeIndex*> > iv_idNonMaximalTypeIndexes;
 
       // iv_cacheDirtyFlags[t] contains all composite indexes which do
       // not have to be updated. If a new FS of type t is added to the index
       // iv_cacheDirtyFlags[t] is cleared.
-      vector<set<IndexABase const *> > iv_cacheDirtyFlags;
+      std::vector<std::set<IndexABase const *> > iv_cacheDirtyFlags;
 
       // iv_isUsed[t] indicates if index for this type has something in it
       // iv_usedIndexes is list of indexes with something in it
-      vector<bool> iv_isUsed;
-      vector<int>  iv_usedIndexes;
+      std::vector<bool> iv_isUsed;
+      std::vector<int>  iv_usedIndexes;
 
       //constains FSs which have been added to the IndexRepository but
       //do not have an index definition in this CAS.
-      vector<TyFS> iv_undefinedindex;
+      std::vector<TyFS> iv_undefinedindex;
 
       bool iv_bIsInitialized;
 
@@ -123,7 +123,7 @@ namespace uima {
       internal::SingleIndex* getSingleIndexForFS(TyFS fs, IndexDefinition::TyIndexID const & crID);
       internal::SingleIndex* getSingleIndexForType(TyFSType tyType, IndexDefinition::TyIndexID const & crID);
 
-      vector<internal::SingleIndex*> const & getAllSingleIndexesForType(TyFSType tyType) const;
+      std::vector<internal::SingleIndex*> const & getAllSingleIndexesForType(TyFSType tyType) const;
 
       void createIndex(TyFSType t, internal::IndexFactory* fac, IndexDefinition::TyIndexID const & id, bool bIsPermanent);
 
@@ -158,13 +158,13 @@ namespace uima {
         return iv_rFSHeap;
       }
 
-      void getUsedIndexes(vector<TyFSType>& fillit);
+      void getUsedIndexes(std::vector<TyFSType>& fillit);
       
 	  //only used for serialization
-	  void getIndexedFSs(vector<TyFS>& fillit);
+      void getIndexedFSs(std::vector<TyFS>& fillit);
 
 #ifndef NDEBUG
-      void print(ostream&) const;
+	  void print(std::ostream&) const;
 #endif
 
       /**
@@ -240,8 +240,8 @@ namespace uima {
     inline internal::SingleIndex* IndexRepository::getSingleIndexForType(TyFSType tyType, IndexDefinition::TyIndexID const & crID) {
       assert( iv_bIsInitialized );
       assert( tyType < iv_idMaximalTypeMapping.size() );
-      map<IndexDefinition::TyIndexID, size_t> const & aMap = iv_idMaximalTypeMapping[tyType];
-      map<IndexDefinition::TyIndexID, size_t>::const_iterator it = aMap.find(crID);
+      std::map<IndexDefinition::TyIndexID, size_t> const & aMap = iv_idMaximalTypeMapping[tyType];
+      std::map<IndexDefinition::TyIndexID, size_t>::const_iterator it = aMap.find(crID);
       assert( it != iv_idMaximalTypeMapping[tyType].end() );
       size_t idIndex = (*it).second;
       assert( idIndex < iv_indexes[tyType].size() );
@@ -255,7 +255,7 @@ namespace uima {
       return getSingleIndexForType(type, crID);
     }
 
-    inline vector<internal::SingleIndex*> const & IndexRepository::getAllSingleIndexesForType(TyFSType tyType) const {
+    inline std::vector<internal::SingleIndex*> const & IndexRepository::getAllSingleIndexesForType(TyFSType tyType) const {
       assert( iv_bIsInitialized );
       assert( tyType < iv_idMaximalTypeMapping.size() );
       assert( iv_rFSHeap.getTypeSystem().isValidType(tyType) );
@@ -268,9 +268,9 @@ namespace uima {
       TyFSType type = iv_rFSHeap.getType(fs);
       UIMA_TPRINT("Removing fs of type " << iv_rFSHeap.getTypeSystem().getTypeName(type) << ": " << (int) fs);
       assert( type < iv_indexes.size() );
-      vector<internal::SingleIndex*>& typeIndexes = iv_indexes[type];
+      std::vector<internal::SingleIndex*>& typeIndexes = iv_indexes[type];
 
-      vector<internal::SingleIndex*>::iterator it;
+      std::vector<internal::SingleIndex*>::iterator it;
       for (it = typeIndexes.begin(); it != typeIndexes.end(); ++it) {
         assert( (*it)->getType() == type );
         (*it)->remove(fs);

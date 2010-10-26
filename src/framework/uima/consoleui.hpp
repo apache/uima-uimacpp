@@ -102,8 +102,8 @@ namespace uima {
         iv_bQuiet = bQuiet;
       }
 
-      ostream &                  getOutputStream(void) const               {
-        return cout;
+      std::ostream &                  getOutputStream(void) const               {
+        return std::cout;
       }
 
       /** display a field and a value with padding so value starts at col 40
@@ -222,13 +222,13 @@ namespace uima {
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::formatHeader(const char * cpszMsg) const {
       if (iv_bQuiet) return;
-      cout << endl << "  " << cpszMsg << "\n  " << gs_cpszLine+2;
+      std::cout << std::endl << "  " << cpszMsg << "\n  " << gs_cpszLine+2;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::header(const char * cpszMsg) const {
       if (iv_bQuiet) return;
-      cout << endl << "  " << gs_cpszLine+2 << iv_szProcessName << ": " << cpszMsg << endl;
+      std::cout << std::endl << "  " << gs_cpszLine+2 << iv_szProcessName << ": " << cpszMsg << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
@@ -236,88 +236,88 @@ namespace uima {
       if (iv_bQuiet) return;
       int len = strlen(cpszMsg);
       if ( len > gi_maxlen ) len = gi_maxlen;
-      cout << "  " << cpszMsg << gs_cpszFiller+len;      // Pad out to col 40
+      std::cout << "  " << cpszMsg << gs_cpszFiller+len;      // Pad out to col 40
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::format(const char * cpszField, const char * cpszValue) const {
       if (iv_bQuiet) return;
       format(cpszField);
-      cout << cpszValue << endl;
+      std::cout << cpszValue << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::format(const char * cpszField, long lValue) const {
       if (iv_bQuiet) return;
       format(cpszField);
-      cout << lValue << endl;
+      std::cout << lValue << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::format(const char * cpszField, unsigned long ulValue) const {
       if (iv_bQuiet) return;
       format(cpszField);
-      cout << ulValue << endl;
+      std::cout << ulValue << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::formatBool(const char * cpszField, bool bValue) const {
       if (iv_bQuiet) return;
       format(cpszField);
-      cout << (bValue ? "YES" : "NO") << endl;
+      std::cout << (bValue ? "YES" : "NO") << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::horizontalBar(void) const {
       if (iv_bQuiet) return;
-      cout << gs_cpszLine << endl;
+      std::cout << gs_cpszLine << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::newline(void) const {
       if (iv_bQuiet) return;
-      cout << endl;
+      std::cout << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::displayUsage(void) const {
-      cout << endl << "Usage: " << iv_szProcessName << endl
+      std::cout << std::endl << "Usage: " << iv_szProcessName << std::endl
       << iv_cpszUsage[0] << iv_cpszUsage[1] << BEEP;
       ::exit(1);
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::displayHelp(void) const {
-      cout << endl << "Help: " << iv_cpszHelp;
+      std::cout << std::endl << "Help: " << iv_cpszHelp;
       ::exit(1);
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::info(const char * cpszMsg) const {
       if (iv_bQuiet) return;
-      cout << endl << gs_cpszLine << iv_szProcessName << ": " << cpszMsg << endl;
+      std::cout << std::endl << gs_cpszLine << iv_szProcessName << ": " << cpszMsg << std::endl;
 
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::warning(const char * cpszMsg1, const char * cpszMsg2) const {
-      cerr << "WARNING: " << cpszMsg1;
+      std::cerr << "WARNING: " << cpszMsg1;
       if ( cpszMsg2 != NULL )
-        cerr << cpszMsg2;
-      cerr << endl;
+	std::cerr << cpszMsg2;
+      std::cerr << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::error(const char * cpszMsg) const {
-      cerr << "ERROR: " << cpszMsg << endl;
+      std::cerr << "ERROR: " << cpszMsg << std::endl;
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::fatal(int iErrcode, const char * cpszMsg1 , const char * cpszMsg2) const {
-      cerr << "FATAL ERROR: " << iErrcode << " " << cpszMsg1;
+      std::cerr << "FATAL ERROR: " << iErrcode << " " << cpszMsg1;
       if ( cpszMsg2 != NULL )
-        cerr << cpszMsg2;
-      cerr << endl;
+	std::cerr << cpszMsg2;
+      std::cerr << std::endl;
       ::exit((int) iErrcode);
     }
 
@@ -377,13 +377,13 @@ namespace uima {
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::progressStep(void) {
       if (iv_bQuiet) return;
-      cout << gs_progressChars[iv_uiProgressInd++ % 4];
+      std::cout << gs_progressChars[iv_uiProgressInd++ % 4];
     }
 
     /* ----------------------------------------------------------------------- */
     inline void ConsoleUI::progressStop(void) const {
       if (iv_bQuiet) return;
-      cout << "\r                                                                                \r";
+      std::cout << "\r                                                                                \r";
     }
 
 

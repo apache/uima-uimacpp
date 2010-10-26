@@ -370,7 +370,7 @@ namespace uima {
     _initFromString(crclString);
   }
 
-  inline string
+  inline std::string
   Language::asString( void ) const {
     return (iv_locale);
   }

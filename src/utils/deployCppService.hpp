@@ -32,7 +32,7 @@
 #include <apr_thread_cond.h>
 #include <apr_signal.h>
 #include <apr_portable.h>
-
+using namespace std;
 class SocketLogger;
 class Monitor;
 class AMQAnalysisEngineService;
@@ -86,7 +86,7 @@ class ServiceParameters {
         cout << asString() << endl;
     }	
 
-    string ServiceParameters::asString() {
+    string asString() {
       stringstream str;
       str << "AE descriptor " <<  iv_aeDescriptor 
         << " Initial FSHeap size " << this->iv_initialfsheapsize

@@ -95,7 +95,7 @@ public:
     return uima::UnicodeStringRef( (UChar const *) iv_cpjcData, iv_ulLength );
   }
 
-  void convertToSystemCodePage(string& rsResult);
+  void convertToSystemCodePage(std::string& rsResult);
 
 };
 

@@ -95,9 +95,8 @@ namespace uima {
    */
   class UIMA_LINK_IMPORTSPEC AnnotatorContext {
   public:
-    typedef map < icu::UnicodeString, AnnotatorContext * > TyMapDelegateAnCs;
-    //BSI
-    typedef map < icu::UnicodeString, SofaID * > TyMapSofaMappings;
+    typedef std::map < icu::UnicodeString, AnnotatorContext * > TyMapDelegateAnCs;
+    typedef std::map < icu::UnicodeString, SofaID * > TyMapSofaMappings;
 
 
 
@@ -129,13 +128,13 @@ namespace uima {
     /** returns string parameter values as UTF-8 string
      * Caller assumes ownership of objects in the vector
      */
-    TyErrorId extractValue(const icu::UnicodeString & paramName, vector<std::string*> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & paramName, std::vector<std::string*> & returnValues) const;
 
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::string & value) const;
     /** returns string parameter values as UTF-8 string
      * Caller assumes ownership of objects in the vector
      */
-    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, vector<std::string*> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::vector<std::string*> & returnValues) const;
     /** @} */
 
 
@@ -214,24 +213,24 @@ namespace uima {
     **/
     /*@{*/
     TyErrorId extractValue(const icu::UnicodeString & paramName, bool & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & paramName, vector<bool> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & paramName, std::vector<bool> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & paramName, int & value) const;
     TyErrorId extractValue(const icu::UnicodeString & paramName, size_t & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & paramName, vector<int> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & paramName, std::vector<int> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & paramName, float & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & paramName, vector<float> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & paramName, std::vector<float> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & paramName, icu::UnicodeString & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & paramName, vector<icu::UnicodeString> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & paramName, std::vector<icu::UnicodeString> & returnValues) const;
 
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, bool & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, vector<bool> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::vector<bool> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, int & value) const;
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, size_t & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, vector<int> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::vector<int> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, float & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, vector<float> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::vector<float> & returnValues) const;
     TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, icu::UnicodeString & value) const;
-    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, vector<icu::UnicodeString> & returnValues) const;
+    TyErrorId extractValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, std::vector<icu::UnicodeString> & returnValues) const;
     /** @} */
 
     /** Release contents of string container filled by extractValue.
@@ -243,7 +242,7 @@ namespace uima {
      * Useful when caller and callee use different heaps, 
      * e.g. when debug code uses a release library.
      */
-    void release(vector<std::string*> & returnValues) const;
+    void release(std::vector<std::string*> & returnValues) const;
 
     /**
      * Returns true iff the parameter paramName is defined for this
@@ -321,7 +320,7 @@ namespace uima {
     * In this case, no group names of any parents will be included in the result,
     * as <code>extractValue</code> on this AnC with these group names would fail.
     **/
-    const set <icu::UnicodeString> getGroupNamesForParameter(const icu::UnicodeString & paramName) const;
+    const std::set <icu::UnicodeString> getGroupNamesForParameter(const icu::UnicodeString & paramName) const;
 
 
 
@@ -339,41 +338,41 @@ namespace uima {
     /*@{*/
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const bool & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< bool > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< bool > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const size_t & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< size_t > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< size_t > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const int & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< int > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< int > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const float & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< float > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< float > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const double & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< double > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< double > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & paramName, const icu::UnicodeString & value);
-    TyErrorId assignValue(const icu::UnicodeString & paramName, const vector< icu::UnicodeString > & value);
+    TyErrorId assignValue(const icu::UnicodeString & paramName, const std::vector< icu::UnicodeString > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const bool & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< bool > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< bool > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const int & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< int > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< int > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const size_t & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< size_t > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< size_t > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const float & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< float > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< float > & value);
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const double & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< double > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< double > & value);
 
 
     TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const icu::UnicodeString & value);
-    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const vector< icu::UnicodeString > & value);
+    TyErrorId assignValue(const icu::UnicodeString & groupName, const icu::UnicodeString & paramName, const std::vector< icu::UnicodeString > & value);
 
     /** @} */
 
@@ -488,7 +487,7 @@ namespace uima {
 
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & paramName,
-      vector<bool> & returnValues) const {
+					   std::vector<bool> & returnValues) const {
     NameValuePair const * pResult = findNameValuePair(paramName);
     if (pResult != NULL) {// a value has been found
       returnValues = pResult->extractBoolValues();
@@ -521,7 +520,7 @@ namespace uima {
 
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & paramName,
-      vector<int> & returnValues) const {
+					   std::vector<int> & returnValues) const {
     NameValuePair const * pResult = findNameValuePair(paramName);
     if (pResult != NULL) {// a value has been found
       returnValues = pResult->extractIntValues();
@@ -543,7 +542,7 @@ namespace uima {
 
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & paramName,
-      vector<float> & returnValues) const {
+					   std::vector<float> & returnValues) const {
     NameValuePair const * pResult = findNameValuePair(paramName);
     if (pResult != NULL) {// a value has been found
       returnValues = pResult->extractFloatValues();
@@ -565,7 +564,7 @@ namespace uima {
 
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & paramName,
-      vector<icu::UnicodeString> & returnValues) const {
+					   std::vector<icu::UnicodeString> & returnValues) const {
     NameValuePair const * pResult = findNameValuePair(paramName);
     if (pResult != NULL) {// a value has been found
       returnValues = pResult->extractStringValues();
@@ -590,7 +589,7 @@ namespace uima {
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & groupName,
       const icu::UnicodeString & paramName,
-      vector<bool> & returnValues) const {
+					   std::vector<bool> & returnValues) const {
     NameValuePair const * pResult =
       findNameValuePair(groupName, paramName, iv_pTaeSpecifier->getSearchStrategy());
     if (pResult != NULL) {// a value has been found
@@ -629,7 +628,7 @@ namespace uima {
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & groupName,
       const icu::UnicodeString & paramName,
-      vector<int> & returnValues) const {
+					   std::vector<int> & returnValues) const {
     NameValuePair const * pResult =
       findNameValuePair(groupName, paramName, iv_pTaeSpecifier->getSearchStrategy());
     if (pResult != NULL) {// a value has been found
@@ -655,7 +654,7 @@ namespace uima {
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & groupName,
       const icu::UnicodeString & paramName,
-      vector<float> & returnValues) const {
+					   std::vector<float> & returnValues) const {
     NameValuePair const * pResult =
       findNameValuePair(groupName, paramName, iv_pTaeSpecifier->getSearchStrategy());
     if (pResult != NULL) {// a value has been found
@@ -681,7 +680,7 @@ namespace uima {
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & groupName,
       const icu::UnicodeString & paramName,
-      vector<icu::UnicodeString> & returnValues) const {
+					   std::vector<icu::UnicodeString> & returnValues) const {
     NameValuePair const * pResult =
       findNameValuePair(groupName, paramName, iv_pTaeSpecifier->getSearchStrategy());
     if (pResult != NULL) {// a value has been found
@@ -709,7 +708,7 @@ namespace uima {
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & groupName,
       const icu::UnicodeString & paramName,
-      vector<std::string*> & returnValues) const {
+					   std::vector<std::string*> & returnValues) const {
     NameValuePair const * pResult =
       findNameValuePair(groupName, paramName, iv_pTaeSpecifier->getSearchStrategy());
     if (pResult != NULL) {// a value has been found
@@ -732,7 +731,7 @@ namespace uima {
 
   inline
   TyErrorId AnnotatorContext::extractValue(const icu::UnicodeString & paramName,
-      vector<std::string*> & returnValues) const {
+					   std::vector<std::string*> & returnValues) const {
     NameValuePair const * pResult = findNameValuePair(paramName);
     if (pResult != NULL) {// a value has been found
       pResult->extractSingleByteStringValues(returnValues);

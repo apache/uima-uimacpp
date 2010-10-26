@@ -60,6 +60,7 @@
 #include "uima/taespecifierbuilder.hpp"
 #include "uima/xmlerror_handler.hpp"
 
+using namespace std;
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
 /* ----------------------------------------------------------------------- */

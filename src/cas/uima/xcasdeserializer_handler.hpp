@@ -78,9 +78,9 @@ namespace uima {
   class UIMA_LINK_IMPORTSPEC FSInfo  {
   public:
     int addr;
-    vector<int>* indexRep;
+    std::vector<int>* indexRep;
 
-    FSInfo(int addr, vector<int>* indexRep)  {
+    FSInfo(int addr, std::vector<int>* indexRep)  {
       this->addr = addr;
       this->indexRep = indexRep;
     }
@@ -159,18 +159,18 @@ namespace uima {
     int sofaTypeCode;
 
     // Store IndexRepositories in a vector;
-    vector<uima::lowlevel::IndexRepository *> indexRepositories;
+    std::vector<uima::lowlevel::IndexRepository *> indexRepositories;
 
     // Store CAS Views in a vector
-    vector<CAS*> tcasInstances;
+    std::vector<CAS*> tcasInstances;
 
     //store FS information for end of document processing
-    map<int, FSInfo*> fsTree;
-    vector<FSInfo*> idLess;
+    std::map<int, FSInfo*> fsTree;
+    std::vector<FSInfo*> idLess;
 
     //maps for deserializing v1.x format XCAS documents
-    vector<int> sofaRefMap;
-    vector<int> indexMap;
+    std::vector<int> sofaRefMap;
+    std::vector<int> indexMap;
     int nextIndex;
 
 

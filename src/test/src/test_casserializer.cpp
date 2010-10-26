@@ -37,6 +37,7 @@
 #include "uima/internal_casdeserializer.hpp"
 #include <sys/stat.h>
 
+using namespace std;
 using namespace uima;
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */

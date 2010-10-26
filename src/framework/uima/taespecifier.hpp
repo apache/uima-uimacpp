@@ -156,7 +156,7 @@ namespace uima {
   **/
   class  UIMA_LINK_IMPORTSPEC FSIndexDescription : public MetaDataObject {
   public:
-    typedef vector < FSIndexKeyDescription * > TyVecpFSIndexKeys;
+    typedef std::vector < FSIndexKeyDescription * > TyVecpFSIndexKeys;
     enum EnIndexKind {
       SORTED, BAG, SET
     };
@@ -261,7 +261,7 @@ namespace uima {
     * <code>node</code> must uniquely identify an annotator.
     **/
     virtual EnFlowType const & getFlowConstraintsType()=0;
-    virtual  vector < icu::UnicodeString > const & getNodes() const = 0;
+    virtual  std::vector < icu::UnicodeString > const & getNodes() const = 0;
     virtual TyErrorId addNode(const icu::UnicodeString & node)=0;
 
   };
@@ -290,12 +290,12 @@ namespace uima {
       return UIMA_ERR_NONE;
     }
 
-    vector < icu::UnicodeString > const & getNodes() const {
+    std::vector < icu::UnicodeString > const & getNodes() const {
       return(iv_nodes);
     }
   private:
     EnFlowType iv_type;
-    vector<icu::UnicodeString> iv_nodes;
+    std::vector<icu::UnicodeString> iv_nodes;
   };
 
   class  UIMA_LINK_IMPORTSPEC CapabilityLanguageFlow : public FlowConstraints {
@@ -316,12 +316,12 @@ namespace uima {
       return UIMA_ERR_NONE;
     }
 
-    vector < icu::UnicodeString > const & getNodes() const {
+    std::vector < icu::UnicodeString > const & getNodes() const {
       return(iv_nodes);
     }
   private:
     EnFlowType iv_type;
-    vector<icu::UnicodeString> iv_nodes;
+    std::vector<icu::UnicodeString> iv_nodes;
   };
 
 
@@ -351,15 +351,15 @@ namespace uima {
       NONE, DEFAULT_FALLBACK, LANGUAGE_FALLBACK
     };
 
-    typedef vector <Capability *> TyVecpCapabilities;
-    typedef vector <FSIndexDescription *> TyVecpFSIndexDescriptions;
-    typedef vector<TypePriority *> TyVecpTypePriorities;
+    typedef std::vector <Capability *> TyVecpCapabilities;
+    typedef std::vector <FSIndexDescription *> TyVecpFSIndexDescriptions;
+    typedef std::vector<TypePriority *> TyVecpTypePriorities;
 
-    typedef vector<ImportDescription *> TyVecpFSIndexImportDescriptions;
-    typedef vector<ImportDescription *> TyVecpTypePriorityImportDescriptions;
+    typedef std::vector<ImportDescription *> TyVecpFSIndexImportDescriptions;
+    typedef std::vector<ImportDescription *> TyVecpTypePriorityImportDescriptions;
 
-    typedef map <icu::UnicodeString, ConfigurationGroup> TyConfigGroup;
-    typedef map <icu::UnicodeString, SettingsForGroup> TyConfigSettings;
+    typedef std::map <icu::UnicodeString, ConfigurationGroup> TyConfigGroup;
+    typedef std::map <icu::UnicodeString, SettingsForGroup> TyConfigSettings;
 
 
     AnalysisEngineMetaData()
@@ -699,7 +699,7 @@ namespace uima {
     * @return The names of all groups in this specifier that define <code>paramName</code>.
     * May contain duplicate group names.
     **/
-    const vector < icu::UnicodeString > getGroupNamesForParameter(const icu::UnicodeString & paramName) const;
+    const std::vector < icu::UnicodeString > getGroupNamesForParameter(const icu::UnicodeString & paramName) const;
 
 
   private:
@@ -749,7 +749,7 @@ namespace uima {
     **/
     void generateFallbackGroups(const icu::UnicodeString & groupName,
                                 EnSearchStrategy strategy,
-                                vector < icu::UnicodeString> & fallbackGroups);
+                                std::vector < icu::UnicodeString> & fallbackGroups);
 
     /**
     * Adds a configuration group named <code>groupName</code>.
@@ -808,7 +808,7 @@ namespace uima {
     * These parameters will be added explicitly in the calls to <code>getConfigurationParameters</code>.
     * 
     **/
-    const vector <icu::UnicodeString> getConfigurationGroupNames() const;
+    const std::vector <icu::UnicodeString> getConfigurationGroupNames() const;
 
     /**
     * @return All <code>ConfigurationParameter</code>s defined for <code>groupName</code>.
@@ -816,7 +816,7 @@ namespace uima {
     * as well.
     * Returns an empty vector if <code>groupName</code> does not exist.
     **/
-    const vector <const ConfigurationParameter *> getConfigurationParameters(const icu::UnicodeString & groupName) const;
+    const std::vector <const ConfigurationParameter *> getConfigurationParameters(const icu::UnicodeString & groupName) const;
 
 
     //internally, we store configuration parameters and settings always in groups
@@ -867,7 +867,7 @@ namespace uima {
     friend class CasDefinition;
 
     typedef std::map<icu::UnicodeString, AnalysisEngineDescription *> TyMapDelegateSpecs;
-    typedef vector <SofaMapping *> TyVecpSofaMappings;
+    typedef std::vector <SofaMapping *> TyVecpSofaMappings;
 
     enum EnFrameworkImplName {
       CPLUSPLUS, JAVA

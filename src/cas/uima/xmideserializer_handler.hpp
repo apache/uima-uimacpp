@@ -148,10 +148,10 @@ namespace uima {
     int sofaTypeCode;
 
     // Store IndexRepositories in a vector;
-    vector<uima::lowlevel::IndexRepository *> indexRepositories;
+    std::vector<uima::lowlevel::IndexRepository *> indexRepositories;
 
     // Store CAS Views in a vector
-    vector<CAS*> tcasInstances;
+    std::vector<CAS*> tcasInstances;
 
     int nextIndex;
 
@@ -159,29 +159,29 @@ namespace uima {
 		int createByteArray(UnicodeString& currentArrayElements, int currentArrayId);
 		void remapFSListHeads(int addr);
 
-		void tokenize(UnicodeString&, vector<string>&);
-		int createIntList(  vector<string>& featVal);
-		int createFloatList(  vector<string>& featVal);
-		int createStringList(  vector<string>& featVal);
-		int createFSList(  vector<string>& featVal);
+		void tokenize(UnicodeString&, std::vector<std::string>&);
+		int createIntList(  std::vector<std::string>& featVal);
+		int createFloatList( std::vector<std::string>& featVal);
+		int createStringList(  std::vector<std::string>& featVal);
+		int createFSList(  std::vector<std::string>& featVal);
 
 		void addArrayElement(lowlevel::TyFS addr,lowlevel::TyFSType arrayType, 
-											int arrayPos, string & buffer);
+											int arrayPos, std::string & buffer);
 
 		void handleFeature(lowlevel::TyFS addr, UnicodeString & featName,
-												vector<string> & featVal);
+												std::vector<std::string> & featVal);
 
 		void handleFeature(lowlevel::TyFS addr, lowlevel::TyFSFeature featCode,
-								lowlevel::TyFSType rangeTypeCode,vector<string> & featVal);
+								lowlevel::TyFSType rangeTypeCode,std::vector<std::string> & featVal);
 
 		int createArray(  lowlevel::TyFSType typeCode,
-								vector<string>& featVal, int xmiID);
+								std::vector<std::string>& featVal, int xmiID);
 
 		void processView(int sofaXmiId, UnicodeString & membersString) ;
 		int getFsAddrForXmiId(int xmiId);
 		void addToOutOfTypeSystemData(XmlElementName * xmlElementName, const Attributes & attrs);
 		void addOutOfTypeSystemFeature(OotsElementData * ootsElem, 
-					UnicodeString & featName, vector<UnicodeString> & featVals);
+					UnicodeString & featName, std::vector<UnicodeString> & featVals);
 
 		// container for data shared between the XmiCasSerialier and
 		// XmiDeserializer, to support things such as consistency of IDs across
@@ -195,15 +195,15 @@ namespace uima {
 
 		// Store address of every FS we've deserialized, since we need to back
 		// and apply fix-ups afterwards.
-		vector<int> deserializedFsAddrs;
+		std::vector<int> deserializedFsAddrs;
 
 		// map from namespace prefixes to URIs.
-		map<UnicodeString, UnicodeString> nsPrefixToUriMap;
+		std::map<UnicodeString, UnicodeString> nsPrefixToUriMap;
 		// map from xmi namespace  to uima namespace 
-		map<UnicodeString, UnicodeString> xmiNamespaceToUimaNamespaceMap;
+		std::map<UnicodeString, UnicodeString> xmiNamespaceToUimaNamespaceMap;
 
 		//typename - values
-		map<UnicodeString, vector<UnicodeString>* > multiValuedFeatures; 
+		std::map<UnicodeString, std::vector<UnicodeString>* > multiValuedFeatures; 
 		int ignoreDepth;
 
 		// The type of the most recently created FS. Needed for arrays, also
@@ -223,7 +223,7 @@ namespace uima {
 		// from multivalued properties.
 		// These are special because their "head" feature needs remapping but their "tail" feature
 		// doesn't.
-		vector<int> fsListNodesFromMultivaluedProperties;
+		std::vector<int> fsListNodesFromMultivaluedProperties;
 		bool lenient;
 
 		static char const  * XMI_ID_ATTR_NAME;

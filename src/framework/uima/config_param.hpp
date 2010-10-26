@@ -220,22 +220,22 @@ namespace uima {
     TyErrorId               addValue(const icu::UnicodeString & value);
 
     bool                    extractBoolValue() const;
-    vector<bool> const &    extractBoolValues() const;
+    std::vector<bool> const &    extractBoolValues() const;
 
     int                     extractIntValue() const;
-    vector<int> const &     extractIntValues() const;
+    std::vector<int> const &     extractIntValues() const;
 
     float                   extractFloatValue() const;
-    vector<float> const &   extractFloatValues() const;
+    std::vector<float> const &   extractFloatValues() const;
 
     icu::UnicodeString const &          extractStringValue() const;
-    vector<icu::UnicodeString> const &  extractStringValues() const;
+    std::vector<icu::UnicodeString> const &  extractStringValues() const;
 
     //Returns a  UTF-8 string
     std::string extractSingleByteStringValue() const;
     //converts array of values  from UTF-16 to UTF-8
     //Caller assumes memory ownership of string objects in vector
-    void extractSingleByteStringValues( vector<std::string*> & values) const;
+    void extractSingleByteStringValues( std::vector<std::string*> & values) const;
 
 
   private:
@@ -266,7 +266,7 @@ namespace uima {
     ~ConfigurationGroup();
 
     void commit() {
-      map<icu::UnicodeString, ConfigurationParameter *>::iterator entries;
+      std::map<icu::UnicodeString, ConfigurationParameter *>::iterator entries;
       for (entries = iv_configParams.begin(); entries != iv_configParams.end(); entries++) {
         entries->second->commit();
       }
@@ -288,7 +288,7 @@ namespace uima {
     * returns TRUE iff a configuration parameter<code>paramName</code>exists in this group.
     **/
     bool hasConfigurationParameter(const icu::UnicodeString & paramName) const {
-      map<icu::UnicodeString, ConfigurationParameter *>::const_iterator ite = iv_configParams.find(paramName);
+      std::map<icu::UnicodeString, ConfigurationParameter *>::const_iterator ite = iv_configParams.find(paramName);
       return(ite != iv_configParams.end());
     }
 
@@ -297,7 +297,7 @@ namespace uima {
     * if no such parameter is found.
     **/
     const ConfigurationParameter * getConfigurationParameter(const icu::UnicodeString & paramName) const {
-      map<icu::UnicodeString, ConfigurationParameter *>::const_iterator ite = iv_configParams.find(paramName);
+      std::map<icu::UnicodeString, ConfigurationParameter *>::const_iterator ite = iv_configParams.find(paramName);
       if (ite != iv_configParams.end()) {
         return ite->second;
       } else {
@@ -305,10 +305,10 @@ namespace uima {
       }
     }
 
-    const vector <const ConfigurationParameter *> getConfigurationParameters() const;
+    const std::vector <const ConfigurationParameter *> getConfigurationParameters() const;
 
   private:
-    map<icu::UnicodeString, ConfigurationParameter *> iv_configParams;
+    std::map<icu::UnicodeString, ConfigurationParameter *> iv_configParams;
 
   };
 
@@ -321,7 +321,7 @@ namespace uima {
         :MetaDataObject(), iv_nameValuePairs() {}
 
     ~SettingsForGroup() {
-      map<icu::UnicodeString, NameValuePair *>::iterator entries = iv_nameValuePairs.begin();
+      std::map<icu::UnicodeString, NameValuePair *>::iterator entries = iv_nameValuePairs.begin();
       while (entries != iv_nameValuePairs.end()) {
         delete (*entries).second;
         entries++;
@@ -350,7 +350,7 @@ namespace uima {
     * Returns the<code>NameValuePair</code>whose name equals<code>paramName</code>or NULL if no such object can be found.
     **/
     NameValuePair * getNameValuePair(const icu::UnicodeString & paramName) const {
-      map<icu::UnicodeString, NameValuePair *>::const_iterator ite = iv_nameValuePairs.find(paramName);
+      std::map<icu::UnicodeString, NameValuePair *>::const_iterator ite = iv_nameValuePairs.find(paramName);
       if (ite == iv_nameValuePairs.end()) {
         return NULL;
       } else {
@@ -358,10 +358,10 @@ namespace uima {
       }
     }
 
-    vector<NameValuePair const *> getNameValuePairs() const;
+    std::vector<NameValuePair const *> getNameValuePairs() const;
 
   private:
-    map<icu::UnicodeString, NameValuePair *> iv_nameValuePairs;
+    std::map<icu::UnicodeString, NameValuePair *> iv_nameValuePairs;
   };
 
 

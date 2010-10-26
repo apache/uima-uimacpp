@@ -75,15 +75,15 @@ class UIMA_LINK_IMPORTSPEC JNILogger : public  uima::Logger {
       JNILogger(JNIEnv * env); 
       
       virtual void log(uima::LogStream::EnEntryType entrytype, 
-                  string classname,
-                  string methodname,
-                  string message,
+                  std::string classname,
+                  std::string methodname,
+                  std::string message,
                   long errorCode)  ;
    
     private:
       /** Format the log message */
       std::string format(uima::LogStream::EnEntryType enType,
-                        const string & cpszMsg, 
+                        const std::string & cpszMsg, 
                         long lUserCode) const;
       JavaVM * iv_jvm;
       jclass   cv_clazz ;    //proxy class on java side

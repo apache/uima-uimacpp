@@ -85,10 +85,10 @@ namespace uima {
       IndexDefinition const & iv_indexDefinition;
       TyFSType iv_tyType;
 
-      vector<TyFSFeature> iv_features;
-      vector<TyFeatureOffset> iv_offsets;
-      vector<EnBuiltinTypes> iv_appropTypes;
-      vector<EnKeyFeatureComp> iv_comparators;
+      std::vector<TyFSFeature> iv_features;
+      std::vector<TyFeatureOffset> iv_offsets;
+      std::vector<EnBuiltinTypes> iv_appropTypes;
+      std::vector<EnKeyFeatureComp> iv_comparators;
     public:
       IndexComparator(IndexDefinition const & iv_indexDefinition,
                       TyFSType tyType);
@@ -98,7 +98,7 @@ namespace uima {
        */
       IndexComparator(IndexDefinition const & iv_indexDefinition,
                       TyFSType tyType,
-                      vector<TyFSFeature> const & crKeyFeatures);
+                      std::vector<TyFSFeature> const & crKeyFeatures);
 
       void addKey(TyFSFeature tyFeat, EnKeyFeatureComp tyComp);
 
@@ -118,11 +118,11 @@ namespace uima {
         return iv_tyType;
       }
 
-      vector<EnKeyFeatureComp> const & getComparisonOps() const {
+      std::vector<EnKeyFeatureComp> const & getComparisonOps() const {
         return iv_comparators;
       }
 
-      vector<TyFSFeature> const & getKeyFeatures() const {
+      std::vector<TyFSFeature> const & getKeyFeatures() const {
         return iv_features;
       }
 

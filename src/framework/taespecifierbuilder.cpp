@@ -66,7 +66,7 @@
 
 #include "uima/msg.h"
 #define MAXXMLCHBUFF 512
-
+using namespace std;
 namespace uima {
 
   UIMA_EXC_CLASSIMPLEMENT(InvalidXMLException, uima::Exception);

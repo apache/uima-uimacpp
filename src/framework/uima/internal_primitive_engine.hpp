@@ -93,7 +93,7 @@ namespace uima {
 
       TyErrorId destroyImpl();
 
-      virtual const string & getSymbolicName(void) const {
+      virtual const std::string & getSymbolicName(void) const {
         assert( EXISTS(iv_pAnnotator) );
         return iv_pAnnotator->getSymbolicName();
       }

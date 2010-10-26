@@ -25,7 +25,7 @@
 #include "deployCppService.hpp"
 #include <activemq/core/ActiveMQConsumer.h>
 using namespace activemq::exceptions;
-
+using namespace std;
 int shutdown_service;
 //===================================================
 //Main

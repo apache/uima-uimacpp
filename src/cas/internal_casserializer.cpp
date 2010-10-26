@@ -60,7 +60,7 @@
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
 
-
+using namespace std;
 namespace uima {
   namespace internal {
 

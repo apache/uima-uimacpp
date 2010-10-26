@@ -20,7 +20,7 @@
 
 #include "uima/api.hpp"
 using namespace uima;
-
+using namespace std;
 class MeetingAnnotator : public Annotator {
 private:
   //config param window size

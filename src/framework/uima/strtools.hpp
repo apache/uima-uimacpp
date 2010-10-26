@@ -56,7 +56,7 @@ namespace uima {
   */
 #  define STRING_NPOS NPOS
 #else
-#  define STRING_NPOS string::npos
+#  define STRING_NPOS std::string::npos
 #endif
 
 //defines for defining basic string template functions with OS/AE STl implementations
@@ -667,7 +667,7 @@ namespace uima {
     bool                              toLower,
     bool                              trim
   ) {
-    ifstream inStream(filename);
+    std::ifstream inStream(filename);
     if (inStream.fail()) {
       return false;
     }
@@ -1902,7 +1902,7 @@ namespace uima {
     const BASIC_STRING_TEMPLATE          & delimiters
   ) {
     BASIC_STRING_TEMPLATE s;
-    typename vector< BASIC_STRING_TEMPLATE >::const_iterator it;
+    typename std::vector< BASIC_STRING_TEMPLATE >::const_iterator it;
 
     for (it = v.begin(); it != v.end(); ++it) {
       s += *it;

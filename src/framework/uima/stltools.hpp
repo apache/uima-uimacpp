@@ -59,7 +59,6 @@
 #        include <ext/hash_set>
 #        include <ext/hash_map>
 #        if (__GNUC_MINOR__ > 0)
-using namespace __gnu_cxx;
 #        endif
 #     else   // gcc 2.9
 #        include <hash_set>
@@ -385,7 +384,7 @@ public:
     //add an element with count 0 to the count list if not already there
     //(if element is already there, it's count is unchanged)
     bool create(const Element& element) {
-      pair<typename CountContainer::iterator, bool> pairItBool;
+      std::pair<typename CountContainer::iterator, bool> pairItBool;
       pairItBool = insert(typename CountContainer::value_type(element, 0));
       if (pairItBool.second) { //if not yet there
         m_sortByCountMap.push_back(pairItBool.first);
@@ -397,7 +396,7 @@ public:
     //increase the count of element by 1
     //(if element is not there already, it is created with a count of 1)
     bool increase_count(const Element& element) {
-      pair<typename CountContainer::iterator, bool> pairItBool;
+      std::pair<typename CountContainer::iterator, bool> pairItBool;
       pairItBool = insert(typename CountContainer::value_type(element, 1));
       if (pairItBool.second) { //if not yet there
         m_sortByCountMap.push_back(pairItBool.first);
@@ -479,7 +478,7 @@ public:
     const char*              cpszDelimiter
   ) {
 //?    ostream_iterator<typename Container::value_type> itOut(rclOut, cpszDelimiter);
-    ostream_iterator<
+    std::ostream_iterator<
 // typename must not be used for some GNU versions
 #if ( ((GCC_VERSION < 30000) || (GCC_VERSION > 30203)) || defined(__xlC__) )
     typename
@@ -518,7 +517,7 @@ public:
     std::ostream&             rclOut,
     const char*               cpszDelimiter
   ) {
-    ostream_iterator<
+    std::ostream_iterator<
 // typename must not be used for some GNU versions
 #if ( ((GCC_VERSION < 30000) || (GCC_VERSION > 30203)) || defined(__xlC__) )
     typename
@@ -533,7 +532,7 @@ public:
   */
   template <class T1, class T2>
   inline std::pair<T1, T2> make_non_const_pair(T1& x, T2& y) {
-    return pair<T1, T2>(x, y);
+    return std::pair<T1, T2>(x, y);
   }
 
   /**
@@ -541,7 +540,7 @@ public:
   */
   template <class T1, class T2>
   inline std::pair<const T1, T2> make_const_pair(const T1& x, T2& y) {
-    return pair<const T1, T2>(x, y);
+    return std::pair<const T1, T2>(x, y);
   }
 
   /**
@@ -549,7 +548,7 @@ public:
   */
   template <class T1, class T2>
   inline std::pair<const T1, T2> make_double_const_pair(const T1& x, const T2& y) {
-    return pair<const T1, const T2>(x, y);
+    return std::pair<const T1, const T2>(x, y);
   }
 
 
@@ -637,7 +636,7 @@ public:
 // find the index of the value in vec
 // if it is nout foun, -1 is returned
   template <class T>
-  int findIndex(vector<T> const & vec, T const & value) {
+  int findIndex(std::vector<T> const & vec, T const & value) {
     size_t i;
     for (i=0; i<vec.size(); ++i) {
       if (vec[i] == value) {

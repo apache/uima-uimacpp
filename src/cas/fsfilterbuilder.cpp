@@ -51,7 +51,7 @@
 Here are straightforward implementations of FSFilters.
 Nothing exciting.
 */
-
+using namespace std;
 namespace uima {
   namespace internal {
 

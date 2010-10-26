@@ -51,7 +51,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 namespace uima {
   namespace lowlevel {
     icu::UnicodeString const TypeSystem::ustrCREATOR_ID_SYSTEM("System");

@@ -82,17 +82,17 @@ public:
   static JNIUString getStringField(JNIEnv* jeEnv, jobject jo, char const * cpszFieldName);
   */
 
-  static jobjectArray createStringArray(JNIEnv* jeEnv, vector<uima::UnicodeStringRef> const & crVec);
-  static jintArray createIntArray(JNIEnv* jeEnv, vector<uima::internal::SerializedCAS::TyNum> const & crVec);
-  static jbyteArray createByteArray(JNIEnv* jeEnv, vector<char> const & crVec);
-  static jshortArray createShortArray(JNIEnv* jeEnv, vector<short> const & crVec);
-  static jlongArray createLongArray(JNIEnv* jeEnv, vector<INT64> const & crVec);
+  static jobjectArray createStringArray(JNIEnv* jeEnv, std::vector<uima::UnicodeStringRef> const & crVec);
+  static jintArray createIntArray(JNIEnv* jeEnv, std::vector<uima::internal::SerializedCAS::TyNum> const & crVec);
+  static jbyteArray createByteArray(JNIEnv* jeEnv, std::vector<char> const & crVec);
+  static jshortArray createShortArray(JNIEnv* jeEnv, std::vector<short> const & crVec);
+  static jlongArray createLongArray(JNIEnv* jeEnv, std::vector<INT64> const & crVec);
 
-  static void createStringVector(JNIEnv* jeEnv, jobjectArray, vector<uima::UnicodeStringRef> & rResult, vector<icu::UnicodeString> & );
-  static void createIntVector(JNIEnv* jeEnv, jintArray, vector<uima::internal::SerializedCAS::TyNum> & rResult);
-  static void createByteVector(JNIEnv* jeEnv, jbyteArray, vector<char> & rResult);
-  static void createShortVector(JNIEnv* jeEnv, jshortArray, vector<short> & rResult);
-  static void createLongVector(JNIEnv* jeEnv, jlongArray, vector<INT64> & rResult);
+  static void createStringVector(JNIEnv* jeEnv, jobjectArray, std::vector<uima::UnicodeStringRef> & rResult, std::vector<icu::UnicodeString> & );
+  static void createIntVector(JNIEnv* jeEnv, jintArray, std::vector<uima::internal::SerializedCAS::TyNum> & rResult);
+  static void createByteVector(JNIEnv* jeEnv, jbyteArray, std::vector<char> & rResult);
+  static void createShortVector(JNIEnv* jeEnv, jshortArray, std::vector<short> & rResult);
+  static void createLongVector(JNIEnv* jeEnv, jlongArray, std::vector<INT64> & rResult);
 
 
   static void throwNewInternalException(JNIEnv* jeEnv,

@@ -133,8 +133,8 @@ namespace uima {
     }
 
 
-    void print(ostream & os) const {
-      os << "ResultSpecification: " << endl;
+    void print(std::ostream & os) const {
+      os << "ResultSpecification: " << std::endl;
       ResultSpecification::TyTypeOrFeatureSTLSet const & crTOFSet = getTypeOrFeatureSTLSet();
       ResultSpecification::TyTypeOrFeatureSTLSet::const_iterator cit;
       for (cit = crTOFSet.begin(); cit != crTOFSet.end(); ++cit) {
@@ -144,7 +144,7 @@ namespace uima {
         assert( crTOF.isValid() );
         assert( contains( crTOF ) );
 
-        os << "  TOF Name: " << crTOF.getName() << endl;
+        os << "  TOF Name: " << crTOF.getName() << std::endl;
       }
 
     }

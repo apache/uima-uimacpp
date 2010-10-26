@@ -47,7 +47,6 @@
 
 #include "uima/msg.h"
 #include "uima/exceptions.hpp"
-using namespace std;
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
 /* ----------------------------------------------------------------------- */
@@ -64,10 +63,10 @@ namespace uima {
 
 class XmlElementName {
   public:
-	  string nsUri;
-	  string shortName;
-	  string qualifiedName;
-	  XmlElementName(string ns, string sname, string qname) :
+	  std::string nsUri;
+	  std::string shortName;
+	  std::string qualifiedName;
+	  XmlElementName(std::string ns, std::string sname, std::string qname) :
     nsUri(ns), shortName(sname), qualifiedName(qname) {}
   };
 
@@ -76,14 +75,14 @@ class XmlElementName {
  */
 class XmlAttribute {
 public:
-  string name;
-  string value;
+ std::string name;
+  std::string value;
   
   XmlAttribute(UnicodeString name, UnicodeString value) {
     this->name = ((UnicodeStringRef)name).asUTF8();
     this->value = ((UnicodeStringRef)value).asUTF8();
   }
-  XmlAttribute(string name, string value) {
+  XmlAttribute(std::string name, std::string value) {
     this->name = name;
     this->value = value;
   }
@@ -108,14 +107,14 @@ public:
     /**
      * List of XmlAttribute objects each holding name and value of an attribute.
      */
-    vector<XmlAttribute*>  attributes;
+    std::vector<XmlAttribute*>  attributes;
     
     /**
      * Map qualified name of an attribute to a list of strings that contain
 	 * the values of the element. Use to store the
      * child elements representing features of this out-of-typesystem element.
      */
-    map<string, vector<string>* > childElements;
+    std::map<std::string, std::vector<std::string>* > childElements;
 
 	OotsElementData() : elementName(0) {}
 
@@ -129,7 +128,7 @@ public:
 	      delete attributes.at(i);
 		}
 	  }
-	  map<string, vector<string>* >::iterator ite;
+	  std::map<std::string, std::vector<std::string>* >::iterator ite;
 	  for (ite=childElements.begin(); ite != childElements.end();ite++) {
 	    if (ite->second != NULL) {
 		  delete ite->second;
@@ -165,39 +164,39 @@ class UIMA_LINK_IMPORTSPEC XmiSerializationSharedData {
    * A map from FeatureStructure address to XMI ID. This is built during deserialization, then used
    * by the next serialization to ensure consistent IDs.
    */
-    map<int, int> fsAddrToXmiIdMap;
+    std::map<int, int> fsAddrToXmiIdMap;
    /** 
    * A map from xmi:id to FeatureStructure address.  This is populated whenever
    * an XMI element is serialized or deserialized.  It is used by the
    * getFsAddrForXmiId() method, necessary to support merging multiple XMI
    * CASes into the same CAS object.
    **/
-   map<int,int> xmiIdToFsAddrMap;
+   std::map<int,int> xmiIdToFsAddrMap;
   
   /**
    * List of OotsElementData objects, each of which captures information about
    * incoming XMI elements that did not correspond to any type in the type system.
    */
-  vector<OotsElementData*> ootsFs;
+  std::vector<OotsElementData*> ootsFs;
   
   /**
    * Map that from the xmi:id  Sofa to a List of xmi:id's  for
    * the out-of-typesystem FSs that are members of that Sofa's view.
    */
-  map<int,vector<int>*> ootsViewMembers;
+  std::map<int,std::vector<int>*> ootsViewMembers;
 
   /** Map from Feature Structure address (Integer) to OotsElementData object, capturing information 
    * about out-of-typesystem features that were part of an in-typesystem FS.  These include both
    * features not defined in the typesystem and features that are references to out-of-typesystem
    * elements.  This information needs to be included when the FS is subsequently serialized.
    */
-  map<int, OotsElementData*> ootsFeatures;
+  std::map<int, OotsElementData*> ootsFeatures;
   
   /** Map from Feature Structure address (Integer) of an FSArray to a list of 
    * {@link XmiArrayElement} objects, each of which holds an index and an xmi:id
    * for an out-of-typesystem array element.
    */
-  map<int,vector<XmiArrayElement*>*> ootsArrayElements;
+  std::map<int,std::vector<XmiArrayElement*>*> ootsArrayElements;
   
 
   /**
@@ -215,10 +214,10 @@ public:
       }
     }
 
-    map<int,vector<XmiArrayElement*>*>::iterator ite;
+    std::map<int,std::vector<XmiArrayElement*>*>::iterator ite;
     for (ite = ootsArrayElements.begin(); ite != ootsArrayElements.end();ite++) {
       if (ite->second != NULL) {
-        vector<XmiArrayElement*>* vec =  ite->second;
+        std::vector<XmiArrayElement*>* vec =  ite->second;
         for (size_t i=0; i < vec->size(); i++) {
           if (vec->at(i) != NULL) {
             delete vec->at(i);
@@ -228,14 +227,14 @@ public:
       }
     }
 
-	map<int,vector<int>*>::iterator viewite;
+	std::map<int,std::vector<int>*>::iterator viewite;
 	for (viewite = ootsViewMembers.begin(); 
 		viewite != ootsViewMembers.end();viewite++) {
 		if (viewite->second != NULL) {
 			delete viewite->second;
 		}
     }
-	map<int, OotsElementData*>::iterator featite;
+	std::map<int, OotsElementData*>::iterator featite;
 	for (featite = ootsFeatures.begin(); 
 		featite != ootsFeatures.end();featite++) {
 		if (featite->second != NULL) {
@@ -253,7 +252,7 @@ public:
 
   int getXmiId(int fsAddr) {
     // see if we already have a mapping
-    map<int,int>::iterator ite = fsAddrToXmiIdMap.find(fsAddr);
+    std::map<int,int>::iterator ite = fsAddrToXmiIdMap.find(fsAddr);
     if (ite != fsAddrToXmiIdMap.end()) {
       return ite->second;
     } else { // no mapping for this FS. Generate a unique ID
@@ -273,7 +272,7 @@ public:
    *   xmi:id, -1 if none.
    */
   int getFsAddrForXmiId(int xmiId) {
-	  map<int,int>::iterator ite =  xmiIdToFsAddrMap.find(xmiId);
+	  std::map<int,int>::iterator ite =  xmiIdToFsAddrMap.find(xmiId);
 	  if (ite != xmiIdToFsAddrMap.end() ) 
 		  return ite->second;
 	  else  {
@@ -310,7 +309,7 @@ public:
    * incoming XMI element that did not correspond to a Type in the TypeSystem.
    * @return List of {@link OotsElementData} objects
    */
-  vector<OotsElementData *> & getOutOfTypeSystemElements() {
+  std::vector<OotsElementData *> & getOutOfTypeSystemElements() {
     return this->ootsFs;
   }
   
@@ -322,10 +321,10 @@ public:
    *   a member of the view for the given Sofa
    */
   void addOutOfTypeSystemViewMember(int sofaXmiId, int memberXmiId) {
-    vector<int> * memberList = 0; 
-    map<int,vector<int>* >::iterator ite = this->ootsViewMembers.find(sofaXmiId);
+    std::vector<int> * memberList = 0; 
+    std::map<int,std::vector<int>* >::iterator ite = this->ootsViewMembers.find(sofaXmiId);
     if (ite == ootsViewMembers.end() ) {
-      memberList = new vector<int>;
+      memberList = new std::vector<int>;
       ootsViewMembers[sofaXmiId] = memberList;
     } else {
       memberList = ite->second;
@@ -339,9 +338,9 @@ public:
    * @param sofaXmiId xmi:id of a Sofa
    * @return List of xmi:id's of members of the view for the given Sofa.
    */
-  void getOutOfTypeSystemViewMembers(int sofaXmiId, vector<int>& tofill) {
-    map<int, vector<int> *>::iterator ite = this->ootsViewMembers.find(sofaXmiId); 
-    vector<int> * memberList = NULL;
+  void getOutOfTypeSystemViewMembers(int sofaXmiId, std::vector<int>& tofill) {
+    std::map<int, std::vector<int> *>::iterator ite = this->ootsViewMembers.find(sofaXmiId); 
+    std::vector<int> * memberList = NULL;
     if (ite != ootsViewMembers.end()) {
       memberList = ite->second;
       for (size_t i=0;i < memberList->size();i++) {
@@ -358,8 +357,8 @@ public:
    * @param featName name of the feature
    * @param featVal value of the feature, as a string
    */
-  void addOutOfTypeSystemAttribute(int addr, string featName, string featVal) {
-    map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
+  void addOutOfTypeSystemAttribute(int addr, std::string featName, std::string featVal) {
+    std::map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
     OotsElementData * oed = NULL;
     if (ite != ootsFeatures.end() )
       oed = ite->second;
@@ -384,8 +383,8 @@ public:
    * @param featName name of the feature (element tag name)
    * @param featVal values of the feature, as a List of strings
    */
-    void addOutOfTypeSystemChildElements(int addr, string featName, vector<string> featVals) {
-      map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
+    void addOutOfTypeSystemChildElements(int addr, std::string featName, std::vector<std::string> featVals) {
+      std::map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
       OotsElementData * oed = NULL;
       if (ite != ootsFeatures.end() )
         oed = ite->second;
@@ -394,10 +393,10 @@ public:
         this->ootsFeatures[addr] = oed;
       } 
 
-      map<string, vector<string>*>::iterator ite2 = oed->childElements.find(featName);
-      vector<string> * pVals = NULL;
+      std::map<std::string, std::vector<std::string>*>::iterator ite2 = oed->childElements.find(featName);
+      std::vector<std::string> * pVals = NULL;
       if (ite2 ==	oed->childElements.end() ) {
-        pVals = new vector<string>;
+        pVals = new std::vector<std::string>;
         oed->childElements[featName] = pVals;
       } else {
         pVals = ite2->second;
@@ -417,7 +416,7 @@ public:
    *   (both attributes and child elements)
    */
   OotsElementData * getOutOfTypeSystemFeatures(int addr) {
-	  map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
+	  std::map<int, OotsElementData*>::iterator ite = this->ootsFeatures.find(addr);
 	  if (ite != this->ootsFeatures.end())
 		  return ite->second;
       else return NULL; 
@@ -427,8 +426,8 @@ public:
    * Get all FS Addresses that have been added to the id map.
    * @return an array containing all the FS addresses
    */
-  void getAllFsAddressesInIdMap( vector<int> & tofill) {    
-	  map<int,int>::iterator ite;
+  void getAllFsAddressesInIdMap( std::vector<int> & tofill) {    
+	  std::map<int,int>::iterator ite;
 	  for (ite = this->fsAddrToXmiIdMap.begin(); ite != fsAddrToXmiIdMap.end();ite++) {
 		  tofill.push_back(ite->first);
 	  }
@@ -441,8 +440,8 @@ public:
    *   holds the index and xmi:id of an array element that is a
    *   reference to an out-of-typesystem FS.
    */
-  vector<XmiArrayElement*> * getOutOfTypeSystemArrayElements(int addr) {
-	  map<int, vector<XmiArrayElement*>*>::iterator ite=this->ootsArrayElements.find(addr);
+  std::vector<XmiArrayElement*> * getOutOfTypeSystemArrayElements(int addr) {
+	  std::map<int, std::vector<XmiArrayElement*>*>::iterator ite=this->ootsArrayElements.find(addr);
       if (ite != ootsArrayElements.end()) 
 		  return ite->second;
 	  else return NULL;
@@ -456,12 +455,12 @@ public:
    * @param xmiId xmi:id of the out-of-typesystem element that is the value at the given index
    */
   void addOutOfTypeSystemArrayElement(int addr, int index, int xmiId) {
-    map<int, vector<XmiArrayElement*>* >::iterator ite = this->ootsArrayElements.find(addr);
-    vector<XmiArrayElement*> * oed = NULL;
+    std::map<int, std::vector<XmiArrayElement*>* >::iterator ite = this->ootsArrayElements.find(addr);
+    std::vector<XmiArrayElement*> * oed = NULL;
     if (ite != ootsArrayElements.end() )
       oed  = ite->second;
     else {
-      oed = new vector<XmiArrayElement*>;
+      oed = new std::vector<XmiArrayElement*>;
       this->ootsArrayElements[addr] = oed;
     }
     oed->push_back(new XmiArrayElement(index, xmiId));
@@ -475,13 +474,13 @@ public:
   }
 
   void print() {
-    map<int,OotsElementData *>::iterator ite;
+    std::map<int,OotsElementData *>::iterator ite;
     for (size_t i=0; i < ootsFs.size() ;i++ ) {
        OotsElementData * oed = ootsFs.at(i);
-       cout << "**OotsFS " << i << oed->elementName->qualifiedName << endl;
-       cout << "NUM CHILDELEMENTS " << oed->childElements.size() << endl;
+       std::cout << "**OotsFS " << i << oed->elementName->qualifiedName << std::endl;
+       std::cout << "NUM CHILDELEMENTS " << oed->childElements.size() << std::endl;
        for (size_t i=0; i < oed->attributes.size();i++) {
-         cout << oed->attributes.at(i)->name << " " << oed->attributes.at(i)->value << endl;
+         std::cout << oed->attributes.at(i)->name << " " << oed->attributes.at(i)->value << std::endl;
        }    
     }
   }

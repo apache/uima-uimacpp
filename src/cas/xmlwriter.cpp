@@ -65,7 +65,7 @@ int sofa;
 /* ----------------------------------------------------------------------- */
 /*       Types / Classes                                                   */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 namespace uima {
   XMLWriterABase::XMLWriterABase(CAS const & crCAS, bool bAddDocBuffer)
       : CASWriterABase(crCAS, bAddDocBuffer) {}

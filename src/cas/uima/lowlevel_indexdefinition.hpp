@@ -84,14 +84,14 @@ namespace uima {
     private:
       TypeSystem const & iv_crTypeSystem;
       // maps ids to index factories
-      map<TyIndexID, internal::IndexFactory*> iv_mapFactories;
+      std::map<TyIndexID, internal::IndexFactory*> iv_mapFactories;
 
       // iv_mapIndexTypes[i] is the type of the index with ID i
-      map<TyIndexID, TyFSType> iv_mapIndexTypes;
+      std::map<TyIndexID, TyFSType> iv_mapIndexTypes;
 
       // iv_mapIsPermanentFlags[i] is true if index with ID i contains permanent feature structures
-      map<TyIndexID, bool> iv_mapIsPermanentFlags;
-      vector<uima::lowlevel::IndexComparator*> iv_vecComparators;
+      std::map<TyIndexID, bool> iv_mapIsPermanentFlags;
+      std::vector<uima::lowlevel::IndexComparator*> iv_vecComparators;
 
       bool iv_bIsCommitted;
 
@@ -101,8 +101,8 @@ namespace uima {
        */
       bool isCompatibleIndexDefinition(EnIndexKind enIxKind,
                                        TyFSType tyType,
-                                       vector<uima::lowlevel::TyFSFeature> const & crKeyFeatures,
-                                       vector<uima::lowlevel::IndexComparator::EnKeyFeatureComp> const & crComparators,
+                                       std::vector<uima::lowlevel::TyFSFeature> const & crKeyFeatures,
+                                       std::vector<uima::lowlevel::IndexComparator::EnKeyFeatureComp> const & crComparators,
                                        TyIndexID const & crID,
                                        bool ) const;
       /**
@@ -148,8 +148,8 @@ namespace uima {
        */
       void defineIndex(EnIndexKind enIxKind,
                        TyFSType tyType,
-                       vector<uima::lowlevel::TyFSFeature> const & crKeyFeatures,
-                       vector<uima::lowlevel::IndexComparator::EnKeyFeatureComp> const & crComparators,
+                       std::vector<uima::lowlevel::TyFSFeature> const & crKeyFeatures,
+                       std::vector<uima::lowlevel::IndexComparator::EnKeyFeatureComp> const & crComparators,
                        TyIndexID const & id,
                        bool bIsPermanent = false);
 
@@ -191,12 +191,12 @@ namespace uima {
        */
       TyFSType getTypeForIndex(TyIndexID const & crID) const {
         //assert( isValidIndexId(crID) );
-        map<TyIndexID, TyFSType>::const_iterator cit = iv_mapIndexTypes.find(crID);
+	std::map<TyIndexID, TyFSType>::const_iterator cit = iv_mapIndexTypes.find(crID);
         return (*cit).second;
       }
 
       uima::lowlevel::internal::IndexFactory const * getFactory(TyIndexID const & crID) const {
-        map<TyIndexID, internal::IndexFactory*>::const_iterator cit = iv_mapFactories.find(crID);
+	std::map<TyIndexID, internal::IndexFactory*>::const_iterator cit = iv_mapFactories.find(crID);
         if (cit == iv_mapFactories.end()) {
           return NULL;
         }
@@ -207,7 +207,7 @@ namespace uima {
        * get the IDs of all indexes.
        * @param rResult output parameter
        */
-      void getAllIndexIDs(vector<TyIndexID>& rResult) const;
+      void getAllIndexIDs(std::vector<TyIndexID>& rResult) const;
 
       void reset();
 

@@ -23,6 +23,7 @@
 #include "uima/xmlwriter.hpp"
 
 #include <sys/stat.h>
+using namespace std;
 using namespace uima;
 /**
  * An example application that reads documents from files, sends them

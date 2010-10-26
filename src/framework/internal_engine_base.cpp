@@ -193,7 +193,7 @@ namespace uima {
         clTrace.dump("Unexpected UIMACPP exception");
         clTrace.dump(rclException.asString().c_str());
         assertWithMsg(false, _TEXT("Unexpected UIMACPP exception in engine destructor"));   //lint !e506: Constant value Boolean
-      } catch (exception & rclException) {
+      } catch (std::exception & rclException) {
         clTrace.dump("ANSI C++ exception");
         clTrace.dump(rclException.what());
         assertWithMsg(false, _TEXT("Unexpected ANSI C++ exception in engine destructor"));   //lint !e506: Constant value Boolean

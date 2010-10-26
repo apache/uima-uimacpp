@@ -25,7 +25,7 @@
 #include "uima/strtools.hpp"
 #include "uima/strconvert.hpp"
 #include "uima/text.h"
-
+using namespace std;
 namespace uima {
 
 

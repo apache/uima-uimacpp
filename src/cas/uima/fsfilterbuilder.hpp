@@ -147,17 +147,17 @@ namespace uima {
      * create a filter which filters all feature structures where the structure
      * under the feature path <code>crFeaturePath</code> satisfies <code>pFilter</code>,
      */
-    FSFilter * createMatchFilter(vector<Feature> const & crFeaturePath, FSFilter * pFilter) const;
+    FSFilter * createMatchFilter(std::vector<Feature> const & crFeaturePath, FSFilter * pFilter) const;
     /**
      * create a filter which filters a feature structure if the int value found
      * under the feature path <code>crFeaturePath</code> is equal, greater, or less than <code>iVal</code>.
      */
-    FSFilter * createIntFeatureFilter(vector<Feature> const & crFeaturePath, EnComparisonOperator enOp, int iVal) const;
+    FSFilter * createIntFeatureFilter(std::vector<Feature> const & crFeaturePath, EnComparisonOperator enOp, int iVal) const;
     /**
      * create a filter which filters a feature structure if the float value found
      * under the feature path <code>crFeaturePath</code> is equal, greater, or less than <code>fVal</code>.
      */
-    FSFilter * createFloatFeatureFilter(vector<Feature> const & crFeaturePath, EnComparisonOperator enOp, float fVal) const;
+    FSFilter * createFloatFeatureFilter(std::vector<Feature> const & crFeaturePath, EnComparisonOperator enOp, float fVal) const;
 
     /**
      * create a filter which filters a feature structure if the string value found
@@ -165,7 +165,7 @@ namespace uima {
      * the string stored under <code>cpUTFBuffer</code> with length <code>uiLength</code>.
      * The string is copied so the buffer may be invalidated after this call.
      */
-    FSFilter * createStringFeatureFilter(vector<Feature> const & crFeaturePath, UChar const * cpUTFBuffer, size_t uiLength) const;
+    FSFilter * createStringFeatureFilter(std::vector<Feature> const & crFeaturePath, UChar const * cpUTFBuffer, size_t uiLength) const;
 
     /**
      * create a filter which filters all feature structures whose type

@@ -175,7 +175,7 @@ namespace uima {
        Character position N - 1 corresponds to bit position 0.
        Subsequent decreasing character positions correspond to increasing
        bit positions. */
-    string to_string( void ) const;
+    std::string to_string( void ) const;
 
     /// Returns the integral value corresponding to the bits in *this.
     unsigned long to_ulong( void ) const;

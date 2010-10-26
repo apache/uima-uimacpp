@@ -113,13 +113,13 @@ namespace uima {
     lowlevel::TyFSFeature iv_tyEndPosFeature;
 
     icu::UnicodeString getTab(int tab) const;
-    void writeFS(int tab, ostream& os, lowlevel::TyFS, bool bWriteShortStyle) const;
-    void writeArray(int iTab, ostream& os, lowlevel::TyFSFeature & tyFeat, lowlevel::TyFS & tyValue, lowlevel::TyFSType tyRange, icu::UnicodeString & newTab) const;
+    void writeFS(int tab, std::ostream& os, lowlevel::TyFS, bool bWriteShortStyle) const;
+    void writeArray(int iTab, std::ostream& os, lowlevel::TyFSFeature & tyFeat, lowlevel::TyFS & tyValue, lowlevel::TyFSType tyRange, icu::UnicodeString & newTab) const;
   public:
     XMLDumpWriter(CAS const & crCAS, bool bAddDocBuffer);
     ~XMLDumpWriter();
 
-    virtual void write(ostream& os);
+    virtual void write(std::ostream& os);
   };
 
 
@@ -146,20 +146,20 @@ namespace uima {
 
     Type iv_sofaType;
     bool isBCCas;
-    map<int, vector<int>*> enqueuedFS;
+    std::map<int, std::vector<int>*> enqueuedFS;
 
-    void writeFeatureValue(ostream & os, FeatureStructure const & fs, Feature const & f);
-    void writeFSFlat(ostream & os, FeatureStructure const & fs, vector<int>* indexInfo);
+    void writeFeatureValue(std::ostream & os, FeatureStructure const & fs, Feature const & f);
+    void writeFSFlat(std::ostream & os, FeatureStructure const & fs, std::vector<int>* indexInfo);
     void findReferencedFSs(FeatureStructure const & fs, bool check=true);
     bool isReferenceType(Type const & t) const;
     bool enqueueIndexed(FeatureStructure const &fs, int sofa);
     bool enqueueUnindexed(FeatureStructure const &fs);
-		void writeStringArray(ostream & os, StringArrayFS const & array, char const * tag);
+		void writeStringArray(std::ostream & os, StringArrayFS const & array, char const * tag);
   public:
     XCASWriter(CAS const & crCAS, bool bAddDocBuffer);
     ~XCASWriter();
 
-    virtual void write(ostream& os);
+    virtual void write(std::ostream& os);
   };
 
 }

@@ -67,7 +67,7 @@ There's a lot of JNI code in here. If you are interested in the details you shou
 consult some book or go to
 http://java.sun.com/j2se/1.3/docs/guide/jni/spec/jniTOC.doc.html
 */
-
+using namespace std;
 namespace uima {
   namespace internal {
 

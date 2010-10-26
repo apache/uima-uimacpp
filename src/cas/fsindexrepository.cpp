@@ -53,7 +53,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 namespace uima {
 
   UIMA_EXC_CLASSIMPLEMENT(InvalidIndexIDException, CASException);

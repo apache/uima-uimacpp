@@ -86,47 +86,48 @@ namespace uima {
       // for building the hierarchy
 
       // tree[t] are the daughters of type t
-      vector<vector<TyFSType> > iv_vecTree;
+       
+      std::vector<std::vector<TyFSType> > iv_vecTree;
       // introducedFeatures[t] are the features introduced at type t
-      vector<vector<TyFSFeature> > iv_vecIntroducedFeatures;
+      std::vector<std::vector<TyFSFeature> > iv_vecIntroducedFeatures;
       // useful map to parents of type t
-      vector<TyFSType> iv_vecParents;
+      std::vector<TyFSType> iv_vecParents;
 
       // iv_vecRangeTypes[f] is the range type for feature f
-      vector<TyFSType> iv_vecRangeTypes;
+      std::vector<TyFSType> iv_vecRangeTypes;
       // iv_vecMultiRefs[f] is the multipleReferencesAllowed property for feature f
-      vector<bool> iv_vecMultiRefs;
+      std::vector<bool> iv_vecMultiRefs;
 
       // names of types and features
-      vector<icu::UnicodeString> iv_vecTypeNames;
-      vector<icu::UnicodeString> iv_vecTypeCreatorIDs;
-      vector<icu::UnicodeString> iv_vecFeatureBaseNames;
-      vector<icu::UnicodeString> iv_vecFeatureCreatorIDs;
+      std::vector<icu::UnicodeString> iv_vecTypeNames;
+      std::vector<icu::UnicodeString> iv_vecTypeCreatorIDs;
+      std::vector<icu::UnicodeString> iv_vecFeatureBaseNames;
+      std::vector<icu::UnicodeString> iv_vecFeatureCreatorIDs;
 
       // string sub types
-      vector<vector<icu::UnicodeString> > iv_enumStrings;
-      map<TyFSType, TyFeatureOffset> iv_stringSubtypeToStringSet;
+      std::vector<std::vector<icu::UnicodeString> > iv_enumStrings;
+      std::map<TyFSType, TyFeatureOffset> iv_stringSubtypeToStringSet;
 
       //  list of priority pairs
-      vector< pair<TyFSType, TyFSType> > iv_typePriorityList;
+      std::vector< std::pair<TyFSType, TyFSType> > iv_typePriorityList;
 
       // the next fields are computed during commit()
 
       // featureNumber[t] is the number of features of type t
-      vector<TyFeatureOffset> iv_vecFeatureNumber;
+      std::vector<TyFeatureOffset> iv_vecFeatureNumber;
 
       // featureOffset[f] is the offset of feature f
-      vector< TyFeatureOffset > iv_vecFeatureOffset;
+      std::vector< TyFeatureOffset > iv_vecFeatureOffset;
 
       // iv_vecTypeFeatureOffsetMapping[t][o] is the feature appropriate
       //   for type t with offset o
-      vector< vector<TyFSFeature> > iv_vecTypeFeatureOffsetMapping;
+      std::vector< std::vector<TyFSFeature> > iv_vecTypeFeatureOffsetMapping;
 
       // approp[t][f] is true if feature f is appropriate for type t
-      vector< vector< bool > > iv_vecApprop;
+      std::vector< std::vector< bool > > iv_vecApprop;
 
       // the total order embedding the user defined type priorities
-      map<TyFSType, size_t> iv_mapTypePriority;
+      std::map<TyFSType, size_t> iv_mapTypePriority;
       // use to avoid calling expensive routine if no custom priorities defined
       bool iv_customTypePrioritySet;
 
@@ -221,10 +222,10 @@ namespace uima {
 
 #ifndef NDEBUG
       bool debugIsTreeConsistent() const;
-      void printTree(int, TyFSType, ostream&) const;
+      void printTree(int, TyFSType, std::ostream&) const;
 #endif
       // These two are used in test_cas when built debug
-      void print(ostream&) const;
+      void print(std::ostream&) const;
       bool debugIsConsistent() const;
 
       /**
@@ -257,7 +258,7 @@ namespace uima {
        */
       TyFSType createType(TyFSType tyParent, icu::UnicodeString const & crName, icu::UnicodeString const & crusCreatorID);
 
-      TyFSType createStringSubtype(icu::UnicodeString const & crName, vector<icu::UnicodeString> const & crStrings, icu::UnicodeString const & crusCreatorID);
+      TyFSType createStringSubtype(icu::UnicodeString const & crName, std::vector<icu::UnicodeString> const & crStrings, icu::UnicodeString const & crusCreatorID);
 
       /**
        * create a feature on <code>tyIntro</code> with value type <code>tyValueType</code>
@@ -360,13 +361,13 @@ namespace uima {
         return iv_vecFeatureBaseNames.size() - 1;
       }
 
-      vector<icu::UnicodeString> const & getStringsForStringSubtype(TyFSType type) const;
+      std::vector<icu::UnicodeString> const & getStringsForStringSubtype(TyFSType type) const;
 
       /**
        * get a list of all the types in the type system.
        * @param rvecResult output parameter
        */
-      void getAllTypes(vector<TyFSType>& rvecResult) const {
+      void getAllTypes(std::vector<TyFSType>& rvecResult) const {
         rvecResult.clear();
         TyFSType i;
         for (i=1; i<iv_vecTypeNames.size(); ++i) {
@@ -378,7 +379,7 @@ namespace uima {
        * get a list of all the features in the type system.
        * @param rvecResult output parameter
        */
-      void getAllFeatures(vector<TyFSFeature>& rvecResult) const {
+      void getAllFeatures(std::vector<TyFSFeature>& rvecResult) const {
         rvecResult.clear();
         TyFSFeature i;
         for (i=1; i<iv_vecFeatureBaseNames.size(); ++i) {
@@ -449,9 +450,9 @@ namespace uima {
        * all features introduced by <code>tyType</code> or one of its ancestors.
        * @param rResult output parameter
        */
-      void getAppropriateFeatures(TyFSType tyType, vector<TyFSFeature>& rResult) const;
+      void getAppropriateFeatures(TyFSType tyType, std::vector<TyFSFeature>& rResult) const;
 
-      void getDirectSubTypes(TyFSType tyType, vector<TyFSType> & rResult) const;
+      void getDirectSubTypes(TyFSType tyType, std::vector<TyFSType> & rResult) const;
 
       /**
        * get the range of the feature, i.e., the value type <code>tyFeature</code>
@@ -496,7 +497,7 @@ namespace uima {
        * get all subsumed types of <code>tyType</code>.
        * @param rResult output parameter
        */
-      void getSubsumedTypes(TyFSType tyType, vector<TyFSType>& rResult) const;
+      void getSubsumedTypes(TyFSType tyType, std::vector<TyFSType>& rResult) const;
 
       /**
        * get the parent type of <code>tyType</code>.

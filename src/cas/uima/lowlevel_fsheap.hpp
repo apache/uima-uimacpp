@@ -626,14 +626,14 @@ namespace uima {
       /**
        * print an FS.
        */
-      void printFS(ostream&, TyFS) const;
+      void printFS(std::ostream&, TyFS) const;
 
 //#ifndef NDEBUG
       // debug methods
       TyHeapCell* getHeapStart() const;
       bool debugIsValidHeapCell(TyHeapCell) const;
       bool debugIsConsistent() const;
-      void print(ostream&) const;
+      void print(std::ostream&) const;
 //#endif
 
     };

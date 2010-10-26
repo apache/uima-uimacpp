@@ -86,12 +86,12 @@ namespace uima {
       Timer iv_timerIndexedFSs;
 #endif
       // for blob serialization
-      vector<SerializedCAS::TyNum> iv_vecIndexedFSs;
+      std::vector<SerializedCAS::TyNum> iv_vecIndexedFSs;
 
       CASSerializer(CASSerializer const &);
       CASSerializer & operator=(CASSerializer const &);
 
-      typedef map<UChar*, uima::internal::SerializedCAS::TyNum> TyStringMap;
+      typedef std::map<UChar*, uima::internal::SerializedCAS::TyNum> TyStringMap;
       SerializedCAS::TyNum adjustString(uima::lowlevel::TyHeapCell tyFeatureCell, TyStringMap &, uima::internal::SerializedCAS & rSerializedCAS);
 
       UnicodeStringRef createString(UChar const *, size_t, uima::internal::SerializedCAS & );
@@ -102,12 +102,12 @@ namespace uima {
       void serializeFSHeapAndStringHeap(uima::CAS const &, uima::internal::SerializedCAS & rSerializedCAS);
       void serializeHeaps(uima::CAS const &, uima::internal::SerializedCAS & rSerializedCAS);
 
-      void serializeIndexedFSs(uima::CAS &, vector<uima::internal::SerializedCAS::TyNum> & iv_vecIndexedFSs);
+      void serializeIndexedFSs(uima::CAS &, std::vector<uima::internal::SerializedCAS::TyNum> & iv_vecIndexedFSs);
 
     public:
       static void serializeResultSpec(ResultSpecification const & resultSpec,
-                                      vector<internal::SerializedCAS::TyNum>& resultSpecTypes,
-                                      vector<internal::SerializedCAS::TyNum>& resultSpecFeatures);
+                                      std::vector<internal::SerializedCAS::TyNum>& resultSpecTypes,
+                                      std::vector<internal::SerializedCAS::TyNum>& resultSpecFeatures);
 
 
       CASSerializer(bool bCopyStrings);

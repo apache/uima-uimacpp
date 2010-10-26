@@ -72,7 +72,7 @@
 #else
 #define CHECK(x) assert(x)
 #endif
-
+using namespace std;
 namespace uima {
   namespace internal {
 

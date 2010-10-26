@@ -47,7 +47,7 @@
 #include <apr_portable.h>
 #include <apr_thread_proc.h>
 using namespace uima;
-
+using namespace std;
 
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */

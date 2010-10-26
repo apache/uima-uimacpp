@@ -51,7 +51,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 namespace uima {
   TypeNameSpace::TypeNameSpace(uima::TypeSystem const & crTypeSystem, icu::UnicodeString const & crName)
       : iv_usName(crName),

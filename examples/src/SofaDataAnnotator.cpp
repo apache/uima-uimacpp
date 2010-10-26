@@ -18,6 +18,7 @@
  */
 
 #include "uima/api.hpp"
+using namespace std;
 using namespace uima;
 
 

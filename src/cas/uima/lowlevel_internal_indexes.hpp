@@ -38,6 +38,7 @@
 /* ----------------------------------------------------------------------- */
 #include "uima/pragmas.hpp" // must be first file to be included to get pragmas
 #include <algorithm>
+#include <memory>
 #include <set>
 
 #include "uima/lowlevel_index.hpp"
@@ -90,7 +91,7 @@ namespace uima {
          */
         virtual bool contains(TyFS) const;
 
-        virtual IndexIterator* createTypeSetIterator(set<uima::lowlevel::TyFSType> const & crType) const {
+        virtual IndexIterator* createTypeSetIterator(std::set<uima::lowlevel::TyFSType> const & crType) const {
           assert( crType.size() <= 1 );
           if (crType.size() == 1) {
             assert( *(crType.begin()) == getType() );
@@ -124,7 +125,7 @@ namespace uima {
        */
       class UIMA_LINK_IMPORTSPEC OrderedSingleIndex : public ComparatorSingleIndex {
       public:
-        typedef vector<TyFS> TyStructures;
+        typedef std::vector<TyFS> TyStructures;
       private:
         TyStructures iv_tyStructures;
       protected:
@@ -143,7 +144,7 @@ namespace uima {
         IndexIterator* createIterator() const;
         TyFS find(TyFS fs) const;
 
-        vector<TyFS> const * getVector() const {
+	std::vector<TyFS> const * getVector() const {
           return & iv_tyStructures;
         }
 #ifndef NDEBUG
@@ -157,7 +158,7 @@ namespace uima {
        * comparator.
        * @see SetSingleIndex
        */
-      class UIMA_LINK_IMPORTSPEC IndexComparatorLess : public binary_function<TyFS, TyFS, bool> {
+      class UIMA_LINK_IMPORTSPEC IndexComparatorLess : public std::binary_function<TyFS, TyFS, bool> {
       private:
         IndexComparator const * iv_cpclComparator;
         FSHeap const * iv_heap;
@@ -189,7 +190,7 @@ namespace uima {
        */
       class UIMA_LINK_IMPORTSPEC SetSingleIndex : public ComparatorSingleIndex {
       public:
-        typedef set<TyFS, IndexComparatorLess> TyStructures;
+        typedef std::set<TyFS, IndexComparatorLess> TyStructures;
       private:
         // the set is allocated on the heap due to template problems with the Solaris compiler
         TyStructures *          iv_pStructures;
@@ -236,7 +237,7 @@ namespace uima {
        */
       class UIMA_LINK_IMPORTSPEC FIFOSingleIndex : public SingleIndex {
       public:
-        typedef vector<TyFS> TyStructures;
+        typedef std::vector<TyFS> TyStructures;
       private:
         TyStructures iv_tyFIFO;
       protected:
@@ -273,7 +274,7 @@ namespace uima {
 
         IndexIterator* createIterator() const;
 
-        vector<TyFS> const * getVector() const {
+	std::vector<TyFS> const * getVector() const {
           return & iv_tyFIFO;
         }
 
@@ -290,7 +291,7 @@ namespace uima {
        */
       class UIMA_LINK_IMPORTSPEC CompositeIndex : public IndexABase {
       public:
-        typedef vector<SingleIndex*> TyComponents;
+        typedef std::vector<SingleIndex*> TyComponents;
       protected:
         TyComponents iv_tyComponents;
         void add(TyFS /*fs*/) {
@@ -311,7 +312,7 @@ namespace uima {
         /**
          * get all the components for the respective types.
          */
-        void getComponentsForTypes(set<uima::lowlevel::TyFSType> const & crTypes, TyComponents & crResult) const;
+        void getComponentsForTypes(std::set<uima::lowlevel::TyFSType> const & crTypes, TyComponents & crResult) const;
       public:
         void addComponent(SingleIndex* pclIndex) {
           assert( iv_crTypeSystem.subsumes( getType(), pclIndex->getType() ) );
@@ -345,7 +346,7 @@ namespace uima {
           TyComponents::const_iterator cit;
           for (cit = iv_tyComponents.begin(); cit != iv_tyComponents.end(); ++cit) {
             SingleIndex const * index = (*cit);
-            auto_ptr<IndexIterator> apit( index->createIterator() );
+	    std::auto_ptr<IndexIterator> apit( index->createIterator() );
             for (apit->moveToFirst(); apit->isValid(); apit->moveToNext()) {
               iv_cache.insert(iv_cache.end(), apit->get() );
             }
@@ -353,7 +354,7 @@ namespace uima {
         }
       public:
         IndexIterator* createIterator() const;
-        IndexIterator* createTypeSetIterator(set<uima::lowlevel::TyFSType> const & crTypes) const;
+        IndexIterator* createTypeSetIterator(std::set<uima::lowlevel::TyFSType> const & crTypes) const;
 
         IndexComparator const * getComparator() const {
           return iv_comparator;
@@ -366,7 +367,7 @@ namespace uima {
        * A composite ordered index. The iterator is different than the one
        * of the superclass in that a different comparison scheme is used.
        */
-      class OrderedCompositeIndex : public CachedCompositeIndex<vector<TyFS> > {
+      class OrderedCompositeIndex : public CachedCompositeIndex<std::vector<TyFS> > {
       protected:
         void clearAndFillCache();
       public:
@@ -382,7 +383,7 @@ namespace uima {
       /**
        * A composite set index.
        */
-      class SetCompositeIndex : public CachedCompositeIndex<set<TyFS> > {
+      class SetCompositeIndex : public CachedCompositeIndex<std::set<TyFS> > {
       protected:
       public:
         SetCompositeIndex(IndexRepository const & aIndexRepository,
@@ -391,7 +392,7 @@ namespace uima {
       };
 
 
-      class FIFOCompositeIndex : public CachedCompositeIndex<vector<TyFS> > {
+      class FIFOCompositeIndex : public CachedCompositeIndex<std::vector<TyFS> > {
       protected:
       public:
         FIFOCompositeIndex(IndexRepository const & crIndexRepository,

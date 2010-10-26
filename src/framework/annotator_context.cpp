@@ -34,6 +34,7 @@
 #include "uima/taespecifierbuilder.hpp"
 #include "uima/internal_casimpl.hpp"
 
+using namespace std;
 namespace uima {
 
 #define CTX_DEFAULT_TEXT_SOFA_NAME  "_DefaultTextSofaName"

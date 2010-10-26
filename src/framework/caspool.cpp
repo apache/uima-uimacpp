@@ -34,7 +34,7 @@
 #include "uima/err_ids.h"
 #include "uima/msg.h"
 
-
+using namespace std;
 namespace uima {
 
 

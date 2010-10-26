@@ -125,7 +125,7 @@ namespace uima {
      * @throws InvalidFSTypeObjectException
      * @throws IncompatibleTypeForIndexException
      */
-    FSIterator typeSetIterator(set<uima::Type> const & crTypes) const;
+    FSIterator typeSetIterator(std::set<uima::Type> const & crTypes) const;
 
     /**
      * create an iterator over this index with the filter <code>cpFilter</code>,

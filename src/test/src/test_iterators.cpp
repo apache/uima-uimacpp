@@ -54,7 +54,7 @@
 /*       Types / Classes                                                   */
 /* ----------------------------------------------------------------------- */
 using namespace uima;
-
+using namespace std;
 
 bool checkIndex(AnnotationFS const & anFS, ANIndex const & ix) {
   ANIterator it = ix.iterator();

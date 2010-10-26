@@ -69,7 +69,7 @@
 #define BEGIN "begin"
 #define END "end"
 #define LANGUAGE "language"
-
+using namespace std;
 namespace uima {
   icu::UnicodeString const CAS::ustrCREATOR_ID_CAS(lowlevel::TypeSystem::ustrCREATOR_ID_SYSTEM);
 

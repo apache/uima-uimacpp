@@ -192,8 +192,8 @@ namespace uima {
   class UIMA_LINK_IMPORTSPEC TypeDescription :public MetaDataObject {
 
   public:
-    typedef vector<FeatureDescription *> TyVecpFeatureDescriptions;
-    typedef vector<AllowedValue *> TyVecpAllowedValues;
+    typedef std::vector<FeatureDescription *> TyVecpFeatureDescriptions;
+    typedef std::vector<AllowedValue *> TyVecpAllowedValues;
 
     TypeDescription()
         :MetaDataObject(), iv_typeName(), iv_superTypeName(), iv_description(),
@@ -332,12 +332,12 @@ namespace uima {
       return UIMA_ERR_NONE;
     }
 
-    const vector <icu::UnicodeString> & getTypeOrder() const {
+    const std::vector <icu::UnicodeString> & getTypeOrder() const {
       return iv_vecTypeOrder;
     }
 
   private:
-    vector <icu::UnicodeString> iv_vecTypeOrder;
+    std::vector <icu::UnicodeString> iv_vecTypeOrder;
   };
 
   /**
@@ -346,8 +346,8 @@ namespace uima {
   **/
   class UIMA_LINK_IMPORTSPEC TypeSystemDescription :public MetaDataObject {
   public:
-    typedef vector<TypeDescription *> TyVecpTypeDescriptions;
-    typedef vector<ImportDescription *> TyVecpImportDescriptions;
+    typedef std::vector<TypeDescription *> TyVecpTypeDescriptions;
+    typedef std::vector<ImportDescription *> TyVecpImportDescriptions;
 
 
     TypeSystemDescription()
@@ -366,7 +366,7 @@ namespace uima {
     void commit() {
       iv_bIsModifiable = false;
 
-      vector<icu::UnicodeString> alreadyImportedLocations;
+      std::vector<icu::UnicodeString> alreadyImportedLocations;
       resolveImports(alreadyImportedLocations);
       size_t i;
       for (i=0; i < iv_vecpTypeDescriptions.size(); i++) {

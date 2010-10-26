@@ -250,7 +250,7 @@ namespace uima {
       */
       void unregisterLogger(Logger *);
 
-    vector<Logger*> & getLoggers();
+    std::vector<Logger*> & getLoggers();
 
     /*@}*/
   protected:
@@ -262,16 +262,16 @@ namespace uima {
     ////bool                    iv_bIgnoreAnnotatorPathSpec;
 
 
-    typedef vector<ResourceABase *> TyResourceList;
-    typedef map<icu::UnicodeString, TyResourceList > TyResources;
+    typedef std::vector<ResourceABase *> TyResourceList;
+    typedef std::map<icu::UnicodeString, TyResourceList > TyResources;
     TyResources iv_resources;
 
-    typedef map<icu::UnicodeString, ResourceFactoryABase *> TyResourceFactories;
+    typedef std::map<icu::UnicodeString, ResourceFactoryABase *> TyResourceFactories;
     TyResourceFactories iv_resourceFactories;
 
 
-    typedef map<std::string, util::Filename *> TyURIStreamHandlers;
-    map<std::string, util::Filename*>   iv_streamhandlers;
+    typedef std::map<std::string, util::Filename *> TyURIStreamHandlers;
+    std::map<std::string, util::Filename*>   iv_streamhandlers;
 
 
     util::Location          iv_locationWork;
@@ -281,7 +281,7 @@ namespace uima {
     TCHAR                   schemaInfo[1024];
 
     //Logging
-    vector<Logger *>        iv_loggers;    //registered loggers
+    std::vector<Logger *>        iv_loggers;    //registered loggers
     FileLogger *            iv_fileLogger; //created if UIMACPP_LOGFILE env variable is set.
 
     LogStream::EnEntryType  iv_logLevel;  // minimum level for message to be logged

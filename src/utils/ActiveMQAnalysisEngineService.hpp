@@ -33,7 +33,7 @@
 #include "time.h"
 #include <apr_thread_proc.h>
 
-
+using namespace std;
 using namespace cms;
 using namespace uima;
 

@@ -39,7 +39,7 @@
 #include "uima/msg.h"
 
 #include <vector>
-
+using namespace std;
 namespace uima {
 
   UIMA_EXC_CLASSIMPLEMENT(ConfigException, Exception);

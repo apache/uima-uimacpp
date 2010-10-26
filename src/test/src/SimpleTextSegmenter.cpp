@@ -23,7 +23,7 @@ Example CAS Multiplier
 #include <stdio.h>
 #include "uima/api.hpp"
 using namespace uima;
-
+using namespace std;
 
 class  SimpleTextSegmenter : public Annotator {
 private:

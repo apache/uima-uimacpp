@@ -79,7 +79,7 @@ namespace uima {
       /**
        * initialize from the string-based description derived from configuration XML file
        */
-      void init( vector<Capability*> const & vecCap, TypeSystem const & typeSystem, EnMatchPolicy enMatchPolicy = enStrictThenLooseMatch);
+      void init( std::vector<Capability*> const & vecCap, TypeSystem const & typeSystem, EnMatchPolicy enMatchPolicy = enStrictThenLooseMatch);
       /**
        * Return the container of all output types/features that are defined
        * for a given language lang using match policy enMatchPolicy

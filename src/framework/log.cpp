@@ -51,7 +51,7 @@
 const size_t                  UIMA_LOG_STATIC_CONVERSION_BUFSIZE = 1024;
 static apr_pool_t         * logPool=0;
 static apr_thread_mutex_t * logMutex=0;
-
+using namespace std;
 /* ----------------------------------------------------------------------- */
 /*       Forward declarations                                              */
 /* ----------------------------------------------------------------------- */
@@ -64,7 +64,7 @@ static apr_thread_mutex_t * logMutex=0;
 /*       Private Implementation                                            */
 /* ----------------------------------------------------------------------- */
 namespace uima {
-  FileLogger::FileLogger(string filename) : iv_logfile(0) {
+  FileLogger::FileLogger(std::string filename) : iv_logfile(0) {
      iv_logfile = fopen(filename.c_str(),"a");
      if (iv_logfile == NULL) {   //Need to handle this better
         //cerr << "Could not open the log file " << cpszLogFile << endl;

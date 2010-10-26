@@ -74,7 +74,7 @@ namespace uima {
     CASWriterABase(CAS const & crCAS, bool bAddDocument);
     virtual ~CASWriterABase();
 
-    virtual void write(ostream& os) = 0;
+    virtual void write(std::ostream& os) = 0;
   };
 
 
@@ -85,7 +85,7 @@ namespace uima {
     XMLWriterABase(CAS const & crCAS, bool bAddDocBuffer);
     virtual ~XMLWriterABase();
 
-    virtual void write(ostream& os) = 0;
+    virtual void write(std::ostream& os) = 0;
   };
 
 }

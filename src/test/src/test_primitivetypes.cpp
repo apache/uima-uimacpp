@@ -34,15 +34,17 @@
 #include "xercesc/util/Base64.hpp"
 #include <fstream>
 XERCES_CPP_NAMESPACE_USE
+using namespace std;
 #ifndef NDEBUG
 #define ASSERT_OR_THROWEXCEPTION(x) assert(x)
 #else
-#define ASSERT_OR_THROWEXCEPTION(x) if (!(x)) { cerr << __FILE__ << ": Error in line " << __LINE__ << endl; exit(1); }
+#define ASSERT_OR_THROWEXCEPTION(x) if (!(x)) { std::cerr << __FILE__ << ": Error in line " << __LINE__ << std::endl; exit(1); }
 #endif
 
 #define LOG(x) cout << __FILE__ << __LINE__ << ": " << x << endl
 
 using namespace uima;
+
 icu::UnicodeString str1("string1");
 icu::UnicodeString str2("string2");
 icu::UnicodeString str3("string3");

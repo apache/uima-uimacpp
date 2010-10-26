@@ -77,8 +77,8 @@ namespace uima {
     class UIMA_LINK_IMPORTSPEC CASDeserializer {
     protected:
 
-      vector<pair<uima::lowlevel::TyHeapCell*, uima::lowlevel::TyHeapCell*> > vecHeapSegments;
-      vector<size_t> segmentStarts, segmentTops;
+      std::vector<std::pair<uima::lowlevel::TyHeapCell*, uima::lowlevel::TyHeapCell*> > vecHeapSegments;
+      std::vector<size_t> segmentStarts, segmentTops;
       size_t lastSegmentUsed;
 
 #ifdef BYEBYEPTRS
@@ -123,7 +123,7 @@ namespace uima {
                                           uima::CAS & rCAS);
 
 
-      void deserializeIndexedFSs(vector<SerializedCAS::TyNum> & iv_vecIndexedFSs,
+      void deserializeIndexedFSs(std::vector<SerializedCAS::TyNum> & iv_vecIndexedFSs,
                                  uima::CAS & rCAS);
 
       void deserializeTypeSystem(SerializedCAS const &, CASDefinition &);
@@ -132,8 +132,8 @@ namespace uima {
 
     public:
 
-      static void deserializeResultSpecification(vector<SerializedCAS::TyNum> const & types,
-          vector<SerializedCAS::TyNum> const & features,
+      static void deserializeResultSpecification(std::vector<SerializedCAS::TyNum> const & types,
+          std::vector<SerializedCAS::TyNum> const & features,
           CASDefinition const &,
           ResultSpecification & result);
 

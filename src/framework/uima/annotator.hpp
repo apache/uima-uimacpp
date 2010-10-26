@@ -144,7 +144,7 @@ namespace uima {
     /** Return the complete filename of this annotator. */
     const util::Filename &     getFilename(void) const;
     /** Return the name of the annotator. */
-    const string &             getSymbolicName(void) const                  {
+    const std::string &             getSymbolicName(void) const                  {
       return(iv_strSymbolicName);
     }
     /** Return the detailed error message if the load() fails. */
@@ -254,7 +254,7 @@ namespace uima {
     /* --- functions --- */
   private:
     util::Filename             iv_clFilename;
-    string                     iv_strSymbolicName;
+    std::string                     iv_strSymbolicName;
     /** const  uima::internal::AnnotatorFile **/
     util::DllProcLoaderFile *  iv_cpclFile;
     bool                       iv_bProcessUnspecifiedTerritories;

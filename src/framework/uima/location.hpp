@@ -137,7 +137,7 @@ namespace uima {
       if (envVar.hasValue())
         path = apr_pstrcat(locPool, envVar.getValue(), "/", NULL );
       else
-        path = "./";
+        path = (char*)"./";
     }
 
     /* ----------------------------------------------------------------------- */
@@ -181,7 +181,7 @@ namespace uima {
         apr_status_t rv;
         rv = apr_dir_make(path, APR_OS_DEFAULT , locPool);
         if (rv != APR_SUCCESS) {
-          cout << "Error creating dir " << path << endl;
+          std::cout << "Error creating dir " << path << std::endl;
           //TODO throw exception
           UIMA_EXC_THROW_NEW(Exception,
                              UIMA_ERR_APR_FAILURE ,

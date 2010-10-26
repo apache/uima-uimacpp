@@ -32,6 +32,7 @@
 #include "uima/taespecifierbuilder.hpp"
 #include <memory>
 #include "uima/msg.h"
+using namespace std;
 namespace uima {
 
   TypeDescription::TypeDescription(const TypeDescription & crOther) {

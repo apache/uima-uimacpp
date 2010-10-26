@@ -57,9 +57,9 @@ namespace uima {
   **/
   class UIMA_LINK_IMPORTSPEC Capability :public MetaDataObject {
   public:
-    typedef vector <icu::UnicodeString > TyVecCapabilityTofs;
-    typedef vector <icu::UnicodeString > TyVecCapabilityLanguages;
-    typedef vector <icu::UnicodeString > TyVecCapabilitySofas;
+    typedef std::vector <icu::UnicodeString > TyVecCapabilityTofs;
+    typedef std::vector <icu::UnicodeString > TyVecCapabilityLanguages;
+    typedef std::vector <icu::UnicodeString > TyVecCapabilitySofas;
 
     enum EnTypeStyle {
       INPUT, OUTPUT, INPUTSOFA, OUTPUTSOFA
@@ -86,7 +86,7 @@ namespace uima {
         break;
       default:
         //TBD: error handling
-        cerr << "Wrong output type " << typeStyle << endl;
+        std::cerr << "Wrong output type " << typeStyle << std::endl;
         break;
       }
 

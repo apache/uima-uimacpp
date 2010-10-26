@@ -20,7 +20,7 @@
 #include "uima/api.hpp"
 #include "uima/dirwalk.hpp"
 #include "uima/xmlwriter.hpp"
-
+using namespace std;
 using namespace uima;
 
 

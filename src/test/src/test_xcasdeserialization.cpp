@@ -29,7 +29,7 @@
 #include "uima/xmiwriter.hpp"
 
 #include <fstream>
-
+using namespace std;
 #ifndef NDEBUG
 #define ASSERT_OR_THROWEXCEPTION(x) assert(x)
 #else

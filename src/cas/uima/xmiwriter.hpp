@@ -104,33 +104,33 @@ namespace uima {
 
     Type iv_sofaType;
     bool isBCCas;
-    map<int, vector<int>*> enqueuedFS;
+    std::map<int, std::vector<int>*> enqueuedFS;
     int sofa;
 
-    void writeFeatureValue(ostream & os, FeatureStructure const & fs, Feature const & f);
-    void writeFSFlat(ostream & os, FeatureStructure const & fs, vector<int>* indexInfo);
+    void writeFeatureValue(std::ostream & os, FeatureStructure const & fs, Feature const & f);
+    void writeFSFlat(std::ostream & os, FeatureStructure const & fs, std::vector<int>* indexInfo);
     void findReferencedFSs(FeatureStructure const & fs, bool check=true);
     bool isReferenceType(Type const & t) const;
     bool enqueueIndexed(FeatureStructure const &fs, int sofa);
     bool enqueueUnindexed(FeatureStructure const &fs);
     bool enqueueUnindexed(int id);
     void initTypeAndNamespaceMappings();
-    void writeViews(ostream & os, CAS const & crCAS);
-    void writeView(ostream & os,int sofaXmiId, vector<lowlevel::TyFS>& members);
+    void writeViews(std::ostream & os, CAS const & crCAS);
+    void writeView(std::ostream & os,int sofaXmiId, std::vector<lowlevel::TyFS>& members);
     XmlElementName * uimaTypeName2XmiElementName(UnicodeStringRef & uimaTypeName);
     int getXmiId(int addr);
-    void writeArray(ostream & os, FeatureStructure const & array, char const * tag, int xmiid);
-    void writeBooleanArray(ostream & os, BooleanArrayFS const & array, char const * tag, int xmiid);
-    void writeStringArray(ostream & os, StringArrayFS const & array, char const * tag, int xmiid);
-    string arrayToString(FeatureStructure const & fs, char const * tag);
-    string listToString(FeatureStructure const & fs, char const * tag);
+    void writeArray(std::ostream & os, FeatureStructure const & array, char const * tag, int xmiid);
+    void writeBooleanArray(std::ostream & os, BooleanArrayFS const & array, char const * tag, int xmiid);
+    void writeStringArray(std::ostream & os, StringArrayFS const & array, char const * tag, int xmiid);
+    std::string arrayToString(FeatureStructure const & fs, char const * tag);
+    std::string listToString(FeatureStructure const & fs, char const * tag);
     void enqueueIncoming();
-    void serializeOutOfTypeSystemElements(ostream & os);
+    void serializeOutOfTypeSystemElements(std::ostream & os);
     void enqueueFSListElements(FeatureStructure const & fs);
-    vector<XmlElementName*> xmiTypeNames;  // array, indexed by type code, 
+    std::vector<XmlElementName*> xmiTypeNames;  // array, indexed by type code, 
                                            // giving XMI names for each type
-    map<string, string> nsUriToPrefixMap;
-    set<string> nsPrefixesUsed;
+    std::map<std::string, std::string> nsUriToPrefixMap;
+   std::set<std::string> nsPrefixesUsed;
     XmiSerializationSharedData * sharedData;
     
     static char const *  XMI_NS_URI;
@@ -150,7 +150,7 @@ namespace uima {
     XmiWriter(CAS const & crCAS, bool bAddDocBuffer, XmiSerializationSharedData * );
     ~XmiWriter();
 
-    virtual void write(ostream& os);
+    virtual void write(std::ostream& os);
   };
 
 }

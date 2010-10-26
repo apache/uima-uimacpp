@@ -80,7 +80,7 @@ static jobject getSerializedCasData (JNIEnv* jeEnv, jobject joJTaf, jint jiWhich
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 
 /********************************************************************
  ***** JNILogger

@@ -34,7 +34,7 @@
 #include "uima/api.hpp"
 #include "uima/envvars.h"
 #include "unicode/ucnv.h"
-
+using namespace std;
 using namespace uima;
 
 /* ----------------------------------------------------------------------- */

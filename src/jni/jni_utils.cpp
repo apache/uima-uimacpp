@@ -56,7 +56,7 @@
 /* ----------------------------------------------------------------------- */
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
-
+using namespace std;
 jfieldID JNIUtils::getFieldID(JNIEnv* jeEnv, jobject jo, char const * sig, char const * cpszFieldID) {
   jclass clazz = jeEnv->GetObjectClass(jo);
   ASSERT_NO_JNI_EXCEPTION(jeEnv);

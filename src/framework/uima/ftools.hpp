@@ -62,7 +62,7 @@ ftool_ReadFileToBuffer(
 UIMA_LINK_IMPORTSPEC size_t
 ftool_ReadFileToString(
   const uima::util::Filename& rclFileName,
-  string&             rsData
+  std::string&             rsData
 );
 
 /**

@@ -68,7 +68,6 @@
 
 #ifdef __cplusplus
 #include <string>
-using namespace std;
 #endif
 
 #ifndef U_OVERRIDE_CXX_ALLOCATION

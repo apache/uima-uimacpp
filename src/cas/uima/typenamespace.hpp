@@ -94,7 +94,7 @@ namespace uima {
     icu::UnicodeString const & getName() const;
 
     /// Return a container with type objects for all types in this namespace
-    void getAllTypes(vector<Type> & rResult) const;
+    void getAllTypes(std::vector<Type> & rResult) const;
 
     /// Return the typesystem this namespace lives in
     TypeSystem const & getTypeSystem() const;
@@ -111,7 +111,7 @@ namespace uima {
    */
   class UIMA_LINK_IMPORTSPEC TypeNameSpaceImport {
   private:
-    vector<TypeNameSpace> iv_vecImports;
+    std::vector<TypeNameSpace> iv_vecImports;
     uima::TypeSystem const * iv_cpTypeSystem;
   public:
     /**
@@ -138,7 +138,7 @@ namespace uima {
      * Return a container with type objects for all types of all namespace
      * that have been added to this TypeNameSpaceImport object
      */
-    void getAllTypes(vector<Type> & rResult) const;
+    void getAllTypes(std::vector<Type> & rResult) const;
 
     /// Return the typesystem this TypeNameSpaceImport object lives in
     TypeSystem const & getTypeSystem() const;

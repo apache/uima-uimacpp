@@ -44,7 +44,7 @@
 /* ----------------------------------------------------------------------- */
 namespace uima {
   class AnalysisEngineDescription;
-  class internal::CASDefinition;
+  //class internal::CASDefinition;
 }
 
 
@@ -63,8 +63,8 @@ namespace uima {
 
   class UIMA_LINK_IMPORTSPEC CASPool {
   private:
-    vector<CAS *> iv_vecAllInstances;
-    vector<CAS *> iv_vecFreeInstances;
+    std::vector<CAS *> iv_vecAllInstances;
+    std::vector<CAS *> iv_vecFreeInstances;
     size_t    iv_numInstances;
     uima::internal::CASDefinition * iv_pCasDef;
 

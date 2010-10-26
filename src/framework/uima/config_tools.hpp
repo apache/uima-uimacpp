@@ -170,7 +170,7 @@ namespace uima {
         // required value not there: return error we got from config
         return utErrId;
       }
-      convertFromString((string)crclOptionInfo.cpszDefaultValueAsString, rclTargetVariable);
+      convertFromString((std::string)crclOptionInfo.cpszDefaultValueAsString, rclTargetVariable);
       // we used the provided default: this is not an error so we return OK
       utErrId = UIMA_ERR_NONE;
     }
@@ -285,9 +285,9 @@ namespace uima {
 #endif
 
 #if defined(__SUNPRO_CC)
-    vector<ContainerType::value_type> elements;
+    std::vector<ContainerType::value_type> elements;
 #else
-    vector<ElementType> elements;
+    std::vector<ElementType> elements;
 #endif
 
     if (EXISTS(cpclConfigGroup)) {
@@ -306,10 +306,10 @@ namespace uima {
         // required value not there: return error we got from config
         return utErrId;
       }
-      vector< string > vecTmpStrings;
+      std::vector< std::string > vecTmpStrings;
       delimitedString2Vector(
         vecTmpStrings,
-        (string)crclOptionInfo.cpszDefaultValueAsString,
+        (std::string)crclOptionInfo.cpszDefaultValueAsString,
         ",",
         true,   // trim strings
         false   // insert empty strings

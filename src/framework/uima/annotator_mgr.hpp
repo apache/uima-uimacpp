@@ -241,7 +241,7 @@ namespace uima {
       static bool shouldEngineBeCalled(internal::CapabilityContainer const &,
                                        ResultSpecification const & rResultSpec,
                                        Language const &,
-                                       vector<TypeOrFeature>&) ;
+                                       std::vector<TypeOrFeature>&) ;
 
       /* COPY CONSTRUCTOR NOT SUPPORTED */
       AnnotatorManager(const AnnotatorManager & ); //lint !e1704

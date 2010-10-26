@@ -40,7 +40,7 @@
 #include "uima/lowlevel_index.hpp"
 #include "uima/lowlevel_indexrepository.hpp"
 #include "uima/fsfilterbuilder.hpp"
-
+using namespace std;
 using namespace uima::internal;
 /* ----------------------------------------------------------------------- */
 /*       Constants                                                         */
