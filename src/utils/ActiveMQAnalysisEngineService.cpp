@@ -166,6 +166,10 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
 
       //default exception listener
       this->iv_pConnection->setExceptionListener(this);	
+      ActiveMQConnection* amqConnection = dynamic_cast<ActiveMQConnection*>( this->iv_pConnection );
+      if( amqConnection != NULL ) {
+        amqConnection->addTransportListener( this );
+      }
       // Create a Producer Session
       LOGINFO(FINEST,"AMQConnection() create Producer Session " + iv_brokerURL);
       this->iv_pProducerSession = this->iv_pConnection->createSession( Session::AUTO_ACKNOWLEDGE );
@@ -369,6 +373,21 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
                        << iv_brokerURL << " is broken. Reconnecting ... " << ex.getMessage() << endl;
     LOGWARN(str.str());
   }
+  void AMQConnection::transportInterrupted() {
+        std::cout << "The Connection's Transport has been Interrupted." << std::endl;
+		stringstream str;
+        str << "AMQConnection()::transportInterrupted() Connection to " 
+                       << iv_brokerURL << " has been interrupted. Reconnecting ... " << endl;
+        LOGWARN(str.str());
+    }
+
+  void AMQConnection::transportResumed() {
+        std::cout << "The Connection's Transport has been Restored." << std::endl;
+		stringstream str;
+        str << "AMQConnection()::transportResumed() Reconnected to " 
+                       << iv_brokerURL  << endl;
+        LOGWARN(str.str());
+    }
 
   TextMessage * AMQConnection::getTextMessage() {
     if (this->iv_pReplyMessage == NULL) {
@@ -721,6 +740,9 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
             errInfo.getMessage().getMessageID(),
             ErrorInfo::unrecoverable);
     }
+
+    CAS * mcas = pEngine->newCAS();
+    delete mcas;
     const AnalysisEngineMetaData & aeMetaData = pEngine->getAnalysisEngineMetaData();			
     icu::UnicodeString xmlBuffer;
     xmlBuffer.insert(0, "<?xml version=\"1.0\"?>");
@@ -729,6 +751,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
     UnicodeStringRef uref(xmlBuffer.getBuffer(), xmlBuffer.length());
 
     this->iv_aeDescriptor = uref.asUTF8();
+    //cout << this->iv_aeDescriptor << endl;
   }
 
 

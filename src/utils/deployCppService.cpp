@@ -24,6 +24,8 @@
 #include "ActiveMQAnalysisEngineService.hpp"
 #include "deployCppService.hpp"
 #include <activemq/core/ActiveMQConsumer.h>
+#include <activemq/library/ActiveMQCPP.h>
+using namespace std;
 using namespace activemq::exceptions;
 
 int shutdown_service;
@@ -47,6 +49,8 @@ int main(int argc, char* argv[]) {
   cout << __FILE__ << " Starting the UIMA C++ Remote Service using ActiveMQ broker." << std::endl;
  // cout << "-----------------------------------------------------\n";
   // _CrtSetBreakAlloc(1988);
+  activemq::library::ActiveMQCPP::initializeLibrary();
+  std::cout << "Running with ActiveMQ CPP failover enabled. " << std::endl;
   try {
     if (argc < 3) {
       printUsage();
@@ -193,6 +197,7 @@ int main(int argc, char* argv[]) {
   cout << __FILE__ " UIMA C++ Remote Service terminated:\n";
   //cout << "=====================================================\n";    
 
+  activemq::library::ActiveMQCPP::shutdownLibrary();
    exit(0);
 
 }  //main

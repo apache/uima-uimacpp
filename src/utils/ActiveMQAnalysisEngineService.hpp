@@ -33,6 +33,9 @@
 #include "time.h"
 #include <apr_thread_proc.h>
 
+#include <activemq/transport/DefaultTransportListener.h>
+using namespace activemq::transport;
+
 using namespace std;
 using namespace cms;
 using namespace uima;
@@ -66,6 +69,7 @@ protected:
 // and MessageConsumer and to send and receive messages.
 //----------------------------------------------------------
 class AMQConnection : public ExceptionListener, 
+	public DefaultTransportListener,
                       public CommonUtils {
 private:
   string iv_brokerURL;
@@ -94,6 +98,8 @@ private:
   
   void initialize();
 public:
+  virtual void transportInterrupted();
+  virtual void transportResumed();
   static ConnectionFactory * createConnectionFactory(ServiceParameters & params);
   
 	/** Establish connection to the broker and create a Message Producer session. 
