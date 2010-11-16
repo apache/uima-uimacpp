@@ -464,12 +464,6 @@ namespace uima {
       ++iv_uiNbrOfDocsProcessed;
       assert(iv_bIsInitialized);
 
-      //get the CAS View
-      tcas = &cas;
-      if (cas.isBackwardCompatibleCas() ) {
-        tcas = cas.getView(cas.getSofa(iv_pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA)));
-      }
-
       assert(!iv_vecEntries.empty());
       for (it = iv_vecEntries.begin(); it != iv_vecEntries.end(); ++it) {
         EngineEntry & rEntry =  (*it);
@@ -489,8 +483,10 @@ namespace uima {
         UIMA_TPRINT("--------- Checking annotator: " << pEngine->getAnalysisEngineMetaData().getName());
         vector<TypeOrFeature> tofsToBeRemoved;
         bool callEngine=true;
-        bool requiresTCas=false;
-        if ( EXISTS(tcas) ) {
+        bool requiresTCas=true;
+
+        if (cas.isBackwardCompatibleCas()) {
+	  tcas = &cas;
 
           //this populates the tofsToBeRemoved vector so always call it
           callEngine = shouldEngineBeCalled(*pCapContainer,
@@ -537,23 +533,21 @@ namespace uima {
             Capability * cap = vecCap.at(i);
             Capability::TyVecCapabilitySofas inputSofa = cap->getCapabilitySofas(Capability::INPUTSOFA);
             Capability::TyVecCapabilitySofas outputSofa = cap->getCapabilitySofas(Capability::OUTPUTSOFA);
-            if (inputSofa.size() == 0 || outputSofa.size() == 0) {
-              requiresTCas = true;
+            if (inputSofa.size() > 0 || outputSofa.size() > 0) {
+              requiresTCas = false;
               break;
             }
           }
 
           if (requiresTCas) {
-            if (!EXISTS(tcas)) {
-              SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
-              if (!defSofa.isValid()) {
-                //TODO: throw exception
-                cerr << "could not get default text sofa " << endl;
-                return 99;
-              }
-              tcas = cas.getView(defSofa);
-            }
-            utErrorId = pEngine->process(*tcas, annResSpec);
+	    SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
+	    if (!defSofa.isValid()) {
+	      //TODO: throw exception
+	      cerr << "could not get default text sofa " << endl;
+	      return 99;
+	    }
+	    tcas = cas.getView(defSofa);
+	    utErrorId = pEngine->process(*tcas, annResSpec);
           } else {
             utErrorId = ((AnalysisEngine*) pEngine)->process(cas, annResSpec);
           }
