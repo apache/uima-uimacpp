@@ -1364,7 +1364,6 @@ namespace uima {
 
     // type system
 
-    if (isPrimitive()) {
       s.append("<typeSystemDescription>");
       TypeSystemDescription const * typeDesc = md.getTypeSystemDescription();
       if (typeDesc != NULL) {
@@ -1457,7 +1456,6 @@ namespace uima {
         }
       }
       s.append("</types></typeSystemDescription>");
-    }
 
     //fsIndexCollection
     s.append("<fsIndexCollection>");
