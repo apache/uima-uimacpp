@@ -87,18 +87,18 @@ namespace uima {
 
     /** Call the annotator to initialize itself based on an AnnotatorContext. */
     virtual
-    TyErrorId               initialize(AnnotatorContext & rclAnnotatorContext) = 0;
+    TyErrorId               initialize(AnnotatorContext & rclAnnotatorContext); // = 0;
 
     /**
      * Call the annotator to cache type/feature objects used in subsequent process() calls.
      */
     virtual
-    TyErrorId               typeSystemInit(TypeSystem const &) = 0;
+    TyErrorId               typeSystemInit(TypeSystem const &); // = 0;
 
     /** Call the annotator to deinitialize itself.
      */
     virtual
-    TyErrorId               destroy(void) = 0;
+    TyErrorId               destroy(void); // = 0;
 
     /** Call the annotator to reconfigure itself.(optional method)
      */
@@ -112,7 +112,7 @@ namespace uima {
      * view of the CAS.
      */
     virtual
-    TyErrorId               process(CAS & cas, ResultSpecification const & crResultSpecification) = 0;
+    TyErrorId               process(CAS & cas, ResultSpecification const & crResultSpecification); // = 0;
 
 
     /** Call the annotator to perform a batchProcessComplete operation. */
@@ -164,8 +164,24 @@ namespace uima {
     ;
   }
 
+  inline TyErrorId Annotator::initialize(AnnotatorContext & rclAnnotatorContext) {
+    return (TyErrorId)UIMA_ERR_NONE;
+  }
+
+  inline TyErrorId Annotator::typeSystemInit(TypeSystem const &) {
+    return (TyErrorId)UIMA_ERR_NONE;
+  }
+
+  inline TyErrorId Annotator::destroy() {
+    return (TyErrorId)UIMA_ERR_NONE;
+  }
+
   inline TyErrorId Annotator::reconfigure() {
     return (TyErrorId)UIMA_ERR_NONE;
+  }
+
+  inline TyErrorId Annotator::process(CAS & cas, ResultSpecification const & crResultSpecification) {
+    return (TyErrorId) UIMA_ERR_NONE;
   }
 
   inline TyErrorId Annotator::batchProcessComplete() {
