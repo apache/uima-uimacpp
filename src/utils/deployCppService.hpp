@@ -748,14 +748,18 @@ static void signal_handler(int signum) {
   stringstream str;
   str << __FILE__ << __LINE__ << " Received Signal: " << signum;
   cerr << str.str() << endl;
-  //singleton_pMonitor->shutdown();
-  singleton_pMonitor->setQuiesceAndStop();
+  singleton_pMonitor->shutdown();
+  //terminateService();
+  //activemq::library::ActiveMQCPP::shutdownLibrary();
+  // exit(0);
+
+  //singleton_pMonitor->setQuiesceAndStop();
 }
 
 
 static int terminateService() {
 
-  cout << "deployCppService::terminateService" << endl;
+  cout << __FILE__ << __LINE__ << "::terminateService" << endl;
 
   if (cs) {
     apr_socket_close(cs);
@@ -865,18 +869,33 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
   //to controller.
   string msg = "0";
   apr_size_t len = msg.length();
+  apr_socket_timeout_set(cs, 5000000);
   rv = apr_socket_send(cs, msg.c_str(), &len);
+  if (rv != APR_SUCCESS || len != msg.length() ) {
+    singleton_pMonitor->shutdown();
+    return 0;
+  }
   len = 1;
   apr_socket_send(cs,"\n", &len);
-  cout << "sent 0 to controller " << endl;
+  //cout << "sent 0 to controller " << endl;
   //receive JMX, admin requests from controller 
   char buf[16];
   memset(buf,0,16);
   len = 16;
-  while ( (rv = apr_socket_recv(cs, buf, &len)) != APR_EOF) {
+  apr_socket_timeout_set(cs,-1);
+  bool doloop = true;
+  //while ( (rv = apr_socket_recv(cs, buf, &len)) != APR_EOF) {
+  while (doloop) {
+    rv = apr_socket_recv(cs,buf,&len);
+    if (APR_STATUS_IS_TIMEUP(rv) ) continue;    
+    if (APR_STATUS_IS_EOF(rv)  || APR_STATUS_IS_ECONNRESET(rv) ) {
+      cerr << __FILE__ << __LINE__ << "::handleCommands Connection broken... apr_status=" << rv << endl;
+      doloop = false;
+      continue;
+    }
     string command = buf;
     memset(buf,0,16);
-    cout << len << " apr_socket_recv command=" << command << endl;
+    cerr << rv << " " << len << " apr_socket_recv command=" << command << endl;
     len=16;
     if (command.compare("GETSTATS")==0) {
       //singleton_pLogger->log(LogStream::EnMessage,"deployCppService","getStats","retrieving stats",0);
@@ -897,8 +916,10 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
     } else {
       if (rv != APR_SUCCESS) {
         singleton_pMonitor->shutdown();
+        doloop = false;
         break;
-      } else {
+      }   
+      else {
         char * c = new char[256];
         apr_strerror(rv, c, 255);
         stringstream str;
@@ -909,9 +930,9 @@ static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data) {
       }
     }
   }
-  apr_thread_exit(thd, APR_SUCCESS);
-  cout << "deployCppService::handleCommand() calling shutdown. " << endl;
+  cout << __FILE__ << __LINE__ << "::handleCommand() calling shutdown. " << endl;
   singleton_pMonitor->shutdown();
+  apr_thread_exit(thd,APR_SUCCESS);
   return NULL;
 }
 

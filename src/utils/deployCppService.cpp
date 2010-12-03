@@ -88,37 +88,46 @@ int main(int argc, char* argv[]) {
     aeService.startProcessingThreads();
 
     /*start receiving messages*/ 
-    cout << __FILE__ << __LINE__  << " Start receiving messages " << endl;
+    cerr << __FILE__ << __LINE__  << " Start receiving messages " << endl;
     aeService.start();
 
-    cout << __FILE__ << " UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
+    //check if java process still there
+   
+
+    cerr << __FILE__ << " UIMA C++ Service " << serviceDesc.getQueueName() << " at " <<
     serviceDesc.getBrokerURL() << " Ready to process..." << endl;
     
     /* connect to java proxy if called from java */  
     apr_thread_t *thread=0;
     apr_threadattr_t *thd_attr=0;
+
     if (cs) {
       apr_threadattr_create(&thd_attr, pool);
       rv = apr_thread_create(&thread, thd_attr, handleCommands, 0, pool);
       assert(rv == APR_SUCCESS);
       //rv = apr_thread_join(&rv, thread);
       //assert(rv == APR_SUCCESS);
+      apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
+      apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
+      apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);
+
     }  else {
+      uima::ResourceManager::getInstance().getLogger().logError(" not from java running ");
       apr_thread_t *stdinthread=0;
       rv = apr_thread_create(&stdinthread, thd_attr, readstdin, 0, pool);
     }  
 
-    //wait 
-    apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
-    apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
-    apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);    
-    
+    //wait
+/**    if (cs) { 
+      apr_thread_mutex_lock(singleton_pMonitor->cond_mutex);
+      apr_thread_cond_wait(singleton_pMonitor->cond, singleton_pMonitor->cond_mutex);
+      apr_thread_mutex_unlock(singleton_pMonitor->cond_mutex);    
+    }
+**/
     if (singleton_pMonitor->getQuiesceAndStop()) {
       cerr << __FILE__ << " " << serviceDesc.getServiceName() << " Quiesce started. " << endl;
-
       //quiesce 
       aeService.quiesceAndStop();
-      
       cerr << __FILE__ << " " << serviceDesc.getServiceName() << " quiesced. " << endl;
     } else {
       cerr << __FILE__ << " Shutdown started. " << endl;
