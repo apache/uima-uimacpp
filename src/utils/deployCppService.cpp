@@ -115,6 +115,7 @@ int main(int argc, char* argv[]) {
       uima::ResourceManager::getInstance().getLogger().logError(" not from java running ");
       apr_thread_t *stdinthread=0;
       rv = apr_thread_create(&stdinthread, thd_attr, readstdin, 0, pool);
+      rv = apr_thread_join(&rv, stdinthread);
     }  
 
     //wait
