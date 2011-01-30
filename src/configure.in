@@ -140,10 +140,16 @@ CPPFLAGS="$CPPFLAGS_save"
 #
 # check for ACTIVEMQ
 #
+ACTIVEMQ_INC="$withval/include"
+for lookdir in "$withval/include" "withval"
+  do
+     ACTIVEMQ_INC="$ACTIVEMQ_INC/$lookdir"
+  done
 
 AC_ARG_WITH([activemq], AC_HELP_STRING([--with-activemq],
                                       [use ACTIVEMQ Library (no deployment wrapper by default)]),
-               [UIMA_ACTIVEMQ_INCLUDE="-I$withval/include/activemq-cpp-3.2.3"
+               [ACTIVEMQ_VER=`echo $withval/include/activemq-cpp-* | sed -e 's/.*activemq-cpp-//'`
+               UIMA_ACTIVEMQ_INCLUDE="-I$withval/include/activemq-cpp-$ACTIVEMQ_VER"
                 UIMA_ACTIVEMQ_LIB="-L$withval/lib -lactivemq-cpp"
 		ACTIVEMQ_TEST_INCLUDE="$UIMA_ACTIVEMQ_INCLUDE"
 		AC_SUBST(UIMA_ACTIVEMQ_INCLUDE)
