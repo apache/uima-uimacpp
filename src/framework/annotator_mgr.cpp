@@ -487,11 +487,11 @@ namespace uima {
 
         if (cas.isBackwardCompatibleCas()) {
 	  tcas = &cas;
-
+		}
           //this populates the tofsToBeRemoved vector so always call it
           callEngine = shouldEngineBeCalled(*pCapContainer,
                                             resSpec,
-                                            tcas->getDocumentAnnotation().getLanguage(),
+                                            cas.getDocumentAnnotation().getLanguage(),
                                             tofsToBeRemoved);
           //check the FlowConstraintType specified in the aggregate engine
           //if CapabilityLanguageFlow whether engine is called is
@@ -506,7 +506,7 @@ namespace uima {
           if (flowType == FlowConstraints::FIXED) {
             callEngine=true;
           }
-        }
+        
 
         if ( callEngine ) {
 
