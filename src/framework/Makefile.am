@@ -50,7 +50,8 @@ INCLUDES += $(UIMA_JDK_INCLUDE)
 INCLUDES += $(UIMA_JDK_INCLUDE)/genunix
 INCLUDES += $(UIMA_JDK_INCLUDE)/linux
 
-libuima_la_LDFLAGS = -version-info $(LT_VERSION_NUMBER) -release $(LT_RELEASE_NUMBER)
+libuima_la_LDFLAGS = -version-info $(LT_VERSION_NUMBER) 
+#-release $(LT_RELEASE_NUMBER)
 #AM_LDFLAGS = -release $(LIB_VERSION)
 
 if DEBUG_UIMA
