@@ -344,7 +344,7 @@ typedef AnnotatorDump UserDefinedAnnotator;
 /*   Include generic C API wrapper                                         */
 /* ----------------------------------------------------------------------- */
 
-#include "uima/annotator_generic.inl"
-
+///#include "uima/annotator_generic.inl"
+MAKE_AE(AnnotatorDump);
 /* <EOF> */
 

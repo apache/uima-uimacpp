@@ -19,11 +19,11 @@
 
 bin_PROGRAMS = $(UTILS_BIN)
 
-if ACTIVEMQ_FOUND
+#if ACTIVEMQ_FOUND
 UTILS_BIN= runAECpp deployCppService
-else
-UTILS_BIN= runAECpp
-endif
+#else
+#UTILS_BIN= runAECpp
+#endif
 
 test_tgt: $(UTILS_BIN)
 
@@ -38,13 +38,16 @@ endif
 AM_CPPFLAGS += -D_GNU_SOURCE
 
 # Set default for all target_LDADD values
-LDADD = $(UIMA_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB)
+LDADD = $(UIMA_LIB) $(UIMA_APR_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB)
 
 runAECpp_SOURCES = runAECpp.cpp
 runAECpp_CPPFLAGS  = -g -DDEBUG
 runAECpp_CPPFLAGS += -D_GNU_SOURCE
 
-deployCppService_SOURCES = deployCppService.cpp ActiveMQAnalysisEngineService.cpp
+deployCppService_SOURCES = deployCppService.cpp ActiveMQAnalysisEngineService.cpp deployCppService.hpp ActiveMQAnalysisEngineService.hpp
+
+
+
 deployCppService_CPPFLAGS  = -g -DDEBUG
 deployCppService_CPPFLAGS += -D_GNU_SOURCE
 

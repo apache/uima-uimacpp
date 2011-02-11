@@ -15,8 +15,19 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
-SUBDIRS = framework utils test
-EXTRA_DIST = base.mak
+#SUBDIRS = framework utils test
+SUBDIRS = src
+ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = docs data examples scriptators LICENSE buildsdk.sh README.4sdk NOTICE.4sdk RELEASE_NOTES.html
+
+
+dist-hook:
+	rm -rf `find $(distdir)/docs -name .svn`
+	rm -rf `find $(distdir)/data -name .svn`
+	rm -rf `find $(distdir)/examples -name .svn`
+	rm -rf `find $(distdir)/scriptators -name .svn`
+	rm -rf `find $(distdir) -name .svn`
+
 install-data-local:
-	$(INSTALL) base.mak $(DESTDIR)$(prefix)/lib/base.mak
+	$(INSTALL) src/base.mak $(DESTDIR)$(prefix)/lib/base.mak
 

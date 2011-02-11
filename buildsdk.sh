@@ -26,7 +26,7 @@ usage() {
 	echo "    The doxygen documentation must be built by running buildocs.sh"
 	echo "      in the docs directory of the uimacpp source tree."
 	echo "    Requires the following environment variables:"
-	echo "      UIMA_INSTALL - 'install' location of uimacpp build."
+	echo "      UIMA_INSTALLDIR - 'install' location of uimacpp build."
 	echo "                     Defaults to ./install"
 	echo "      APR_HOME - root of the APR install."
 	echo "      ICU_HOME - root of the ICU install."

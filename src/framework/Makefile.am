@@ -17,10 +17,14 @@
 
 lib_LTLIBRARIES = libuima.la
 
-include_HEADERS =
-include_HEADERS += uima/*.h
-include_HEADERS += uima/*.hpp
-include_HEADERS += ../cas/uima/*.hpp
+nobase_include_HEADERS =
+nobase_include_HEADERS += uima/*.h
+nobase_include_HEADERS += uima/*.hpp
+cas_includedir = $(includedir)/uima
+cas_include_HEADERS = ../cas/uima/*.hpp
+jni_includedir = $(includedir)/uima
+jni_include_HEADERS = ../jni/uima/*.hpp
+jni_include_HEADERS += ../jni/uima/*.h
 
 uima_tgt: libuima.la
 
@@ -46,7 +50,8 @@ INCLUDES += $(UIMA_JDK_INCLUDE)
 INCLUDES += $(UIMA_JDK_INCLUDE)/genunix
 INCLUDES += $(UIMA_JDK_INCLUDE)/linux
 
-AM_LDFLAGS = -release $(LIB_VERSION)
+libuima_la_LDFLAGS = -version-info $(LT_VERSION_NUMBER) -release $(LT_RELEASE_NUMBER)
+#AM_LDFLAGS = -release $(LIB_VERSION)
 
 if DEBUG_UIMA
 AM_CPPFLAGS = -g -DDEBUG
@@ -133,4 +138,5 @@ libuima_la_SOURCES += ../cas/xmideserializer.cpp
 libuima_la_SOURCES += ../cas/xmideserializer_handler.cpp
 libuima_la_SOURCES += ../cas/xmiwriter.cpp
 
+#libuima_la_LDFLAGS = -avoid-version -release 2.3.1 -soname libuima.2.3
 libuima_la_LIBADD = $(UIMA_XERCES_LIB) $(UIMA_APR_LIB) $(UIMA_ICU_LIB) $(UIMACPP_HOME_LIB)
