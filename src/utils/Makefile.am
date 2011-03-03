@@ -19,11 +19,11 @@
 
 bin_PROGRAMS = $(UTILS_BIN)
 
-#if ACTIVEMQ_FOUND
+if ACTIVEMQ_FOUND
 UTILS_BIN= runAECpp deployCppService
-#else
-#UTILS_BIN= runAECpp
-#endif
+else
+UTILS_BIN= runAECpp
+endif
 
 test_tgt: $(UTILS_BIN)
 

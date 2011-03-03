@@ -275,25 +275,46 @@ CPPFLAGS="$CPPFLAGS_save"
 ########################################################################
 # check for ActiveMQ new
 #
-AC_MSG_NOTICE([ActiveMQ  C++ library configuration])
-AMQ_FIND_AMQ([3.2])
+activemq=true
+AC_ARG_WITH([activemq],
+            [AS_HELP_STRING([--without-activemq],
+              [disable support for ActiveMQ service wrapper])],
+            [],
+            [with_activemq=check])
 
-if test $amq_found = "no"; then
-  AC_MSG_WARN([ACTIVEMQ not found])
-  echo "The ACTIVEMQ C++ library cannot be found."
-  echo "Please install ACTIVEMQ 3.2 or higher on this system and supply the appropriate"
-  echo "--with-activemq option to 'configure'"
+if test "x$with_activemq" = xno; then
+  activemq=false
+  echo "disabling service wrapper"
+else
+  AC_MSG_NOTICE([ActiveMQ  C++ library configuration])
+  AMQ_FIND_AMQ([3.2])
 
-  AC_MSG_ERROR([no suitable ACTIVEMQ found])
-fi
+  if test $amq_found = "no"; then
+    AC_MSG_WARN([ACTIVEMQ not found])
+    echo "The ACTIVEMQ C++ library cannot be found."
+    echo "Please install ACTIVEMQ 3.2 or higher on this system and supply the appropriate"
+    echo "--with-activemq option to 'configure'"
 
-# Get build information from XERCES
-UIMA_ACTIVEMQ_INCLUDE="$ACTIVEMQ_CXXFLAGS"
-UIMA_ACTIVEMQ_LIB="$ACTIVEMQ_LDFLAGS"
+    AC_MSG_ERROR([no suitable ACTIVEMQ found])
+  fi
 
-AC_SUBST(UIMA_ACTIVEMQ_INCLUDE)
-AC_SUBST(UIMA_ACTIVEMQ_LIB)
+  # Get build information from XERCES
+  UIMA_ACTIVEMQ_INCLUDE="$ACTIVEMQ_CXXFLAGS"
+  UIMA_ACTIVEMQ_LIB="$ACTIVEMQ_LDFLAGS"
 
+  AC_SUBST(UIMA_ACTIVEMQ_INCLUDE)
+  AC_SUBST(UIMA_ACTIVEMQ_LIB)
+  CPPFLAGS_save="$CPPFLAGS"
+  CPPFLAGS="$CPPFLAGS $UIMA_ACTIVEMQ_INCLUDE"
+  activemq=true
+  AC_CHECK_HEADER([activemq/exceptions/ExceptionDefines.h],
+                [:],
+                [activemq=false])
+  CPPFLAGS="$CPPFLAGS_save"
+  if test "x$activemq" = "xfalse"; then
+    AC_MSG_ERROR([ActiveMQ Headers not found. Specify valid path to ActivMQ.])
+  fi
+fi 
 
 #########################################################################
 #
@@ -315,15 +336,17 @@ AC_SUBST(UIMA_ACTIVEMQ_LIB)
 #		AC_SUBST(UIMA_ACTIVEMQ_LIB)
 #		])
 
-CPPFLAGS_save="$CPPFLAGS"
-#CPPFLAGS="$CPPFLAGS $ACTIVEMQ_TEST_INCLUDE"
-CPPFLAGS="$CPPFLAGS $UIMA_ACTIVEMQ_INCLUDE"
-activemq=true
-AC_CHECK_HEADER([activemq/exceptions/ExceptionDefines.h],
-                [:],
-                [activemq=false])
+#CPPFLAGS_save="$CPPFLAGS"
+##CPPFLAGS="$CPPFLAGS $ACTIVEMQ_TEST_INCLUDE"
+#CPPFLAGS="$CPPFLAGS $UIMA_ACTIVEMQ_INCLUDE"
+#activemq=true
+#AC_CHECK_HEADER([activemq/exceptions/ExceptionDefines.h],
+#                [:],
+#                [activemq=false])
 
-CPPFLAGS="$CPPFLAGS_save"
+#CPPFLAGS="$CPPFLAGS_save"
+
+
 AM_CONDITIONAL([ACTIVEMQ_FOUND], [test x$activemq = xtrue])
 if test "x$activemq" = "xfalse"; then
 AC_MSG_RESULT(***ACTIVEMQ dependency not found)
