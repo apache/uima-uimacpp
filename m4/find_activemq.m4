@@ -37,7 +37,9 @@ AC_DEFUN([AMQ_FIND_AMQ],
      [ --with-activemq=PATH prefix for install ACTIVEMQ or leave out to use standard path ],
    [
       if test -d "$withval"; then
-        activemq_prefix="$withval" 
+        activemq_prefix="$withval"
+	activemq_install="$withval"
+	AC_SUBST(activemq_install) 
       else
         AC_MSG_ERROR([Invalid ACTIVEMQ path $withval])
       fi

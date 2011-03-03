@@ -37,7 +37,9 @@ AC_DEFUN([ICU_FIND_ICU],
      [ --with-icu=PATH prefix for install ICU or will try standar path ],
    [
       if test -d "$withval"; then
-        icu_prefix="$withval" 
+        icu_prefix="$withval"
+	icu_install="$withval"
+        AC_SUBST(icu_install)
       else
         AC_MSG_ERROR([Invalid ICU path $withval])
       fi

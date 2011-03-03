@@ -104,7 +104,8 @@ AC_DEFUN([APR_FIND_APR], [
     if test "$withval" = "no" || test "$withval" = "yes"; then
       AC_MSG_ERROR([--with-apr requires a directory or file to be provided])
     fi
-
+    apr_install="$withval"
+    AC_SUBST(apr_install)
     for apr_temp_apr_config_file in $apr_temp_acceptable_apr_config
     do
       for lookdir in "$withval/bin" "$withval"

@@ -66,6 +66,8 @@ AC_DEFUN([AX_LIB_XERCES],
         elif test -d "$withval"; then
             xerces_prefix="$withval"
             xerces_requested="yes"
+	    xerces_install="$withval"
+            AC_SUBST(xerces_install)
         else
             xerces_prefix=""
             xerces_requested="no"
