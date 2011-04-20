@@ -30,7 +30,7 @@ dist-hook:
 
 install-data-local:
 	$(INSTALL) src/base.mak $(DESTDIR)$(prefix)/lib/base.mak
-
+	rm -f $(DESTDIR)$(prefix)/include/*.hpp
 
 docs: 	docs/html/index.html
 
