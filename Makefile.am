@@ -38,5 +38,5 @@ docs/html/index.html:
 	cd docs && ./builddocs.sh
 
 sdk:	install/bin/runAECpp docs/html/index.html $(icu_install) $(apr_install) $(xerces_install) $(activemq_install)
-	echo "Building SDK with $(icu_install) $(apr_install) $(xerces_install) $(activemq_install)"
-	export APR_HOME=$(apr_install) ICU_HOME=$(icu_install) XERCES_HOME=$(xerces_install) $ACTIVEMQ_HOME=$(activemq_install) && ./buildsdk.sh $(ARGS)
+	echo "Building SDK with $(icu_install) $(apr_install) $(xerces_install) $(activemq_install) in target directory $(ARGS)"
+	export APR_HOME=$(apr_install) ICU_HOME=$(icu_install) XERCES_HOME=$(xerces_install) ACTIVEMQ_HOME=$(activemq_install) && ./buildsdk.sh $(ARGS)
