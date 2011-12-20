@@ -15,11 +15,18 @@ using MSVC version 8, and on MacOSX with gcc version 4.0.1.
 Setting up the build environment:
 ---------------------------------
 UIMACPP has dependencies on APR, ICU, Xerces-C and ActiveMQ-cpp
-libraries.  Dependent libraries must be specified with the
+libraries.  
+
+On Windows dependent libraries must be specified with the
 environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
 ACTIVEMQ_HOME.  For now, the ActiveMQ dependency is optional; if not
 specified the UIMA-AS compatible service wrapper deployCppService will
 fail to build.
+
+On Linux, system install of dependencies - APR, ICU, XERCES, ACTIVEMQ 
+will be used if minimum version requirements are met.  They may also
+be specified with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
+ACTIVEMQ_HOME.  ActiveMQ is required.
 
 There is also a dependency on JNI headers from a Java JDK. The build
 looks for these headers in the directory specified by JAVA_INCLUDE.
@@ -50,29 +57,32 @@ assume you have unpacked the source into $HOME/uimacpp-2.X.Y-incubating.
         it should be skipped when building from a source tarball.
         The prebuild step requires relatively up-to-date GNU tools
         GNU automake v1.9.6, autoconf v2.59 and libtool v1.5.24.
-  cd $HOME/uimacpp-2.X.Y-incubating/src
-  make -f Makefile.prebuild
+  cd root of an SVN extract
+  ./autogen.sh
 
 2 Build the UIMA shared library and test routines:
-  cd $HOME/uimacpp-2.X.Y-incubating/src
-  make -f Makefile.unix install
+  cd root of the SVN extract  
+  ./configure --with-jdk=$JAVA_HOME/include --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
+  make
+  DESTDIR=`pwd` make install
+3 Build and run the test suite:
+  From root of the SVN extract  
+  make check
 
-3 Run the test suite:
-  cd $HOME/uimacpp-2.X.Y-incubating/src/test
-  ./fvt.sh
-
-4 Build the documentation:
+4 Build the SDK tree:
+  Requires environmental parameters to be set for ICU_HOME, XERCES_HOME, APR_HOME, and ACTIVEMQ_HOME.
+  From root of the SVN extract  
+  make sdk ARGS=target_dir
+  This will build the documentation.
   Note: The documentation build requires Doxygen 1.3.6 or later.
-  cd $HOME/uimacpp-2.X.Y-incubating/docs
-  ./builddocs.sh
 
-5 Build the SDK tree:
-  cd $HOME/uimacpp-2.X.Y-incubating
-  ./buildsdk.sh target_dir
+5 Package the SDK tarball:
+  cd target_dir/..
+  tar czf uimacpp-2.X.Y-bin.tgz uimacpp
 
-6 Package the SDK tarball:
-  cd target_dir
-  tar czf uimacpp-2.X.Y-incubating-bin.tgz uimacpp
+6 Build source tarball:
+  From root of the SVN extract  
+  make dist
 
 
 Building, testing and packaging on Windows:
@@ -81,27 +91,27 @@ Set up your environment as described above. The following instructions
 assume you have unpacked the source into \uimacpp-2.X.Y-incubating.
 
 1 Build the UIMA C++ framework in both release and debug:
-  cd \uimacpp-2.X.Y-incubating\src
+  cd \uimacpp-2.X.Y\src
   winmake /build release
   winmake /build debug
 
 2 Build and run the test suite:
-  cd \uimacpp-2.X.Y-incubating\src\test
+  cd \uimacpp-2.X.Y\src\test
   devenv test.sln /build release
   fvt
 
 3 Build the documentation:
   Note: The documentation build requires Doxygen 1.3.6 or later.
-  cd \uimacpp-2.X.Y-incubating\docs
+  cd \uimacpp-2.X.Y\docs
   builddocs
 
 4 Build the SDK tree:
   set MSVCRT_HOME to the directory with the msvc*.dll files required.
-  cd \uimacpp-2.X.Y-incubating
+  cd \uimacpp-2.X.Y
   buildsdk target_dir
 
 5 Package the SDK zipfile by creating a compressed folder of 
-  target_dir\uimacpp into uimacpp-2.X.Y-incubating-bin.zip
+  target_dir\uimacpp into uimacpp-2.X.Y-bin.zip
 
 
 Building, testing and packaging on Mac OSX:
