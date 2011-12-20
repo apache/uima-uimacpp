@@ -67,10 +67,10 @@ char chars[] = {
                };
 
 
-int shorts[] = {
+short shorts[] = {
                  10,20,30,40,50
                };
-int longs[] = {
+INT64 longs[] = {
                 10000,20000,30000,40000,50000
               };
 double doubles[] = {
@@ -89,7 +89,7 @@ int end = 5;
 char * viewName = "EnglishDocument";
 #define BOOLEAN_ARRAY_SIZE 20
 
-void createExampleFS(CAS & cas)  {
+void createExampleFS(CAS & cas, bool copyarrays)  {
 
   Type testType = cas.getTypeSystem().getType("test.primitives.Example");
   Feature intF = testType.getFeatureByBaseName("intFeature");
@@ -143,10 +143,13 @@ void createExampleFS(CAS & cas)  {
   }
 
   IntArrayFS intArrayFS = cas.createIntArrayFS(NUMBEROF(ints));
-  for (size_t i=0; i< NUMBEROF(ints); ++i) {
-    intArrayFS.set(i, ints[i]);
+  if (copyarrays) {
+	  intArrayFS.copyFromArray(ints,0,NUMBEROF(ints)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(ints); ++i) {
+      intArrayFS.set(i, ints[i]);
+    }
   }
-
 
   FloatListFS floatListFS = cas.createFloatListFS();
   for (size_t i=0;i < NUMBEROF(floats); i++) {
@@ -154,33 +157,62 @@ void createExampleFS(CAS & cas)  {
   }
 
   FloatArrayFS floatArrayFS = cas.createFloatArrayFS(NUMBEROF(floats));
-  for (size_t i=0; i< NUMBEROF(floats); ++i) {
-    floatArrayFS.set(i, floats[i]);
+  if (copyarrays) {
+	  floatArrayFS.copyFromArray(floats,0,NUMBEROF(floats)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(floats); ++i) {
+      floatArrayFS.set(i, floats[i]);
+    }
   }
 
   ByteArrayFS byteArrayFS = cas.createByteArrayFS(NUMBEROF(chars));
-  for (size_t i=0; i< NUMBEROF(chars); ++i) {
-    byteArrayFS.set(i, chars[i]);
+  if (copyarrays) {
+	  byteArrayFS.copyFromArray(chars,0,NUMBEROF(chars)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(chars); ++i) {
+      byteArrayFS.set(i, chars[i]);
+    }
   }
 
   BooleanArrayFS boolArrayFS = cas.createBooleanArrayFS(BOOLEAN_ARRAY_SIZE);
-  for (int i=0; i<20; i++) {
-    boolArrayFS.set(i,val=!val);
+  bool bools[BOOLEAN_ARRAY_SIZE];
+  for (int i=0; i<BOOLEAN_ARRAY_SIZE; i++) {
+    val = !val;
+    bools[i] = val;
+  }
+  if (copyarrays) {
+	boolArrayFS.copyFromArray(bools,0,NUMBEROF(bools)-1,0);
+  } else {
+    for (int i=0; i<BOOLEAN_ARRAY_SIZE; i++) {
+      boolArrayFS.set(i,bools[i]);
+    }
   }
 
   ShortArrayFS shortArrayFS = cas.createShortArrayFS(NUMBEROF(shorts));
-  for (size_t i=0; i< NUMBEROF(shorts); ++i) {
-    shortArrayFS.set(i, shorts[i]);
+  if (copyarrays) {
+	shortArrayFS.copyFromArray(shorts,0,NUMBEROF(shorts)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(shorts); ++i) {
+      shortArrayFS.set(i, shorts[i]);
+    }
   }
 
   LongArrayFS longArrayFS = cas.createLongArrayFS(NUMBEROF(longs));
-  for (size_t i=0; i< NUMBEROF(longs); ++i) {
-    longArrayFS.set(i, longs[i]);
+  if (copyarrays) {
+	longArrayFS.copyFromArray(longs,0,NUMBEROF(longs)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(longs); ++i) {
+      longArrayFS.set(i, longs[i]);
+    }
   }
 
   DoubleArrayFS doubleArrayFS = cas.createDoubleArrayFS(NUMBEROF(doubles));
-  for (size_t i=0; i< NUMBEROF(doubles); ++i) {
-    doubleArrayFS.set(i, doubles[i]);
+  if (copyarrays) {
+	doubleArrayFS.copyFromArray(doubles,0,NUMBEROF(doubles)-1,0);
+  } else {
+    for (size_t i=0; i< NUMBEROF(doubles); ++i) {
+      doubleArrayFS.set(i, doubles[i]);
+    }
   }
 
   Type annot = cas.getTypeSystem().getType(CAS::TYPE_NAME_ANNOTATION);
@@ -222,8 +254,11 @@ void createExampleFS(CAS & cas)  {
   fs.setFeatureValue(stringListF, stringListFS);
 
 }
+void createExampleFS(CAS & cas)  {
+  createExampleFS(cas, false);
+}
 
-void validateFS(CAS & cas)  {
+void validateFS(CAS & cas, bool checkcopytoarray)  {
 
 
   Type testType = cas.getTypeSystem().getType("test.primitives.Example");
@@ -290,6 +325,14 @@ void validateFS(CAS & cas)  {
   for (size_t i=0; i< NUMBEROF(ints); ++i) {
     ASSERT_OR_THROWEXCEPTION(intArrayFS.get(i)==ints[i]);
   }
+  if (checkcopytoarray) {  //copy only part of int array
+    int * destArray = new int[intArrayFS.size()];
+	intArrayFS.copyToArray(2,intArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < intArrayFS.size()-2; i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==ints[i+2]);
+	}
+	delete destArray;
+  }
 
   FloatListFS floatListFS = fs.getFloatListFSValue(floatListF);
   for (num=0; num< NUMBEROF(floats); num++) {
@@ -303,11 +346,27 @@ void validateFS(CAS & cas)  {
   for (size_t i=0; i< NUMBEROF(floats); ++i) {
     ASSERT_OR_THROWEXCEPTION(floatArrayFS.get(i)==floats[i]);
   }
+  if (checkcopytoarray) {
+    float * destArray = new float[floatArrayFS.size()];
+	floatArrayFS.copyToArray(0,floatArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < floatArrayFS.size(); i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==floats[i]);
+	}
+	delete destArray;
+  }
 
   ByteArrayFS byteArrayFS = fs.getByteArrayFSValue(byteArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(chars)==byteArrayFS.size());
   for (size_t i=0; i< NUMBEROF(chars); ++i) {
     ASSERT_OR_THROWEXCEPTION(byteArrayFS.get(i)==chars[i]);
+  }
+  if (checkcopytoarray) {
+    char * destArray = new char[byteArrayFS.size()];
+	byteArrayFS.copyToArray(0,byteArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < byteArrayFS.size(); i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==chars[i]);
+	}
+	delete destArray;
   }
 
   BooleanArrayFS boolArrayFS = fs.getBooleanArrayFSValue(booleanArrayF);
@@ -316,11 +375,28 @@ void validateFS(CAS & cas)  {
     val = !val;
     ASSERT_OR_THROWEXCEPTION(boolArrayFS.get(i)==val);
   }
+  if (checkcopytoarray) {
+    bool * destArray = new bool[boolArrayFS.size()];
+	boolArrayFS.copyToArray(0,boolArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < boolArrayFS.size(); i++ ) {
+	   val = !val;
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==val);
+	}
+	delete destArray;
+  }
 
   ShortArrayFS shortArrayFS = fs.getShortArrayFSValue(shortArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(shorts)==shortArrayFS.size());
   for (size_t i=0; i< NUMBEROF(shorts); ++i) {
     ASSERT_OR_THROWEXCEPTION(shortArrayFS.get(i)==shorts[i]);
+  }
+  if (checkcopytoarray) {
+    short * destArray = new short[shortArrayFS.size()];
+	shortArrayFS.copyToArray(0,shortArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < shortArrayFS.size(); i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==shorts[i]);
+	}
+	delete destArray;
   }
 
   LongArrayFS longArrayFS = fs.getLongArrayFSValue(longArrayF);
@@ -328,11 +404,27 @@ void validateFS(CAS & cas)  {
   for (size_t i=0; i< NUMBEROF(longs); ++i) {
     ASSERT_OR_THROWEXCEPTION(longArrayFS.get(i)==longs[i]);
   }
+  if (checkcopytoarray) {
+    INT64 * destArray = new INT64[longArrayFS.size()];
+	longArrayFS.copyToArray(0,longArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < longArrayFS.size(); i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==longs[i]);
+	}
+	delete destArray;
+  }
 
   DoubleArrayFS doubleArrayFS = fs.getDoubleArrayFSValue(doubleArrayF);
   ASSERT_OR_THROWEXCEPTION(NUMBEROF(doubles)==doubleArrayFS.size());
   for (size_t i=0; i< NUMBEROF(doubles); ++i) {
     ASSERT_OR_THROWEXCEPTION(doubleArrayFS.get(i) == doubles[i]);
+  }
+  if (checkcopytoarray) {
+    double * destArray = new double[doubleArrayFS.size()];
+	doubleArrayFS.copyToArray(0,doubleArrayFS.size()-1,destArray,0);
+	for (size_t i=0;i < doubleArrayFS.size(); i++ ) {
+	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==doubles[i]);
+	}
+	delete destArray;
   }
 
   FeatureStructure listFS = fs.getFSValue(fsListF);
@@ -364,8 +456,34 @@ void validateFS(CAS & cas)  {
   ASSERT_OR_THROWEXCEPTION(fs.getDoubleValue(doubleF)==doubles[0]);
 }
 
+void validateFS(CAS & cas)  {
+  validateFS(cas,false);
+}
 
+void copyArrayExample(CAS & cas) {
+  Type testType = cas.getTypeSystem().getType("test.primitives.Example");
+   Feature intArrayF = testType.getFeatureByBaseName("intArrayFeature");
+  Feature floatArrayF = testType.getFeatureByBaseName("floatArrayFeature");
+  Feature stringArrayF = testType.getFeatureByBaseName("stringArrayFeature");
+  Feature booleanArrayF = testType.getFeatureByBaseName("boolArrayFeature");
+  Feature byteArrayF = testType.getFeatureByBaseName("byteArrayFeature");
+  Feature shortArrayF = testType.getFeatureByBaseName("shortArrayFeature");
+  Feature longArrayF = testType.getFeatureByBaseName("longArrayFeature");
+  Feature doubleArrayF = testType.getFeatureByBaseName("doubleArrayFeature");
 
+   //get index repository
+  FSIndexRepository & indexRep = cas.getIndexRepository();
+
+  //   Create a view
+  CAS * englishView = cas.createView(viewName);
+  // Set the document text
+  englishView->setDocumentText(ustr);
+
+  // create an FS of exampleType and index it
+  AnnotationFS fs = englishView->createAnnotation(testType, begin, end);
+  englishView->getIndexRepository().addFS(fs);
+
+}
 
 
 
@@ -507,12 +625,23 @@ int main(int argc, char * argv[]) /*
     static TypeSystem *ts = Framework::createTypeSystemFromXMLBuffer(config, errorInfo );
     CAS* cas =  Framework::createCAS(*ts, errorInfo);
     ASSERT_OR_THROWEXCEPTION( EXISTS(cas) );
-    
+
+	LOG("UIMATEST_PRIMITIVETYPES test copyToArray ");
+	createExampleFS(*cas,false);
+    validateFS(*cas, true);
+	cas->reset();
+	LOG("UIMATEST_PRIMITIVETYPES test copyToArray ");
+	createExampleFS(*cas,true);
+    validateFS(*cas, false);
+	cas->reset();
+
+	
     /* add a FS */
     LOG("UIMATEST_PRIMITIVETYPES create a FS");
     createExampleFS(*cas);
     validateFS(*cas);
 
+   
     /* test xcas serialization */
     CAS* trgCas =  Framework::createCAS(*ts, errorInfo);
     LOG("UIMATEST_PRIMITIVETYPES test XCAS serialization");
@@ -563,6 +692,15 @@ int main(int argc, char * argv[]) /*
     //LOG("deserialize data");
     deserializer.deserializeData(serializedCas, *trgCas);
     validateFS(*trgCas);
+
+
+     /* test copyToArray and copyFromArray */
+    LOG("UIMATEST_PRIMITIVETYPES copyToArray and copyFromArray");
+    trgCas->reset();
+
+	
+
+
     delete ts;
     delete cas;
     delete trgCas;

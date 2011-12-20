@@ -169,28 +169,76 @@ namespace uima {
     size_t uiEnd,
     T* destArray,
     size_t uiDestOffset) const {
-    assertWithMsg(false, "Not yet implemented");
-    UIMA_EXC_THROW_NEW(NotYetImplementedException,
-                       UIMA_ERR_NOT_YET_IMPLEMENTED,
-                       UIMA_MSG_ID_EXC_NOT_YET_IMPLEMENTED,
-                       ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
-                       ErrorInfo::unrecoverable
-                      );
-  }
+      checkValidity(UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart , UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      uima::lowlevel::TyFSType typecode = iv_cas->getHeap()->getType(iv_tyFS);
+      T result;
+	  size_t srcOffset = uiStart;
+	  size_t numelements = uiEnd-uiStart+1;
+	  size_t destOffset = uiDestOffset;
 
+	  if (typecode== uima::internal::gs_tyIntArrayType || 
+		  typecode== uima::internal::gs_tyFloatArrayType   ) {
+			  iv_cas->getHeap()->copyToArray( srcOffset,iv_tyFS,(uima::lowlevel::TyHeapCell*) destArray,destOffset,numelements);
+	  } else if(typecode== uima::internal::gs_tyByteArrayType || 
+		        typecode== uima::internal::gs_tyBooleanArrayType) {
+		  iv_cas->getHeap()->copyToArray( srcOffset,iv_tyFS,(char*) destArray,destOffset,numelements);
+	  } else if(typecode== uima::internal::gs_tyShortArrayType ) {
+		  iv_cas->getHeap()->copyToArray( srcOffset,iv_tyFS,(short*) destArray,destOffset,numelements);
+      } else if(typecode== uima::internal::gs_tyLongArrayType || 
+		        typecode== uima::internal::gs_tyDoubleArrayType) {
+		  iv_cas->getHeap()->copyToArray( srcOffset,iv_tyFS,(INT64*) destArray,destOffset,numelements);
+      } else {
+      assertWithMsg(false, "Not yet implemented");
+      UIMA_EXC_THROW_NEW(NotYetImplementedException,
+                 UIMA_ERR_NOT_YET_IMPLEMENTED,
+                 UIMA_MSG_ID_EXC_NOT_YET_IMPLEMENTED,
+                 ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
+                 ErrorInfo::unrecoverable
+                );
+      }
+  }
   template< class T, const uima::lowlevel::TyFSType ARRAY_TYPE >
   void BasicArrayFS<T, ARRAY_TYPE>::copyFromArray(
-    T const * sourceArray,
+  T const * sourceArray,
     size_t uiStart,
     size_t uiEnd,
     size_t uiOffset) {
-    assertWithMsg(false, "Not yet implemented");
-    UIMA_EXC_THROW_NEW(NotYetImplementedException,
-                       UIMA_ERR_NOT_YET_IMPLEMENTED,
-                       UIMA_MSG_ID_EXC_NOT_YET_IMPLEMENTED,
-                       ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
-                       ErrorInfo::unrecoverable
-                      );
+      checkValidity(UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart, UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      
+	  size_t srcOffset = uiStart;
+	  size_t numelements = uiEnd-uiStart+1;
+	  size_t destOffset = uiOffset;
+	  checkArraySize(iv_tyFS, iv_cas->getHeap(), destOffset+numelements-1, UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      uima::lowlevel::TyFSType typecode = iv_cas->getHeap()->getType(iv_tyFS);
+
+	  if (typecode== uima::internal::gs_tyIntArrayType || 
+		  typecode== uima::internal::gs_tyFloatArrayType   ) {
+	    iv_cas->getHeap()->copyFromArray(  (uima::lowlevel::TyHeapCell *) sourceArray, srcOffset,  iv_tyFS, destOffset, numelements);
+      }
+      else if(typecode== uima::internal::gs_tyByteArrayType || 
+		  typecode== uima::internal::gs_tyBooleanArrayType ) {
+		iv_cas->getHeap()->copyFromArray(  (char *) sourceArray, srcOffset,  iv_tyFS, destOffset, numelements);
+       
+      }
+	  else if(typecode== uima::internal::gs_tyShortArrayType) {
+       	iv_cas->getHeap()->copyFromArray(  (short *) sourceArray, srcOffset,  iv_tyFS, destOffset, numelements);
+      }
+	  else if(typecode== uima::internal::gs_tyLongArrayType ||
+		  typecode == uima::internal::gs_tyDoubleArrayType ) {
+       	iv_cas->getHeap()->copyFromArray(  (INT64 *) sourceArray, srcOffset,  iv_tyFS, destOffset, numelements);
+      }
+      else {
+        assertWithMsg(false, "Not yet implemented");
+        UIMA_EXC_THROW_NEW(NotYetImplementedException,
+                         UIMA_ERR_NOT_YET_IMPLEMENTED,
+                         UIMA_MSG_ID_EXC_NOT_YET_IMPLEMENTED,
+                         ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
+                         ErrorInfo::unrecoverable
+                        );
+
+    }
   }
 
   template< class T, const uima::lowlevel::TyFSType ARRAY_TYPE >
