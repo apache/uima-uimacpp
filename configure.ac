@@ -16,7 +16,7 @@
  # specific language governing permissions and limitations
  # under the License.
 
-AC_INIT(libuima, 2.3.1)
+AC_INIT(libuima, 2.4.0)
 AC_CONFIG_SRCDIR(src/framework/engine.cpp)
 AM_INIT_AUTOMAKE
 
