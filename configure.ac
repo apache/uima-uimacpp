@@ -46,20 +46,10 @@ AC_ARG_ENABLE(debugtest,
 esac],[debugtest=false])
 AM_CONDITIONAL([DEBUG_TEST], [test x$debugtest = xtrue])
 
-#LIB_VERSION_MAJOR="2"
-#LIB_VERSION_MINOR="3"
-#LIB_VERSION_REV="1"
-#LIB_VERSION=${LIB_VERSION_MAJOR}.${LIB_VERSION_MINOR}.${LIB_VERSION_REV}
-#LT_RELEASE_NUMBER=${LIB_VERSION_MAJOR}.${LIB_VERSION_MINOR}
-#LT_VERSION_NUMBER=${LIB_VERSION_MAJOR}:${LIB_VERSION_MINOR}:${LIB_VERSION_REV}
 LT_VERSION_NUMBER=0:0:0
 
-#AC_SUBST(LT_RELEASE_NUMBER)
 AC_SUBST(LT_VERSION_NUMBER)
 AC_SUBST(VERSION)
-#AC_SUBST(LIB_VERSION)
-#AC_SUBST(LIB_VERSION_MAJOR)
-#AC_SUBST(LIB_VERSION_MINOR)
 AC_MSG_RESULT([release $VERSION, library $LIB_VERSION])
 
 AC_PROG_LIBTOOL
@@ -101,18 +91,6 @@ AC_SUBST(UIMA_XERCES_LIB)
 #
 # check for XercesC
 #
-
-#AC_ARG_WITH([xerces], AC_HELP_STRING([--with-xerces],
-#                                     [use Xerces C++ Library (uses $UIMACPP_HOME by default)]),
-#            [UIMA_XERCES_INCLUDE="-I$withval/include"
-#             UIMA_XERCES_LIB="-L$withval/lib -lxerces-c"
-#             XERCES_TEST_INCLUDE="$UIMA_XERCES_INCLUDE"
-#	     AC_SUBST(UIMA_XERCES_INCLUDE)
-#	     AC_SUBST(UIMA_XERCES_LIB)
-#	     ],
-#                  [XERCES_TEST_INCLUDE="-I$UIMACPP_HOME/include"
-#		   UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -lxerces-c"])
-
 CPPFLAGS_save="$CPPFLAGS"
 #CPPFLAGS="$CPPFLAGS $XERCES_TEST_INCLUDE"
 CPPFLAGS="$CPPFLAGS $UIMA_XERCES_INCLUDE"
@@ -201,20 +179,6 @@ AC_SUBST(UIMA_APR_LIB)
 # check for APR
 #
 
-#AC_ARG_WITH([apr], AC_HELP_STRING([--with-apr],
-#                                     [use APR Library (uses $UIMACPP_HOME by default)]),
-#            [APR_VER=`echo $withval/include/apr-* | sed -e 's/.*apr-//'`
-#	     UIMA_APR_INCLUDE="-I$withval/include/apr-$APR_VER"
-#             UIMA_APR_LIB="-L$withval/lib -lapr-$APR_VER"
-#             APR_TEST_INCLUDE="$UIMA_APR_INCLUDE"
-#	     AC_SUBST(UIMA_APR_INCLUDE)
-#	     AC_SUBST(UIMA_APR_LIB)
-#	     ],
-#                      [APR_VER=`echo $UIMACPP_HOME/include/apr-* | sed -e 's/.*apr-//'`
-#		       APR_TEST_INCLUDE="-I$UIMACPP_HOME/include/apr-$APR_VER"
-#		       UIMACPP_HOME_INCLUDE="$UIMACPP_HOME_INCLUDE $APR_TEST_INCLUDE"
-#		       UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -lapr-$APR_VER"])
-
 CPPFLAGS_save="$CPPFLAGS"
 #CPPFLAGS="$CPPFLAGS $APR_TEST_INCLUDE -D_GNU_SOURCE"
 CPPFLAGS="$CPPFLAGS $UIMA_APR_INCLUDE -D_GNU_SOURCE"
@@ -251,17 +215,6 @@ AC_SUBST(UIMA_ICU_LIB)
 #
 # check for ICU
 #
-
-#AC_ARG_WITH([icu], AC_HELP_STRING([--with-icu],
-#                                      [use ICU Library (uses $UIMACPP_HOME by default)]),
-#               [UIMA_ICU_INCLUDE="-I$withval/include"
-#                UIMA_ICU_LIB="-L$withval/lib -licui18n -licuuc -licuio -licudata"
-#		ICU_TEST_INCLUDE="$UIMA_ICU_INCLUDE"
-#		AC_SUBST(UIMA_ICU_INCLUDE)
-#		AC_SUBST(UIMA_ICU_LIB)
-#		],
-#                      [ICU_TEST_INCLUDE="-I$UIMACPP_HOME/include"
-#		       UIMACPP_HOME_LIB="$UIMACPP_HOME_LIB -licui18n -licuuc -licuio -licudata"])
 
 CPPFLAGS_save="$CPPFLAGS"
 #CPPFLAGS="$CPPFLAGS $ICU_TEST_INCLUDE"
@@ -320,21 +273,6 @@ fi
 #
 # check for ACTIVEMQ
 #
-#ACTIVEMQ_INC="$withval/include"
-#for lookdir in "$withval/include" "withval"
-#  do
-#     ACTIVEMQ_INC="$ACTIVEMQ_INC/$lookdir"
-#  done
-
-#AC_ARG_WITH([activemq], AC_HELP_STRING([--with-activemq],
-#                                      [use ACTIVEMQ Library (no deployment wrapper by default)]),
-#               [ACTIVEMQ_VER=`echo $withval/include/activemq-cpp-* | sed -e 's/.*activemq-cpp-//'`
-#               UIMA_ACTIVEMQ_INCLUDE="-I$withval/include/activemq-cpp-$ACTIVEMQ_VER"
-#                UIMA_ACTIVEMQ_LIB="-L$withval/lib -lactivemq-cpp"
-#		ACTIVEMQ_TEST_INCLUDE="$UIMA_ACTIVEMQ_INCLUDE"
-#		AC_SUBST(UIMA_ACTIVEMQ_INCLUDE)
-#		AC_SUBST(UIMA_ACTIVEMQ_LIB)
-#		])
 
 #CPPFLAGS_save="$CPPFLAGS"
 ##CPPFLAGS="$CPPFLAGS $ACTIVEMQ_TEST_INCLUDE"
