@@ -611,56 +611,56 @@ namespace uima {
       double getDouble(TyHeapCell offset);
 	 
 
-	  void FSHeap::copyFromArray(TyHeapCell sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
+	  void copyFromArray(TyHeapCell sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
 	    TyHeapCell * ptr = getCArrayFromFS(tyCell);
         if(ptr!=NULL) {
           memcpy(ptr + destOffset, sourceArray + srcOffset, numelements*sizeof(TyHeapCell));
         }
 	  }
 
-	  void FSHeap::copyFromArray(char sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
+	  void copyFromArray(char sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
 	    char * ptr = const_cast<char*>(get8BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(ptr + destOffset, sourceArray + srcOffset, numelements);
         }
 	  }
 
-	  void FSHeap::copyFromArray(short sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
+	  void copyFromArray(short sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
 	    short * ptr = const_cast<short*>(get16BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(ptr + destOffset, sourceArray + srcOffset, numelements * sizeof(short));
         }
 	  }
 
-	  void FSHeap::copyFromArray(INT64 sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
+	  void copyFromArray(INT64 sourceArray[], size_t srcOffset, TyHeapCell tyCell, size_t destOffset, size_t numelements) {
 	    INT64 * ptr = const_cast<INT64*>(get64BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(ptr + destOffset, sourceArray + srcOffset, numelements * sizeof(INT64));
         }
 	  }
 
-	  void FSHeap::copyToArray(size_t srcOffset, TyHeapCell tyCell, char destArray[], size_t destOffset, size_t numelements) {
+	  void copyToArray(size_t srcOffset, TyHeapCell tyCell, char destArray[], size_t destOffset, size_t numelements) {
 	    char * ptr = const_cast<char*>(get8BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(destArray + destOffset, ptr + srcOffset, numelements);
         }
 	  }
 
-	  void FSHeap::copyToArray(size_t srcOffset, TyHeapCell tyCell, TyHeapCell destArray[], size_t destOffset, size_t numelements) {
+	  void copyToArray(size_t srcOffset, TyHeapCell tyCell, TyHeapCell destArray[], size_t destOffset, size_t numelements) {
 	    TyHeapCell * ptr = const_cast<TyHeapCell*>(getCArrayFromFS(tyCell));
         if(ptr!=NULL) {
           memcpy(destArray + destOffset, ptr + srcOffset, numelements*sizeof(TyHeapCell) );
         }
 	  }
 
-	  void FSHeap::copyToArray(size_t srcOffset, TyHeapCell tyCell, short destArray[], size_t destOffset, size_t numelements) {
+	  void copyToArray(size_t srcOffset, TyHeapCell tyCell, short destArray[], size_t destOffset, size_t numelements) {
 	    short * ptr = const_cast<short*>(get16BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(destArray + destOffset, ptr + srcOffset, numelements*sizeof(short) );
         }
 	  }
 
-	  void FSHeap::copyToArray(size_t srcOffset, TyHeapCell tyCell, INT64 destArray[], size_t destOffset, size_t numelements) {
+	  void copyToArray(size_t srcOffset, TyHeapCell tyCell, INT64 destArray[], size_t destOffset, size_t numelements) {
 	    INT64 * ptr = const_cast<INT64*>(get64BitArray(tyCell));
         if(ptr!=NULL) {
           memcpy(destArray + destOffset, ptr + srcOffset, numelements*sizeof(INT64) );
