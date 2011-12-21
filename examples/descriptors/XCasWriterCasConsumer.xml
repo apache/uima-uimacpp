@@ -67,7 +67,7 @@
 			<features>
 				<featureDescription>
 					<name>uri</name>
-					<description>URI of document. (For example, file:///MyDirectory/myFile.txt for a simple file or http://incubator.apache.org/uima/index.html for content from a web source.)</description>
+					<description>URI of document. (For example, file:///MyDirectory/myFile.txt for a simple file or http://uima.apache.org for content from a web source.)</description>
 					<rangeTypeName>uima.cas.String</rangeTypeName>
 				</featureDescription>
 				<featureDescription>

@@ -7,7 +7,7 @@ Getting Started
 
 Apache UIMA C++ can be used as a standalone framework, but it is primarily intended to be integrated with the Apache UIMA Java framework. Interoperability is enhanced if the uimacpp SDK package is installed directly under the top level directory of the Apache UIMA Java framework. 
 
-For information about the Apache UIMA C++ package go to index.html in the uimacpp/docs directory. For more information about Apache UIMA, go to http://incubator.apache.org/uima/index.html, or to the documentation in the Apache UIMA Java package.
+For information about the Apache UIMA C++ package go to index.html in the uimacpp/docs directory. For more information about Apache UIMA, go to http://uima.apache.org, or to the documentation in the Apache UIMA Java package.
 
 
 Supported Platforms
@@ -64,11 +64,5 @@ For more information about UIMA C++ $UIMACPP_HOME/RELEASE_NOTES.html.
 Disclaimer
 -----------
 
-Apache UIMA is an effort undergoing incubation at The Apache Software
-Foundation (ASF). Incubation is required of all newly accepted projects
-until a further review indicates that the infrastructure, communications,
-and decision making process have stabilized in a manner consistent with
-other successful ASF projects. While incubation status is not necessarily
-a reflection of the completeness or stability of the code, it does
-indicate that the project has yet to be fully endorsed by the ASF.
+
 
