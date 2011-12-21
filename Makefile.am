@@ -18,7 +18,7 @@
 #SUBDIRS = framework utils test
 SUBDIRS = src
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = docs data examples scriptators LICENSE buildsdk.sh README.4sdk NOTICE.4sdk RELEASE_NOTES.html
+EXTRA_DIST = docs data examples scriptators LICENSE buildsdk.sh README.4src README.4sdk NOTICE.4sdk RELEASE_NOTES.html
 
 
 dist-hook:
