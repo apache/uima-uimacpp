@@ -156,7 +156,3 @@ On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and D
 Also, the APR library can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
-
-Disclaimer
------------
-

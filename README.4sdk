@@ -59,10 +59,3 @@ To test interoperability with Java using the JNI, first verify that Apache UIMA 
 For more information about the C++ sample code see $UIMACPP_HOME/examples/readme.html.
 
 For more information about UIMA C++ $UIMACPP_HOME/RELEASE_NOTES.html.
-
-
-Disclaimer
------------
-
-
-
