@@ -261,8 +261,8 @@ REM xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
 if not "%ACTIVEMQ_HOME%" == "" (
   echo.
   echo copying from %ACTIVEMQ_HOME%...
-  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL\activemq-cpp.dll %UIMA_DIR%\bin
-  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2005-build\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
+  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2008-build\win32\ReleaseDLL\activemq-cpp.dll %UIMA_DIR%\bin
+  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2008-build\win32\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
 )
 
 echo cleaning the target tree
