@@ -82,7 +82,7 @@ private:
 
   //consumer session
   Session* iv_pConsumerSession;
-	MessageConsumer * iv_pConsumer;
+  MessageConsumer * iv_pConsumer;
   string iv_inputQueueName;
   cms::Queue * iv_pInputQueue;      
   MessageListener * iv_pListener;
@@ -104,7 +104,7 @@ public:
   
 	/** Establish connection to the broker and create a Message Producer session. 
    */
-  AMQConnection ( ConnectionFactory * connFact, Monitor * pStatistics, int id);
+  AMQConnection ( ConnectionFactory * connFact, string brokerURL, Monitor * pStatistics, int id);
 
   /** Creates a MessageConsumer session and registers a listener. 
       Caller owns the listener. */

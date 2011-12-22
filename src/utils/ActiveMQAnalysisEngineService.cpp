@@ -88,11 +88,12 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
  };
 
  AMQConnection::AMQConnection(  ConnectionFactory * connFact, 
-                                      Monitor * pMonitor, int id) :
+                                      string brokerURL, Monitor * pMonitor, int id) :
                                       iv_id(id),
                                       iv_pConnFact(connFact),
                                       //iv_pMonitor(0),
-                                      iv_brokerURL(((ActiveMQConnectionFactory*)connFact)->getBrokerURL()), 
+                                      //iv_brokerURL(((ActiveMQConnectionFactory*)connFact)->getBrokerURL()), 
+									  iv_brokerURL(brokerURL),
                                       iv_pConnection(0), 
                                       iv_pConsumerSession(0),
                                       iv_pConsumer(0),
@@ -615,7 +616,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
       if (ite == iv_connections.end()) {
         LOGINFO(FINE,"AMQConnectionsCache::getConnection() create new connection to " +
           brokerURL);
-        connection = new AMQConnection(iv_pConnFact, iv_pMonitor, iv_connections.size());
+        connection = new AMQConnection(iv_pConnFact, brokerURL, iv_pMonitor, iv_connections.size());
         if (connection == NULL) {
           LOGERROR("AMQConnectionCache::getConnection Could not create a endpoint connection to " +
             brokerURL);
@@ -633,7 +634,7 @@ static void* APR_THREAD_FUNC handleMessages(apr_thread_t *thd, void *data) {
             LOGWARN("AMQConnectionCache::getEndPoint() Existing connection invalid. Reconnecting to " + brokerURL );
             delete connection;
             this->iv_connections.erase(brokerURL);
-            connection = new AMQConnection(iv_pConnFact, iv_pMonitor, iv_connections.size());
+            connection = new AMQConnection(iv_pConnFact, brokerURL, iv_pMonitor, iv_connections.size());
             if (connection == NULL) {
               LOGERROR("AMQConnectionCache::getConnection() could not connect to "
                 + brokerURL );
@@ -1285,7 +1286,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
       //create a AnalysisEngine and CAS for each instance
       for (int i=0; i < iv_numInstances; i++) {
         //create the connection
-        AMQConnection * newConnection = new AMQConnection(this->iv_pConnFact, this->iv_pMonitor, i);
+        AMQConnection * newConnection = new AMQConnection(this->iv_pConnFact, params.getBrokerURL(), this->iv_pMonitor, i);
         if (newConnection == NULL) {
           LOGERROR("AMQAnalysisEngineService::initialize() Could not create ActiveMQ endpoint connection.");
           ErrorMessage msg(UIMA_MSG_ID_LOG_ERROR);
@@ -1372,7 +1373,7 @@ void AMQListener::receiveAndProcessMessages(apr_thread_t * thd) {
       //Fast GetMeta
       //create connection 
      LOGINFO(FINEST, "AMQAnalysisEngineService::initialize() Setup GETMETA instance.");
-     iv_pgetMetaConnection = new AMQConnection(this->iv_pConnFact, this->iv_pMonitor, iv_numInstances);
+     iv_pgetMetaConnection = new AMQConnection(this->iv_pConnFact, params.getBrokerURL(), this->iv_pMonitor, iv_numInstances);
 
      if (iv_pgetMetaConnection == NULL) {
           LOGERROR("AMQAnalysisEngineService::initialize() Could not create fast getmeta ActiveMQ endpoint connection.");
