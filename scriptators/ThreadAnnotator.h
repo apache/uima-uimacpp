@@ -20,7 +20,6 @@
 #include "apr_thread_proc.h"
 #include "apr_thread_mutex.h"
 #include "apr_thread_cond.h"
-
 template <class _Annotator>
 class ThreadAnnotator : public uima::Annotator {
   _Annotator *child;
@@ -120,7 +119,7 @@ public:
     apr_sleep(1000);
 	apr_thread_mutex_lock(mutex);
  	if (!threadReady) {
-	  cerr << "WARNING: ThreadAnnotator worker thread not ready! " << endl;
+	  std::cerr << "WARNING: ThreadAnnotator worker thread not ready! " << std::endl;
  	}
 	apr_thread_mutex_unlock(mutex);
   }
