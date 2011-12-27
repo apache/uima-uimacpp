@@ -140,9 +140,9 @@ Download and build information for these libraries are at:
   XERCES   - http://xml.apache.org/xerces-c/
   ACTIVEMQ - http://activemq.apache.org/cms/download.html
 
-ACTIVEMQ CPP library version 3.2 or higher is required.
-ACTIVEMQ CPP has a dependency on APR at version 1.3.8 or higher.
-
+ACTIVEMQ CPP library version 3.2 or higher is required to support the ActiveMQ failover protocol
+and to support multi-byte payload data.
+ACTIVEMQ CPP 3.2 and higher has a dependency on APR at version 1.3.8 or higher.
 
 For UNIX users that cannot or do not want to install these at
 system root, specify DESTDIR for the install step. For example,
@@ -151,8 +151,28 @@ after building APR, install using:
   DESTDIR=`pwd` make install
 
 On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
- e.g. devenv vs2005-build/vs2005-activemq.vcproj /build ReleaseDLL
+ e.g. devenv vs2008-build/vs2008-activemq.vcproj /build ReleaseDLL
 
 Also, the APR library can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
+
+UIMA C++ Release Compatibility
+-------------------------------
+
+There  a two distinct features of UIMA C++ to consider when dealing with release compatibility:
+
+- The framework dynamically loads annotators which are user code. The annotators make calls to UIMA C++ APIs 
+   and are built with some version of the SDK. A possible scenario is for an application to run annotators that 
+   were built with different  releases of UIMA C++ SDK.
+-  The SDK depends on ICU, XERCES, APR and ACTIVEMQ-CPP and a release is built with a particular version of these.  
+   Binary compatibility therefore depends on the compatibility of these underlying libraries.  In particular,  
+   ICU and XERCES encode the major and minor release numbers in the APIs which restricts binary compatibility across 
+   releases of these libraries.   An application running UIMA C++ is restricted to running one version of the ICU library 
+   in a process and all annotators and underlying libraries must use the same ICU version.
+   
+We do not enforce binary compatility when doing a release.
+
+Installing UIMACPP SDK as a system-wide shared library is discouraged since we do not
+have support for parallel versions.  The include directory does not have version number and
+there cannot be multiple versions of executable runAECpp and deployCppService.

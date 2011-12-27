@@ -3,13 +3,10 @@ Instructions for creating a uimacpp release or a new build
 
 For a new release
 
-1. create a branch for the new release, e.g.
-	svn copy https://svn.apache.org/repos/asf/uima/uimacpp/trunk https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-2.4.0 -m"create branch for 2.4.0 release"
+1. create a tag for the new release, e.g.
+	svn copy https://svn.apache.org/repos/asf/uima/uimacpp/trunk https://svn.apache.org/repos/asf/uima/uimacpp/tags/uimacpp-2.4.0 1 -m"create tag for 2.4.0 release"
 
-2. if changes are needed, update branch
-
-3. when approved, create a tag for the branch, and merge branch into trunk
-
+2. if changes are needed, update trunk. Create a new tag when ready to release.
 
 
 For a new build on Linux
@@ -18,13 +15,13 @@ For a new build on Linux
 	mkdir uimacpp-2.4.0
 	cd uimacpp-2.4.0
 
-2. checkout source from current release branch
-	svn co https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-2.4.0
+2. checkout source from current tag
+	svn co https://svn.apache.org/repos/asf/uima/uimacpp/tag/uimacpp-2.4.0
 
 3. Modify configure.ac 
    Update package version number specified in AC_INIT call.
    Update the  library number by modifying LT_VERSION_NUMBER following the 
-      libtool version numbering convention. This is summarize on the
+      libtool version numbering convention. This is summarized on the
       wiki page https://cwiki.apache.org/UIMA/proposed-changes-to-uima-c-build-and-packaging.html.
 
 4  Create configure script 
