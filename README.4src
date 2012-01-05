@@ -6,8 +6,8 @@ Building the Apache UIMA C++ SDK
 --------------------------------
 
 The Apache UIMA C++ SDK has been built and tested in 32-bit mode
-on Linux systems with gcc versions from 3.2.4 to 4.1.0, on Windows 
-using MSVC version 8, and on MacOSX with gcc version 4.0.1.
+on Linux systems with gcc version 3.4.6 and on Windows 
+using MSVC version 8. 64-bit builds have only been tested on Linux with gcc 4.3.2
 
 64-bit builds have only been tested on Linux with gcc 4.1.0.
 
@@ -19,14 +19,14 @@ libraries.
 
 On Windows dependent libraries must be specified with the
 environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
-ACTIVEMQ_HOME.  For now, the ActiveMQ dependency is optional; if not
+ACTIVEMQ_HOME.  For now, the ActiveMQ CPP dependency is optional; if not
 specified the UIMA-AS compatible service wrapper deployCppService will
 fail to build.
 
 On Linux, system install of dependencies - APR, ICU, XERCES, ACTIVEMQ 
 will be used if minimum version requirements are met.  They may also
 be specified with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
-ACTIVEMQ_HOME.  ActiveMQ is required.
+ACTIVEMQ_HOME.  The ActiveMQ CPP library is required.
 
 There is also a dependency on JNI headers from a Java JDK. The build
 looks for these headers in the directory specified by JAVA_INCLUDE.
