@@ -16,13 +16,13 @@
 # ---------------------------------------------------------------------------
 
 #SUBDIRS = framework utils test
+AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = docs data examples scriptators LICENSE buildsdk.sh README.4src README.4sdk NOTICE.4sdk RELEASE_NOTES.html
+EXTRA_DIST = docs/builddocs.sh docs/doxyheader.html docs/overview_and_setup.html docs/uimacppdocs.mak docs/uimacpp.dox data examples scriptators LICENSE buildsdk.sh README.4src README.4sdk NOTICE.4sdk RELEASE_NOTES.html autogen.sh
 
 
 dist-hook:
-	rm -rf `find $(distdir)/docs -name .svn`
 	rm -rf `find $(distdir)/data -name .svn`
 	rm -rf `find $(distdir)/examples -name .svn`
 	rm -rf `find $(distdir)/scriptators -name .svn`
