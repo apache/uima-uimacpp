@@ -32,13 +32,6 @@ For a new build on Linux
    define environment variable ICU_HOME, APR_HOME, XERCES_HOME, ACTIVEMQ_HOME, JAVA_INCLUDE
    ./configure --with-jdk=$JAVA_HOME/include --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
 
-4. create src tarball
-	make dist
-    This create libuima-2.4.0.tar.gz
-
-5. rat scan of source
-	java -jar apache-rat-0.6.jar uimacpp-2.4.0 > uimacpp-src-linux-report.txt
-
 6. build, test and create sdk tree
 	cd uimacpp-2.4.0
 	[setup env for the build]
@@ -96,17 +89,7 @@ For a new build on Windows
 1. checkout source from current release branch
 	svn co https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-2.4.0
 
-3. create source tree
-	./buildSrcTree buildDir
-
-4. create src zipfile of buildDir\uimacpp-2.4.0 as
-	uimacpp-2.4.0-src.zip
-
-5. rat scan of source
-	cd buildDir
-	java -jar apache-rat-0.6.jar uimacpp-2.4.0 > uimacpp-src-windows-report.txt
-
-6. build, test and create sdk tree
+2. build, test and create sdk tree
 	cd uimacpp-2.4.0\src
 	[setup env for the build]
 	winmake /build release
@@ -122,13 +105,13 @@ For a new build on Windows
 	cd ..\..
 	buildsdk ..
 
-7. create bin zipfile of buildDir\uimacpp as
+3. create bin zipfile of buildDir\uimacpp as
 	uimacpp-2.4.0-bin.zip
 
-8. rat scan of bin
+4. rat scan of bin
 	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-windows-report.txt
 
-9. sniff test of base sdk
+5. sniff test of base sdk
 	cd uimacpp
 	set UIMACPP_HOME=%cd%
 	path=%path%;%cd%\bin;%cd%\examples\src
@@ -137,7 +120,7 @@ For a new build on Windows
 	cd ..
 	runall
 
-10. sniff test of scriptators (following base sniff test)
+6. sniff test of scriptators (following base sniff test)
 	cd ..\scriptators\perl
 	winmake
 	runAECpp PerlSample.xml ..\..\examples\data\
@@ -150,7 +133,7 @@ For a new build on Windows
 	winmake
 	runAECpp TclSample.xml ..\..\examples\data\
 
-11. sniff test of uimacpp service wrapper
+7. sniff test of uimacpp service wrapper
 	in a "Uima AS window", run:
 	  startBroker
 	back in the UimaCpp test window:
@@ -158,3 +141,20 @@ For a new build on Windows
 	  runRemoteAsyncAE tcp://localhost:61616 MeetingAnnotator \
 	  -d tutorial\descriptors\Deploy_MeetingAnnotator.xml
 
+
+Create Source Tar ball
+
+The source tar ball contains sources needed to build the Windows and Linux
+binaries.
+The source packaging  should be done on Linux as it requires running the autoconf tool to generate the configure script required for a Linux build.
+ 
+1. update srcName in the buildSrcTree.sh
+2. create source directory
+   ./buildSrcTree.sh target_directory
+   This will create the uimacpp-X.Y.Z-src directory in the target_directory  
+3. create src tarball
+   From target_directory
+   tar -zcvf uimacpp-X.Y.X-src.tgz uimacpp-X.Y.Z-src
+4. Rat scan of source
+   java -jar apache-rat-0.6.jar uimacpp-X.Y.Z-src >
+uimacpp-X.Y.Z-src-linux-report.txt
