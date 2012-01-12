@@ -12,8 +12,8 @@ For a new release
 For a new build on Linux
 
 1. create new directory for release candidate and cd there
-	mkdir uimacpp-2.4.0
-	cd uimacpp-2.4.0
+	mkdir uimacpp-2.4.0-build
+	cd uimacpp-2.4.0-build
 
 2. checkout source from current tag
 	svn co https://svn.apache.org/repos/asf/uima/uimacpp/tag/uimacpp-2.4.0
@@ -24,15 +24,14 @@ For a new build on Linux
       libtool version numbering convention. This is summarized on the
       wiki page https://cwiki.apache.org/UIMA/proposed-changes-to-uima-c-build-and-packaging.html.
 
-4  Create configure script 
-   cd uimacpp-2.4.0
-   ./autogen.sh
-
-5. Run configure
+4. Run configure
    define environment variable ICU_HOME, APR_HOME, XERCES_HOME, ACTIVEMQ_HOME, JAVA_INCLUDE
    ./configure --with-jdk=$JAVA_HOME/include --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
+   
+   NOTE: if you need to regenerate the configure script, run autogen.sh and
+   check into svn the generated output files.
 
-6. build, test and create sdk tree
+5. build, test and create sdk tree
 	cd uimacpp-2.4.0
 	[setup env for the build]
       make
@@ -40,13 +39,13 @@ For a new build on Linux
       make check
       make sdk ARGS=`pwd`
 
-7. create bin tarball
+6. create bin tarball
 	tar -czf uimacpp-2.4.0-bin.tgz uimacpp
 
-8. rat scan of bin
+7. rat scan of bin
 	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-linux-report.txt
 
-9. sniff test of base sdk
+8. sniff test of base sdk
 	cd uimacpp
 	export UIMACPP_HOME=`pwd`
 	PATH=$PATH:`pwd`/bin
@@ -56,7 +55,7 @@ For a new build on Linux
 	cd ..
 	./runall.sh
 
-10. sniff test of scriptators (following base sniff test)
+9. sniff test of scriptators (following base sniff test)
 	cd ../scriptators/perl
 	make
 	PATH=$PATH:`pwd`
@@ -74,7 +73,7 @@ For a new build on Linux
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
 	runAECpp TclSample.xml ../../examples/data/
 
-11. sniff test of uimacpp service wrapper
+10. sniff test of uimacpp service wrapper
 	in a "Uima AS window", run:
 	  startBroker.sh
 	back in the UimaCpp test window:
@@ -147,4 +146,13 @@ Create Source Tar ball
 The source tar ball is created by zipping up the files from svn extract of
 uimacpp.
 The source tar ball contains all the files needed to build the Windows and/or
-Linux binaries.  
+Linux binaries. 
+
+1. checkout source from current release branch
+        svn co https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-2.4.0
+2. create the tar ball
+   On Windows zip up uimacpp-2.4.0 and create uimacpp-2.4.0-src.zip
+   On Linux tar -zcvf uimacpp-2.4.0-src.tgz uimacpp-2.4.0
+3. rat scan the source directory
+   java -jar apache-rat-0.6.jar uimacpp-2.4.0 > uimacpp-2.4.0-src-report.txt
+  
