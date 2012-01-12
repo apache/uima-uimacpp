@@ -144,17 +144,7 @@ For a new build on Windows
 
 Create Source Tar ball
 
-The source tar ball contains sources needed to build the Windows and Linux
-binaries.
-The source packaging  should be done on Linux as it requires running the autoconf tool to generate the configure script required for a Linux build.
- 
-1. update srcName in the buildSrcTree.sh
-2. create source directory
-   ./buildSrcTree.sh target_directory
-   This will create the uimacpp-X.Y.Z-src directory in the target_directory  
-3. create src tarball
-   From target_directory
-   tar -zcvf uimacpp-X.Y.X-src.tgz uimacpp-X.Y.Z-src
-4. Rat scan of source
-   java -jar apache-rat-0.6.jar uimacpp-X.Y.Z-src >
-uimacpp-X.Y.Z-src-linux-report.txt
+The source tar ball is created by zipping up the files from svn extract of
+uimacpp.
+The source tar ball contains all the files needed to build the Windows and/or
+Linux binaries.  
