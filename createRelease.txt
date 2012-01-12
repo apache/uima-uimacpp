@@ -4,7 +4,7 @@ Instructions for creating a uimacpp release or a new build
 For a new release
 
 1. create a tag for the new release, e.g.
-	svn copy https://svn.apache.org/repos/asf/uima/uimacpp/trunk https://svn.apache.org/repos/asf/uima/uimacpp/tags/uimacpp-2.4.0 1 -m"create tag for 2.4.0 release"
+	svn copy https://svn.apache.org/repos/asf/uima/uimacpp/trunk https://svn.apache.org/repos/asf/uima/uimacpp/tags/uimacpp-2.4.0-rcN -m"create tag for 2.4.0 release"
 
 2. if changes are needed, update trunk. Create a new tag when ready to release.
 
