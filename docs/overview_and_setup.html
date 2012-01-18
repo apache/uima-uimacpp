@@ -21,7 +21,7 @@
 <html>
  <head>
    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-   <title>Apache C++ Overview and Setup</title>
+   <title>Apache UIMA C++ Overview and Setup</title>
    <link rel="stylesheet" href="css/stylesheet.css" type="text/css">
  </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="book" lang="en" id="d0e2"><div class="titlepage"><div><div><h1 class="title"><a name="d0e2"></a>Apache UIMA C++ Overview and Setup</h1></div><div><div class="authorgroup"><h3 class="corpauthor">Authors: The Apache UIMA Development Community</h3></div></div><div><p class="releaseinfo">Version 2.4.0</p></div><div><p class="copyright">Copyright &copy; 2006, 2007 The Apache Software Foundation</p></div><div><p class="copyright">Copyright &copy; 2004, 2006 International Business Machines Corporation</p></div><div><div class="legalnotice"><a name="d0e15"></a><p> </p>          
@@ -48,8 +48,8 @@
 
 
 <h2>1.0 Apache UIMA C++ Overview</h2>
-<p>The Apache UIMA C++ framework allows the creation of UIMA compliant 
-analysis engines from analytics written in C++ and several scripting langauges that
+<p>The Apache UIMA&#8482; C++ framework allows the creation of UIMA compliant 
+analysis engines from analytics written in C++ and several scripting languages that
 can utilize C++ libraries. A rich set of standard UIMA interface methods minimizes
 the effort to extract input data from a CAS and then update the CAS with the analytic results.
 The UIMA framework transparently moves the CAS between Java and C++ components and between 
@@ -67,7 +67,7 @@ and can be aggregated with other UIMA-compliant annotators.
 For C++ applications the UIMA C++ framework has APIs to 
 parse component descriptors, then instantiate and call analysis engines.
 A C++ test driver is available so that a UIMA C++ analytic can be developed and tested with 
-standard native programming tools; no programing in Java is required.
+standard native programming tools; no programming in Java is required.
 On the other hand, for a more consistent development environment,
 Eclipse can provide a single IDE for both Java and C++ components
 using the <a href="http://www.eclipse.org/cdt/">CDT</a>.
@@ -80,7 +80,7 @@ engine is used; in this case a Java proxy will instantiate the uimacpp
 framework though the JNI. Note that if more than one C++ component is
 used in the same JVM, they must share the same native
 environment. Using UIMA AS, a C++ component can be started as a separate
-process, and therefor each component can have different native environments, if
+process, and therefore each component can have different native environments, if
 desired. When C++ is launched automatically from Java, logging and JMX monitoring
 of the annotator is done via the JVM.
 </p>
@@ -223,10 +223,13 @@ To test the interoperability with UIMA Java SDK, make sure UIMA_HOME is set to t
 The runAE driver will process all files in the data directory and DaveDetector should find Dave in some of them.
 
 <h3>2.3 Testing Interoperability with UIMA AS</h3>
-UIMA AS is an add-on to the core UIMA package; it must be separately downloaded and installed. To test interoperability with UIMA AS, make sure UIMA_HOME is set to the location of the combined SDK, and that its bin directory is in the PATH. Run the C++ MeetingAnnotator as follows:
+UIMA AS is an add-on to the core UIMA package; it must be separately downloaded and installed. 
+To test interoperability with UIMA AS, make sure UIMA_HOME is set to the location of the combined SDK, 
+and that its bin directory is in the PATH. Run the C++ MeetingAnnotator as follows:
 <h4>2.3.1 Adjust example Deployment Descriptor</h4>
 The UIMA AS example C++ deployment descriptor includes specifications for the UIMACPP environment.
-Following the convention for UIMA examples, this descriptor specifies paths starting with "C:/Program Files/apache-uima". This path prefix must be changed in the descriptor to be the parent directory of UIMACPP.
+Following the convention for UIMA examples, this descriptor specifies paths starting with "C:/Program Files/apache-uima". 
+This path prefix must be changed in the descriptor to be the parent directory of UIMACPP.
 <h4>2.3.2 On Linux</h4>
 <ul>
     <code>
