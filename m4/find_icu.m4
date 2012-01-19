@@ -1,5 +1,5 @@
 # ===========================================================================
-#       http://www.gnu.org/software/autoconf-archive/ax_lib_xerces.html
+#       Derived from http://www.gnu.org/software/autoconf-archive/ax_lib_xerces.html
 # ===========================================================================
 #
 # SYNOPSIS
