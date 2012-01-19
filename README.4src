@@ -39,7 +39,7 @@ dependent libraries under $dependent_HOME/lib.
 
 The build of dependent libraries on Windows is less consistent.
 APR libraries are expected in %APR_HOME%\Release. ActiveMQ libraries 
-are in %ACTIVEMQ_HOME%\vs2005-build\ReleaseDLL (or DebugDLL) and 
+are in %ACTIVEMQ_HOME%\vs2008-build\ReleaseDLL (or DebugDLL) and 
 ActiveMQ headers are expected in %ACTIVEMQ_HOME%\src\main.
 
 On Windows, buildsdk command tries to copy the msvc*.dll runtime libs from
@@ -52,9 +52,9 @@ Building, testing and packaging on Linux:
 Set up your environment as described above. The following instructions
 assume you have unpacked the source into $HOME/uimacpp-2.X.Y.
 
-1 Create the GNU automake scripts:
-  Note: This step is only done when building from an SVN extract;
-        it should be skipped when building from a source tarball.
+1 (Optional) Create the GNU automake scripts:
+  Note: This step is only done to regenerate the configure script and Makefile.in if 
+        the configure.ac or Makefile.am need to be modified.
         The prebuild step requires relatively up-to-date GNU tools
         GNU automake v1.9.6, autoconf v2.59 and libtool v1.5.24.
   cd root of an SVN extract
@@ -64,7 +64,7 @@ assume you have unpacked the source into $HOME/uimacpp-2.X.Y.
   cd root of the SVN extract  
   ./configure --with-jdk=$JAVA_HOME/include --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
   make
-  DESTDIR=`pwd` make install
+  DESTDIR=`pwd` make install  (or make install-strip to strip symbols to shrink the binaries)
 
 3 Build and run the test suite:
   From root of the SVN extract  
@@ -82,7 +82,8 @@ assume you have unpacked the source into $HOME/uimacpp-2.X.Y.
   tar czf uimacpp-2.X.Y-bin.tgz uimacpp
 
 6 Build source tarball:
-  From root of the SVN extract  
+  The source tar ball contains all the files needed to build on Windows and Linux  
+  To build a source tar ball with only files needed for a Linux build, run:
   make dist
 
 
@@ -156,6 +157,7 @@ On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and D
 Also, the APR library can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
+Binary distributions are available for Xerces and ICU.
 
 UIMA C++ Release Compatibility
 -------------------------------
