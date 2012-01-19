@@ -197,8 +197,8 @@ echo.
 echo copying from %XERCES_HOME%...
 mkdir %UIMA_DIR%\include\xercesc
 xcopy /S /Q /Y %XERCES_HOME%\include\xercesc %UIMA_DIR%\include\xercesc
-xcopy /Q /Y %XERCES_HOME%\bin\xerces-c*.dll %UIMA_DIR%\bin
-xcopy /Q /Y %XERCES_HOME%\lib\xerces-c*.lib %UIMA_DIR%\lib
+xcopy /Q /Y %XERCES_HOME%\bin\xerces-c_2*.dll %UIMA_DIR%\bin
+xcopy /Q /Y %XERCES_HOME%\lib\xerces-c_2*.lib %UIMA_DIR%\lib
 
 echo.
 echo copying MSVC redistribution libs
@@ -213,6 +213,7 @@ echo.
 echo copying the Perl scriptator...
 mkdir %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\Perl.html %UIMA_DIR%\scriptators\perl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\Perl.html %UIMA_DIR%\docs
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.cpp %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.pl  %UIMA_DIR%\scriptators\perl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\perl\*.xml %UIMA_DIR%\scriptators\perl
@@ -223,6 +224,7 @@ echo.
 echo copying Python scriptator...
 mkdir %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\Python.html %UIMA_DIR%\scriptators\python
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\Python.html %UIMA_DIR%\docs
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.cpp %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.py  %UIMA_DIR%\scriptators\python
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\python\*.xml %UIMA_DIR%\scriptators\python
@@ -233,6 +235,7 @@ echo.
 echo copying Tcl scriptator...
 mkdir %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\Tcl.html %UIMA_DIR%\scriptators\tcl
+xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\Tcl.html %UIMA_DIR%\docs
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.cpp %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.tcl %UIMA_DIR%\scriptators\tcl
 xcopy /Q /Y %UIMA_SCRIPTATORSDIR%\tcl\*.xml %UIMA_DIR%\scriptators\tcl
