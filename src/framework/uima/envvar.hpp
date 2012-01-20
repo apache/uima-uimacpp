@@ -74,7 +74,7 @@ namespace uima {
       /*@{*/
       /** instantiate a new environment variable handler */
       EnvironmentVariableQueryOnly(const char * cpszVar);
-      /*@}*/
+ 
       ~EnvironmentVariableQueryOnly(void);
       /*@}*/
       /* --- selectors --- */

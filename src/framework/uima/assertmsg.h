@@ -73,7 +73,7 @@
    There is no return value.
 
    Example:
-   \code
+   @code
    foo(const void * cpvP1, const void * cpvP2, int i)
    {
       assert(EXISTS(cpvP1));
@@ -81,11 +81,12 @@
       assert((i > 0) && (i < 100));
       ...
    }
-   \endcode
+   @endcode
+
    \note <tt> assert</tt> is no longer implemented here ... the system macro is used.
    Do not use the \#undef directive with <tt> assert</tt>.
 
-   \line
+   
 
    <tt> assertWithMsg</tt> prints a diagnostic message to stderr and aborts the
    program if expression is false (zero).
@@ -108,7 +109,7 @@
    There is no return value.
 
    Example:
-   \code
+   @code
    foo(const void * cpvP1, const void * cpvP2, int i)
    {
       assert(EXISTS(cpvP1));
@@ -116,7 +117,7 @@
       assertWithMsg(((i > 0) && (i < 100)), "invalid value specified");
       ...
    }
-   \endcode
+   @endcode
    \note <tt> assertWithMsg</tt> is implemented as a macro.
    Do not use the \#undef directive with <tt> assertWithMsg</tt>.
 

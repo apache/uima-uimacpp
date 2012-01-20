@@ -420,6 +420,7 @@ INPUT = \
  ../src/framework/uima/assertmsg.h \
  ../src/framework/uima/capability.hpp \
  ../src/cas/uima/cas.hpp \
+ ../src/framework/uima/casiterator.hpp \
  ../src/framework/uima/casdefinition.hpp \
  ../src/cas/uima/casexception.hpp \
  ../src/framework/uima/caswriter_abase.hpp \

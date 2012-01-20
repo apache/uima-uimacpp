@@ -81,8 +81,8 @@ namespace uima {
      * Advance the current position by the number of bytes read.
      * This call blocks till read request is satisfied or EOF is 
      * reached.  
-     * @param numBytes, the number of bytes to read
-     * @param pBuffer, buffer into which the bytes are to be copied.
+     * @param numBytes the number of bytes to read
+     * @param pBuffer buffer into which the bytes are to be copied.
      * @returns number of bytes read of EOF (-1). This may be less than
      * the number of bytes requested.
      */
@@ -92,7 +92,7 @@ namespace uima {
      *
      * Sets the position within the current stream.
      *
-        * @param offset - number of bytes from origin
+     * @param offset - number of bytes from origin
      * @param origin is one of the following (taken from lseek spec):
      *          If SEEK_SET, the position is set to offset bytes.
      *          If SEEK_CUR, the position is  set  to  its
@@ -100,7 +100,6 @@ namespace uima {
      *          If SEEK_END,  the position is set to the total length
      *              plus offset bytes.
      *          These constants are defined in stdio.h 
-     * 
      * @return 0 indicates success
      *         -1 EOF
      */

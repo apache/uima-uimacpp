@@ -98,6 +98,7 @@ namespace uima {
       ~ConsoleUI(void);
       /*@}*/
 
+	  /*@{*/
       void                       setQuietMode(bool bQuiet)                 {
         iv_bQuiet = bQuiet;
       }

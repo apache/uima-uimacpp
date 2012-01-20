@@ -1,3 +1,6 @@
+#ifndef UIMA_SOFASTREAM_HPP
+#define UIMA_SOFASTREAM_HPP
+
 /** \file sofastream.hpp .
 -----------------------------------------------------------------------------
 
@@ -45,8 +48,7 @@
    10/01/2004  Initial creation
 
 -------------------------------------------------------------------------- */
-#ifndef UIMA_SOFASTREAM_HPP
-#define UIMA_SOFASTREAM_HPP
+
 
 // ---------------------------------------------------------------------------
 //  Includes
@@ -136,8 +138,8 @@ namespace uima {
      * at least elementSize*numElements in size.
      *
      * @param pbuffer
-     *         elementSize, e.g.,  1, 2, 4, 8
-     *         numElements
+     * @param elementSize e.g.,  1, 2, 4, 8
+     * @param numElements
      * @return number of elements read
      *         -1 indicates EOF and no elements read 
      *         -2 indicates elementSize is not compatible with elementSize
@@ -152,8 +154,8 @@ namespace uima {
      * the specified offset from the specified origin.
      * The origin is one of: 
      *     
-     * @param - offset, in number of bytes
-     *          origin as defined in stdio.h is one of 
+     * @param  offset in number of bytes
+     * @param  origin as defined in stdio.h is one of 
      *         SEEK_SET,  from the start 
      *         SEEK_CUR,  from current location. 
      *         SEEK_END,  from end.
@@ -196,7 +198,7 @@ namespace uima {
   public:
     LocalSofaDataStream(SofaFS & sofaFS);
     ~LocalSofaDataStream();
-    int open(size_t minbuf=0);
+    int open(size_t minbufsize=0);
     INT64 getTotalStreamSizeInBytes();
     INT64 howManyBytesAvailable();
     int read( void * pbuffer, int elementSize, size_t numElements);
@@ -229,7 +231,7 @@ namespace uima {
   public:
     RemoteSofaDataStream(SofaFS& sofaFS);
     ~RemoteSofaDataStream();
-    int open(size_t minbuf=0);
+    int open(size_t minbufsize=0);
     INT64 getTotalStreamSizeInBytes();
     INT64 howManyBytesAvailable();
     int read( void * pbuffer, int elementSize, size_t numElements);

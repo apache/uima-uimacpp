@@ -295,7 +295,8 @@ namespace uima {
   Trying to load function begindoc.
         File    : extract.cpp
         Function: ExternalAnnotator::tryGetProcAddress(char*)
-        Line    : 87\endcode
+        Line    : 87
+  \endcode
   */
   UIMA_LINK_IMPORTSPEC std::ostream &
   operator << (
@@ -483,7 +484,8 @@ namespace uima {
      While      : Trying to initialize UIMACPP.
         File    : framewrk.cpp
         Function: Framework::init(const IString&)
-        Line    : 128\endcode
+        Line    : 128
+  \endcode
   */
   UIMA_LINK_IMPORTSPEC std::ostream &
   operator << (
@@ -672,7 +674,8 @@ namespace uima {
      While      : Trying to initialize UIMACPP.
         File    : framewrk.cpp
         Function: Framework::init(const IString&)
-        Line    : 128\endcode
+        Line    : 128
+  \endcode
   */
   UIMA_LINK_IMPORTSPEC std::ostream &
   operator << (
@@ -1048,7 +1051,8 @@ private:                                                                      \
      While      : Trying to initialize UIMACPP.
         File    : framewrk.cpp
         Function: Framework::init(const IString&)
-        Line    : 128\endcode
+        Line    : 128
+	\endcode
   */
 //@{
 //@}

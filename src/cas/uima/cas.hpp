@@ -149,7 +149,7 @@ namespace uima {
    * <li>A set of @link PreDefTypes predefined types@endlink,
    *   @link PreDefFeatures features@endlink,
    *   @link PreDefIndexes indexes@endlink and
-   *   @link UtilFuncts functions@endlink
+   *   @link UtilFuncts Utility Functions@endlink
    *   for text analysis.
    * </ol>
    */
@@ -243,7 +243,6 @@ namespace uima {
     /**
      * Add a copy of <code>crString</code> to the string heap.
      * @param crString the string to add
-     * @param bIsPermanent indicate if the string should be permanent, i.e., has a lifetime longer than the document
      * @return an LString pointing to the new copy
      */
     int addString(icu::UnicodeString const & crString);
@@ -252,14 +251,12 @@ namespace uima {
      * Add a copy of <code>cpString</code> to the string heap.
      * @param cpString a pointer to the string to copy (maynot be zero terminated)
      * @param uiLen number of Unicode code units (not bytes!) to copy
-     * @param bIsPermanent indicate if the string should be permanent, i.e., has a lifetime longer than the document
      * @return an LString pointing to the new copy
      */
     int addString(UChar const * cpString, size_t uiLen);
     /**
      * Add a copy of <code>uls</code> to the string heap.
      * @param uls a pointer to the string to copy (maynot be zero terminated)
-     * @param bIsPermanent indicate if the string should be permanent, i.e., has a lifetime longer than the document
      * @return an LString pointing to the new copy
      */
     int addString(const UnicodeStringRef & uls );
@@ -338,7 +335,7 @@ namespace uima {
 
     /**
      * Returns true if a CAS view.
-     * @deprecated.
+     * @deprecated
      */
     inline bool isView() {
       return !isbaseCas;
@@ -370,7 +367,6 @@ namespace uima {
     /**
      * create an FS of type <code>crType</code>
      * @param crType the type of FS to create
-     * @param bIsPermanent indicate if the feature structure should be permanent, i.e., has a lifetime longer than the document
      * @throws CouldNotCreateFSOfFinalTypeException
      * @return the created feature structure
      */
@@ -380,8 +376,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a FeatureStructure.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     ArrayFS createArrayFS(size_t uiSize);
 
@@ -389,8 +383,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a float.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     FloatArrayFS createFloatArrayFS(size_t uiSize );
 
@@ -398,8 +390,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a int.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     IntArrayFS createIntArrayFS(size_t uiSize );
 
@@ -407,40 +397,30 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a string.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     StringArrayFS createStringArrayFS(size_t uiSize );
 
     /**
      * create a feature structure of type empty FS list (list length is zero)
      * Each element in the list is a FeatureStructure.
-     * @param bIsPermanent indicate if the feature structure should be permanent,
-     *                     i.e., has a lifetime longer than the document
      */
     ListFS createListFS();
 
     /**
      * create a feature structure of type empty float list (list length is zero).
      * Each element in the list is a float.
-     * @param bIsPermanent indicate if the feature structure should be permanent,
-     *                     i.e., has a lifetime longer than the document
      */
     FloatListFS createFloatListFS();
 
     /**
      * create a feature structure of type empty int list (list length is zero).
      * Each element in the list is a int.
-     * @param bIsPermanent indicate if the feature structure should be permanent,
-     *                     i.e., has a lifetime longer than the document
      */
     IntListFS createIntListFS();
 
     /**
      * create a feature structure of type empty string list (list length is zero).
      * Each element in the list is a string.
-     * @param bIsPermanent indicate if the feature structure should be permanent,
-     *                     i.e., has a lifetime longer than the document
      */
     StringListFS createStringListFS();
 
@@ -449,8 +429,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a byte.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     BooleanArrayFS createBooleanArrayFS(size_t uiSize );
 
@@ -459,8 +437,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a byte.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     ByteArrayFS createByteArrayFS(size_t uiSize );
 
@@ -469,8 +445,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a short.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     ShortArrayFS createShortArrayFS(size_t uiSize );
 
@@ -478,9 +452,7 @@ namespace uima {
     /**
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a long.
-     * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
+     * @param uiSize        the size of the arrayt
      */
     LongArrayFS createLongArrayFS(size_t uiSize );
 
@@ -488,8 +460,6 @@ namespace uima {
      * create a feature structure of type FS Array.
      * Each of the uiSize elements in the array is a long.
      * @param uiSize        the size of the array
-     * @param bIsPermanent  indicate if the data should be permanent,
-     *                      i.e., has a lifetime longer than the document
      */
     DoubleArrayFS createDoubleArrayFS(size_t uiSize );
 
@@ -614,7 +584,7 @@ namespace uima {
      * 
      * @param text
      *          The text to be analyzed.
-     * @param mime
+     * @param mimetype
      *          The mime type of the data
      * @exception CASException
      *              If the Sofa data has already been set, or View is base CAS.
@@ -701,9 +671,10 @@ namespace uima {
      */
     FSIterator iterator() ;
 
-    /**
-     * @name CAS Utility functions for Annotations
-     * @{ */
+    
+	/** @defgroup UtilFuncts functions 
+     * CAS Utility functions for Annotations
+	 * @{ */
     /**
      * convenience function for creating an annotation.
      * <code>type</code> must be a subtype of type Annotation.
@@ -714,12 +685,9 @@ namespace uima {
      */
     virtual AnnotationFS createAnnotation( Type const & type, size_t uiBeginPos, size_t uiEndPos );
 
-    /** @} */
 
     /**
-     * @name CAS Utility functions for Annotation Iterators
-     * @{ */
-    /**
+     * CAS Utility functions for Annotation Iterators
      * sets the index iterator to the begin position of <code>crFromAnn</code>.
      *
      * @param itOfType  The iterator to move
@@ -732,6 +700,7 @@ namespace uima {
      *         FeatureStructure must be annotations.
      */
     bool moveToBeginPosition (ANIterator & itOfType, AnnotationFS const & crFromAnn);
+	/** @}  defgroup */
 
     /** @defgroup PreDefIndexes Predefined Indexes
      * Only very few applications and annotators will need to create specific
@@ -770,6 +739,15 @@ namespace uima {
      * @{ */
 
     /**
+     * get the index over all annotations.
+     * The index is ordered where an annotation a1 is considered "less-than"
+     * another annotation a2 if the begin position of a1 is less then the begin
+     * position of a2, or, if they are equal, a1 is shorter than a2.
+     *
+     * @throws InvalidFSTypeObjectException
+     */
+    virtual ANIndex getAnnotationIndex();
+	  /**
      * get the index over annotations of type <code>crType</code>.
      * The index is ordered where an annotation a1 is considered "less-than"
      * another annotation a2 if the begin position of a1 is less then the begin
@@ -781,7 +759,6 @@ namespace uima {
      *
      * @throws InvalidFSTypeObjectException
      */
-    virtual ANIndex getAnnotationIndex();
     virtual ANIndex getAnnotationIndex(Type const & crType);
     virtual ANIndex const getAnnotationIndex(Type const & crType) const;
 
@@ -1022,7 +999,7 @@ namespace uima {
    *         SofaIDs are the primary handle or access.
    * <li><strong> Mime type </strong> : This string feature can be used to describe the type of the data represented by the Sofa.
    * <li><strong>Sofa Data</strong> : The data itself. This data can be resident in the CAS or it can be a reference to data outside the CAS.
-   * <eul>
+   * </ul>
    * To create a Sofa FS, use CAS.createSofa().
    * <br>
    * <br>
@@ -1126,7 +1103,7 @@ namespace uima {
 
     /**
      * Get the Sofa Data Stream for the give Sofa FeatureStructure.
-     * @param a valid SofA feature structure with values for one of 
+     * @param fs a valid SofA feature structure with values for one of 
      * these feature -- sofaString, sofaArray, or sofaURI -- set.
      * If the sofaURI feature has a valid value, a valid SofaDataStream 
      * is returned only if there is a stream handler registered  

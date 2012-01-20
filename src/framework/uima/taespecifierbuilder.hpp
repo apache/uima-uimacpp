@@ -94,7 +94,7 @@ namespace uima {
      * 
      * @param aeDesc
      *          reference to <code>AnalysisEngineDescription</code> object 
-	 *        fileName
+	 * @param   fileName
      *          char buffer file containing the XML document to be parsed.
      * 
      * @throws InvalidXMLException
@@ -107,7 +107,7 @@ namespace uima {
      * 
      * @param aeDesc
      *          reference to <code>AnalysisEngineDescription</code> object
-     *        fileName 
+     * @param   fileName 
 	 *          UnicodeStrin object containing the file name of the file cotaining the XML document.
      * 
      * @throws InvalidXMLException
@@ -121,7 +121,7 @@ namespace uima {
      * 
      * @param aeDesc
 	 *          reference to <code>AnalysisEngineDescription</code> object.
-	 *        crInputSource
+	 * @param crInputSource
      *          the input source from which to read the XML document.
      * 
      * 
@@ -135,7 +135,7 @@ namespace uima {
      * 
 	 * @param aeDesc
 	 *          reference to <code>TypeSystemDescription</code> object.
-	 *        crInputSource
+	 * @param crInputSource
      *          the input source from which to read the XML document.
      * 
      * @throws InvalidXMLException
@@ -149,7 +149,7 @@ namespace uima {
      * 
 	 * @param fsDesc
 	 *          reference to <code>TyVecpFSIndexDescriptions</code> object.
-	 *        crInputSource
+	 * @param crInputSource
      *          the input source from which to read the XML document.
      *
      * 
@@ -164,7 +164,7 @@ namespace uima {
 	 *
      * @param prioDesc
 	 *          reference to <code>TyVecpTypePriorities</code> object.
-	 *        crInputSource
+	 * @param crInputSource
      *          the input source from which to read the XML document.
 	 *
      * @throws InvalidXMLException
@@ -177,7 +177,7 @@ namespace uima {
      * Caller assumes ownership of objects in the vector.
      * @param sofaMapDesc
 	 *          reference to <code>TyVecpTypePriorities</code> object.
-	 *        crInputSource
+	 * @param crInputSource
      *          the input source from which to read the XML document.
      * 
      * @throws InvalidXMLException

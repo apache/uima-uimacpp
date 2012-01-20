@@ -22,6 +22,7 @@
  * specific language governing permissions and limitations
  * under the License.
 
+  \brief  Contains class uima::CasIterator
 -------------------------------------------------------------------------- */
 #ifndef UIMA_CASITERATOR_HPP
 #define UIMA_CASITERATOR_HPP
@@ -55,8 +56,8 @@ namespace uima {
 namespace uima {
 
   /**------------------------------------------------
-  * CASPool 
-  * This class manages  pool of CAS objects
+  * CASIterator
+  * 
   *------------------------------------------------
   */
 

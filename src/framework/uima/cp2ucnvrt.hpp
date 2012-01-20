@@ -95,7 +95,7 @@ namespace uima {
         using this code page converter */
     size_t getMaximumLength(const char * cpacSource, size_t uiSourceLength) const;
 
-
+     /*@{*/
     /** Using this code page converter, convert the specified source buffer
      <TT>cpacSource</TT> with size <TT>uiSourceSize</TT> in bytes, to target 
     buffer <TT>pclTarget</TT> with size <TT>uiTargetMaxSize</TT> in bytes to 

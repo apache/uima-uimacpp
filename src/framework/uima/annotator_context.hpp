@@ -119,7 +119,7 @@ namespace uima {
     AnnotatorContext(AnalysisEngineDescription * taeSpec);
 
     ~AnnotatorContext(void);
-
+    /** @{ */
     /**
      * Return string config params as UTF-8--should be only if you know this is will work with
      * you are dealing with single byte char set. 
@@ -180,7 +180,7 @@ namespace uima {
 
     /**
       * Defines the CAS pool that this AnnotatorContext must support. 
-         * This method must be called before {@link AnnotatorContext#getEmptyCas()}
+         * This method must be called before {@link AnnotatorContext#getEmptyCAS()}
       * may be called. A CASPool is defined by the framework when the components 
       * getCASInstancesRequired() returns a value greater than 0,
       */

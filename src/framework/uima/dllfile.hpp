@@ -92,7 +92,7 @@ namespace uima {
      * unloaded the DLL will cause unexpected results. (An application crash
      * is very likely to happen.)
      *
-     * <b> NOTE: dropped the Cos Special Requirements for AIX 4.2 and below
+     * <b> NOTE: dropped the Cos Special Requirements for AIX 4.2 and below </b>
      *
      */
     class DllProcLoaderFile {

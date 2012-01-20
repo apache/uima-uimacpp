@@ -385,19 +385,19 @@ namespace uima {
     virtual TyErrorId collectionProcessComplete() = 0;
 
 
-    /**Processes a CAS, possibly producing multiple CASes as a result.
-        * The application uses the {@link  CasIterator} interface to step through the 
+    /**Processes a <code>CAS</code>, possibly producing multiple CASes as a result.
+        * The application uses the {@link CASIterator } interface to step through the 
         * output CASes. 
         * <p>
         * If this Analysis Engine does not produce output CASes, then the 
-        * <code>CasIterator</code> will return no elements. 
+        * <code>CASIterator</code> will return no elements. 
         * <p>
         * Once this method is called, the AnalysisEngine "owns" <code>aCAS</code>
-        * until such time as the {@link CasIterator#hasNext()} method returns false.
+        * until such time as the {@link CASIterator#hasNext() } method returns false.
         * That is, the caller should not attempt to modify or access the input CAS until
         * it has read all of the elements from the CasIterator.  If the caller wants to 
         * abort the processing before having read all of the output CASes, it may call 
-        * {@link CasIterator#release()}, which will stop further processing from 
+        * {@link uima::CASIterator#release()}, which will stop further processing from 
         * occurring, and ownership of <code>aCAS</code> will revert to the caller.
      */
     virtual CASIterator processAndOutputNewCASes(CAS &) =0;
@@ -441,7 +441,7 @@ namespace uima {
 
 
   /**
-   * @deprecate
+   * @deprecated
    * A TextAnalysisEngine is an AnalysisEngine specialized for Text Analysis.
    * It adds text specific support like language aware processing.
    * It contains a specialized version of the CAS for text analysis, a uima::TCAS.
@@ -459,21 +459,21 @@ namespace uima {
     virtual ~TextAnalysisEngine() {}
     /** @name Creation functions */
     /*@{*/
-    /**@deprecate
+    /**@deprecated
      * create a TextAnalysisEngine from a TAESpecifier. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
      */
     static TextAnalysisEngine * createTextAnalysisEngine(AnalysisEngineDescription &, ErrorInfo& errorInfo);
 
-    /**@deprecate
+    /**@deprecated
      * create a TextAnalysisEngine from the name of configuration file. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
      */
     static TextAnalysisEngine * createTextAnalysisEngine(char const * cpConfigFileName, ErrorInfo& errorInfo);
 
-    /**@deprecate
+    /**@deprecated
      * create a TextAnalysisEngine from an in-memory XML Buffer. Returns NULL if creation failed.
      * In such a case, <code>errorInfo</code> contains information about possible errors
      * (output parameter).
@@ -481,7 +481,7 @@ namespace uima {
     static TextAnalysisEngine * createTextAnalysisEngine(UChar const * cpBuffer, size_t uiLength, ErrorInfo& errorInfo);
 
 
-    /**@deprecate
+    /**@deprecated
      * A lower level API for creating a TextAnalysisEngine
      */
     static TextAnalysisEngine * createTAE(AnnotatorContext & rANC, bool bOwnsANC,
@@ -489,7 +489,7 @@ namespace uima {
                                           uima::internal::CASDefinition & casDefinition,
                                           bool ownsCASDefintion,
                                           ErrorInfo &);
-    /**@deprecate
+    /**@deprecated
      * Creates a TAE from a file name if the first argument is true or 
      * an XML buffer if false.
      */
