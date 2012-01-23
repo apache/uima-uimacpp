@@ -111,9 +111,7 @@ namespace uima {
     ///Assignment operator
     UnicodeStringRef & operator=( UnicodeStringRef const & crclRHS );
 
-	///Index operator
-    inline UChar operator[]( int32_t offset ) const;
-	///Equality operator
+    ///Equality operator
     int operator==( const UnicodeStringRef & crclRHS ) const;
     ///Inequality operator
     int operator!=( const UnicodeStringRef & crclRHS ) const;
