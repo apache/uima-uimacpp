@@ -38,10 +38,10 @@ copylicenses() {
 	echo copying licenses...
 
 	# add Apache SDK licenses
-	cp $CPL  $UIMACPP_SOURCE/NOTICE.4sdk $UIMA_DIR/NOTICE
+	cp $CPL  $UIMACPP_SOURCE/NOTICE.4bin $UIMA_DIR/NOTICE
 	cp $CPL  $UIMACPP_SOURCE/LICENSE $UIMA_DIR/
 	cp $CPL  $UIMACPP_SOURCE/RELEASE_NOTES* $UIMA_DIR/
-	cp $CPL  $UIMACPP_SOURCE/README.4sdk $UIMA_DIR/README
+	cp $CPL  $UIMACPP_SOURCE/README.4bin $UIMA_DIR/README
 
 # 	mkdir "$UIMA_DIR"/licenses/apr
 # 	if [ -r "$APR_HOME"/LICENSE ]; then

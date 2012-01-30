@@ -19,7 +19,7 @@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = docs/builddocs.sh docs/doxyheader.html docs/overview_and_setup.html docs/uimacppdocs.mak docs/uimacpp.dox data examples scriptators LICENSE buildsdk.sh README.4src README.4sdk NOTICE.4sdk RELEASE_NOTES.html autogen.sh
+EXTRA_DIST = docs/builddocs.sh docs/doxyheader.html docs/overview_and_setup.html docs/uimacppdocs.mak docs/uimacpp.dox data examples scriptators LICENSE buildsdk.sh README.4src README.4bin NOTICE NOTICE.4bin RELEASE_NOTES.html autogen.sh
 
 
 dist-hook:
