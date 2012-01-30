@@ -199,6 +199,39 @@ namespace uima {
       size_t uiEnd,
       size_t uiOffset);
 
+ /**
+   * Copy the contents of the array from <code>start</code> for <code>numelements</code> to the
+   * destination <code>destArray</code> with destination offset <code>destOffset</code>.
+   * 
+   * @param srcOffset	  The index of the first element to copy.
+   * @param dest          The array to copy to.
+   * @param destOffset    Where to start copying into.
+   * @param numelements   The number of elements to copy.
+   * @throws InvalidFSObjectException
+   * @throws FSArrayOutOfBoundsException
+   *        If <code>srcOffset &lt; 0</code> or <code>length > size()</code> or
+   *        <code>destOffset + length > destArray.length</code>.
+   */
+  void copyToArray(size_t srcOffset, T * destArray, size_t destOffset, size_t numelements) const ;
+      
+
+ /**
+   * Copy the contents of an external array into this array.
+   * 
+   * @param src          The source array.
+   * @param srcOffset    Where to start copying in the source array.
+   * @param destOffset   Where to start copying to in the destination array.
+   * @param length       The number of elements to copy.
+   * @throws InvalidFSObjectException
+   * @throws FSArrayOutOfBoundsException If <code>srcOffset or destOffset &lt; 0</code>
+   * or <code>length > size()</code> or
+   * <code>destOffset + length > size()</code>.
+   *
+   * NOTE: replace copyFromArray with this API to be consistent with the Java API.
+   */
+   
+//  void copyFromArray(T const * src, size_t srcOffset, size_t destOffset, size_t length) ;
+       
     /// @if internal
     /**
      * create a feature structure of type empty list (list length is zero)

@@ -170,11 +170,11 @@ namespace uima {
     T* destArray,
     size_t uiDestOffset) const {
       checkValidity(UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
-      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart , UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart - 1 , UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
       uima::lowlevel::TyFSType typecode = iv_cas->getHeap()->getType(iv_tyFS);
-      T result;
+
 	  size_t srcOffset = uiStart;
-	  size_t numelements = uiEnd-uiStart+1;
+	  size_t numelements = uiEnd-uiStart;
 	  size_t destOffset = uiDestOffset;
 
 	  if (typecode== uima::internal::gs_tyIntArrayType || 
@@ -205,10 +205,10 @@ namespace uima {
     size_t uiEnd,
     size_t uiOffset) {
       checkValidity(UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
-      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart, UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
+      checkArraySize(iv_tyFS, iv_cas->getHeap(), uiEnd - uiStart - 1, UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
       
 	  size_t srcOffset = uiStart;
-	  size_t numelements = uiEnd-uiStart+1;
+	  size_t numelements = uiEnd-uiStart;
 	  size_t destOffset = uiOffset;
 	  checkArraySize(iv_tyFS, iv_cas->getHeap(), destOffset+numelements-1, UIMA_MSG_ID_EXCON_GETTING_FS_FROM_ARRAY);
       uima::lowlevel::TyFSType typecode = iv_cas->getHeap()->getType(iv_tyFS);
@@ -240,6 +240,19 @@ namespace uima {
 
     }
   }
+
+  template< class T, const uima::lowlevel::TyFSType ARRAY_TYPE >
+  void BasicArrayFS<T, ARRAY_TYPE>::copyToArray(
+    size_t srcOffset, T * destArray, size_t destOffset, size_t length)
+    const {
+		copyToArray(srcOffset, srcOffset + length, destArray, destOffset ); 
+  }
+
+  // template< class T, const uima::lowlevel::TyFSType ARRAY_TYPE >
+  //void BasicArrayFS<T, ARRAY_TYPE>::copyFromArray(
+	 // T const * srcArray, size_t srcOffset, size_t destOffset, size_t length) {
+		//copyFromArray(srcArray, srcOffset, srcOffset + length, destOffset);
+  //}
 
   template< class T, const uima::lowlevel::TyFSType ARRAY_TYPE >
   /*static*/ BasicArrayFS<T, ARRAY_TYPE> BasicArrayFS<T, ARRAY_TYPE>::createArrayFS( CAS & cas, size_t uiSize, bool bIsPermanent) {

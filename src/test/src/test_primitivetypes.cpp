@@ -144,7 +144,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   IntArrayFS intArrayFS = cas.createIntArrayFS(NUMBEROF(ints));
   if (copyarrays) {
-	  intArrayFS.copyFromArray(ints,0,NUMBEROF(ints)-1,0);
+	  intArrayFS.copyFromArray(ints,0,NUMBEROF(ints),0);
   } else {
     for (size_t i=0; i< NUMBEROF(ints); ++i) {
       intArrayFS.set(i, ints[i]);
@@ -158,7 +158,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   FloatArrayFS floatArrayFS = cas.createFloatArrayFS(NUMBEROF(floats));
   if (copyarrays) {
-	  floatArrayFS.copyFromArray(floats,0,NUMBEROF(floats)-1,0);
+	  floatArrayFS.copyFromArray(floats,0,NUMBEROF(floats),0);
   } else {
     for (size_t i=0; i< NUMBEROF(floats); ++i) {
       floatArrayFS.set(i, floats[i]);
@@ -167,7 +167,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   ByteArrayFS byteArrayFS = cas.createByteArrayFS(NUMBEROF(chars));
   if (copyarrays) {
-	  byteArrayFS.copyFromArray(chars,0,NUMBEROF(chars)-1,0);
+	  byteArrayFS.copyFromArray(chars,0,NUMBEROF(chars),0);
   } else {
     for (size_t i=0; i< NUMBEROF(chars); ++i) {
       byteArrayFS.set(i, chars[i]);
@@ -181,7 +181,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
     bools[i] = val;
   }
   if (copyarrays) {
-	boolArrayFS.copyFromArray(bools,0,NUMBEROF(bools)-1,0);
+	boolArrayFS.copyFromArray(bools,0,NUMBEROF(bools),0);
   } else {
     for (int i=0; i<BOOLEAN_ARRAY_SIZE; i++) {
       boolArrayFS.set(i,bools[i]);
@@ -190,7 +190,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   ShortArrayFS shortArrayFS = cas.createShortArrayFS(NUMBEROF(shorts));
   if (copyarrays) {
-	shortArrayFS.copyFromArray(shorts,0,NUMBEROF(shorts)-1,0);
+	shortArrayFS.copyFromArray(shorts,0,NUMBEROF(shorts),0);
   } else {
     for (size_t i=0; i< NUMBEROF(shorts); ++i) {
       shortArrayFS.set(i, shorts[i]);
@@ -199,7 +199,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   LongArrayFS longArrayFS = cas.createLongArrayFS(NUMBEROF(longs));
   if (copyarrays) {
-	longArrayFS.copyFromArray(longs,0,NUMBEROF(longs)-1,0);
+	longArrayFS.copyFromArray(longs,0,NUMBEROF(longs),0);
   } else {
     for (size_t i=0; i< NUMBEROF(longs); ++i) {
       longArrayFS.set(i, longs[i]);
@@ -208,7 +208,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
 
   DoubleArrayFS doubleArrayFS = cas.createDoubleArrayFS(NUMBEROF(doubles));
   if (copyarrays) {
-	doubleArrayFS.copyFromArray(doubles,0,NUMBEROF(doubles)-1,0);
+	doubleArrayFS.copyFromArray(doubles,0,NUMBEROF(doubles),0);
   } else {
     for (size_t i=0; i< NUMBEROF(doubles); ++i) {
       doubleArrayFS.set(i, doubles[i]);
@@ -327,7 +327,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {  //copy only part of int array
     int * destArray = new int[intArrayFS.size()];
-	intArrayFS.copyToArray(2,intArrayFS.size()-1,destArray,0);
+//	intArrayFS.copyToArray(2,intArrayFS.size(),destArray,0);
+	intArrayFS.copyToArray(2,destArray,0,intArrayFS.size()-2);
 	for (size_t i=0;i < intArrayFS.size()-2; i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==ints[i+2]);
 	}
@@ -348,7 +349,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     float * destArray = new float[floatArrayFS.size()];
-	floatArrayFS.copyToArray(0,floatArrayFS.size()-1,destArray,0);
+//	floatArrayFS.copyToArray(0,floatArrayFS.size(),destArray,0);
+	floatArrayFS.copyToArray(0,destArray,0,floatArrayFS.size());
 	for (size_t i=0;i < floatArrayFS.size(); i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==floats[i]);
 	}
@@ -362,7 +364,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     char * destArray = new char[byteArrayFS.size()];
-	byteArrayFS.copyToArray(0,byteArrayFS.size()-1,destArray,0);
+	//byteArrayFS.copyToArray(0,byteArrayFS.size(),destArray,0);
+	byteArrayFS.copyToArray(0,destArray,0,byteArrayFS.size());
 	for (size_t i=0;i < byteArrayFS.size(); i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==chars[i]);
 	}
@@ -377,7 +380,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     bool * destArray = new bool[boolArrayFS.size()];
-	boolArrayFS.copyToArray(0,boolArrayFS.size()-1,destArray,0);
+	//boolArrayFS.copyToArray(0,boolArrayFS.size(),destArray,0);
+	boolArrayFS.copyToArray(0,destArray,0,boolArrayFS.size());
 	for (size_t i=0;i < boolArrayFS.size(); i++ ) {
 	   val = !val;
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==val);
@@ -392,7 +396,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     short * destArray = new short[shortArrayFS.size()];
-	shortArrayFS.copyToArray(0,shortArrayFS.size()-1,destArray,0);
+	//shortArrayFS.copyToArray(0,shortArrayFS.size(),destArray,0);
+	shortArrayFS.copyToArray(0,destArray,0,shortArrayFS.size());
 	for (size_t i=0;i < shortArrayFS.size(); i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==shorts[i]);
 	}
@@ -406,7 +411,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     INT64 * destArray = new INT64[longArrayFS.size()];
-	longArrayFS.copyToArray(0,longArrayFS.size()-1,destArray,0);
+	//longArrayFS.copyToArray(0,longArrayFS.size(),destArray,0);
+	longArrayFS.copyToArray(0,destArray,0,longArrayFS.size());
 	for (size_t i=0;i < longArrayFS.size(); i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==longs[i]);
 	}
@@ -420,7 +426,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   if (checkcopytoarray) {
     double * destArray = new double[doubleArrayFS.size()];
-	doubleArrayFS.copyToArray(0,doubleArrayFS.size()-1,destArray,0);
+	//doubleArrayFS.copyToArray(0,doubleArrayFS.size(),destArray,0);
+	doubleArrayFS.copyToArray(0,destArray,0,doubleArrayFS.size());
 	for (size_t i=0;i < doubleArrayFS.size(); i++ ) {
 	   ASSERT_OR_THROWEXCEPTION( *(destArray+i)==doubles[i]);
 	}
