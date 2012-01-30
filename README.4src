@@ -116,6 +116,9 @@ assume you have unpacked the source into \uimacpp-2.X.Y.
 
 Building, testing and packaging on Mac OSX:
 -------------------------------------------
+
+These instructions should work on the Max OSX but have not been tested. 
+
 Except for one problem with APR, building is the same here as on Linux.
 For the Intel-based Mac OSX machines we have tested with, the APR function
 to dynamically load shared libraries does not respect DYLD_LIBRARY_PATH.
