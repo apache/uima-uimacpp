@@ -19,7 +19,7 @@ On Windows dependent libraries must be specified with the
 environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
 ACTIVEMQ_HOME.  For now, the ActiveMQ CPP dependency is optional; if not
 specified the UIMA-AS compatible service wrapper deployCppService will
-fail to build.
+fail to build.  
 
 On Linux, system install of dependencies - APR, ICU, XERCES, ACTIVEMQ 
 will be used if minimum version requirements are met.  They may also
@@ -89,6 +89,10 @@ Building, testing and packaging on Windows:
 -----------------------------
 Set up your environment as described above. The following instructions
 assume you have unpacked the source into \uimacpp-2.X.Y.
+
+The following commands assume you are running from a Microsoft Visual Studio 2005 Command Prompt.
+
+If using MSVC Express Edition, replace the devenv command with vcexpress.  
 
 1 Build the UIMA C++ framework in both release and debug:
   cd \uimacpp-2.X.Y\src

@@ -55,6 +55,7 @@ On Linux:
     * LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
 
 On Windows:
+From a MSVC Command Prompt:
     * devenv DaveDetector.vcproj /build release
     * PATH=%PATH%;%CD%
 
