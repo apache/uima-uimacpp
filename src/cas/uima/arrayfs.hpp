@@ -178,7 +178,7 @@ namespace uima {
      * <code>destOffset</code>.
      *
      * @param uiStart The index of the first element to copy.
-     * @param uiEnd The index after the last element to copy.
+     * @param numelements number of element, the index after the last element to copy.
      * @param destArray The array to copy to.
      * @param uiDestOffset Where to start copying into <code>destArray</code>.
      *
