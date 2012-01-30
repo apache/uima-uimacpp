@@ -1,5 +1,5 @@
 
-See the NOTICE file for licensing information.
+See the LICENSE file for licensing information.
 
 --------------------------------
 Building the Apache UIMA C++ SDK
@@ -8,8 +8,6 @@ Building the Apache UIMA C++ SDK
 The Apache UIMA C++ SDK has been built and tested in 32-bit mode
 on Linux systems with gcc version 3.4.6 and on Windows 
 using MSVC version 8. 64-bit builds have only been tested on Linux with gcc 4.3.2
-
-64-bit builds have only been tested on Linux with gcc 4.1.0.
 
 
 Setting up the build environment:

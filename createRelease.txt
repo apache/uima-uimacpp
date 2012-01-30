@@ -154,5 +154,7 @@ Linux binaries.
    On Windows zip up uimacpp-2.4.0 and create uimacpp-2.4.0-src.zip
    On Linux tar -zcvf uimacpp-2.4.0-src.tgz uimacpp-2.4.0
 3. rat scan the source directory
-   java -jar apache-rat-0.6.jar uimacpp-2.4.0 > uimacpp-2.4.0-src-report.txt
+   java -jar c:\apache-rat-0.8\apache-rat-0.8.jar -dir uimacpp-2.4.0 -e org_apache*.h *.vcproj createRelease.txt configure *.txt
+ *.sln  *.html *.sh  README* scriptators test examples config  m4 NOTICE*  uimacpp-2.4.0 > uimacpp-2.4.0-src-report.txt
+
   
