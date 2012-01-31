@@ -82,6 +82,9 @@ below.
 #include <vector>
 #include <stdexcept>
 
+#include <iostream>
+#include <sstream>
+#include <string>
 #include "uima/strtools.hpp"
 #include "uima/err_ids.h"
 #include "uima/types.h"
@@ -167,27 +170,14 @@ namespace uima {
       const std::vector< std::string > &  crvecParams
     );
 
-    /*---------------------------------------------------------------------*/
-    ///add parameter to message
-    void                             addParam(const char * cpsz);
-    ///add parameter to message
-    void                             addParam(const std::string & str);
-    ///add parameter to message
-    void                             addParam(const UChar * cpuszParam);
-    ///add parameter to message
-    void                             addParam(const icu::UnicodeString & crustrParam);
-    ///add parameter to message
-    void                             addParam(uima::UnicodeStringRef const &);
-    ///add parameter to message
-    void                             addParam(long l);
-    ///add parameter to message
-    void                             addParam(unsigned long ul);
-    ///add parameter to message
-    void                             addParam(int ul);
-    ///add parameter to message
-    void                             addParam(unsigned int ul);
-    ///add parameter to message
-    void                             addParam(double d);
+    /*------------------------- addParams --------------------------------*/
+
+	template <class T>
+	void addParam(T p) {
+	  std::ostringstream message;
+      message << p;
+      iv_vecParams.push_back(message.str());
+	}
     /*------------------------- Attributes --------------------------------*/
     ///accessor for the message id
     TyMessageId                   getMessageID() const {

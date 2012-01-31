@@ -168,73 +168,7 @@ namespace uima {
     assert( iv_utMsgId != 0 );
   }
 
-
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(const char * cpsz) {
-    iv_vecParams.push_back(cpsz);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(const string & str) {
-    iv_vecParams.push_back(str);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(const UChar * cpuszParam) {
-    string s;
-    UnicodeStringRef(cpuszParam).extract(s);         // Convert to default encoding for platform
-    iv_vecParams.push_back(s);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(const icu::UnicodeString & crustrParam) {
-    string s;
-    UnicodeStringRef(crustrParam).extract(s);         // Convert to default encoding for platform
-    iv_vecParams.push_back(s);
-  }
-
-  void ErrorMessage::addParam(uima::UnicodeStringRef const & crParam) {
-    icu::UnicodeString str(crParam.getBuffer(), crParam.length() );
-    addParam(str);
-  }
-
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(long l) {
-    string str;
-    convertToString(l, str);
-    iv_vecParams.push_back(str);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(unsigned long ul) {
-    string str;
-    convertToString(ul, str);
-    iv_vecParams.push_back(str);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(int i) {
-    string str;
-    convertToString(i, str);
-    iv_vecParams.push_back(str);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(unsigned int ui) {
-    string str;
-    convertToString(ui, str);
-    iv_vecParams.push_back(str);
-  }
-  ///add parameter to message id
-  void
-  ErrorMessage::addParam(double d) {
-    string str;
-    convertToString(d, str);
-    iv_vecParams.push_back(str);
-  }
-
+  
   /*------------------------------- Constructors -------------------------------*/
 
   ErrorContext::ErrorContext(
