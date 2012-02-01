@@ -33,7 +33,7 @@ For a new build on Linux
 
 5. build, test and create sdk tree
 	cd uimacpp-2.4.0
-	[setup env for the build]
+	[setup env for the build]. Requires environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME, APU_HOME.
       make
       DESTDIR=`pwd` make install
       make check
@@ -90,7 +90,7 @@ For a new build on Windows
 
 2. build, test and create sdk tree
 	cd uimacpp-2.4.0\src
-	[setup env for the build]
+	[setup env for the build] Requires environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME, APU_HOME.
 	winmake /build release
 	winmake /build debug
 	cd ..\docs

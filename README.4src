@@ -13,17 +13,18 @@ using MSVC version 8. 64-bit builds have only been tested on Linux with gcc 4.3.
 Setting up the build environment:
 ---------------------------------
 UIMACPP has dependencies on APR, ICU, Xerces-C and ActiveMQ-cpp
-libraries.  
+libraries.  ActiveMQ-cpp has a runtime dependency on APR-Util and is required to build the
+binary distribution.
 
 On Windows dependent libraries must be specified with the
-environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
-ACTIVEMQ_HOME.  For now, the ActiveMQ CPP dependency is optional; if not
+environmental parameters APR_HOME, ICU_HOME, XERCES_HOME, APU_HOME and
+ACTIVEMQ_HOME.  For now, the ActiveMQ CPP and APR Util dependencies are optional; if not
 specified the UIMA-AS compatible service wrapper deployCppService will
 fail to build.  
 
 On Linux, system install of dependencies - APR, ICU, XERCES, ACTIVEMQ 
 will be used if minimum version requirements are met.  They may also
-be specified with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME and
+be specified with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME, 
 ACTIVEMQ_HOME.  The ActiveMQ CPP library is required.
 
 There is also a dependency on JNI headers from a Java JDK. The build
@@ -36,8 +37,8 @@ On Unix, dependent headers are expected under $dependent_HOME/include and
 dependent libraries under $dependent_HOME/lib.
 
 The build of dependent libraries on Windows is less consistent.
-APR libraries are expected in %APR_HOME%\Release. ActiveMQ libraries 
-are in %ACTIVEMQ_HOME%\vs2008-build\ReleaseDLL (or DebugDLL) and 
+APR and APR-Util libraries are expected in %APR_HOME%\Release and %APU_HOME%\Release respectively. 
+ActiveMQ libraries are in %ACTIVEMQ_HOME%\vs2008-build\ReleaseDLL (or DebugDLL) and 
 ActiveMQ headers are expected in %ACTIVEMQ_HOME%\src\main.
 
 On Windows, buildsdk command tries to copy the msvc*.dll runtime libs from
@@ -69,7 +70,7 @@ assume you have unpacked the source into $HOME/uimacpp-2.X.Y.
   make check
 
 4 Build the SDK tree:
-  Requires environmental parameters to be set for ICU_HOME, XERCES_HOME, APR_HOME, and ACTIVEMQ_HOME.
+  Requires environmental parameters to be set for ICU_HOME, XERCES_HOME, APR_HOME, ACTIVEMQ_HOME, APU_HOME.
   From root of the SVN extract  
   make sdk ARGS=target_dir
   This will build the documentation.
@@ -111,6 +112,7 @@ If using MSVC Express Edition, replace the devenv command with vcexpress.
 
 4 Build the SDK tree:
   set MSVCRT_HOME to the directory with the msvc*.dll files required.
+  set ACTIVEMQ_HOME and APU_HOME if building and distributing the ActiveMQ CPP service wrapper, deployCppService.
   cd \uimacpp-2.X.Y
   buildsdk target_dir
 
@@ -142,6 +144,7 @@ Building the dependencies: APR, ICU, Xersec-c and Activemq-cpp
 
 Download and build information for these libraries are at:
   APR      - http://apr.apache.org/
+  APR-Util - http://apr.apache.org/
   ICU      - http://www.icu-project.org/
   XERCES   - http://xml.apache.org/xerces-c/
   ACTIVEMQ - http://activemq.apache.org/cms/download.html
@@ -159,7 +162,7 @@ after building APR, install using:
 On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
  e.g. devenv vs2008-build/vs2008-activemq.vcproj /build ReleaseDLL
 
-Also, the APR library can be built by launching libapr.dsp or by following the
+Also, the APR and APR-Util libraries can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
 Binary distributions are available for Xerces and ICU.
