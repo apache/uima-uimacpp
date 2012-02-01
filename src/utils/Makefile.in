@@ -55,7 +55,6 @@ am_deployCppService_OBJECTS =  \
 	deployCppService-deployCppService.$(OBJEXT) \
 	deployCppService-ActiveMQAnalysisEngineService.$(OBJEXT)
 deployCppService_OBJECTS = $(am_deployCppService_OBJECTS)
-deployCppService_LDADD = $(LDADD)
 am__DEPENDENCIES_1 =
 deployCppService_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
@@ -63,10 +62,9 @@ deployCppService_DEPENDENCIES = $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1)
 am_runAECpp_OBJECTS = runAECpp-runAECpp.$(OBJEXT)
 runAECpp_OBJECTS = $(am_runAECpp_OBJECTS)
-runAECpp_LDADD = $(LDADD)
 runAECpp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+	$(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
 am__depfiles_maybe = depfiles
@@ -231,7 +229,8 @@ xerces_install = @xerces_install@
 @DEBUG_TEST_TRUE@AM_CPPFLAGS = -g -DDEBUG -D_GNU_SOURCE
 
 # Set default for all target_LDADD values
-LDADD = $(UIMA_LIB) $(UIMA_APR_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB)
+deployCppService_LDADD = $(UIMA_LIB) $(UIMA_APR_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB) $(UIMA_ACTIVEMQ_LIB)  -ldl $(UIMACPP_HOME_LIB)
+runAECpp_LDADD = $(UIMA_LIB) $(UIMA_APR_LIB) $(UIMA_XERCES_LIB) $(UIMA_ICU_LIB)   -ldl $(UIMACPP_HOME_LIB)
 runAECpp_SOURCES = runAECpp.cpp
 runAECpp_CPPFLAGS = -g -DDEBUG -D_GNU_SOURCE
 deployCppService_SOURCES = deployCppService.cpp ActiveMQAnalysisEngineService.cpp deployCppService.hpp ActiveMQAnalysisEngineService.hpp
