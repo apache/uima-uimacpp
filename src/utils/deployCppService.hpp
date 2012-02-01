@@ -32,6 +32,7 @@
 #include <apr_thread_cond.h>
 #include <apr_signal.h>
 #include <apr_portable.h>
+#include <string>
 using namespace std;
 class SocketLogger;
 class Monitor;
@@ -242,7 +243,7 @@ class ServiceParameters {
           }
         } else if (0 == strcmp(arg, "-a")) {
           if (++index < argc) {
-            if (stricmp(argv[index],"true")==0) {
+			if (strcasecmp(argv[index],"true")==0) {
               this->iv_terminateOnCPCError = true;
             } else {
               this->iv_terminateOnCPCError=false;
