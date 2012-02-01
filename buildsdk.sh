@@ -31,6 +31,8 @@ usage() {
 	echo "      APR_HOME - root of the APR install."
 	echo "      ICU_HOME - root of the ICU install."
 	echo "      XERCES_HOME - root of the XERCES install."
+ 	echo "      ACTIVEMQ_HOME - root of the XERCES install." 
+        echo "      APU_HOME - root of the APR Util install Required if ACTIVEMQ_HOME is set."
 }
 
 
@@ -156,8 +158,28 @@ if [ ! -d "$XERCES_HOME"/include ]; then
 fi
 
 if [  -r "$UIMA_INSTALLDIR"/bin/deployCppService ]; then
+   echo "checking $ACTIVEMQ_HOME"
+   if [ "$ACTIVEMQ_HOME" = "" ]; then
+      echo ERROR: ACTIVEMQ_HOME must be set to location of ActiveMQ CPP install.
+      echo UIMACPP SDK was not built.
+      exit
+   fi
+   echo "checking $APU_HOME"
+   if [ "$APU_HOME" = "" ]; then
+      echo ERROR: APU_HOME must be set to location where APR-Util is installed.
+      echo UIMACPP SDK was not built.
+      exit
+   fi
+
+
    if [ ! -d "$ACTIVEMQ_HOME"/lib ]; then
       echo ERROR: ACTIVEMQ_HOME "$ACTIVEMQ_HOME" is invalid.
+      echo UIMACPP SDK was not built.
+      exit
+   fi
+   echo "checking $APU_HOME"
+   if [ ! -d "$APU_HOME"/lib ]; then
+      echo ERROR: APU_HOME "$APU_HOME"  is invalid.
       echo UIMACPP SDK was not built.
       exit
    fi
@@ -236,6 +258,11 @@ eval cp $CPLR "$XERCES_HOME"/lib/libxerces-c*.$LIBEXT"*" "$UIMA_DIR"/lib/
 if [ ! "$ACTIVEMQ_HOME" = "" ]; then
   echo copying from "$ACTIVEMQ_HOME"...
   eval cp $CPLR "$ACTIVEMQ_HOME"/lib/libactivemq-cpp*.$LIBEXT"*" "$UIMA_DIR"/lib/
+fi
+
+if [ ! "$APU_HOME" = "" ]; then
+  echo copying from "$APU_HOME"...
+  eval cp $CPLR "$APU_HOME"/lib/libaprutil*.$LIBEXT"*" "$UIMA_DIR"/lib/
 fi
 
 echo copying the scriptators...
