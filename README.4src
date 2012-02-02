@@ -151,7 +151,7 @@ Download and build information for these libraries are at:
 
 ACTIVEMQ CPP library version 3.2 or higher is required to support the ActiveMQ failover protocol
 and to support multi-byte payload data.
-ACTIVEMQ CPP 3.2 and higher has a dependency on APR at version 1.3.8 or higher.
+ACTIVEMQ CPP 3.2 and higher has a dependency on APR at version 1.3.8 or higher and APR-Util 1.3.8.
 
 For UNIX users that cannot or do not want to install these at
 system root, specify DESTDIR for the install step. For example,
@@ -159,12 +159,34 @@ after building APR, install using:
 
   DESTDIR=`pwd` make install
 
-On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
- e.g. devenv vs2008-build/vs2008-activemq.vcproj /build ReleaseDLL
+Building Dependencies on Winows:
+--------------------------------
 
+ActiveMQ-CPP
+The UIMA C++ MSVC projects are Microsoft Visual Studio 8 (2005) projects.
+The ActiveMQ CPP source distribution comes with MSVC 8 (2008) project.  These
+can be down converted to MSVC 2005 by following these step reproduced from
+http://stackoverflow.com/questions/609419/how-do-i-downgrade-a-c-visual-studio-2008-project-to-2005
+
+Put the following sed script in a file called downgrade_vc9_to_vc8.sed :
+s#Version=\"9.00\"#Version=\"8.00\"#g
+s#<ProductVersion>9.0.21022</ProductVersion>#<ProductVersion>8.0.50727</ProductVersion>#g
+s#<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>##g
+s# ToolsVersion=\"3.5\"##g
+s#MSBuildToolsPath#MSBuildBinPath#g
+
+Run 
+sed.exe -f downgrade_sln_vc9_to_vc8.sed vs2008-build/activemq-cpp.vcproj > vs2008-build/activemq-cpp2005.vcproj
+
+On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
+ e.g. devenv vs2008-build/activemq-cpp2005.vcproj /build ReleaseDLL
+      devenv vs2008-build/activemq-cpp2005.vcproj /build DebugDLL
+ 
+APR and APR-Util
 Also, the APR and APR-Util libraries can be built by launching libapr.dsp or by following the
 instructions in Makefile.win.
 
+XERCES and ICU
 Binary distributions are available for Xerces and ICU.
 
 UIMA C++ Release Compatibility
