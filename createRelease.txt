@@ -15,7 +15,7 @@ For a new build on Linux
 	mkdir uimacpp-2.4.0-build
 	cd uimacpp-2.4.0-build
 
-2. checkout source from current tag
+2. checkout source from the tag
 	svn co https://svn.apache.org/repos/asf/uima/uimacpp/tag/uimacpp-2.4.0
 
 3. Modify configure.ac 
@@ -24,26 +24,16 @@ For a new build on Linux
       libtool version numbering convention. This is summarized on the
       wiki page https://cwiki.apache.org/UIMA/proposed-changes-to-uima-c-build-and-packaging.html.
 
-4. Run configure
-   define environment variable ICU_HOME, APR_HOME, XERCES_HOME, ACTIVEMQ_HOME, JAVA_INCLUDE
-   ./configure --with-jdk=$JAVA_HOME/include --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
-   
-   NOTE: if you need to regenerate the configure script, run autogen.sh and
+4. Run autogen.sh to generate new configure script
    check into svn the generated output files.
 
-5. build, test and create sdk tree
-	cd uimacpp-2.4.0
-	[setup env for the build]. Requires environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME, APU_HOME.
-      make
-      DESTDIR=`pwd` make install
-      make check
-      make sdk ARGS=`pwd`
+5. build, test and create sdk tree. Follow the instructions in README.4src.
 
 6. create bin tarball
 	tar -czf uimacpp-2.4.0-bin.tgz uimacpp
 
 7. rat scan of bin
-	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-linux-report.txt
+      java -jar apache-rat-0.8.jar  -dir uimacpp -e *.vcproj docs scriptators txt README RELEASE* examples  html > uimacpp-bin-linux
 
 8. sniff test of base sdk
 	cd uimacpp
@@ -88,27 +78,13 @@ For a new build on Windows
 1. checkout source from current release branch
 	svn co https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-2.4.0
 
-2. build, test and create sdk tree
-	cd uimacpp-2.4.0\src
-	[setup env for the build] Requires environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME, APU_HOME.
-	winmake /build release
-	winmake /build debug
-	cd ..\docs
-	builddocs
-	cd ..\src\test
-	devenv test.sln /build release
-	set UIMA_HOME=someGoodUimaSDK
-	fvt
-	devenv test.sln /build debug
-	fvt debug
-	cd ..\..
-	buildsdk ..
-
+2. build, test and create sdk tree following the instructions in README.4src
+	
 3. create bin zipfile of buildDir\uimacpp as
 	uimacpp-2.4.0-bin.zip
 
 4. rat scan of bin
-	java -jar apache-rat-0.6.jar uimacpp > uimacpp-bin-windows-report.txt
+     java -jar apache-rat-0.8.jar  -dir uimacpp -e *.vcproj docs scriptators txt README RELEASE* examples  html > uimacpp-bin-windows-report.txt
 
 5. sniff test of base sdk
 	cd uimacpp
@@ -143,8 +119,8 @@ For a new build on Windows
 
 Create Source Tar ball
 
-The source tar ball is created by zipping up the files from svn extract of
-uimacpp.
+The source tar ball is created by zipping up the files from svn extract of UIMA C++ source.
+
 The source tar ball contains all the files needed to build the Windows and/or
 Linux binaries. 
 
