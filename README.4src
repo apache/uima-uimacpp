@@ -22,10 +22,14 @@ ACTIVEMQ_HOME.  For now, the ActiveMQ CPP and APR Util dependencies are optional
 specified the UIMA-AS compatible service wrapper deployCppService will
 fail to build.  
 
-On Linux, system install of dependencies - APR, ICU, XERCES, ACTIVEMQ 
-will be used if minimum version requirements are met.  They may also
-be specified with the environmental parameters APR_HOME, ICU_HOME, XERCES_HOME, 
-ACTIVEMQ_HOME.  The ActiveMQ CPP library is required.
+On Linux, the build will attempt to locate and use the system installation of the dependencies 
+- APR, ICU, XERCES, ACTIVEMQ. Provided these are consistent and only the UIMACPP library is required to be built, 
+there is no need for ennviroment variables to be set.
+
+To build with libraries at different location or to build the SDK, the environmental parameters 
+APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME and APU_HOME must be set.  
+
+The ActiveMQ CPP library is required for the Linux build.
 
 There is also a dependency on JNI headers from a Java JDK. The build
 looks for these headers in the directory specified by JAVA_INCLUDE.
@@ -61,6 +65,12 @@ assume you have unpacked the source into $HOME/uimacpp-2.X.Y.
 
 2 Build the UIMA shared library and test routines:
   cd root of the SVN extract  
+  To build with system installation of the dependencies, run:
+  ./configure
+  To build specifiying the path to the the location of the dependencies, 
+  first set the environement variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME to the respective install directories..
+        set JAVA_INCLUDE
+  run
   ./configure --with-jdk=$JAVA_INCLUDE --with-apr=$APR_HOME --with-icu=$ICU_HOME --with-xerces=$XERCES_HOME --with-activemq=$ACTIVEMQ_HOME
   make
   DESTDIR=`pwd` make install  (or make install-strip to strip symbols to shrink the binaries)
