@@ -79,7 +79,11 @@ else
 # compile flags for ship mode:
 # all optimization on, Multithreaded, dynamic link runtime
 BUILD_CFLAGS=-DNDEBUG -DTRACEOFF -O3 -fPIC $(FORCE_32)
+ifeq ($(UNAME), Darwin)
+BUILD_LFLAGS= $(FORCE_32)
+else
 BUILD_LFLAGS= -Wl,--strip-debug $(FORCE_32)
+endif
 endif
 
 # include directory for compile
