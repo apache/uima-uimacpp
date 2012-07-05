@@ -55,7 +55,6 @@ namespace uima {
   XMLErrorHandler::~XMLErrorHandler()   {}
 
 
-
 // ---------------------------------------------------------------------------
 //  XMLErrorHandler: Overrides of the SAX ErrorHandler interface
 // ---------------------------------------------------------------------------
@@ -66,8 +65,8 @@ namespace uima {
     assertWithMsg(sizeof(XMLCh) == sizeof(UChar), "Port required");
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
-    msg.addParam(e.getColumnNumber());
-    msg.addParam(XMLString::transcode(e.getMessage()));
+	msg.addParam(e.getColumnNumber());
+	msg.addParam(UnicodeString(e.getMessage(),XMLString::stringLen(e.getMessage())));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
@@ -82,7 +81,7 @@ namespace uima {
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
     msg.addParam(e.getColumnNumber());
-	msg.addParam(XMLString::transcode(e.getMessage()));
+	msg.addParam(UnicodeString(e.getMessage(),XMLString::stringLen(e.getMessage())));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
@@ -97,7 +96,7 @@ namespace uima {
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
     msg.addParam(e.getColumnNumber());
-    msg.addParam(XMLString::transcode(e.getMessage()));
+	msg.addParam(UnicodeString(e.getMessage(),XMLString::stringLen(e.getMessage())));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
