@@ -67,7 +67,7 @@ namespace uima {
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
     msg.addParam(e.getColumnNumber());
-    msg.addParam( (UChar const *) e.getMessage());
+    msg.addParam(XMLString::transcode(e.getMessage()));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
@@ -82,7 +82,7 @@ namespace uima {
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
     msg.addParam(e.getColumnNumber());
-    msg.addParam( (UChar const *) e.getMessage());
+	msg.addParam(XMLString::transcode(e.getMessage()));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
@@ -97,7 +97,7 @@ namespace uima {
     msg.addParam( (UChar const *) e.getSystemId());
     msg.addParam(e.getLineNumber());
     msg.addParam(e.getColumnNumber());
-    msg.addParam( (UChar const *) e.getMessage());
+    msg.addParam(XMLString::transcode(e.getMessage()));
     errInfo.setMessage(msg);
     errInfo.setSeverity(ErrorInfo::unrecoverable);
     ExcIllFormedInputError exc(errInfo);
