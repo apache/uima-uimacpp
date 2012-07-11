@@ -231,8 +231,8 @@ CPPFLAGS="$CPPFLAGS_save"
 #
 activemq=true
 AC_ARG_WITH([activemq],
-            [AS_HELP_STRING([--without-activemq],
-              [disable support for ActiveMQ service wrapper])],
+           [AS_HELP_STRING([--without-activemq],
+             [disable support for ActiveMQ service wrapper])],
             [],
             [with_activemq=check])
 
@@ -252,7 +252,7 @@ else
     AC_MSG_ERROR([no suitable ACTIVEMQ found])
   fi
 
-  # Get build information from XERCES
+  # Get build information from ACTIVEMQ
   UIMA_ACTIVEMQ_INCLUDE="$ACTIVEMQ_CXXFLAGS"
   UIMA_ACTIVEMQ_LIB="$ACTIVEMQ_LDFLAGS"
 
@@ -266,8 +266,19 @@ else
                 [activemq=false])
   CPPFLAGS="$CPPFLAGS_save"
   if test "x$activemq" = "xfalse"; then
-    AC_MSG_ERROR([ActiveMQ Headers not found. Specify valid path to ActivMQ.])
+    AC_MSG_ERROR([ActiveMQ Headers not found. Specify valid path to ActiveMQ.])
   fi
+  AC_MSG_NOTICE([Apache Portable Runtime (APR Util ) library configuration])
+  APR_FIND_APU([], [], 1, [1])
+
+  if test $apu_found = "no"; then
+    AC_MSG_WARN([APR-Util not found])
+    echo "APR-Util is required if building with ActiveMQ."
+    echo "Please install APR-Util on this system and supply the appropriate"
+    echo "--with-apr-util option to 'configure'"
+    AC_MSG_ERROR([no suitable APR-Util found. Required to build with ActiveMQ. Rerun configure with the option --with-apr-util=PATH ])
+fi
+
 fi 
 
 #########################################################################
@@ -307,7 +318,7 @@ AC_SUBST(UIMACPP_HOME_LIB)
 #
 
 AC_ARG_WITH([jdk], AC_HELP_STRING([--with-jdk],
-                                      [use local JDK (uses /opt/IBMJava2-142 by default)]),
+                                      [use local JDK (uses /opt/IBMJava2-142/include by default)]),
                [UIMA_JDK_INCLUDE="-I$withval"
                 JDK_TEST_INCLUDE="$UIMA_JDK_INCLUDE"],
                     [UIMA_JDK_INCLUDE="-I/opt/IBMJava2-142/include"

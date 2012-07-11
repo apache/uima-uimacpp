@@ -258,9 +258,6 @@ eval cp $CPLR "$XERCES_HOME"/lib/libxerces-c*.$LIBEXT"*" "$UIMA_DIR"/lib/
 if [ ! "$ACTIVEMQ_HOME" = "" ]; then
   echo copying from "$ACTIVEMQ_HOME"...
   eval cp $CPLR "$ACTIVEMQ_HOME"/lib/libactivemq-cpp*.$LIBEXT"*" "$UIMA_DIR"/lib/
-fi
-
-if [ ! "$APU_HOME" = "" ]; then
   echo copying from "$APU_HOME"...
   eval cp $CPLR "$APU_HOME"/lib/libaprutil*.$LIBEXT"*" "$UIMA_DIR"/lib/
 fi
