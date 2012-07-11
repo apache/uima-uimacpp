@@ -68,6 +68,7 @@ static bool PyUnicodeConvert(PyObject *obj, UnicodeString &rv) {
 static bool PyStringConvert(PyObject *obj, UnicodeString &rv) {
   char *src;
   int len;
+  //Py_ssize_t len;
   PyString_AsStringAndSize(obj, &src, &len);
   rv = UnicodeString((const char *) src, (int32_t) len);
   return true;

@@ -19,7 +19,8 @@ ifeq ($(UIMACPP_HOME),)
   $(error UIMACPP_HOME not set)
 endif
 
-SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell swig -version 2>&1)))
+SWIGVERSION:=$(shell swig -version  | grep SWIG | sed "s/SWIG Version //" )
+#SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell swig -version 2>&1)))
 
 ifeq ($(SWIGVERSION),)
   $(error unable to determine SWIGVERSION)
