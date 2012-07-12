@@ -731,7 +731,7 @@ PACKAGE_STRING='uimacpp 2.4.0'
 PACKAGE_BUGREPORT=''
 
 ac_unique_file="src/framework/engine.cpp"
-ac_default_prefix=/install
+ac_default_prefix=/usr/local/uimacpp
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

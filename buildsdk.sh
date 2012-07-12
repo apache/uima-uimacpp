@@ -27,7 +27,7 @@ usage() {
 	echo "      in the docs directory of the uimacpp source tree."
 	echo "    Requires the following environment variables:"
 	echo "      UIMA_INSTALLDIR - 'install' location of uimacpp build."
-	echo "                     Defaults to ./install"
+	echo "                     Defaults to ./usr/local/uimacpp"
 	echo "      APR_HOME - root of the APR install."
 	echo "      ICU_HOME - root of the ICU install."
 	echo "      XERCES_HOME - root of the XERCES install."
@@ -101,7 +101,7 @@ fi
 # set default values if not set
 
 if [ "$UIMA_INSTALLDIR" = "" ]; then
-	export UIMA_INSTALLDIR=$UIMACPP_SOURCE/install
+	export UIMA_INSTALLDIR=$UIMACPP_SOURCE/usr/local/uimacpp
 fi
 
 if [[ "$APR_HOME" = "" || "$ICU_HOME" = "" || "$XERCES_HOME" = "" ]]; then

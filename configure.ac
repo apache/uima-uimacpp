@@ -23,7 +23,7 @@ AM_INIT_AUTOMAKE([foreign])
 
 AC_CONFIG_MACRO_DIR([m4])
 AC_DISABLE_STATIC
-AC_PREFIX_DEFAULT(/install)
+AC_PREFIX_DEFAULT(/usr/local/uimacpp)
 
 #[LIB_VERSION=`echo $VERSION | sed -e 's/\.//' -e 's/^\([^.]*\)$/\1.0/'`]
 #LIB_VERSION_MAJOR=`echo $LIB_VERSION | sed 's/\..*//'`
