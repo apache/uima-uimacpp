@@ -28,6 +28,9 @@ The Apache UIMA C++ SDK has been built and tested in 32-bit mode on
 Linux systems with gcc version 3.4.6 and on Windows using MSVC version 8.
 64-bit builds have only been tested on Linux with gcc 4.3.2 and 4.4.6.
 
+For up-to-date build instructions. please see these pages on the Apache UIMA site: 
+https://uima.apache.org/dev-quick.html
+https://uima.apache.org/doc-uimacpp-build.html
 
 ----------------
 Building on Unix
@@ -98,9 +101,9 @@ Install and Build SDK tree
   make sdk TARGETDIR=loc_of_sdk_tree [clean]
 
 By default the install step will put UIMACPP components in
-/usr/local/uimacpp. To install them elsewhere, add the following
+/usr/local/uimacpp. To build an SDK, install them elsewhere by adding the following
 option to configure:
-  --prefix=install_target_loc
+  --prefix=install_target_loc e.g. --prefix=~/uimacpp-2.4.0/install
 
 The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
 
@@ -122,8 +125,12 @@ environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME,
 APU_HOME and JAVA_INCLUDE.
 
 The following commands assume you are running from a Microsoft Visual
-Studio 2005 Command Prompt. If using MSVC Express Edition, replace the
-devenv command with vcexpress.
+Studio 2005 Command Prompt. 
+If using MSVC Express Edition, 
+  cd uimacpp-2.X.Y\src
+  run vcexpress uimacpp.sln and do any conversions as prompted.
+  replace devenv command with vcexpress in the winmake and test/fvt.sh scripts and in all build instructions. 
+  continue with the instructions below.
 
 1 Build the UIMA C++ framework in both release and debug:
   cd \uimacpp-2.X.Y\src

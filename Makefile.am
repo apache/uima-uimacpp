@@ -37,6 +37,6 @@ docs: 	docs/html/index.html
 docs/html/index.html: 
 	cd docs && ./builddocs.sh
 
-sdk:	$(DESTDIR)usr/local/uimacpp/bin/runAECpp docs/html/index.html $(icu_install) $(apr_install) $(xerces_install) $(activemq_install) $(apu_install)
-	echo "Building SDK with $(icu_install) $(apr_install) $(xerces_install) $(activemq_install) in target directory $(TARGETDIR)"
-	export APR_HOME=$(apr_install) ICU_HOME=$(icu_install) XERCES_HOME=$(xerces_install) ACTIVEMQ_HOME=$(activemq_install) APU_HOME=$(apu_install) && ./buildsdk.sh $(TARGETDIR)
+sdk:	$(DESTDIR)$(prefix)/bin/runAECpp docs/html/index.html $(icu_install) $(apr_install) $(xerces_install) $(activemq_install) $(apu_install)
+	echo "Building SDK with $(icu_install) $(apr_install) $(xerces_install) $(activemq_install) $(apu_install)  in target directory $(TARGETDIR)"
+	export APR_HOME=$(apr_install) ICU_HOME=$(icu_install) XERCES_HOME=$(xerces_install) ACTIVEMQ_HOME=$(activemq_install) APU_HOME=$(apu_install) UIMA_INSTALLDIR=$(DESTDIR)$(prefix) && ./buildsdk.sh $(TARGETDIR)
