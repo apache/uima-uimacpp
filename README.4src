@@ -84,8 +84,8 @@ to the configure script.
 There is also a dependency on JNI headers from a Java JDK.
 
 
-2.1 Optional pre-build step
-----------------------------
+Optional pre-build step
+-----------------------
 If changes are made to configure.ac or Makefile.am, then configure
 needs to be re-generated using:
 
@@ -94,62 +94,57 @@ needs to be re-generated using:
 autogen.sh requires GNU tools at or above the following versions:
 automake v1.9.6, autoconf v2.59 and libtool v1.5.24.
 
-2.2 Configure, build and test
-------------------------------
-To build the UIMACPP libraries using prerequisites installed in the
-system directories, Simply,
+Build Steps
+-----------
 
-  ./configure --with-jdk=location_of_jni.h [other options]
-  make
+1 Configure and build
+  To build the UIMACPP libraries using prerequisites installed in the
+  system directories, Simply run:
+    ./configure --with-jdk=location_of_jni.h [other options]
+    make
 
-The ./configure script will generate Makefiles customized to your
-system, including detecting available prerequisites that have been
-installed in standard locations.
+  The ./configure script will generate Makefiles customized to your
+  system, including detecting available prerequisites that have been
+  installed in standard locations.
 
-On Linux jni.h is usually in the JDK's "include" directory. On MacOSX
-jni.h is in the JDK's "Headers" dirctory. In some cases jni.h will
-#include files in other directories. For example, if jni.h includes
-jni_md.h located in a subdirectory named linux, use
-  --with-jdk="loc_of_jdk/include -Iloc_of_jdk/include/linux"
-
-If the prerequisites are not installed in the system directories and  
-for a full SDK build, additional parameters must be provided to the
-configure script:
-
-For a full SDK build, all of the following are needed:
-  --with-apr=loc_of_apr_install --with-icu=loc_of_icu_install \
-  --with-xerces=loc_of_xerces_install --with-activemq=loc_of_amq_install \
-  --with-apr-util=loc_of_apr-util_install
-
-For a build of UIMACPP without UIMA-AS support, specify the option
---without-activemq and leave out --with-activemq and --with-apr-util.
-
-For more help on how to customize the build configuration, run:
-
-  ./configure --help
-
-2.3 Run the test suite
------------------------
-make check
-
-2.3 Install and Build the SDK tree
-----------------------------------
-  make install
-  make sdk TARGETDIR=loc_of_sdk_tree [clean]
-
-By default the install step will put UIMACPP components in
-/usr/local/uimacpp. To build an SDK, install them elsewhere by adding the following
-option to configure:
+  By default the install step will put UIMACPP components in
+  /usr/local/uimacpp. To build an SDK, install them elsewhere by adding 
+  the following option to configure:
   --prefix=install_target_loc e.g. --prefix=~/uimacpp-2.4.0/install
 
-The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
+  On Linux jni.h is usually in the JDK's "include" directory. On MacOSX
+  jni.h is in the JDK's "Headers" dirctory. In some cases jni.h will
+  #include files in other directories. For example, if jni.h includes
+  jni_md.h located in a subdirectory named linux, use
+  --with-jdk="loc_of_jdk/include -Iloc_of_jdk/include/linux"
 
-  cd loc_of_sdk_tree
-  tar czf uimacpp-2.X.Y-bin.tgz uimacpp
+  If the prerequisites are not installed in the system directories as well as   
+  for a full SDK build, additional parameters must be provided to the
+  configure script:
+  For a full SDK build, all of the following are needed:
+      --with-apr=loc_of_apr_install --with-icu=loc_of_icu_install \
+      --with-xerces=loc_of_xerces_install --with-activemq=loc_of_amq_install \
+      --with-apr-util=loc_of_apr-util_install
 
-2.4 Generate source tar ball
-----------------------------
-  make dist
+  For a build of UIMACPP without UIMA-AS support, specify the option
+    --without-activemq and leave out --with-activemq and --with-apr-util.
+
+  For more help on how to customize the build configuration, run:
+    ./configure --help
+
+2 Run the test suite
+    make check
+
+3 Install and Build the SDK tree
+    make install 
+    make sdk TARGETDIR=loc_of_sdk_tree [clean]
+
+  The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
+    cd loc_of_sdk_tree
+    tar czf uimacpp-2.X.Y-bin.tgz uimacpp
+
+4 Optionally, generate source tar ball
+    make dist
 
 For additional information on building on Mac OSX, please see Section 4.
 
