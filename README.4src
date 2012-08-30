@@ -43,7 +43,7 @@ ICU           >= 3.6
 Xerces-C      >= 2.8
 JDK           for building the JNI interface
 ActiveMQ CPP  >= 3.4.1  (optional) to build the UIMA-AS service wrapper
-APR-Util      >= 1.3.8  (optional) an ActiveMQ prerequisite
+APR-util      >= 1.3.8  (optional) an ActiveMQ prerequisite
 
 
 On Linux the following GNU build tools are required:
@@ -72,7 +72,7 @@ https://uima.apache.org/doc-uimacpp-build.html
 --------------------
 
 To build an SDK it is recommended that all prerequisite components, APR, ICU, Xerces-C,
-ActiveMQ-cpp and APR-Util be built from source and "make
+ActiveMQ-cpp and APR-util be built from source and "make
 install" run. They need not be installed in system directories.
 
 Prerequisite installs from compatible binary distributions can be used to build
@@ -154,18 +154,18 @@ For additional information on building on Mac OSX, please see Section 4.
 ----------------------
 
 To build an SDK all prerequisite components, APR, ICU, Xerces-C,
-ActiveMQ-cpp and APR-Util must first be built on the machine, and a
+ActiveMQ-cpp, APR-util and APR-iconv must first be built, and a
 JDK installed. The location of the dependencies must be set in
-environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME,
-APU_HOME and JAVA_INCLUDE.
+environment variables APR_HOME, ICU_HOME, XERCES_HOME, ACTIVEMQ_HOME
+and JAVA_HOME.
 
 For details on building the dependencies, please see section 5.2 of 
 this document.
 
-In order to be able to build annotators, the SDK must be built as the
-annotator MSVC projects setup requires the environment variable 
-UIMACPP_HOME to be set to the location of the SDK and finds all
-dependencies under UIMACPP_HOME.
+In order to be able to build annotators, the SDK must be built as
+described below in step 4, since the annotator projects use the 
+environment variable UIMACPP_HOME to locate the UIMA libraries
+and dependencies.
 
 If using MSVC Express Edition, first run these prebuild steps. 
   - cd uimacpp-2.X.Y\src
@@ -195,9 +195,10 @@ Studio 2005 Command Prompt.
   builddocs
 
 4 Build the SDK tree:
-  set MSVCRT_HOME to the directory with the msvc*.dll files required.
-  set ACTIVEMQ_HOME and APU_HOME if building and distributing the ActiveMQ CPP service wrapper, deployCppService.
+  set MSVCRT_HOME to the directory with the required msvc*.dll files.
+  set ACTIVEMQ_HOME if building the ActiveMQ service wrapper, deployCppService.
 
+  cd \uimacpp-2.X.Y
   buildsdk "target_dir [clean]"
 
 5 Package the SDK zipfile by creating a compressed folder of 
@@ -248,12 +249,11 @@ install_name_tool -change "/install/lib/libuima.dylib"
 
 
 ----------------------------------------------------------------------------
-5. Building the dependencies: APR, APR-Util, ICU, Xerses-c and Activemq-cpp
+5. Building the dependencies: APR et al, ICU, Xerses-c and Activemq-cpp
 ----------------------------------------------------------------------------
 
 Download and build information for these libraries are at:
   APR      - http://apr.apache.org/
-  APR-Util - http://apr.apache.org/
   ICU      - http://www.icu-project.org/
   XERCES   - http://xml.apache.org/xerces-c/
   ACTIVEMQ - http://activemq.apache.org/cms/download.html
@@ -261,7 +261,7 @@ Download and build information for these libraries are at:
 ACTIVEMQ CPP library version 3.2 or higher is required to support
 the ActiveMQ failover protocol and to support multi-byte payload data.
 ACTIVEMQ CPP 3.2 and higher has a dependency on APR at version 1.3.8
-or higher and APR-Util 1.3.8.
+or higher and APR-util 1.3.8.  (On Windows APR-util requires APR-iconv)
 
 
 5.1 Building Dependencies on Unix/MacOSX
@@ -274,10 +274,11 @@ in install_loc/lib.
 5.2 Building Dependencies on Windows:
 -------------------------------------
 The build of dependent libraries on Windows is less consistent.
-APR and APR-Util libraries are expected in %APR_HOME%\Release and
-%APU_HOME%\Release respectively.  ActiveMQ libraries are in
-%ACTIVEMQ_HOME%\vs2008-build\ReleaseDLL (or DebugDLL) and ActiveMQ
-headers are expected in %ACTIVEMQ_HOME%\src\main.
+The APR components must be checked out and built in parallel 
+directories (see apr.apache.org) and the libraries are expected 
+to be located relative to %APR_HOME%.
+ActiveMQ libraries are in %ACTIVEMQ_HOME%\vs2008-build\ReleaseDLL
+and the headers are expected in %ACTIVEMQ_HOME%\src\main.
 
 On Windows, buildsdk command tries to copy the msvc*.dll runtime libs from
 C:\Program Files\Microsoft Visual Studio8\VC\redist\x86\Microsoft.VC80.CRT 
@@ -299,16 +300,17 @@ s#MSBuildToolsPath#MSBuildBinPath#g
 Run 
 sed.exe -f downgrade_sln_vc9_to_vc8.sed vs2008-build/activemq-cpp.vcproj > vs2008-build/activemq-cpp2005.vcproj
 
-On Windows, the only activemq-cpp targets needed by uimacpp are ReleaseDLL and DebugDLL,
+The only activemq-cpp target needed by uimacpp is ReleaseDLL,
  e.g. devenv vs2008-build/activemq-cpp2005.vcproj /build ReleaseDLL
-      devenv vs2008-build/activemq-cpp2005.vcproj /build DebugDLL
  
-APR and APR-Util
-Also, the APR and APR-Util libraries can be built by launching
-libapr.dsp or by following the instructions in Makefile.win.
+The three APR libraries can be built by launching aprutil.dsw and
+building libaprutil or by following the instructions in Makefile.win.
 
 XERCES and ICU
 Binary distributions are available for Xerces and ICU.
+Use only those built with a compatible version of Visual Studio!
+Currently the SDK uses xerces-c_2 so if a higher version is 
+installed the MSVC project files must be edited.
 
 
 ----------------------------------
