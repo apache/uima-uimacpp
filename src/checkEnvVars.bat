@@ -22,8 +22,8 @@ REM   under the License.
 @REM which are include in the SDK
 @REM These may be overridden by setting APR_HOME or ICU_HOME or XERCES_HOME
 
-if not exist "%JAVA_INCLUDE%\jni.h" (
-  echo Error: failed to find JDK headers in %JAVA_INCLUDE%
+if not exist "%JAVA_HOME%\include\jni.h" (
+  echo Error: failed to find JDK headers in %JAVA_HOME%
   goto end
 )
 

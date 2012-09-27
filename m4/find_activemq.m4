@@ -41,7 +41,8 @@ AC_DEFUN([AMQ_FIND_AMQ],
 	activemq_install="$withval"
 	AC_SUBST(activemq_install) 
       else
-        AC_MSG_ERROR([Invalid ACTIVEMQ path $withval])
+        AC_MSG_WARN([Invalid ACTIVEMQ path $withval])
+        AC_MSG_ERROR([ACTIVEMQ not found. Please use --without-activemq or--with-activemq=PATH])
       fi
    ],
    [

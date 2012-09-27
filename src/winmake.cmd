@@ -23,7 +23,7 @@ REM Unset UIMACPP_HOME to avoid build problems
 set UIMACPP_HOME=
 
 REM need a Java JRE for the JNI interface
-if not exist %JAVA_INCLUDE%\jni.h goto nojava
+if not exist %JAVA_HOME%\include\jni.h goto nojava
 
 REM Other requied dependencies
 if "%APR_HOME%"==""     goto noapr
@@ -58,7 +58,7 @@ echo need XERCES_HOME to be set
 goto end
 
 :nojava
-echo JAVA_INCLUDE is not set or does not contain jni.h
+echo JAVA_HOME is not set or does not contain include\jni.h
 
 :end
 endlocal

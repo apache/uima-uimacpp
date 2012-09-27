@@ -67,8 +67,20 @@ static bool PyUnicodeConvert(PyObject *obj, UnicodeString &rv) {
 // convert using default codepage
 static bool PyStringConvert(PyObject *obj, UnicodeString &rv) {
   char *src;
-  int len;
-  PyString_AsStringAndSize(obj, &src, &len);
+  #ifdef PY_VERSION_HEX
+  #if (PY_VERSION_HEX >= 0x02050000)
+    /* Python version was greater than 2.5 */
+    Py_ssize_t len;
+     PyString_AsStringAndSize(obj, &src,  ( Py_ssize_t*)&len);
+  #else
+    /* Python version was less than 2.5 */
+     int len;
+     PyString_AsStringAndSize(obj, &src, &len);
+  #endif
+  #else
+    /* Could not determine version */ 
+    PyString_AsStringAndSize(obj, &src, &len);
+  #endif
   rv = UnicodeString((const char *) src, (int32_t) len);
   return true;
 }

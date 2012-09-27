@@ -34,7 +34,6 @@ if "%~1" == "" (
 	echo       ICU_HOME - root of the ICU install. Required.
 	echo       XERCES_HOME - root of the XERCES install. Required.
 	echo       MSVCRT_HOME - directory with required msvc*.dll files
-	echo       APU_HOME - root of the APR Util install Required if ACTIVEMQ_HOME is set.
 	echo       ACTIVEMQ_HOME - root of the XERCES install. Optional.
 	echo     Optional environment variable:
 	echo       UIMA_INSTALL - 'install' location of uimacpp build.
@@ -55,10 +54,6 @@ set UIMA_DIR=%TARGET_DIR%\uimacpp
 if "%APR_HOME%" == "" goto Missing
 if "%ICU_HOME%" == "" goto Missing
 if "%XERCES_HOME%" == "" goto Missing
-if not "%ACTIVEMQ_HOME%" == "" (
-  if "%APU_HOME%" == "" goto MissingAprUtil
-
-)
 
 echo.
 echo SDK directory tree will be built in %UIMA_DIR%
@@ -101,12 +96,13 @@ if not exist "%XERCES_HOME%"\include (
 	goto error
 )
 
-if "%MSVCRT_HOME%" == "" (
-        set MSVCRT_HOME=C:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT
-        echo MSVCRT_HOME undefined: trying: "%MSVCRT_HOME%"
-)
+if not "%MSVCRT_HOME%" == "" goto check
 
-if not exist "%MSVCRT_HOME%" (
+set MSVCRT_HOME=C:\Program Files\Microsoft Visual Studio 8\VC\redist\x86\Microsoft.VC80.CRT
+echo MSVCRT_HOME undefined: trying: "%MSVCRT_HOME%"
+
+:check
+if not exist "%MSVCRT_HOME%"\msvc*.dll (
         echo ERROR: MSVCRT_HOME "%MSVCRT_HOME%" is invalid.
         goto error
 )
@@ -188,8 +184,8 @@ echo.
 echo copying from %APR_HOME%...
 mkdir %UIMA_DIR%\include\apr
 xcopy /Q /Y %APR_HOME%\include\apr*.h %UIMA_DIR%\include\apr
-xcopy /Q /Y %APR_HOME%\Release\libapr*.dll %UIMA_DIR%\bin
-xcopy /Q /Y %APR_HOME%\Release\libapr*.lib %UIMA_DIR%\lib
+xcopy /Q /Y %APR_HOME%\Release\libapr-*.dll %UIMA_DIR%\bin
+xcopy /Q /Y %APR_HOME%\Release\libapr-*.lib %UIMA_DIR%\lib
 
 
 echo.
@@ -203,8 +199,11 @@ echo.
 echo copying from %XERCES_HOME%...
 mkdir %UIMA_DIR%\include\xercesc
 xcopy /S /Q /Y %XERCES_HOME%\include\xercesc %UIMA_DIR%\include\xercesc
-xcopy /Q /Y %XERCES_HOME%\bin\xerces-c_2*.dll %UIMA_DIR%\bin
-xcopy /Q /Y %XERCES_HOME%\lib\xerces-c_2*.lib %UIMA_DIR%\lib
+xcopy /Q /Y %XERCES_HOME%\bin\xerces-c_*.dll %UIMA_DIR%\bin
+xcopy /Q /Y %XERCES_HOME%\lib\xerces-c_*.lib %UIMA_DIR%\lib
+del %UIMA_DIR%\bin\xerces-c*d.dll 2> NUL
+del %UIMA_DIR%\lib\xerces-c*d.lib 2> NUL
+del %UIMA_DIR%\lib\xerces-c_static* 2> NUL
 
 echo.
 echo copying MSVC redistribution libs
@@ -268,29 +267,26 @@ REM xcopy /Q /Y %XERCES_HOME%\LICENSE* %UIMA_DIR%\licenses\xerces
 
 if not "%ACTIVEMQ_HOME%" == "" (
   echo.
-  echo copying from %APU_HOME%...
-  xcopy /Q /Y %APU_HOME%\Release\libaprutil*.dll %UIMA_DIR%\bin
-  xcopy /Q /Y %APU_HOME%\Release\libaprutil*.lib %UIMA_DIR%\lib
+  echo copying libaprutil and libapriconv ...
+  xcopy /Q /Y %APR_HOME%\..\apr-util\Release\libaprutil*.dll %UIMA_DIR%\bin
+  xcopy /Q /Y %APR_HOME%\..\apr-util\Release\libaprutil*.lib %UIMA_DIR%\lib
+  xcopy /Q /Y %APR_HOME%\..\apr-iconv\Release\libapriconv*.dll %UIMA_DIR%\bin
+  xcopy /Q /Y %APR_HOME%\..\apr-iconv\Release\libapriconv*.lib %UIMA_DIR%\lib
   echo.
   echo copying from %ACTIVEMQ_HOME%...
   xcopy /Q /Y %ACTIVEMQ_HOME%\vs2008-build\win32\ReleaseDLL\activemq-cpp.dll %UIMA_DIR%\bin
-  xcopy /Q /Y %ACTIVEMQ_HOME%\vs2008-build\win32\DebugDLL\activemq-cppd.dll %UIMA_DIR%\bin
 )
 
 echo cleaning the target tree
 for /R %UIMA_DIR% %%d in (.) do del %%d\*~ 2> NUL
 
 echo DONE SDK image in %UIMA_DIR%
+echo Please check that all copies were successful
 goto end
 
 :Missing
 echo APR_HOME and ICU_HOME and XERCES_HOME must all be specified
 echo and must contain the directories produced by their "install" builds
-goto end
-
-:MissingAprUtil
-echo APU_HOME must be specifed when ACTIVEMQ_HOME is specified
-echo and must contain the directories produced by apr-util "install" build
 goto end
 
 :error

@@ -27,7 +27,7 @@ usage() {
 	echo "      in the docs directory of the uimacpp source tree."
 	echo "    Requires the following environment variables:"
 	echo "      UIMA_INSTALLDIR - 'install' location of uimacpp build."
-	echo "                     Defaults to ./install"
+	echo "                     Defaults to ./usr/local/uimacpp"
 	echo "      APR_HOME - root of the APR install."
 	echo "      ICU_HOME - root of the ICU install."
 	echo "      XERCES_HOME - root of the XERCES install."
@@ -101,7 +101,8 @@ fi
 # set default values if not set
 
 if [ "$UIMA_INSTALLDIR" = "" ]; then
-	export UIMA_INSTALLDIR=$UIMACPP_SOURCE/install
+	echo ERROR: UIMA_INSTALLDIR is not set.
+       	exit
 fi
 
 if [[ "$APR_HOME" = "" || "$ICU_HOME" = "" || "$XERCES_HOME" = "" ]]; then
@@ -240,28 +241,25 @@ find $UIMA_DIR/examples -type f -iname '*.cmd' -exec rm -f {} \;
 
 cp $CPL "$UIMACPP_SOURCE/src/base.mak" "$UIMA_DIR"/lib/
 	
-echo copying from "$APR_HOME"...
+echo copying APR from "$APR_HOME"...
 cp $CPLR  "$APR_HOME"/include/apr-* "$UIMA_DIR"/include/
 eval cp $CPLR "$APR_HOME"/lib/libapr*.$LIBEXT"*" "$UIMA_DIR"/lib/
 
-echo copying from "$ICU_HOME"...
+echo copying ICU from "$ICU_HOME"...
 cp $CPLR "$ICU_HOME"/include/unicode "$UIMA_DIR"/include/
 eval cp $CPLR "$ICU_HOME"/lib/libicuio*.$LIBEXT"*" "$UIMA_DIR"/lib/
 eval cp $CPLR "$ICU_HOME"/lib/libicuuc*.$LIBEXT"*" "$UIMA_DIR"/lib/
 eval cp $CPLR "$ICU_HOME"/lib/libicui18n*.$LIBEXT"*" "$UIMA_DIR"/lib/
 eval cp $CPLR "$ICU_HOME"/lib/libicudata.$LIBEXT"*" "$UIMA_DIR"/lib/
 	
-echo copying from "$XERCES_HOME"...
+echo copying Xerces from "$XERCES_HOME"...
 cp $CPLR "$XERCES_HOME"/include/xercesc "$UIMA_DIR"/include/
 eval cp $CPLR "$XERCES_HOME"/lib/libxerces-c*.$LIBEXT"*" "$UIMA_DIR"/lib/
 
 if [ ! "$ACTIVEMQ_HOME" = "" ]; then
-  echo copying from "$ACTIVEMQ_HOME"...
+  echo copying ActiveMQ from "$ACTIVEMQ_HOME"...
   eval cp $CPLR "$ACTIVEMQ_HOME"/lib/libactivemq-cpp*.$LIBEXT"*" "$UIMA_DIR"/lib/
-fi
-
-if [ ! "$APU_HOME" = "" ]; then
-  echo copying from "$APU_HOME"...
+  echo copying APR-Util from "$APU_HOME"...
   eval cp $CPLR "$APU_HOME"/lib/libaprutil*.$LIBEXT"*" "$UIMA_DIR"/lib/
 fi
 
