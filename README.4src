@@ -18,12 +18,13 @@ The Apache UIMA C++ SDK
 UIMACPP enables analytics written in C++, Python, Perl and Tcl to be
 easily integrated into the UIMA Java framework.
 
-The Apache UIMA C++ SDK is intended to be portable, packaged with
-user's annotator code, to make it easier to redistribute UIMACPP-based
-applications. This portability also allows different UIMACPP annotators,
-each using different versions of UIMACPP, to be integrated into a
-common UIMA pipeline on the same machine. For this reason the SDK includes
-UIMACPP as well as all prerequisite components.  
+The Apache UIMA C++ SDK contains UIMACPP as well as all prerequisite 
+components. The SDK is intended to enable user's annotator code 
+be packaged for integration into a UIMA pipeline and to make it
+easier to redistribute UIMACPP-based applications.  This also allows 
+different UIMACPP annotators, each using different versions of UIMACPP, 
+to be integrated into a common UIMA pipeline on the same machine. For this 
+reason the SDK contains UIMACPP as well as all prerequisite components.  
 
 To build the SDK, it is recommended that the prerequisites be built from source.
 The SDK build process must be configured with the location of the install directory for each
@@ -57,7 +58,8 @@ libtool     >= 1.5.24
 On Windows, UIMACPP is built with Microsoft Visual Studio. The UIMA C++ MSVC projects 
 are Microsoft Visual Studio 8 (2005) projects.  
 
-The SDK also requires doxygen for building the documentation.
+The SDK build process also builds the documentation and requires doxygen for building 
+the documentation.
 
 The Apache UIMA C++ SDK has been built and tested in 32-bit mode on
 Linux systems with gcc version 3.4.6 and on Windows using MSVC version 8.
@@ -67,13 +69,13 @@ For up-to-date build instructions. please see these pages on the Apache UIMA sit
 https://uima.apache.org/dev-quick.html
 https://uima.apache.org/doc-uimacpp-build.html
 
---------------------
-2. Building on Unix
---------------------
+-------------------------
+2. Building on Unix/Linux
+-------------------------
 
 To build an SDK it is recommended that all prerequisite components, APR, ICU, Xerces-C,
-ActiveMQ-cpp and APR-util be built from source and "make
-install" run. They need not be installed in system directories.
+ActiveMQ-cpp and APR-util be built from source and installed by running "make
+install". They need not be installed in system directories.
 
 Prerequisite installs from compatible binary distributions can be used to build
 the UIMACPP components.  At runtime, only one version of ICU can be loaded. Some
@@ -316,7 +318,7 @@ installed the MSVC project files must be edited.
 ----------------------------------
 6. UIMA C++ Release Compatibility
 ----------------------------------
-There a two distinct features of UIMA C++ to consider when dealing
+There are two distinct features of UIMA C++ to consider when dealing
 with release compatibility:
 
 - The framework dynamically loads annotators which are user code. The
