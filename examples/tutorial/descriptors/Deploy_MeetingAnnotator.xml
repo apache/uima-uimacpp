@@ -37,7 +37,7 @@
       <environmentVariables>
        <!-- Add the location of the MeetingAnnotator to the library search path -->
        <!-- Note that PATH must be uppercase for Windows -->
-       <environmentVariable name="PATH">src</environmentVariable>
+       <environmentVariable name="Path">src</environmentVariable>
        <environmentVariable name="LD_LIBRARY_PATH">src</environmentVariable>
        <environmentVariable name="DYLD_LIBRARY_PATH">src</environmentVariable>
        <environmentVariable name="UIMACPP_DATAPATH">C:/mydata</environmentVariable>
