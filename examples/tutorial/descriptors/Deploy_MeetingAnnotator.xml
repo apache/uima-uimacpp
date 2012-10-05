@@ -35,9 +35,11 @@
        <import location="MeetingAnnotatorCPP.xml"/>
       </topDescriptor>
       <environmentVariables>
-       <environmentVariable name="Path">C:/Program Files/apache-uima/uimacpp/examples/tutorial/src;C:/Program Files/apache-uima/uimacpp/bin</environmentVariable>
-       <environmentVariable name="LD_LIBRARY_PATH">C:/Program Files/apache-uima/uimacpp/examples/tutorial/src:C:/Program Files/apache-uima/uimacpp/lib</environmentVariable>
-       <environmentVariable name="DYLD_LIBRARY_PATH">C:/Program Files/apache-uima/uimacpp/examples/tutorial/src:C:/Program Files/apache-uima/uimacpp/lib</environmentVariable>
+       <!-- Add the location of the MeetingAnnotator to the library search path -->
+       <!-- Note that PATH must be uppercase for Windows -->
+       <environmentVariable name="PATH">src</environmentVariable>
+       <environmentVariable name="LD_LIBRARY_PATH">src</environmentVariable>
+       <environmentVariable name="DYLD_LIBRARY_PATH">src</environmentVariable>
        <environmentVariable name="UIMACPP_DATAPATH">C:/mydata</environmentVariable>
 	</environmentVariables>
     </service>

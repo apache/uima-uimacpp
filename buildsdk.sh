@@ -233,7 +233,6 @@ cp $CPLR "$UIMACPP_SOURCE"/examples "$UIMA_DIR"/
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/SofaStreamHandlerFile.cpp "$UIMA_DIR"/examples/src/
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/SimpleTextSegmenter.cpp "$UIMA_DIR"/examples/src/
 cp $CPL "$UIMACPP_SOURCE"/src/test/src/MeetingAnnotator.cpp "$UIMA_DIR"/examples/tutorial/src/
-cp -p "$UIMACPP_SOURCE"/src/test/.libs/libMeetingAnnotator.$LIBEXT "$UIMA_DIR"/examples/tutorial/src/MeetingAnnotator.$LIBEXT
 find $UIMA_DIR/examples -type f -iname '*.sln' -exec rm -f {} \;
 find $UIMA_DIR/examples -type f -iname '*.vcproj' -exec rm -f {} \;
 find $UIMA_DIR/examples -type f -iname '*.cmd' -exec rm -f {} \;

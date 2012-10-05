@@ -178,7 +178,6 @@ xcopy /Q /Y %UIMA_EXAMPLESDIR%\tutorial\descriptors\*.xml %UIMA_DIR%\examples\tu
 xcopy /Q /Y %UIMA_EXAMPLESDIR%\tutorial\src\*.vcproj %UIMA_DIR%\examples\tutorial\src
 REM copy the following files from the fvt suite
 xcopy /Q /Y %UIMA_TESTSRCDIR%\MeetingAnnotator.cpp %UIMA_DIR%\examples\tutorial\src
-xcopy /Q /Y %UIMA_TESTSRCDIR%\..\MeetingAnnotator.dll %UIMA_DIR%\examples\tutorial\src
 
 echo.
 echo copying from %APR_HOME%...

@@ -233,33 +233,26 @@ The runAE driver will process all files in the data directory and DaveDetector s
 <h3>2.3 Testing Interoperability with UIMA AS</h3>
 UIMA AS is an add-on to the core UIMA package; it must be separately downloaded and installed. 
 To test interoperability with UIMA AS, make sure UIMA_HOME is set to the location of the combined SDK, 
-and that its bin directory is in the PATH. Run the C++ MeetingAnnotator as follows:
-<h4>2.3.1 Adjust example Deployment Descriptor</h4>
-The UIMA AS example C++ deployment descriptor includes specifications for the UIMACPP environment.
-Following the convention for UIMA examples, this descriptor specifies paths starting with "C:/Program Files/apache-uima". 
-This path prefix must be changed in the descriptor to be the parent directory of UIMACPP.
-<h4>2.3.2 On Linux</h4>
+and that its bin directory is in the PATH. Build and run the C++ MeetingAnnotator as follows:
+<h4>2.3.1 On Linux</h4>
 <ul>
     <code>
       start the ActiveMQ broker following directions in $UIMA_HOME/README<br>
       cd $UIMACPP_HOME/examples/tutorial<br>
-      runRemoteAsyncAE.sh  tcp://localhost:61616 MeetingAnnotator \<br>
-      <dir><code>-d descriptors/Deploy_MeetingAnnotator.xml</code></dir>
+      make -C src -f MeetingAnnotator.mak<br>
+      runRemoteAsyncAE.sh  tcp://localhost:61616 MeetingAnnotator -d descriptors/Deploy_MeetingAnnotator.xml
     </code>
 </ul>  
-<h4>2.3.3 On Windows</h4>
+<h4>2.3.2 On Windows</h4>
 <ul>
     <code>
       start the ActiveMQ broker following directions in %UIMA_HOME%\README<br>
       cd %UIMACPP_HOME%\examples\tutorial<br>
-      runRemoteAsyncAE  tcp://localhost:61616 MeetingAnnotator \<br>
-      <dir><code>-d descriptors\Deploy_MeetingAnnotator.xml</code></dir>
+      devenv src\MeetingAnnotator.vcproj /build release<br>
+      runRemoteAsyncAE  tcp://localhost:61616 MeetingAnnotator -d descriptors\Deploy_MeetingAnnotator.xml
     </code>
-<p>
-NOTE: On Windows, the case of the environment variable name 'Path' in the deployment descriptor must match the case of the Path environment variable name in the system.  
-</p>
 </ul>
-The runRemoteAsyncAE driver will deploy the MeetingAnnotator binary from the distribution package as a UIMA AS service and send it an empty CAS to process.
+The runRemoteAsyncAE driver will deploy the MeetingAnnotator as a UIMA AS service and send it an empty CAS to process.
 
 <h2>3.0 Developing a C++ Component</h2>
 
