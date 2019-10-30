@@ -61,7 +61,7 @@ namespace uima {
                          const char * cpszTitle, const char * cpszCopyright)
         : iv_bQuiet(false),
         iv_cpszHelp(NULL),
-        iv_szProcessName(""),
+	iv_szProcessName(strdup("")),
         iv_currentArg(99999) {
       // Catch any APR errors here in case caller does not expect this constructor to fail
       try {

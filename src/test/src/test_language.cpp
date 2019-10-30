@@ -86,7 +86,7 @@ void mainDisplay(util::ConsoleUI & rclConsole, Language & rclLang)
 }
 
 // Display an array of Unicode characters
-void ucharDisplay(util::ConsoleUI & rclConsole, char* tag, const UChar* ucbuff, int len) {
+void ucharDisplay(util::ConsoleUI & rclConsole, const char* tag, const UChar* ucbuff, int len) {
   char cbuf[1024];
   char* s = cbuf;
   *s++ = '\"';
@@ -184,8 +184,8 @@ mainTest(
   UErrorCode err;
   std::string ss;
 
-  char* cstr = "abcdefghijklmnopqrstuvyzyz 0123456789";
-  UnicodeString us1(cstr);
+  const char* cstr = "abcdefghijklmnopqrstuvyzyz 0123456789";
+  icu::UnicodeString us1(cstr);
   UnicodeStringRef usr(us1);
 
   // into std::string with default conversion
@@ -193,9 +193,9 @@ mainTest(
   if (bVerbose) rclConsole.format("extract to std::string",ss.c_str());
   ASSERT (strlen(cstr) == ss.length());
 
-  // substring into UnicodeString
-  UnicodeString us2("initialValue");
-  UnicodeString us3("z 0");
+  // substring into icu::UnicodeString
+  icu::UnicodeString us2("initialValue");
+  icu::UnicodeString us3("z 0");
   usr.extractBetween(25,28,us2);               // Should be "z 0"
   if (bVerbose) ucharDisplay(rclConsole, "extractBetween into UChar buffer", us2.getBuffer(), us2.length());
   ASSERT ( us2 == us3 );
@@ -205,7 +205,7 @@ mainTest(
   len = us1.extract(ucbuf,100,err);         // Pre-fill buffer
 
   usr.extract(27,3,ucbuf,5);                // extract part of USR into the buffer
-  UnicodeString us4("abcde012ijklm");
+  icu::UnicodeString us4("abcde012ijklm");
   if (bVerbose) ucharDisplay(rclConsole, "extract into UChar buffer", ucbuf, 13);
   ASSERT ( us4.compare(ucbuf,13) == 0 );
 
@@ -227,18 +227,18 @@ mainTest(
   // Test some UnicodeStringRef conversion functions
   //------------------------------------------------------
 
-  // Create a UnicodeString with 8 Arabic characters followed by a blank.
+  // Create a icu::UnicodeString with 8 Arabic characters followed by a blank.
   // Also get the utf-8 form as a reference
   UChar uc[] = {0x062c, 0x0648, 0x0631, 0x062c, 0x062a, 0x0627, 0x0648, 0x0646, 0x0020};
   int nchars = sizeof(uc)/sizeof(UChar);
-  UnicodeString US1(uc, nchars);
+  icu::UnicodeString US1(uc, nchars);
   char u8[100];
   US1.extract(0, US1.length(), u8, 100, "utf-8");
 
   // Create two UnicodeStringRef and compare them
   UnicodeStringRef USR1(US1);
   UnicodeStringRef USR2(uc, nchars);
-  if (bVerbose) ucharDisplay(rclConsole, "Construct from UnicodeString", USR1.getBuffer(), USR1.length());
+  if (bVerbose) ucharDisplay(rclConsole, "Construct from icu::UnicodeString", USR1.getBuffer(), USR1.length());
   if (bVerbose) ucharDisplay(rclConsole, "Construct from UChar array",   USR2.getBuffer(), USR2.length());
   ASSERT ( USR1.compare(US1) == 0 );
 
@@ -257,7 +257,7 @@ mainTest(
 
   // Test the "re-try when overflows" logic in unistrref.cpp
   // Create a string that converts to >255 chars
-  UnicodeString US2(uc, nchars);
+  icu::UnicodeString US2(uc, nchars);
   for ( int i=0; i < 15; ++i )
     US2.append(uc, nchars);
 

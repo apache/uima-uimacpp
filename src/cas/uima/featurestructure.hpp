@@ -136,6 +136,11 @@ namespace uima {
      */
     FeatureStructure();
 
+    // This is required to allow safe delete calls (it makes the
+    // class polymorphic).
+    virtual ~FeatureStructure(){} 
+
+    
     /**
      * Returns the CAS object in which this feature structure lives.
      */

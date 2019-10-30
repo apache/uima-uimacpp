@@ -1178,7 +1178,7 @@ namespace uima {
      */
     inline void extract(int32_t start,
                         int32_t length,
-                        UnicodeString& dst) const;
+                        icu::UnicodeString& dst) const;
 
     /**
      * Copy the characters in the range [<tt>start</tt>, <tt>limit</tt>)
@@ -1191,7 +1191,7 @@ namespace uima {
      */
     inline void extractBetween(int32_t start,
                                int32_t limit,
-                               UnicodeString& dst) const;
+                               icu::UnicodeString& dst) const;
 
     /* Substring extraction with conversion */
 
@@ -1378,7 +1378,7 @@ namespace uima {
      * @return a reference to this
      * @stable
      */
-    inline UnicodeStringRef& setTo(const UnicodeString& srcText);
+  inline UnicodeStringRef& setTo(const icu::UnicodeString& srcText);
 
     /**
      * Set the characters in the UnicodeString object to the characters
@@ -1456,7 +1456,7 @@ namespace uima {
                           int32_t dstStart) const;
     inline void doExtract(int32_t start,
                           int32_t length,
-                          UnicodeString& dst) const;
+                          icu::UnicodeString& dst) const;
 
     inline void
     pinIndices(int32_t& start,
@@ -2074,7 +2074,7 @@ namespace uima {
   inline void
   UnicodeStringRef::extract(int32_t start,
                             int32_t length,
-                            UnicodeString& target) const {
+                            icu::UnicodeString& target) const {
     target.replace(0, target.length(), getBuffer(), start, length);
   }
 // Replaces all of target by substring of src
@@ -2091,7 +2091,7 @@ namespace uima {
   inline void
   UnicodeStringRef::extractBetween(int32_t start,
                                    int32_t limit,
-                                   UnicodeString& dst) const {
+                                   icu::UnicodeString& dst) const {
     extract(start, limit - start, dst);
   }
 
@@ -2188,7 +2188,7 @@ namespace uima {
     return (*this);
   }
 
-  inline UnicodeStringRef& UnicodeStringRef::setTo(const UnicodeString& srcText) {
+  inline UnicodeStringRef& UnicodeStringRef::setTo(const icu::UnicodeString& srcText) {
     iv_pUChars  = srcText.getBuffer();
     iv_uiLength = srcText.length();
     return (*this);

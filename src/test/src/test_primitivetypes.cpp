@@ -63,7 +63,8 @@ float floats[] = {
                  };
 
 char chars[] = {
-                 1, 10, 'a','b','c','d','e',8,16,64,128,255
+		/*                 1, 10, 'a','b','c','d','e',8,16,64,128,255*/
+		                1, 10, 'a','b','c','d','e',8,16,64,-128,-1
                };
 
 
@@ -83,10 +84,10 @@ double doubles[] = {
                    };
 
 bool val = false;
-UnicodeString ustr("this beer is good");
-int begin = 1;
-int end = 5;
-char * viewName = "EnglishDocument";
+icu::UnicodeString ustr("this beer is good");
+int Begin = 1;
+int End = 5;
+const char * viewName = "EnglishDocument";
 #define BOOLEAN_ARRAY_SIZE 20
 
 void createExampleFS(CAS & cas, bool copyarrays)  {
@@ -123,7 +124,7 @@ void createExampleFS(CAS & cas, bool copyarrays)  {
   englishView->setDocumentText(ustr);
 
   // create an FS of exampleType and index it
-  AnnotationFS fs = englishView->createAnnotation(testType, begin, end);
+  AnnotationFS fs = englishView->createAnnotation(testType, Begin, End);
   englishView->getIndexRepository().addFS(fs);
 
   // create Array FSs
@@ -453,8 +454,8 @@ void validateFS(CAS & cas, bool checkcopytoarray)  {
   }
   // check scalar values
   ASSERT_OR_THROWEXCEPTION(0==fs.getStringValue(stringF).compare(strings[0]));
-  ASSERT_OR_THROWEXCEPTION(fs.getBeginPosition()==begin);
-  ASSERT_OR_THROWEXCEPTION(fs.getEndPosition()==end);
+  ASSERT_OR_THROWEXCEPTION(fs.getBeginPosition()==Begin);
+  ASSERT_OR_THROWEXCEPTION(fs.getEndPosition()==End);
   ASSERT_OR_THROWEXCEPTION(fs.getFloatValue(floatF)==floats[0]);
   ASSERT_OR_THROWEXCEPTION(fs.getBooleanValue(booleanF)==val);
   ASSERT_OR_THROWEXCEPTION(fs.getByteValue(byteF)=='z');
@@ -487,7 +488,7 @@ void copyArrayExample(CAS & cas) {
   englishView->setDocumentText(ustr);
 
   // create an FS of exampleType and index it
-  AnnotationFS fs = englishView->createAnnotation(testType, begin, end);
+  AnnotationFS fs = englishView->createAnnotation(testType, Begin, End);
   englishView->getIndexRepository().addFS(fs);
 
 }
