@@ -55,6 +55,8 @@ using namespace std;
 #include "uima/resmgr.hpp"
 
 
+#define DEBUG 0
+
 namespace uima {
 
 // ---------------------------------------------------------------------------
@@ -67,7 +69,7 @@ namespace uima {
             //    ,iv_typesystem(iv_casimpl.getHeap().getTypeSystem())
                 ) {
 
-    //cout << " XCASDeserializerHandler::constructor " << endl;
+    if (DEBUG) std::cerr << " XCASDeserializerHandler::constructor " << std::endl;
     currentContentFeat.append(DEFAULT_CONTENT_FEATURE);
     sofaTypeCode = uima::internal::gs_tySofaType;
     FSIndexRepository * fsidx = &iv_cas->getBaseIndexRepository();
@@ -88,7 +90,7 @@ namespace uima {
   }
 
   XCASDeserializerHandler::~XCASDeserializerHandler()   {
-    //cout << " XCASDeserializerHandler::destructor " << endl;
+    if (DEBUG) std::cout << " XCASDeserializerHandler::destructor " << std::endl;
     for (size_t i = 0; i < fsTree.size(); i++) {
       FSInfo * fsinfo = (FSInfo*) fsTree[i];
       if (fsinfo != 0) {
@@ -117,12 +119,12 @@ namespace uima {
 // ---------------------------------------------------------------------------
 
   void  XCASDeserializerHandler::setDocumentLocator(const Locator* const locator) {
-    //cout << " XCASDeserializerHandler::setDocumentLocator() " << endl;
+    if (DEBUG) std::cerr << " XCASDeserializerHandler::setDocumentLocator() " << std::endl;
     iv_locator = locator;
   }
 
   void XCASDeserializerHandler::startDocument() {
-    //cout << " XCASDeserializerHandler::startDocument() " << endl;
+    if (DEBUG) cout << " XCASDeserializerHandler::startDocument() " << endl;
     iv_state = DOC_STATE;
   }
 
@@ -130,10 +132,10 @@ namespace uima {
       const   XMLCh* const    localname,
       const   XMLCh* const    qname,
       const Attributes & attrs) {
-    //cout << " XCASDeserializerHandler::startElement() " << UnicodeString((UChar*)qname, XMLString::stringLen(qname)) << endl;
+    if (DEBUG) std::cerr << " XCASDeserializerHandler::startElement() " << icu::UnicodeString((UChar*)qname, XMLString::stringLen(qname)) << endl;
     assert(sizeof(XMLCh) == sizeof(UChar));
 
-    UnicodeString qualifiedName( (UChar const *) qname, XMLString::stringLen(qname));
+    icu::UnicodeString qualifiedName( (UChar const *) qname, XMLString::stringLen(qname));
     buffer.remove();
 
     switch (iv_state) {
@@ -183,8 +185,8 @@ namespace uima {
 
   void XCASDeserializerHandler::characters(
     const   XMLCh* const  cpwsz,
-    const unsigned int    uiLength) {
-    //cout << "XCASDeserializerHandler::characters: \"" << icu::UnicodeString(cpwsz, uiLength) << "\"" << endl;
+    const XMLSize_t    uiLength) {
+    if (DEBUG) std::cerr << "XCASDeserializerHandler::characters: \"" << icu::UnicodeString(cpwsz, uiLength) << "\"" << endl;
 
     assert(sizeof(XMLCh) == sizeof(UChar));
 
@@ -204,8 +206,8 @@ namespace uima {
   void XCASDeserializerHandler::endElement(const XMLCh* const uri,
       const XMLCh* const localname,
       const XMLCh* const qname) {
-    //cout << " XCASDeserializerHandler::endElement() " << UnicodeString( (UChar*) qname, XMLString::stringLen(qname) ) << endl;
-    UnicodeString qualifiedName( (UChar const *) qname, XMLString::stringLen(qname));
+    if (DEBUG) std::cerr << " XCASDeserializerHandler::endElement() " << icu::UnicodeString( (UChar*) qname, XMLString::stringLen(qname) ) << " -- buffer is >" << buffer << "<" << endl;
+    icu::UnicodeString qualifiedName( (UChar const *) qname, XMLString::stringLen(qname));
     assert(sizeof(XMLCh) == sizeof(UChar));
     switch (iv_state) {
     case DOC_STATE: {
@@ -247,7 +249,7 @@ namespace uima {
     }
     case DOC_TEXT_STATE: {
       // Assume old style TCAS with one text Sofa
-      SofaFS newSofa = iv_cas->createInitialSofa(UnicodeString("text"));
+      SofaFS newSofa = iv_cas->createInitialSofa(icu::UnicodeString("text"));
       CAS* cas = iv_cas->getInitialView();
       cas->registerView(newSofa);
       // Set the document text without creating a documentAnnotation
@@ -308,8 +310,8 @@ namespace uima {
 
 
 // Create a new FS.
-  void XCASDeserializerHandler::readFS(UnicodeString & qualifiedName, const Attributes & attrs) {
-    UnicodeString typeName(qualifiedName);
+  void XCASDeserializerHandler::readFS(icu::UnicodeString & qualifiedName, const Attributes & attrs) {
+    icu::UnicodeString typeName(qualifiedName);
     Type type = iv_cas->getTypeSystem().getType(typeName);
     uima::lowlevel::TyFSType typecode =  uima::internal::FSPromoter::demoteType(type);
 
@@ -333,8 +335,8 @@ namespace uima {
     int id = -1;
 //       int sofaRef = -1; // 0 ==> baseCas indexRepository
     vector<int>* sofaRef = new vector<int>;
-    UnicodeString attrName;
-    UnicodeString attrValue;
+    icu::UnicodeString attrName;
+    icu::UnicodeString attrValue;
     bool nameMapping = false;
     UChar ubuff[256];
     UErrorCode errorCode = U_ZERO_ERROR;
@@ -347,12 +349,12 @@ namespace uima {
 
       // determine if this is the one and only initial view Sofa
       bool isInitialView = false;
-      int extsz = UnicodeString(CAS::FEATURE_BASE_NAME_SOFAID).extract(ubuff, 256, errorCode);
+      int extsz = icu::UnicodeString(CAS::FEATURE_BASE_NAME_SOFAID).extract(ubuff, 256, errorCode);
       if (extsz > 256) {
         cout << "ACK!" << endl;
       }
       const UChar* sofaID = attrs.getValue(ubuff);
-      if (0==UnicodeStringRef(sofaID).compare(UnicodeString("_DefaultTextSofaName"))) {
+      if (0==UnicodeStringRef(sofaID).compare(icu::UnicodeString("_DefaultTextSofaName"))) {
         sofaID = ubuff;
       }
 //   no Sofa mapping for now
@@ -360,11 +362,11 @@ namespace uima {
 //           // Map incoming SofaIDs
 //           sofaID = iv_ctx->mapToSofaID(sofaID).getSofaId();
 //         }
-      if (0==UnicodeStringRef(sofaID).compare(UnicodeString(CAS::NAME_DEFAULT_SOFA))) {
+      if (0==UnicodeStringRef(sofaID).compare(icu::UnicodeString(CAS::NAME_DEFAULT_SOFA))) {
         isInitialView = true;
       }
       // get the sofaNum
-      extsz = UnicodeString(CAS::FEATURE_BASE_NAME_SOFANUM).extract(ubuff, 256, errorCode);
+      extsz = icu::UnicodeString(CAS::FEATURE_BASE_NAME_SOFANUM).extract(ubuff, 256, errorCode);
       if (extsz > 256) {
         cout << "ACK!" << endl;
       }
@@ -372,7 +374,7 @@ namespace uima {
       int thisSofaNum = atoi(UnicodeStringRef(aString).asUTF8().c_str());
 
       // get the sofa's FeatureStructure id
-      UnicodeString(ID_ATTR_NAME).extract(ubuff,256, errorCode);
+      icu::UnicodeString(ID_ATTR_NAME).extract(ubuff,256, errorCode);
       aString = attrs.getValue(ubuff);
       int sofaFsId = atoi(UnicodeStringRef(aString).asUTF8().c_str());
 
@@ -509,8 +511,8 @@ namespace uima {
     vector<int>* indexRep = new vector<int>;
     int id = -1;
     int size=0;
-    UnicodeString attrName;
-    UnicodeString attrValue;
+    icu::UnicodeString attrName;
+    icu::UnicodeString attrValue;
 
     for (size_t i = 0; i < attrs.getLength(); i++) {
       assertWithMsg( sizeof(XMLCh) == sizeof(UChar), "Port required!");
@@ -566,7 +568,7 @@ namespace uima {
 
   }
 
-  void XCASDeserializerHandler::readArrayElement(UnicodeString & qualifiedName, const Attributes & attrs) {
+  void XCASDeserializerHandler::readArrayElement(icu::UnicodeString & qualifiedName, const Attributes & attrs) {
     if (qualifiedName.compare(ARRAY_ELEMENT_TAG) != 0) {
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
@@ -592,8 +594,8 @@ namespace uima {
     iv_state = ARRAY_ELE_CONTENT_STATE;
   }
 
-  void XCASDeserializerHandler::addArrayElement(UnicodeString & buffer) {
-
+  void XCASDeserializerHandler::addArrayElement(icu::UnicodeString & buffer) {
+ 
     if (arrayPos >= iv_casimpl.getHeap().getArraySize(currentAddr) ) {
       ErrorInfo errInfo;
       errInfo.setErrorId((TyErrorId)UIMA_ERR_RESOURCE_CORRUPTED);
@@ -622,7 +624,7 @@ namespace uima {
         break;
       }
     case internal::gs_tyStringArrayType: {
-        //add the striug
+        //add the string
         int stringoffset = iv_cas->getHeap()->addString(buffer);
         //set the array value in fs heap
         lowlevel::TyFS  stringref =  iv_cas->getHeap()->getStringAsFS(stringoffset);
@@ -693,13 +695,14 @@ namespace uima {
 
 
   // Create a feature value from a string representation.
-  void XCASDeserializerHandler::handleFeature(lowlevel::TyFS addr, UnicodeString & featName, UnicodeString & featVal, bool lenient) {
+  void XCASDeserializerHandler::handleFeature(lowlevel::TyFS addr, icu::UnicodeString & featName, icu::UnicodeString & featVal, bool lenient) {
+
     lowlevel::TyFSType fstype = iv_casimpl.getHeap().getType(addr);
     Type type = uima::internal::FSPromoter::promoteType(fstype, iv_cas->getTypeSystem().getLowlevelTypeSystem());
     handleFeature(type, addr, featName, featVal, lenient);
   }
 
-  void XCASDeserializerHandler::handleFeature(Type & type, lowlevel::TyFS addr, UnicodeString & featName, UnicodeString & featVal,
+  void XCASDeserializerHandler::handleFeature(Type & type, lowlevel::TyFS addr, icu::UnicodeString & featName, icu::UnicodeString & featVal,
       bool lenient) {
     char charFeatVal[10];
 
@@ -709,7 +712,7 @@ namespace uima {
         iv_typesystem->subsumes(internal::gs_tyAnnotationBaseType, fstype)) {
       int ifeatval = atoi(UnicodeStringRef(featVal).asUTF8().c_str());
       sprintf(charFeatVal, "%d", sofaRefMap[ifeatval]);
-      featVal.setTo(UnicodeString(charFeatVal));
+      featVal.setTo(icu::UnicodeString(charFeatVal));
     }
 
     // handle v1.x sofanum values, remapping so that _InitialView always == 1
@@ -719,7 +722,7 @@ namespace uima {
       iv_casimpl.getHeap().setIntValue(addr, internal::gs_tySofaNumFeature, indexMap[sofaNum]);
     }
 
-    UnicodeString prefix(REF_PREFIX);
+    icu::UnicodeString prefix(REF_PREFIX);
     if (featName.startsWith(REF_PREFIX)) {
       featName.remove(0,prefix.length());             // Delete prefix
     }

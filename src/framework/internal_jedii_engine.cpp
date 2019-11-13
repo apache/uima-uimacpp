@@ -554,10 +554,10 @@ namespace uima {
         // create and initialize Java VM
         char * optionStrings[] = {
                                    cpBuf.get(),
-                                   "-Xmx256MB",
+                                   strdup("-Xmx256MB"),
 #ifndef NDEBUG
-                                   "-Xcheck:jni",
-                                   "-Xcheck:nabounds",
+                                   strdup("-Xcheck:jni"),
+                                   strdup("-Xcheck:nabounds"),
 #endif
                                  };
 

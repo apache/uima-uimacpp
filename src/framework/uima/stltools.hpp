@@ -41,38 +41,43 @@
 
 
 #include <iostream>
+#include <iterator>
 #include <vector>
 #include <algorithm>
 #include <map>
 #include <string>
 #include <utility>
-#if defined( UIMA_NO_HASH_CONTAINERS_SUPPORTED ) || defined( UIMA_DONT_USE_HASH_CONTAINERS )
-// we include the appropriate headers
-#  include <set>
-#  include <map>
-#else
-#  if defined(__GNUC__)
-#define GCC_VERSION (__GNUC__ * 10000 \
-                     + __GNUC_MINOR__ * 100 \
-                     + __GNUC_PATCHLEVEL__)
-#     if (__GNUC__ >= 3)
-#        include <ext/hash_set>
-#        include <ext/hash_map>
-#        if (__GNUC_MINOR__ > 0)
-#        endif
-#     else   // gcc 2.9
-#        include <hash_set>
-#        include <hash_map>
-#     endif
-#  elif defined(__INTEL_COMPILER)
-#     define _HAS_TRADITIONAL_STL 1
-#     include <hash_set>
-#     include <hash_map>
-#  else
-#     include <hashset>
-#     include <hashmap>
-#  endif
-#endif
+
+#include <set>
+#include <map>
+
+// #if defined( UIMA_NO_HASH_CONTAINERS_SUPPORTED ) || defined( UIMA_DONT_USE_HASH_CONTAINERS )
+// // we include the appropriate headers
+// #  include <set>
+// #  include <map>
+// #else
+// #  if defined(__GNUC__)
+// #define GCC_VERSION (__GNUC__ * 10000 \
+//                      + __GNUC_MINOR__ * 100 \
+//                      + __GNUC_PATCHLEVEL__)
+// #     if (__GNUC__ >= 3)
+// #        include <ext/hash_set>
+// #        include <ext/hash_map>
+// #        if (__GNUC_MINOR__ > 0)
+// #        endif
+// #     else   // gcc 2.9
+// #        include <hash_set>
+// #        include <hash_map>
+// #     endif
+// #  elif defined(__INTEL_COMPILER)
+// #     define _HAS_TRADITIONAL_STL 1
+// #     include <hash_set>
+// #     include <hash_map>
+// #  else
+// #     include <hashset>
+// #     include <hashmap>
+// #  endif
+// #endif
 
 namespace uima {
 
