@@ -381,7 +381,7 @@ void testLowLevelTypeSystem() {
 
   // check appropriateness
 #define APPROPCHECK 14
-  int appropcheck[APPROPCHECK][2] = {
+  unsigned int appropcheck[APPROPCHECK][2] = {
                                       {
                                         t1, f1
                                       }
@@ -896,7 +896,7 @@ void testLowLevelIndex() {
   size_t SENTENCE_NUM = NUMBEROF(sentencesToBeCreated);
 
   // define the orders of all annotations
-  int annotationOrder[] = {
+  size_t annotationOrder[] = {
                           //      int annotationOrder[TOKEN_NUM + SENTENCE_NUM] = {
                             // sentence 0, token 0, token 1, token 2
                             0, SENTENCE_NUM + 0, SENTENCE_NUM + 1, SENTENCE_NUM + 2

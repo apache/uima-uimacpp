@@ -360,7 +360,7 @@ namespace uima {
         return engine->process(cas, getCompleteResultSpecification());
       } catch (Exception & rclException) {
         getAnnotatorContext().getLogger().logError(rclException.getErrorInfo() );
-        UIMA_EXC_RETHROW(rclException,NULL);
+        UIMA_EXC_RETHROW(rclException,0);
         ///return rclException.getErrorInfo().getErrorId();
       }
 
@@ -383,7 +383,7 @@ namespace uima {
       } catch (Exception & rclException) {
         getAnnotatorContext().getLogger().logError(rclException.getErrorInfo() );
         //return rclException.getErrorInfo().getErrorId();
-        UIMA_EXC_RETHROW(rclException,NULL);
+        UIMA_EXC_RETHROW(rclException,0);
       }
 
     }

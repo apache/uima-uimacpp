@@ -205,7 +205,7 @@ namespace uima {
         try {
           iv_pAnnotator->processDocument(cas, crResultSpec);
         } catch (Exception e) {
-          UIMA_EXC_RETHROW(e, NULL);
+          UIMA_EXC_RETHROW(e,0);
         }
       }
       // if annotator should not be called is not really an error

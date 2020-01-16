@@ -37,18 +37,18 @@ clean:
 	rm -f $(TST_BIN) $(test_engine_OBJECTS) $(test_typepriority_OBJECTS) $(test_sofa_OBJECTS) $(test_language_OBJECTS) $(test_cas_OBJECTS)  $(test_iterators_OBJECTS) $(test_casserializer_OBJECTS) $(test_primitivetypes_OBJECTS) $(test_xcasdeserialization_OBJECTS) $(test_xmideserialization_OBJECTS)
 	rm -f $(TST_LIB) $(libtoknz_la_OBJECTS) $(libdump_la_OBJECTS) $(libSofaStreamHandlerFile_la_OBJECTS) $(libSimpleTextSegmenter_la_OBJECTS) $(libTextSegmentConsumer_la_OBJECTS) $(libMeetingAnnotator_la_OBJECTS)
 
-INCLUDES  = -Isrc
-INCLUDES += -I../cas
-INCLUDES += -I../framework
-INCLUDES += $(UIMA_XERCES_INCLUDE)
-INCLUDES += $(UIMA_APR_INCLUDE)
-INCLUDES += $(UIMA_ICU_INCLUDE)
-INCLUDES += $(UIMACPP_HOME_INCLUDE)
+AM_CPPFLAGS  = -Isrc
+AM_CPPFLAGS += -I../cas
+AM_CPPFLAGS += -I../framework
+AM_CPPFLAGS += $(UIMA_XERCES_INCLUDE)
+AM_CPPFLAGS += $(UIMA_APR_INCLUDE)
+AM_CPPFLAGS += $(UIMA_ICU_INCLUDE)
+AM_CPPFLAGS += $(UIMACPP_HOME_INCLUDE)
 
 if DEBUG_TEST
-AM_CPPFLAGS = -g -DDEBUG
+AM_CPPFLAGS += -g -DDEBUG
 else
-AM_CPPFLAGS = -O3 -DNDEBUG -DTRACEOFF
+AM_CPPFLAGS += -O3 -DNDEBUG -DTRACEOFF
 endif
 AM_CPPFLAGS += -D_GNU_SOURCE -DUIMA_SUPPRESS_TIMING
 

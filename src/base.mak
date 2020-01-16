@@ -91,7 +91,7 @@ INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1
 
 # compiler flags:
 CFLAGS=-Wall -x c++ $(BUILD_CFLAGS) $(INCLUDES) $(USER_CFLAGS) \
-	 -Wno-deprecated
+	 -Wno-deprecated -std=c++11
 
 ifeq ($(DLL_BUILD),1)
 DLL_LINKFLAGS=$(SHARED_FLAG)

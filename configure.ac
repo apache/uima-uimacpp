@@ -119,7 +119,8 @@ if test $apr_found = "no"; then
 fi
 
 # check APR version number agains regex
-APR_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] 1\.4\.[0-9]"]
+#APR_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] 1\.4\.[0-9]"]
+APR_VER_REGEXES=["1\.4\.[0-9] 1\.5\.[0-9] 1\.6\.[0-9]"]
 
 AC_MSG_CHECKING([APR version])
 apr_version="`$apr_config --version`"
