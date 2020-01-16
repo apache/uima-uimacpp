@@ -189,7 +189,7 @@ public:
       }
 
       // convert cas and rs to python variables (parameters) 
-      swig_module_info *module = SWIG_Python_GetModule();
+      swig_module_info *module = SWIG_Python_GetModule(NULL);
       if (!module) {
         cerr << MODULENAME ": could not get Python swig module" << endl;
         _PY_END_BLOCK_THREADS_
@@ -230,7 +230,7 @@ public:
 
       if (function[FUNCTION_INITIALIZE]) {
         PyObject *arg1 = 
-           SWIG_Python_NewPointerObj(
+           SWIG_Python_NewPointerObj(NULL,
            reinterpret_cast<void *>( &ac),
            ac_type, 0);
         PyObject *rv = PyObject_CallFunctionObjArgs( 
@@ -284,7 +284,7 @@ public:
     }
     if (function[FUNCTION_TYPESYSTEMINIT] == 0) return UIMA_ERR_NONE;
     PyObject *arg1 = 
-       SWIG_Python_NewPointerObj(
+       SWIG_Python_NewPointerObj(NULL,
        reinterpret_cast<void *>( const_cast<TypeSystem *>(&ts)),
        ts_type, 0);
     PyObject *rv = PyObject_CallFunctionObjArgs( 
@@ -358,7 +358,7 @@ public:
 
     _PY_BEGIN_BLOCK_THREADS_
     PyObject *arg1 = 
-       SWIG_Python_NewPointerObj(
+       SWIG_Python_NewPointerObj(NULL,
        reinterpret_cast<void *>( &_cas), cas_type, 0);
     if (!arg1) {
       cerr << "process: could not allocate Python object for cas" << endl;
@@ -366,7 +366,7 @@ public:
       return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS;
     }
     PyObject *arg2 = 
-       SWIG_Python_NewPointerObj(
+       SWIG_Python_NewPointerObj(NULL,
        reinterpret_cast<void *>( 
 		const_cast<ResultSpecification *>(&_rs)),
        rs_type, 0);
