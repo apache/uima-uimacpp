@@ -43,7 +43,7 @@ OBJS=Tclator.o uima_wrap.o
 USER_CFLAGS=-fPIC -g $(SWIGFLAGS) -I..
 
 #Use this var to pass additional user-defined parameters to the linker
-USER_LINKFLAGS=-g -ltcl8.4 -lpthread
+USER_LINKFLAGS=-g -ltcl8.5 -lpthread
 
 # Define the symbol DEBUG=1 if you want to build a debug version
 DEBUG=1
