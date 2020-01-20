@@ -13,12 +13,9 @@ For information about the Apache UIMA C++ package go to index.html in the uimacp
 Supported Platforms
 --------------------
 
-The Apache UIMA C++ SDK has been built and tested in 64-bit mode
-on Linux systems with gcc version 4.8.5. MacOS and Windows versions are delayed
-pending user requests. 
+The Apache UIMA C++ SDK has been built and tested in 64-bit mode on Linux systems with gcc version 4.8.5. MacOS and Windows versions are delayed pending user requests. 
 
-UIMACPP has dependencies on APR, ICU, Xerces-C and optionally ActiveMQ-cpp
-libraries.  ActiveMQ-cpp has a dependency on APR-UTIL. 
+UIMACPP has dependencies on APR, ICU, Xerces-C and optionally ActiveMQ-cpp libraries.  ActiveMQ-cpp has a dependency on APR-UTIL. 
 
 This UIMA C++ SDK has been built with the following versions of these dependencies:
 - APR 1.6.5
@@ -66,12 +63,10 @@ To test the sample code in the C++ environment, change back to the $UIMACPP_HOME
 
 The console should show that a Dave was found in some of the files in the data directory.
 
-To test interoperability with Java using the JNI, enable UIMA-AS by setting UIMA_HOME and 
-adding $UIMA_HOME/bin to PATH. Then use the runAE.sh utility (use runAE on Windows) to run 
-DaveDetector from the $UIMACPP_HOME/examples:
+To test interoperability with Java using the JNI, enable UIMA-AS by setting UIMA_HOME and adding $UIMA_HOME/bin to PATH. Then use the runAE.sh utility (use runAE on Windows) to run DaveDetector from the $UIMACPP_HOME/examples:
     * runAE.sh descriptors/DaveDetector.xml data
 
-To test interoperability with UIMA-AS, continuing with above configuration
+To test interoperability with UIMA-AS, continuing with above configuration:
     * Start and ActiveMQ broker using the startBroker.sh command
     * Build and deploy the uimacpp MeetingAnnotator component
        * cd $UIMACPP_HOME/examples/tutorial/src and run "make -f MeetingAnnotator.mak"
@@ -94,6 +89,19 @@ Notes on lib/base.mak
 ---------------------
 The annotator and application Make files include lib/base.mak.
 
-On Mac OS X, may be necessary to modify the line in base.mak
+On Mac OS X, it is necessary to modify base.mak 
+1) Change APR, ICU and XERCES-C includes
+   In line 
    INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1
-to correctly specify path to the APR include directory.
+   set the correct path to the APR, ICU and XERCES-C include directories. For example:
+   INCLUDES=-I$(UIMACPP_HOME)/include -I/usr/local/opt/apr/libexec/include/apr-1 -I/usr/local/opt/icu4c/include -I/usr/local/opt/xerces-c/include
+2) Add APR, ICU and XERCES-C libraries
+   In line 
+   LIBRARIES=-L$(UIMACPP_HOME)/lib
+   include the path to the APR, ICU and XERCES-C lib directories. For example:
+   LIBRARIES=-L$(UIMACPP_HOME)/lib -L/usr/local/opt/apr/libexec/lib -L/usr/local/opt/icu4c/lib -L/usr/local/opt/xerces-c/lib
+3) Change the compiler
+   If you have issues with the default Mac OS X GCC, install GCC-5 and change the line
+   CC=g++
+   to
+   CC=g++-5

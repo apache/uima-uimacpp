@@ -46,6 +46,9 @@
 # USER_LINKFLAGS    to specify additional linker parameters
 # USER_XTARGET      to specify extra user target to build
 #
+# Mac OS X users must modify this file, changing the CC, includes and
+# libraries. Follow the README for more instructions.
+#
 #############################################################################
 
 ifeq ($(UIMACPP_HOME),)
@@ -100,6 +103,10 @@ BIN_LINKFLAGS=
 else
 BIN_LINKFLAGS= -lxerces-c -licuuc -licuio -licui18n -licudata -ldl
 TARGET_FILE_NAME=$(TARGET_FILE)
+endif
+
+ifeq ($(UNAME), Darwin)
+  BIN_LINKFLAGS= -lxerces-c -licuuc -licuio -licui18n -licudata -ldl
 endif
 
 LINKFLAGS= $(DLL_LINKFLAGS) $(BIN_LINKFLAGS) \
