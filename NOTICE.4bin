@@ -1,5 +1,5 @@
 Apache UIMA
-Copyright 2007, 2009, 2012 The Apache Software Foundation
+Copyright 2006 The Apache Software Foundation
 
 This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
@@ -7,17 +7,21 @@ The Apache Software Foundation (http://www.apache.org/).
 Portions of UIMACPP were originally developed by
 International Business Machines Corporation and are
 licensed to the Apache Software Foundation under the
-"Software Grant License Agreement", informally known as the 
+"Software Grant License Agreement", informally known as the
 "IBM UIMA License Agreement".
 Copyright (c) 2003, 2007 IBM Corporation.
 
+---------------------
 This product includes the software, International Components for
 Unicode, ICU (http://www.icu-project.org). Copyright (c) 1995-2006
 International Business Machines Corporation and others.
 
-This product include the software, APR 1.3.8
-Apache Portable Runtime
-Copyright (c) 2009 The Apache Software Foundation.
+---------------------
+This product includes the software, Apache Portable Runtime 1.6.5
+Copyright (c) 2000-2018 The Apache Software Foundation.
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
 
 Portions of this software were developed at the National Center
 for Supercomputing Applications (NCSA) at the University of
@@ -29,23 +33,24 @@ Inc. MD5 Message-Digest Algorithm.
 This software contains code derived from UNIX V7, Copyright(C)
 Caldera International Inc.
 
+---------------------
 This product includes the software, Apache Xerces 
 Portions of this software were originally based on the following:
      - software copyright (c) 1999, IBM Corporation., http://www.ibm.com. 
 
-
-For ActiveMQ CPP 3.4.1
+---------------------
+This product includes the software Apache ActiveMQ CPP 3.9.3
 =========================================================================
 ==  ZLib Compression / Decompression Library Notice                    ==
 =========================================================================
 This product includes software developed by the Jean-loup Gailly and Mark Adler
 http://www.zlib.net/
 
-------------------------------------------------------------------------
-Apache Portable Runtime Utility Library
-Copyright (c) 2009 The Apache Software Foundation.
+---------------------
+This product includes the software Apache Portable Runtime Utility Library 1.6.1
+Copyright (c) 2000-2016 The Apache Software Foundation.
 
-This product includes software developed by
+This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
 
 Portions of this software were developed at the National Center
