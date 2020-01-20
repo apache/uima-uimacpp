@@ -54,8 +54,8 @@ class ServiceParameters;
 #define EXC_PAYLOAD         1003
 #define NO_PAYLOAD          1005
 
-static char * getmeta_selector = "Command = 2001";
-static char * annotator_selector = "Command = 2000 or Command = 2002";
+static const char * getmeta_selector = "Command = 2001";
+static const char * annotator_selector = "Command = 2000 or Command = 2002";
 
 static int initialize(ServiceParameters &, apr_pool_t*);
 static void* APR_THREAD_FUNC handleCommands(apr_thread_t *thd, void *data);

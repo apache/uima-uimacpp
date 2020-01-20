@@ -83,7 +83,8 @@ public:
   // and contained in the type system are evaluated.
 
   TyErrorId initialize(AnnotatorContext &ac) {
-    PyObject *main_module, *user_module;
+	//    PyObject *main_module, *user_module;
+    PyObject *user_module;
     PyObject *dict;
     swig_type_info *ac_type;
 #ifdef PATH_MAX
@@ -158,7 +159,7 @@ public:
       PyEval_ReleaseLock();
 
       _PY_BEGIN_BLOCK_THREADS_
-      main_module = PyImport_AddModule("__main__");
+		//      main_module = PyImport_AddModule("__main__");
       if (PyImport_ImportModule("pythonnator") == 0) { 
         cerr << MODULENAME ":" << fn <<  ": failed to import pythonnator module, PYTHONPATH problem? " <<endl;
         _PY_END_BLOCK_THREADS_
