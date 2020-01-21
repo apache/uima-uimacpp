@@ -19,7 +19,7 @@ REM   specific language governing permissions and limitations
 REM   under the License.
 
 REM For now, update version in line below
-set srcName=uimacpp-2.4.0
+set srcName=uimacpp-3.0.0
 
 REM check args
 if "%~1" == "" (

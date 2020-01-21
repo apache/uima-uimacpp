@@ -37,12 +37,12 @@ prerequisites can be installed from binary distributions.
 
 UIMACPP runtime prerequisites are: 
 
-Tool        Recommended Version
+3rd Party     Recommended Version
 -------------------------------
 APR           >= 1.6.5
 ICU           == 50.2
 Xerces-C      >= 3.1.4
-JDK           for building the JNI interface
+Java SDK      >= 1.8
 ActiveMQ CPP  >= 3.9.3  (optional) to build the UIMA-AS service wrapper
 APR-util      >= 1.6.1  (optional) an ActiveMQ prerequisite
 
@@ -52,8 +52,9 @@ On Linux the following GNU build tools are required:
 Tool        Recommended Version
 -------------------------------
 autoconf    >= 2.69
-automake    >= 1.13
-libtool     >= 2.4
+automake    >= 1.13.4
+libtool     >= 2.4.2
+g++         >= 4.8.5
 
 On Windows, UIMACPP is built with Microsoft Visual Studio. The UIMA C++ MSVC projects 
 are Microsoft Visual Studio 8 (2005) projects.  
@@ -82,42 +83,30 @@ binary distributions of Xerces-C are built with ICU and have been reported to ha
 problems. In this case, rebuild Xerces-C from source and specify --without-icu argument
 to the configure script. 
 
-There is also a dependency on JNI headers from a Java JDK.
+There is also a dependency on JNI headers from an installed Java development package.
 
-
-Optional pre-build step
------------------------
-If changes are made to configure.ac or Makefile.am, then configure
-needs to be re-generated using:
-
- ./autogen.sh
-
-autogen.sh requires GNU tools at or above the following versions:
-automake v1.9.6, autoconf v2.59 and libtool v1.5.24.
 
 Build Steps
 -----------
 
-1 Configure and build
-  To build the UIMACPP libraries using prerequisites installed in the
-  system directories, Simply run:
-    ./configure --with-jdk=location_of_jni.h [other options]
-    make
+Configure and build
+  Generate a configure script compatible with the build machine tool level:
+    ./autogen.sh
 
-  The ./configure script will generate Makefiles customized to your
-  system, including detecting available prerequisites that have been
-  installed in standard locations.
+  Generate the required makefiles and build UIMACPP components:
+    ./configure --with-jdk=location_of_jni.h [other options, see below]
+    make
 
   By default the install step will put UIMACPP components in
   /usr/local/uimacpp. To build an SDK, install them elsewhere by adding 
   the following option to configure:
-  --prefix=install_target_loc e.g. --prefix=~/uimacpp-2.4.0/install
+  --prefix=install_target_loc e.g. --prefix=~/uimacpp-3.0.0/install
 
   On Linux jni.h is usually in the JDK's "include" directory. On MacOSX
   jni.h is in the JDK's "Headers" dirctory. In some cases jni.h will
   #include files in other directories. For example, if jni.h includes
   jni_md.h located in a subdirectory named linux, use
-  --with-jdk="loc_of_jdk/include -Iloc_of_jdk/include/linux"
+  --with-jdk="loc_of_jdk/include' -I'loc_of_jdk/include/linux"
 
   If the prerequisites are not installed in the system directories as well as   
   for a full SDK build, additional parameters must be provided to the
@@ -133,19 +122,16 @@ Build Steps
   For more help on how to customize the build configuration, run:
     ./configure --help
 
-2 Run the test suite
+Run the test suite
     make check
 
-3 Install and Build the SDK tree
+Install and Build the SDK tree
     make install 
     make sdk TARGETDIR=loc_of_sdk_tree [clean]
 
   The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
     cd loc_of_sdk_tree
-    tar czf uimacpp-2.X.Y-bin.tgz uimacpp
-
-4 Optionally, generate source tar ball
-    make dist
+    tar czf uimacpp-X.Y.Z-bin.tgz uimacpp
 
 For additional information on building on Mac OSX, please see Section 4.
 
@@ -169,41 +155,41 @@ environment variable UIMACPP_HOME to locate the UIMA libraries
 and dependencies.
 
 If using MSVC Express Edition, first run these prebuild steps. 
-  - cd uimacpp-2.X.Y\src
+  - cd uimacpp-X.Y.Z\src
   - run vcexpress uimacpp.sln and do any conversions as prompted.
   - replace devenv command with vcexpress in the winmake and test/fvt.sh scripts and in all build instructions. 
   - continue with the instructions below.
 
-If using a newer version of MSVC, the uimacpp.sln in uimacpp-2.X.Y\src 
+If using a newer version of MSVC, the uimacpp.sln in uimacpp-X.Y.Z\src 
 must be converted. 
 
 The following commands assume you are running from a Microsoft Visual
 Studio 2005 Command Prompt.
 
 1 Build the UIMA C++ framework in both release and debug:
-  cd \uimacpp-2.X.Y\src
+  cd \uimacpp-X.Y.Z\src
   winmake /build release
   winmake /build debug
 
 2 Build and run the test suite:
-  cd \uimacpp-2.X.Y\src\test
+  cd \uimacpp-X.Y.Z\src\test
   devenv test.sln /build release
   fvt
 
 3 Build the documentation:
   Note: The documentation build requires Doxygen 1.3.6 or later.
-  cd \uimacpp-2.X.Y\docs
+  cd \uimacpp-X.Y.Z\docs
   builddocs
 
 4 Build the SDK tree:
   set MSVCRT_HOME to the directory with the required msvc*.dll files.
   set ACTIVEMQ_HOME if building the ActiveMQ service wrapper, deployCppService.
 
-  cd \uimacpp-2.X.Y
+  cd \uimacpp-X.Y.Z
   buildsdk "target_dir [clean]"
 
 5 Package the SDK zipfile by creating a compressed folder of 
-  target_dir\uimacpp into uimacpp-2.X.Y-bin.zip
+  target_dir\uimacpp into uimacpp-X.Y.Z-bin.zip
 
 6 Package a source zipfile by creating a compressed folder of the
   the directory containing the uimacpp source from git

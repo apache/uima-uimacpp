@@ -16,7 +16,7 @@
  # specific language governing permissions and limitations
  # under the License.
 
-AC_INIT(uimacpp, 2.4.0)
+AC_INIT(uimacpp, 3.0.0)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/framework/engine.cpp)
 AM_INIT_AUTOMAKE([foreign])

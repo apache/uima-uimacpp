@@ -18,7 +18,7 @@
 #   under the License.
 
 # for now, change versionnumber in line below
-srcName=uimacpp-2.4.0-src
+srcName=uimacpp-3.0.0-src
 
 if [ "$1" = 'TRACE' ]
     then set -vx ;shift
