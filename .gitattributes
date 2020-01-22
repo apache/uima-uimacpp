@@ -1,2 +1,9 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
-* text=auto
+# Set as default eol=NL so windows can create cross platform src tarball
+*     	  text=lf
+
+# Make sure these files have eol=CRLF
+*.vcproj  text eol=crlf
+*.cmd	  text eol=crlf
+*.bat	  text eol=crlf
+*.sln	  text eol=crlf
+*.asc	  binary
