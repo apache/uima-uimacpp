@@ -18,11 +18,10 @@ For a new build on Linux
 2. checkout source from the tag
 	svn co https://svn.apache.org/repos/asf/uima/uimacpp/tag/uimacpp-X.Y.Z
 
-3. Modify configure.ac 
-   Update package version number specified in AC_INIT call.
+3. Make sure configure.ac has the desired package version numbers in AC_INIT and library version in LT_VERSION_NUMBER. Update source control if necessary.
    Update the  library number by modifying LT_VERSION_NUMBER following the 
       libtool version numbering convention. This is summarized on the
-      wiki page https://cwiki.apache.org/UIMA/proposed-changes-to-uima-c-build-and-packaging.html.
+      wiki page https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=25201320
 
 4. Run autogen.sh to generate new configure script
    check into svn the generated output files.

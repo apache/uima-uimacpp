@@ -47,7 +47,7 @@ AC_ARG_ENABLE(debugtest,
 esac],[debugtest=false])
 AM_CONDITIONAL([DEBUG_TEST], [test x$debugtest = xtrue])
 
-LT_VERSION_NUMBER=0:0:0
+LT_VERSION_NUMBER=3:0:0
 
 AC_SUBST(LT_VERSION_NUMBER)
 AC_SUBST(VERSION)
