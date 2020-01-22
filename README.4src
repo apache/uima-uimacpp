@@ -126,8 +126,9 @@ Run the test suite
     make check
 
 Install and Build the SDK tree
-    make install 
-    make sdk TARGETDIR=loc_of_sdk_tree [clean]
+    make install
+    make docs
+    make sdk TARGETDIR=loc_of_sdk_tree [CLEAN=clean]
 
   The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
     cd loc_of_sdk_tree
