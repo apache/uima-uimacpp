@@ -1,5 +1,5 @@
 # Set as default eol=NL so windows can create cross platform src tarball
-*     	  text=lf
+*     	  text eol=lf
 
 # Make sure these files have eol=CRLF
 *.vcproj  text eol=crlf
