@@ -37,14 +37,14 @@ prerequisites can be installed from binary distributions.
 
 UIMACPP runtime prerequisites are: 
 
-3rd Party     Recommended Version
+3rd Party     Tested   Notes
 -------------------------------
-APR           >= 1.6.5
-ICU           == 50.2
-Xerces-C      >= 3.1.4
-Java SDK      >= 1.8
-ActiveMQ CPP  >= 3.9.3  (optional) to build the UIMA-AS service wrapper
-APR-util      >= 1.6.1  (optional) an ActiveMQ prerequisite
+APR           1.6.5    v1.7 did not work on Mac OSX
+ICU           50.2     v58.2 did not work
+Xerces-C      3.1.4
+Java SDK      1.8
+ActiveMQ CPP  3.9.3    (optional) required only for the UIMA-AS service wrapper
+APR-util      1.6.1    (optional) required by ActiveMQ CPP
 
 
 On Linux the following GNU build tools are required:
@@ -102,7 +102,7 @@ Configure and build
   the following option to configure:
   --prefix=install_target_loc e.g. --prefix=~/uimacpp-3.0.0/install
 
-  On Linux jni.h is usually in the JDK's "include" directory. On MacOSX
+  On Linux jni.h is usually in the JDK's "include" directory. On Mac OSX
   jni.h is in the JDK's "Headers" dirctory. In some cases jni.h will
   #include files in other directories. For example, if jni.h includes
   jni_md.h located in a subdirectory named linux, use
@@ -222,15 +222,7 @@ A fix is to patch dso/unix/dso.c as follows:
 >
 
 
-4.2 Re-generated configure
---------------------------
-
-In Mac OSX it is necessary to re-generate the configure file:
-
-  ./autogen.sh
-
-
-4.3 Executing configure
+4.2 Executing configure
 -----------------------
 
 Mac OSX Sierra default GCC is not capable of building UIMACPP. As alternative, you can
@@ -242,7 +234,7 @@ Make sure to pass the JDK Hearder path (--with-jdk) and the path of each depende
 (--with-<dep name> syntax).
 
 
-4.4 Packaging UIMA C++ annotators:
+4.3 Packaging UIMA C++ annotators:
 On Mac OSX, the install names are embedded in the binaries.  Run the
 following steps manually post build to neutralize the embedded name in
 the UIMA C++ binary and to change the dependency path in the
