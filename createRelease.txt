@@ -32,7 +32,7 @@ For a new build on Linux
 	tar -czf uimacpp-X.Y.Z-bin.tgz uimacpp
 
 7. rat scan of bin
-      java -jar apache-rat-0.8.jar  -dir uimacpp -e *.vcproj docs scriptators txt README RELEASE* examples  html > uimacpp-bin-linux
+      java -jar apache-rat-0.8.jar  -dir uimacpp -e .*vcproj docs scriptators txt README RELEASE.* examples  html > uimacpp-bin-linux
 
 8. sniff test of base sdk
 	cd uimacpp

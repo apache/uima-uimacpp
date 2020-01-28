@@ -39,8 +39,8 @@ UIMACPP runtime prerequisites are:
 
 3rd Party     Tested   Notes
 -------------------------------
-APR           1.6.5    v1.7 did not work on Mac OSX
-ICU           50.2     v58.2 did not work
+APR           1.6.5
+ICU           50.2     known problem with newer versions
 Xerces-C      3.1.4
 Java SDK      1.8
 ActiveMQ CPP  3.9.3    (optional) required only for the UIMA-AS service wrapper
@@ -128,7 +128,7 @@ Run the test suite
 Install and Build the SDK tree
     make install
     make docs
-    make sdk TARGETDIR=loc_of_sdk_tree [CLEAN=clean]
+    make sdk TARGETDIR=loc_of_sdk_tree
 
   The SDK tree will be created in loc_of_sdk_tree/uimacpp. Package by:
     cd loc_of_sdk_tree
