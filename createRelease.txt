@@ -1,40 +1,42 @@
-Instructions for creating a uimacpp release or a new build
+Instructions for creating a uimacpp release
 
 
 For a new release
 
 1. create a tag for the new release, e.g.
-	svn copy https://svn.apache.org/repos/asf/uima/uimacpp/trunk https://svn.apache.org/repos/asf/uima/uimacpp/tags/uimacpp-X.Y.Z-rcN -m"create tag for X.Y.Z release"
-
-2. if changes are needed, update trunk. Create a new tag when ready to release.
+	use the github webpage to create a new branch named rc/uimacpp-X.Y.Z
+2. follow "new build" instructions below and update branch if needed. Iterate until clean.
+3. create a new tag when ready to release.
+4. sign release artifacts
+5. copy signed release artifacts to staging spot
+6. get successful release vote
+7. releasing: see http://uima.apache.org/release.html
 
 
 For a new build on Linux
 
-1. create new directory for release candidate and cd there
-	mkdir uimacpp-X.Y.Z-build
-	cd uimacpp-X.Y.Z-build
+0. confirm that prerequisite tools for automake and doxygen are installed.
 
-2. checkout source from the tag
-	svn co https://svn.apache.org/repos/asf/uima/uimacpp/tag/uimacpp-X.Y.Z
+1. Make sure configure.ac has the desired package version numbers in AC_INIT and library version in LT_VERSION_NUMBER. Update source control if necessary.
+   Update the  library number by modifying LT_VERSION_NUMBER following the libtool version numbering convention. This is summarized on the wiki page https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=25201320
 
-3. Make sure configure.ac has the desired package version numbers in AC_INIT and library version in LT_VERSION_NUMBER. Update source control if necessary.
-   Update the  library number by modifying LT_VERSION_NUMBER following the 
-      libtool version numbering convention. This is summarized on the
-      wiki page https://cwiki.apache.org/confluence/pages/viewpage.action?pageId=25201320
+2. Update RELEASE_NOTES.html with new Jira report from Jira website:
+   on jira web page, go to UIMA releases and select new release. For example:
+     https://issues.apache.org/jira/projects/UIMA/versions/12346908
+   hit "Release Notes", replace Jira report section with new html text from webpage.
 
-4. Run autogen.sh to generate new configure script
-   check into svn the generated output files.
+3. checkout source from the tag and cd to that directory
+   	git clone -b rc/uimacpp-X.Y.Z https://github.com/apache/uima-uimacpp uimacpp-X.Y.Z-rc
+	cd uimacpp-X.Y.Z-rc
 
-5. build, test and create sdk tree. Follow the instructions in README.4src.
+4. build all 3rd party dependencies, build & check UIMACPP, and create SDK tree with:
+   	./uimacpp-make-sdk.sh
 
-6. create bin tarball
+5. create bin tarball
+   	cd sdk
 	tar -czf uimacpp-X.Y.Z-bin.tgz uimacpp
 
-7. rat scan of bin
-      java -jar apache-rat-0.8.jar  -dir uimacpp -e .*vcproj docs scriptators txt README RELEASE.* examples  html > uimacpp-bin-linux
-
-8. sniff test of base sdk
+7. sniff test of base sdk
 	cd uimacpp
 	export UIMACPP_HOME=`pwd`
 	PATH=$PATH:`pwd`/bin
@@ -44,12 +46,11 @@ For a new build on Linux
 	cd ..
 	./runall.sh
 
-9. sniff test of scriptators (following base sniff test)
-	cd ../scriptators/perl
+8. sniff test of scriptators (following base sniff test)
+	cd ../scriptators/tcl
 	make
-	PATH=$PATH:`pwd`
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
-	runAECpp PerlSample.xml ../../examples/data/
+	runAECpp TclSample.xml ../../examples/data/
 
 	cd ../python
 	make
@@ -57,18 +58,24 @@ For a new build on Linux
 	export PYTHONPATH=`pwd`
 	runAECpp PythonSample.xml ../../examples/data/
 
-	cd ../tcl
+	cd ../perl
 	make
+	PATH=$PATH:`pwd`
 	LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
-	runAECpp TclSample.xml ../../examples/data/
+	runAECpp PerlSample.xml ../../examples/data/
 
-10. sniff test of uimacpp service wrapper
-	in a "Uima AS window", run:
+9. sniff test of uimacpp service wrapper
+	in a new window start an ActiveMQ broker:
+	  set UIMA_HOME and extend PATH with $UIMA_HOME/bin
 	  startBroker.sh
 	back in the UimaCpp test window:
-	  cd ../../examples
+	  cd $UIMACPP/examples/tutorial/src
+	  make -f MeetingAnnotator.mak
+	  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:`pwd`
+	  cd ..
+	  set UIMA_HOME and extend PATH with $UIMA_HOME/bin
 	  runRemoteAsyncAE.sh tcp://localhost:61616 MeetingAnnotator \
-	  -d tutorial/descriptors/Deploy_MeetingAnnotator.xml
+	  -d descriptors/Deploy_MeetingAnnotator.xml
 
 
 
@@ -82,10 +89,7 @@ For a new build on Windows
 3. create bin zipfile of buildDir\uimacpp as
 	uimacpp-X.Y.Z-bin.zip
 
-4. rat scan of bin
-     java -jar apache-rat-0.8.jar  -dir uimacpp -e *.vcproj docs scriptators txt README RELEASE* examples  html > uimacpp-bin-windows-report.txt
-
-5. sniff test of base sdk
+4. sniff test of base sdk
 	cd uimacpp
 	set UIMACPP_HOME=%cd%
 	path=%path%;%cd%\bin;%cd%\examples\src
@@ -94,7 +98,7 @@ For a new build on Windows
 	cd ..
 	runall
 
-6. sniff test of scriptators (following base sniff test)
+5. sniff test of scriptators (following base sniff test)
 	cd ..\scriptators\perl
 	winmake
 	runAECpp PerlSample.xml ..\..\examples\data\
@@ -107,7 +111,7 @@ For a new build on Windows
 	winmake
 	runAECpp TclSample.xml ..\..\examples\data\
 
-7. sniff test of uimacpp service wrapper
+6. sniff test of uimacpp service wrapper
 	in a "Uima AS window", run:
 	  startBroker
 	back in the UimaCpp test window:
@@ -124,12 +128,14 @@ The source tar ball contains all the files needed to build the Windows and/or
 Linux binaries. 
 
 1. checkout source from current release branch
-        svn co https://svn.apache.org/repos/asf/uima/uimacpp/branches/uimacpp-X.Y.Z
+   	git clone -b rc/uimacpp-X.Y.Z https://github.com/apache/uima-uimacpp uimacpp-X.Y.Z-rc
+
 2. create the tar ball
-   On Windows zip up uimacpp-X.Y.Z and create uimacpp-X.Y.Z-src.zip
-   On Linux tar -zcvf uimacpp-X.Y.Z-src.tgz uimacpp-X.Y.Z
-3. rat scan the source directory
-   java -jar c:\apache-rat-0.8\apache-rat-0.8.jar -dir uimacpp-X.Y.Z -e org_apache*.h *.vcproj createRelease.txt configure *.txt
- *.sln  *.html *.sh  README* scriptators test examples config  m4 NOTICE*  uimacpp-X.Y.Z > uimacpp-X.Y.Z-src-report.txt
+	Remove git specific files: "rm -rf .git .gitattributes .asf.yaml"
+        Create zip file for Windows: zip -r uimacpp-X.Y.Z-src.zip uimacpp-X.Y.Z
+	Create tar file for Linux:   tar -zcvf uimacpp-X.Y.Z-src.tgz uimacpp-X.Y.Z
+
+3. rat scan the source directory 
+        java -jar apache-rat-0.13.jar -dir uimacpp-X.Y.Z-rc -e .*vcproj .*txt .*sln .*asc README.* RELEASE.* NOTICE.* autogen.sh dot.gdbinit doxyheader.html org_apache_uima_uimacpp_UimacppEngine.h config m4
 
   

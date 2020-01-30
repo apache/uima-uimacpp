@@ -61,7 +61,7 @@ AMQCPP=activemq-cpp-library-3.9.3
 
 # Build xerces
 if [ ! -f "${XERCES}.tar.gz" ]; then
-    wget http://archive.apache.org/dist/xerces/c/3/sources/$XERCES}.tar.gz
+    wget http://archive.apache.org/dist/xerces/c/3/sources/${XERCES}.tar.gz
     tar -xf ${XERCES}.tar.gz
 fi
 #Modify next line if not version 3.1.x
@@ -105,7 +105,7 @@ fi
 
 # Build APR-UTIL
 if [ ! -f "${APRUTIL}.tar.gz" ]; then
-    wget http://mirrors.ocf.berkeley.edu/apache//apr/${APR-UTIL}.tar.gz
+    wget http://mirrors.ocf.berkeley.edu/apache/apr/${APRUTIL}.tar.gz
     tar -xf ${APRUTIL}.tar.gz
 fi
 if [ ! -f ${APRUTIL}/apu-config.out ]; then
