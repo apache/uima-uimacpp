@@ -1249,7 +1249,7 @@ namespace uima {
      *
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity enAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity enIsAmbiguous = enAmbiguous ) const;
   protected:
   }
   ; // class AnnotationFS
@@ -1373,7 +1373,7 @@ namespace uima {
      *                    annotations cover the area.)
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity enAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity enIsAmbiguous = enAmbiguous ) const;
 
     /**
      * create an iterator over this index such that calling

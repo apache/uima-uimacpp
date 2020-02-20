@@ -1364,8 +1364,8 @@ namespace uima {
     return fsCoveringAn;
   }
 
-  ANIterator AnnotationFS::subIterator( Type const & crType, EnIteratorAmbiguity enAmbiguous ) const {
-    return getCAS().getAnnotationIndex(crType).subIterator(*this, enAmbiguous);
+  ANIterator AnnotationFS::subIterator( Type const & crType, EnIteratorAmbiguity enIsAmbiguous ) const {
+    return getCAS().getAnnotationIndex(crType).subIterator(*this, enIsAmbiguous);
   }
 
 
@@ -1704,16 +1704,16 @@ namespace uima {
   } // namespace lowlevel
 
 
-  ANIterator ANIndex::subIterator( AnnotationFS const & an, EnIteratorAmbiguity enAmbiguous ) const {
+  ANIterator ANIndex::subIterator( AnnotationFS const & an, EnIteratorAmbiguity enIsAmbiguous ) const {
     checkValidity();
     lowlevel::IndexIterator* pitBase = iv_pIndex->createIterator();
     assert( EXISTS(pitBase) );
 
     lowlevel::IndexIterator* pitSub;
-    if (enAmbiguous == enUnambiguous) {
+    if (enIsAmbiguous == enUnambiguous) {
       pitSub = new lowlevel::UnAmbiguousSubIterator( iv_indexRepository->getFSHeap(), internal::FSPromoter::demoteFS(an), pitBase);
     } else {
-      assert(enAmbiguous == enAmbiguous);
+      assert(enIsAmbiguous == enAmbiguous);
       pitSub = new lowlevel::SubIterator(iv_indexRepository->getFSHeap(), internal::FSPromoter::demoteFS(an), pitBase);
     }
     assert( EXISTS(pitSub) );

@@ -34,10 +34,13 @@ mkdir -p "$TARGET"
 
 #guess JAVA_HOME if not set
 if [ -z $JAVA_HOME ]; then
-    JAVA_HOME=$(dirname $(dirname $(dirname $(readlink -f $(which java)))))
+    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
     if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
-	echo Cannot guess JAVA_HOME. JAVA SDK installed?
-	exit
+	JAVA_HOME=$(dirname $(dirname $(dirname $(readlink -f $(which java)))))
+	if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
+	    echo Cannot guess JAVA_HOME. JAVA SDK installed?
+	    exit
+	fi
     fi
     echo guessing JAVA_HOME=$JAVA_HOME
 else
