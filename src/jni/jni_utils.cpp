@@ -193,7 +193,7 @@ jintArray JNIUtils::createIntArray(JNIEnv* jeEnv, vector<uima::internal::Seriali
 
     jeEnv->SetIntArrayRegion(jiArr, 0, uiLength, pJIntArray);
     ASSERT_NO_JNI_EXCEPTION(jeEnv);
-    delete pJIntArray;
+    delete[] pJIntArray;
   }
 
   return jiArr;
@@ -270,7 +270,7 @@ jbyteArray JNIUtils::createByteArray(JNIEnv* jeEnv, vector<char> const & crVec) 
 
     jeEnv->SetByteArrayRegion(jiArr, 0, uiLength, pJByteArray);
     ASSERT_NO_JNI_EXCEPTION(jeEnv);
-    delete pJByteArray;
+    delete[] pJByteArray;
   }
 
   return jiArr;
@@ -306,7 +306,7 @@ jshortArray JNIUtils::createShortArray(JNIEnv* jeEnv, vector<short> const & crVe
 
     jeEnv->SetShortArrayRegion(jiArr, 0, uiLength, pJShortArray);
     ASSERT_NO_JNI_EXCEPTION(jeEnv);
-    delete pJShortArray;
+    delete[] pJShortArray;
   }
 
   return jiArr;
@@ -343,7 +343,7 @@ jlongArray JNIUtils::createLongArray(JNIEnv* jeEnv, vector<INT64> const & crVec)
 
     jeEnv->SetLongArrayRegion(jiArr, 0, uiLength, pJLongArray);
     ASSERT_NO_JNI_EXCEPTION(jeEnv);
-    delete pJLongArray;
+    delete[] pJLongArray;
   }
 
   return jiArr;
