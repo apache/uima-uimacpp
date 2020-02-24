@@ -32,15 +32,21 @@ TARGET=`pwd`/target
 mkdir -p "$PREFIX"
 mkdir -p "$TARGET"
 
+# Linux / Mac OSX customizations
+# If ActiveMQ falsely believes OpenSSL is installed use: AMQARG=--disable-ssl
+# or if it is installed elsewhere use (e.g. on OSX):     AMQARG=--with-openssl=/usr/local/opt/openssl
+
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
 	LIBEXT=dylib
 	INCDIR=darwin
 	ICUARG=MacOSX
+	AMQARG=
 else
 	LIBEXT=so
 	INCDIR=linux
 	ICUARG=Linux
+	AMQARG=
 fi
 
 #guess JAVA_HOME if not set
@@ -76,7 +82,7 @@ APRUTIL=apr-util-1.6.1
 AMQVERSION=3.9.5
 AMQCPP=activemq-cpp-library-$AMQVERSION
 
-# Additional modifications may be needed below for changes to Xerces, ICU, or ActiveMQ-C++
+# Additional modifications may be needed below after any version changes
 
 # Build xerces
 if [ ! -f "${XERCES}.tar.gz" ]; then
@@ -96,7 +102,6 @@ fi
 
 # Build ICU
 if [ ! -f $ICU ]; then
-#Modify next line if not version 50.2
     wget https://github.com/unicode-org/icu/releases/download/$ICURELEASE/$ICU
     tar -xzf $ICU
 fi
@@ -142,14 +147,13 @@ fi
 
 # Build ActiveMQ-C++
 if [ ! -f ${AMQCPP}-src.tar.gz ]; then
-#Modify next line if not v3.9.3
     wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
     tar -xf ${AMQCPP}-src.tar.gz
 fi
 if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
     cd $AMQCPP
 	echo Building ActiveMQ
-    ./configure --with-openssl=/usr/local/opt/openssl --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+    ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
     make install
     cd ..
 else
