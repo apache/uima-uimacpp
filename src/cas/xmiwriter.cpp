@@ -400,6 +400,7 @@ namespace uima {
     }
   }
 
+  /*  Not used ?? ... also ID_ATTR_NAME is private
   template<class Array>
   void writeArray(ostream & os, Array const & array, char const * tag, int xmiid) {
     size_t i;
@@ -414,7 +415,8 @@ namespace uima {
       //XCAS os << " size=\"0\"/>" << endl;
     }
   }
-
+  */
+  
   void XmiWriter::writeArray(ostream & os, 
                             FeatureStructure const & array, 
                             char const * tag, int xmiid) { 

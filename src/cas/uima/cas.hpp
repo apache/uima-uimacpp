@@ -1226,8 +1226,8 @@ namespace uima {
      * and begin positon < this.getEndPosition()
      *
      * @param crType      The type of annotation over which to iterate.
-                          crType must be subsumed by type annotation.
-     * @param enAmbiguous If set to CAS::enAmbiguous calling
+     *                    crType must be subsumed by type annotation.
+     * @param ambiguity   If set to CAS::enAmbiguous calling
      *                    moveToNext/moveToPrevious will alway move the resulting
      *                    interator to an annotation that is no longer covered
      *                    by the current annotation.
@@ -1249,7 +1249,7 @@ namespace uima {
      *
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity enIsAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity ambiguity = enAmbiguous ) const;
   protected:
   }
   ; // class AnnotationFS
@@ -1352,7 +1352,7 @@ namespace uima {
      *
      * @param an          The annotatation "under" which the subiterator
      *                    iterates
-     * @param enAmbiguous If set to CAS::enAmbiguous calling
+     * @param ambiguity   If set to CAS::enAmbiguous calling
      *                    moveToNext/moveToPrevious will alway move the resulting
      *                    interator to an annotation that is no longer covered
      *                    by the current annotation.
@@ -1373,7 +1373,7 @@ namespace uima {
      *                    annotations cover the area.)
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity enIsAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity ambiguity = enAmbiguous ) const;
 
     /**
      * create an iterator over this index such that calling

@@ -94,7 +94,8 @@ test_xmideserialization_SOURCES = src/test_xmideserialization.cpp
 #   Otherwise we get: object `tt_types.$(OBJEXT)' created both with libtool and without
 #
 
-LT_FLAGS = -avoid-version -module -rpath /somewhere
+# Removed -module from LT_FLAGS as it produced .so instead of .dylib files on OSX
+LT_FLAGS = -avoid-version -rpath /somewhere
 
 libtoknz_la_SOURCES  = src/annotator_tok.cpp
 libtoknz_la_SOURCES += src/ss_tokenizer.cpp

@@ -1671,8 +1671,8 @@ namespace uima {
     size_t                  pos
   ) {
     const BASIC_STRING_TEMPLATE ENV_VAR = "$ENV(";
-    unsigned int envBegPos = s.find(ENV_VAR, pos);
-    unsigned int envEndPos;
+    size_t envBegPos = s.find(ENV_VAR, pos);
+    size_t envEndPos;
     if (envBegPos != STRING_NPOS) {
       envEndPos = s.find(')', envBegPos+1);
       if (envEndPos != STRING_NPOS) {

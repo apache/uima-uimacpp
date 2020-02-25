@@ -24,7 +24,8 @@ fi
  Testbin=.libs
 
 export LD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib:$UIMACPP_HOME/lib
-export DYLD_LIBRARY_PATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib:$UIMACPP_HOME/lib
+# OSX does not allow DYLD_LIBRARY_PATH to be propagated in the environment
+export OSX_LIBRARYPATH=$Testlib:$APR_HOME/lib:$ICU_HOME/lib:$XERCES_HOME/lib:$UIMACPP_HOME/lib:$UIMACPP_HOME/dependencies/lib
 export PATH=$Testbin:$PATH
 
 export UIMACPP_DATAPATH=./data
