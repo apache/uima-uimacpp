@@ -15,6 +15,12 @@
 # limitations under the License.
 # ---------------------------------------------------------------------------
 
+# OSX removes DYLD_LIBRARY_PATH from the environment so set it for each call
+uname = ${shell "uname" "-s"}
+ifeq "$(uname)" "Darwin"
+	 DEBUG_FVT := DYLD_LIBRARY_PATH=$(OSX_LIBRARYPATH) $(DEBUG_FVT)
+endif
+
 all:	cas sofa engine typepriority language iterators casserializer primitivetypes xcasdeserialization xmideserialization jni
 
 cas:

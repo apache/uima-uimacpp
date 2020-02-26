@@ -593,7 +593,8 @@ namespace uima {
 			if (extsz > 256) {
 				cout << "ACK!" << endl;
 			}
-			const UChar* sofaID = attrs.getValue(ubuff);
+			// Xerces deals with char type XMLCh so cast from/to our UChar (both are 16-bits)
+			const UChar* sofaID = (UChar*)attrs.getValue((XMLCh*)ubuff);
 
 			if (0==UnicodeStringRef(sofaID).compare(icu::UnicodeString("_DefaultTextSofaName"))) {  
 				// initial view Sofa always has sofaNum = 1

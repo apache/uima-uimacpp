@@ -32,15 +32,33 @@ TARGET=`pwd`/target
 mkdir -p "$PREFIX"
 mkdir -p "$TARGET"
 
+# Linux / Mac OSX customizations
+# If ActiveMQ falsely believes OpenSSL is installed use: AMQARG=--disable-ssl
+# or if it is installed elsewhere use (e.g. on OSX):     AMQARG=--with-openssl=/usr/local/opt/openssl
+
+UNAME=`uname -s`
+if [ "$UNAME" = "Darwin" ]; then
+	LIBEXT=dylib
+	INCDIR=darwin
+	ICUARG=MacOSX
+	AMQARG=
+else
+	LIBEXT=so
+	INCDIR=linux
+	ICUARG=Linux
+	AMQARG=
+fi
+
 #guess JAVA_HOME if not set
 if [ -z $JAVA_HOME ]; then
-    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-    if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
-	JAVA_HOME=$(dirname $(dirname $(dirname $(readlink -f $(which java)))))
-	if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
-	    echo Cannot guess JAVA_HOME. JAVA SDK installed?
-	    exit
+	if [ "$UNAME" = "Darwin" ]; then
+		JAVA_HOME=$(/usr/libexec/java_home)
+	else
+		JAVA_HOME=$(dirname $(dirname $(dirname $(readlink -f $(which java)))))
 	fi
+    if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
+	echo Cannot guess JAVA_HOME. JAVA SDK installed?
+	exit
     fi
     echo guessing JAVA_HOME=$JAVA_HOME
 else
@@ -55,21 +73,26 @@ export ICU_HOME=$PREFIX
 export AMQ_HOME=$PREFIX
 
 # 3rd party component versons to use
-XERCES=xerces-c-3.1.4
-ICU=icu4c-50_2-src.tgz
-APR=apr-1.4.8
+XERCESMAJOR=3
+XERCES=xerces-c-3.2.2
+ICURELEASE=release-65-1
+ICU=icu4c-65_1-src.tgz
+APR=apr-1.7.0
 APRUTIL=apr-util-1.6.1
-AMQCPP=activemq-cpp-library-3.9.3
-# Additional modifications may be needed below for changes to Xerces, ICU, or ActiveMQ-C++
+AMQVERSION=3.9.5
+AMQCPP=activemq-cpp-library-$AMQVERSION
+
+# Additional modifications may be needed below after any version changes
 
 # Build xerces
 if [ ! -f "${XERCES}.tar.gz" ]; then
-    wget http://archive.apache.org/dist/xerces/c/3/sources/${XERCES}.tar.gz
+    wget http://archive.apache.org/dist/xerces/c/$XERCESMAJOR/sources/${XERCES}.tar.gz
     tar -xf ${XERCES}.tar.gz
 fi
-#Modify next line if not version 3.1.x
-if [ ! -f "$XERCES/src/.libs/libxerces-c-3.1.so" ]; then
+#Check if already built
+if [ ! -f "$XERCES/src/.libs/libxerces-c.$LIBEXT" ]; then
     cd $XERCES
+	echo Building Xerces
     ./configure --prefix="$PREFIX"
     make install
     cd ..
@@ -79,15 +102,15 @@ fi
 
 # Build ICU
 if [ ! -f $ICU ]; then
-#Modify next line if not version 50.2
-    wget https://github.com/unicode-org/icu/releases/download/release-50-2/$ICU
+    wget https://github.com/unicode-org/icu/releases/download/$ICURELEASE/$ICU
     tar -xzf $ICU
 fi
 if [ ! -f icu/source/bin/uconv ]; then
     cd icu/source
-    ./runConfigureICU Linux --prefix="$PREFIX"
+	echo Building ICU
+    ./runConfigureICU $ICUARG --prefix="$PREFIX"
     make install
-    cd ../..
+	cd ../..
 else
     echo ICU previously built
 fi
@@ -99,6 +122,7 @@ if [ ! -f "${APR}.tar.gz" ]; then
 fi
 if [ ! -f "$APR/build/apr_rules.out" ]; then
     cd $APR
+	echo Building APR
     ./configure --prefix="$PREFIX"
     make install
     cd ..
@@ -113,6 +137,7 @@ if [ ! -f "${APRUTIL}.tar.gz" ]; then
 fi
 if [ ! -f ${APRUTIL}/apu-config.out ]; then
     cd $APRUTIL
+	echo Building APR-UTIL
     ./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
     make install
     cd ..
@@ -122,13 +147,13 @@ fi
 
 # Build ActiveMQ-C++
 if [ ! -f ${AMQCPP}-src.tar.gz ]; then
-#Modify next line if not v3.9.3
-    wget http://archive.apache.org/dist/activemq/activemq-cpp/3.9.3/${AMQCPP}-src.tar.gz
+    wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
     tar -xf ${AMQCPP}-src.tar.gz
 fi
-if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.so ]; then
+if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
     cd $AMQCPP
-    ./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+	echo Building ActiveMQ
+    ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
     make install
     cd ..
 else
@@ -137,8 +162,9 @@ fi
 
 # Now build UIMA
 
+echo Building UIMA
 ./autogen.sh
-./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-apr-util=$PREFIX --with-icu=$PREFIX --with-activemq=$PREFIX --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/linux CXXFLAGS=-std=c++11
+./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-apr-util=$PREFIX --with-icu=$PREFIX --with-activemq=$PREFIX --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
 make check
 make install
 make docs

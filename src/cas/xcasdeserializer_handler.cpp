@@ -353,7 +353,8 @@ namespace uima {
       if (extsz > 256) {
         cout << "ACK!" << endl;
       }
-      const UChar* sofaID = attrs.getValue(ubuff);
+	  // Xerces deals with char type XMLCh so cast from/to our UChar (both are 16-bits)
+      const UChar* sofaID = (UChar*)attrs.getValue((XMLCh*)ubuff);
       if (0==UnicodeStringRef(sofaID).compare(icu::UnicodeString("_DefaultTextSofaName"))) {
         sofaID = ubuff;
       }
@@ -370,12 +371,12 @@ namespace uima {
       if (extsz > 256) {
         cout << "ACK!" << endl;
       }
-      const UChar* aString = attrs.getValue(ubuff);
+      const UChar* aString = (UChar*)attrs.getValue((XMLCh*)ubuff);
       int thisSofaNum = atoi(UnicodeStringRef(aString).asUTF8().c_str());
 
       // get the sofa's FeatureStructure id
       icu::UnicodeString(ID_ATTR_NAME).extract(ubuff,256, errorCode);
-      aString = attrs.getValue(ubuff);
+      aString = (UChar*)attrs.getValue((XMLCh*)ubuff);
       int sofaFsId = atoi(UnicodeStringRef(aString).asUTF8().c_str());
 
       // for v1 and v2 formats, create the index map
