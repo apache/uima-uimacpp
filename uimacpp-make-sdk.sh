@@ -17,7 +17,11 @@
 #   specific language governing permissions and limitations
 #   under the License.
 
+# with any command line arg
+# 1. Download and build minimum required 3rd party library dependencies
+# 2. Build uimacpp library and run test cases
 #
+# else
 # 1. Download and build all uimacpp 3rd party library dependencies
 # 2. Build uimacpp and run test cases
 # 3. Build uimacpp docs
@@ -25,6 +29,11 @@
 #
 
 set -e
+
+# test only if any argument set
+if [ "$#" -gt 0 ]; then
+   TESTONLY="true"
+fi
 
 PREFIX=`pwd`/dependencies
 TARGET=`pwd`/target
@@ -52,9 +61,12 @@ fi
 #guess JAVA_HOME if not set
 if [ -z $JAVA_HOME ]; then
 	if [ "$UNAME" = "Darwin" ]; then
-		JAVA_HOME=$(/usr/libexec/java_home)
+	    JAVA_HOME=$(/usr/libexec/java_home)
 	else
+	    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+	    if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
 		JAVA_HOME=$(dirname $(dirname $(dirname $(readlink -f $(which java)))))
+	    fi
 	fi
     if [ ! -f "$JAVA_HOME/include/jni.h" ]; then
 	echo Cannot guess JAVA_HOME. JAVA SDK installed?
@@ -71,8 +83,10 @@ export APU_HOME=$PREFIX
 export XERCES_HOME=$PREFIX
 export ICU_HOME=$PREFIX
 export AMQ_HOME=$PREFIX
+export UIMA_HOME=$PWD/apache-uima
 
 # 3rd party component versons to use
+UIMAJ=uimaj-3.1.0
 XERCESMAJOR=3
 XERCES=xerces-c-3.2.2
 ICURELEASE=release-65-1
@@ -82,7 +96,14 @@ APRUTIL=apr-util-1.6.1
 AMQVERSION=3.9.5
 AMQCPP=activemq-cpp-library-$AMQVERSION
 
-# Additional modifications may be needed below after any version changes
+# Install uimaj for JNI test
+if [ ! -f "${UIMAJ}-bin.tar.gz" ]; then
+    echo Installing UIMAJ
+    wget http://archive.apache.org//dist/uima//${UIMAJ}/${UIMAJ}-bin.tar.gz
+    tar -xf ${UIMAJ}-bin.tar.gz
+else
+    echo uimaj already installed
+fi
 
 # Build xerces
 if [ ! -f "${XERCES}.tar.gz" ]; then
@@ -130,42 +151,53 @@ else
     echo APR previously built
 fi
 
-# Build APR-UTIL
-if [ ! -f "${APRUTIL}.tar.gz" ]; then
-    wget http://mirrors.ocf.berkeley.edu/apache/apr/${APRUTIL}.tar.gz
-    tar -xf ${APRUTIL}.tar.gz
-fi
-if [ ! -f ${APRUTIL}/apu-config.out ]; then
-    cd $APRUTIL
+if [ -z $TESTONLY ]; then
+    # Build APR-UTIL
+    if [ ! -f "${APRUTIL}.tar.gz" ]; then
+	wget http://mirrors.ocf.berkeley.edu/apache/apr/${APRUTIL}.tar.gz
+	tar -xf ${APRUTIL}.tar.gz
+    fi
+    if [ ! -f ${APRUTIL}/apu-config.out ]; then
+	cd $APRUTIL
 	echo Building APR-UTIL
-    ./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-    make install
-    cd ..
-else
-    echo "APR-UTIL previously built"
-fi
+	./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+	make install
+	cd ..
+    else
+	echo "APR-UTIL previously built"
+    fi
 
-# Build ActiveMQ-C++
-if [ ! -f ${AMQCPP}-src.tar.gz ]; then
-    wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
-    tar -xf ${AMQCPP}-src.tar.gz
-fi
-if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
-    cd $AMQCPP
+    # Build ActiveMQ-C++
+    if [ ! -f ${AMQCPP}-src.tar.gz ]; then
+	wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
+	tar -xf ${AMQCPP}-src.tar.gz
+    fi
+    if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
+	cd $AMQCPP
 	echo Building ActiveMQ
-    ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-    make install
-    cd ..
-else
-    echo "ActiveMQ C++" previously built
+        if [ "$UNAME" = "Darwin" ]; then
+           LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include" ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+        else
+           ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+        fi
+	make install
+	cd ..
+    else
+	echo "ActiveMQ C++" previously built
+    fi
 fi
 
 # Now build UIMA
 
 echo Building UIMA
 ./autogen.sh
-./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-apr-util=$PREFIX --with-icu=$PREFIX --with-activemq=$PREFIX --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
-make check
-make install
-make docs
-make sdk TARGETDIR=sdk
+if [ -z $TESTONLY ]; then
+    ./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-apr-util=$PREFIX --with-icu=$PREFIX --with-activemq=$PREFIX --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
+    make check
+    make install
+    make docs
+    make sdk TARGETDIR=sdk
+else
+    ./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-icu=$PREFIX --without-activemq --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
+    make check
+fi

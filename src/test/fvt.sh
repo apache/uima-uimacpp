@@ -45,10 +45,18 @@ then
 fi
 
 export RM=rm
-export UIMACPPTEST_JNI="$UIMA_HOME/bin/runAE.sh data/descriptors/javaaggregate.xml data/segmenterinput"
-if [ ! $UIMA_HOME ] 
+
+if [ $UIMA_HOME ]
 then
+    export UIMACPPTEST_JNI="java "-Duima.home=$UIMA_HOME" "-Duima.datapath=$UIMA_DATAPATH" "-Djava.util.logging.config.file=$UIMA_HOME/config/Logger.properties" "-Duima.use_jul_as_default_uima_logger" -DNoOp -DUimaBootstrapSuppressClassPathDisplay -Dorg.apache.uima.jarpath="$UIMA_HOME/lib" -jar "$UIMA_HOME/lib/uimaj-bootstrap.jar" org.apache.uima.tools.RunAE data/descriptors/javaaggregate.xml data/segmenterinput"
+else
   export UIMACPPTEST_JNI="@echo UIMA_HOME is not set. JNI test was not run."
+fi
+
+UNAME=`uname -s`
+if [ "$UNAME" = "Darwin" ]
+then
+   export UIMACPPTEST_JNI="@echo JNI not working on DARWIN yet. JNI test was not run."
 fi
 
 make -f fvtTestfile $1
