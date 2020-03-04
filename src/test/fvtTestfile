@@ -62,4 +62,4 @@ xmideserialization:
 	$(RM) oots2.xmi
 
 jni:
-	$(UIMACPPTEST_JNI)
+	$(DEBUG_FVT)$(UIMACPPTEST_JNI)
