@@ -114,7 +114,7 @@ fi
 if [ ! -f "$XERCES/src/.libs/libxerces-c.$LIBEXT" ]; then
     cd $XERCES
 	echo Building Xerces
-    ./configure --prefix="$PREFIX"
+    ./configure --prefix="$PREFIX" --enable-netaccessor-socket
     make install
     cd ..
 else
