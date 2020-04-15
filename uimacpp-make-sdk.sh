@@ -41,16 +41,16 @@ TARGET=`pwd`/target
 mkdir -p "$PREFIX"
 mkdir -p "$TARGET"
 
-# Linux / Mac OSX customizations
+# Linux / Mac OSX configuration customization for AMQ build
 # If ActiveMQ falsely believes OpenSSL is installed use: AMQARG=--disable-ssl
-# or if it is installed elsewhere use (e.g. on OSX):     AMQARG=--with-openssl=/usr/local/opt/openssl
+# or if OpenSLL is installed elsewhere in OSX, change the specified value
 
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
 	LIBEXT=dylib
 	INCDIR=darwin
 	ICUARG=MacOSX
-	AMQARG=
+	AMQARG=--with-openssl=/usr/local/opt/openssl
 else
 	LIBEXT=so
 	INCDIR=linux
@@ -88,7 +88,7 @@ export UIMA_HOME=$PWD/apache-uima
 # 3rd party component versons to use
 UIMAJ=uimaj-3.1.0
 XERCESMAJOR=3
-XERCES=xerces-c-3.2.2
+XERCES=xerces-c-3.2.3
 ICURELEASE=release-65-1
 ICU=icu4c-65_1-src.tgz
 APR=apr-1.7.0
@@ -175,11 +175,7 @@ if [ -z $TESTONLY ]; then
     if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
 	cd $AMQCPP
 	echo Building ActiveMQ
-        if [ "$UNAME" = "Darwin" ]; then
-           LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include" ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-        else
-           ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-        fi
+        ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
 	make install
 	cd ..
     else
@@ -196,6 +192,7 @@ if [ -z $TESTONLY ]; then
     make check
     make install
     make docs
+    rm -rf sdk
     make sdk TARGETDIR=sdk
 else
     ./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-icu=$PREFIX --without-activemq --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
