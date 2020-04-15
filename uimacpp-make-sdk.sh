@@ -43,7 +43,7 @@ mkdir -p "$TARGET"
 
 # Linux / Mac OSX configuration customization for AMQ build
 # If ActiveMQ falsely believes OpenSSL is installed use: AMQARG=--disable-ssl
-# or if OpenSLL is installed elsewhere in OSX, change the specified value
+# On Mac OpenSSL is usually installed in /usr/local/opt/openssl
 
 UNAME=`uname -s`
 if [ "$UNAME" = "Darwin" ]; then
@@ -143,7 +143,7 @@ if [ ! -f "${APR}.tar.gz" ]; then
 fi
 if [ ! -f "$APR/build/apr_rules.out" ]; then
     cd $APR
-	echo Building APR
+    echo Building APR
     ./configure --prefix="$PREFIX"
     make install
     cd ..
@@ -154,32 +154,32 @@ fi
 if [ -z $TESTONLY ]; then
     # Build APR-UTIL
     if [ ! -f "${APRUTIL}.tar.gz" ]; then
-	wget http://mirrors.ocf.berkeley.edu/apache/apr/${APRUTIL}.tar.gz
-	tar -xf ${APRUTIL}.tar.gz
+        wget http://mirrors.ocf.berkeley.edu/apache/apr/${APRUTIL}.tar.gz
+        tar -xf ${APRUTIL}.tar.gz
     fi
     if [ ! -f ${APRUTIL}/apu-config.out ]; then
-	cd $APRUTIL
-	echo Building APR-UTIL
-	./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-	make install
-	cd ..
+        cd $APRUTIL
+        echo Building APR-UTIL
+        ./configure --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
+        make install
+        cd ..
     else
-	echo "APR-UTIL previously built"
+        echo "APR-UTIL previously built"
     fi
 
     # Build ActiveMQ-C++
     if [ ! -f ${AMQCPP}-src.tar.gz ]; then
-	wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
-	tar -xf ${AMQCPP}-src.tar.gz
+        wget http://archive.apache.org/dist/activemq/activemq-cpp/${AMQVERSION}/${AMQCPP}-src.tar.gz
+        tar -xf ${AMQCPP}-src.tar.gz
     fi
     if [ ! -f ${AMQCPP}/src/main/.libs/libactivemq-cpp.${LIBEXT} ]; then
-	cd $AMQCPP
-	echo Building ActiveMQ
+        cd $AMQCPP
+        echo Building ActiveMQ
         ./configure $AMQARG --prefix=$PREFIX --with-apr=$PREFIX/bin/apr-1-config
-	make install
-	cd ..
+        make install
+        cd ..
     else
-	echo "ActiveMQ C++" previously built
+        echo "ActiveMQ C++" previously built
     fi
 fi
 
