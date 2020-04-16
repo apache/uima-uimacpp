@@ -95,6 +95,10 @@ APR=apr-1.7.0
 APRUTIL=apr-util-1.6.1
 AMQVERSION=3.9.5
 AMQCPP=activemq-cpp-library-$AMQVERSION
+DOXYGEN_REL=1.8.13
+DOXYGEN_FILE_LINUX=doxygen-${DOXYGEN_REL}.linux.bin.tar.gz
+DOXYGEN_FILE_MACOS=doxygen-${DOXYGEN_REL}.dmg
+DOXYGEN_URL=https://sourceforge.net/projects/doxygen/files/rel-${DOXYGEN_REL}/${DOXYGEN_FILE_LINUX}/download
 
 # Install uimaj for JNI test
 if [ ! -f "${UIMAJ}-bin.tar.gz" ]; then
@@ -191,6 +195,21 @@ if [ -z $TESTONLY ]; then
     ./configure --prefix=$TARGET --with-xerces=$PREFIX --with-apr=$PREFIX --with-apr-util=$PREFIX --with-icu=$PREFIX --with-activemq=$PREFIX --with-jdk=$JAVA_HOME/include' -I'${JAVA_HOME}/include/${INCDIR} CXXFLAGS=-std=c++11
     make check
     make install
+
+    # install doxygen
+    if [ ! -f "$DOXYGEN_FILE_LINUX" ] && [ ! -f "$DOXYGEN_FILE_MACOS" ]; then
+	echo Installing doxygen
+	if [ "$UNAME" = "Darwin" ]; then
+	    echo "Darwin, GACK!"
+	else
+	    wget $DOXYGEN_URL -O $DOXYGEN_FILE_LINUX
+	    tar -xzf $DOXYGEN_FILE_LINUX
+	    PATH=$PWD/doxygen-${DOXYGEN_REL}/bin:$PATH
+	fi
+    else
+	echo doxygen previously installed
+    fi
+
     make docs
     rm -rf sdk
     make sdk TARGETDIR=sdk
