@@ -7,3 +7,4 @@
 *.bat	  text eol=crlf
 *.sln	  text eol=crlf
 *.asc	  binary
+*.png	  binary
