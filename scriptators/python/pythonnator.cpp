@@ -30,22 +30,18 @@
 // .so file, we do not get the exports from the dependent libraries in 
 // when loading.  This flag causes the python .so file to be re-bound
 // hopefully this can be removed pending a future relesase of UIMA
-#define REBIND_PYTHON_SO
+#define REBIND_PYTHON_SO 
 #include <dlfcn.h>
 #endif
 
-#if defined(PYTHON2_3) || defined(PYTHON2_4)
 #define _PY_BEGIN_BLOCK_THREADS_ \
-  PyGILState_STATE __state = PyGILState_Ensure();
+  PyEval_RestoreThread(thread_state);
 #define _PY_END_BLOCK_THREADS_ \
-  PyGILState_Release(__state);
-#else
-#define _PY_BEGIN_BLOCK_THREADS_
-#define _PY_END_BLOCK_THREADS_ 
-#endif
+  thread_state = PyEval_SaveThread();
 
 using namespace uima;
 using namespace std;
+using namespace icu;
 
 // copied from SwigGenerated code
 
@@ -77,7 +73,7 @@ class Pythonnator : public Annotator {
   static unsigned int refcount;
 
 public:
-  // We construct a perl interpreter in initialize - it lives for the
+  // We construct a python interpreter in initialize - it lives for the
   // life of the annotator - even if reconfigure happens.  Reconfigure
   // and intialize both set dirty so the source code in the source file
   // and contained in the type system are evaluated.
@@ -144,19 +140,15 @@ public:
         }
 
         Py_Initialize();
-        PyEval_InitThreads();
 	thread_state = PyThreadState_Get();
-        PyEval_ReleaseLock(); // We will reaquire the lock in a few lines
-        // after thread_state has been initialized
       }
 
-      PyEval_AcquireLock();
       thread_state = Py_NewInterpreter();
       if (thread_state == 0) {
         cerr<< MODULENAME ": unable to create interpreter" << endl;
         return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_INIT;
       }
-      PyEval_ReleaseLock();
+      thread_state = PyEval_SaveThread();
 
       _PY_BEGIN_BLOCK_THREADS_
 		//      main_module = PyImport_AddModule("__main__");
@@ -169,6 +161,7 @@ public:
       user_module = PyImport_ImportModule(srcfile);
       if (user_module == 0) {
         cerr << MODULENAME ": could not import python module " << srcfile <<endl;
+        _PY_END_BLOCK_THREADS_
         return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_INIT;
       }
       dict = PyModule_GetDict(user_module);
