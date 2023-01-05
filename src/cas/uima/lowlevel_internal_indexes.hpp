@@ -158,7 +158,7 @@ namespace uima {
        * comparator.
        * @see SetSingleIndex
        */
-      class UIMA_LINK_IMPORTSPEC IndexComparatorLess : public std::binary_function<TyFS, TyFS, bool> {
+      class UIMA_LINK_IMPORTSPEC IndexComparatorLess {
       private:
         IndexComparator const * iv_cpclComparator;
         FSHeap const * iv_heap;
@@ -169,6 +169,10 @@ namespace uima {
           assertWithMsg(false, "Default constructor for STL compliance only!");
         };
       public:
+        using result_type = bool;
+        using first_argument_type = TyFS;
+        using second_argument_type = TyFS;
+        
         IndexComparatorLess(IndexComparator const * aComparator,
                             FSHeap const & heap)
             : iv_cpclComparator(aComparator),

@@ -542,8 +542,12 @@ namespace uima {
      The class currently supports only single character-based comparision.
   */
   template< class T >
-  class UIMA_LINK_IMPORTSPEC StringLessI : public std::binary_function< T, T, bool > {
+  class UIMA_LINK_IMPORTSPEC StringLessI {
   public:
+    using result_type = bool;
+    using first_argument_type = T;
+    using second_argument_type = T;
+    
     bool
     operator()(const T& x, const T& y) const {
       if (x.length() == 0) {

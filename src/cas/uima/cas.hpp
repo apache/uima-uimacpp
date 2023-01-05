@@ -1134,7 +1134,7 @@ namespace uima {
    * @see AnnotationFS
    */
   typedef enum EnIteratorAmbiguity_ {
-    enAmbiguous,   /// Default behaviour: return all annotations, even if several are available for a postion.
+    enAmbiguous,   /// Default behaviour: return all annotations, even if several are available for a position.
     enUnambiguous, /// return only one annotation for a given position.
     enNumberOfIteratorAmbiguityElems // must be last in enum
   } EnIteratorAmbiguity;
@@ -1227,7 +1227,7 @@ namespace uima {
      *
      * @param crType      The type of annotation over which to iterate.
                           crType must be subsumed by type annotation.
-     * @param enAmbiguous If set to CAS::enAmbiguous calling
+     * @param ambiguity   If set to CAS::enAmbiguous calling
      *                    moveToNext/moveToPrevious will alway move the resulting
      *                    interator to an annotation that is no longer covered
      *                    by the current annotation.
@@ -1249,7 +1249,7 @@ namespace uima {
      *
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity enAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( Type const & crType, EnIteratorAmbiguity const ambiguity = enAmbiguous ) const;
   protected:
   }
   ; // class AnnotationFS
@@ -1352,7 +1352,7 @@ namespace uima {
      *
      * @param an          The annotatation "under" which the subiterator
      *                    iterates
-     * @param enAmbiguous If set to CAS::enAmbiguous calling
+     * @param ambiguity   If set to CAS::enAmbiguous calling
      *                    moveToNext/moveToPrevious will alway move the resulting
      *                    interator to an annotation that is no longer covered
      *                    by the current annotation.
@@ -1373,7 +1373,7 @@ namespace uima {
      *                    annotations cover the area.)
      * @throws InvalidIndexObjectException
      */
-    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity enAmbiguous = enAmbiguous ) const;
+    ANIterator subIterator( AnnotationFS const & an, EnIteratorAmbiguity const ambiguity = enAmbiguous ) const;
 
     /**
      * create an iterator over this index such that calling
