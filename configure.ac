@@ -16,7 +16,7 @@
  # specific language governing permissions and limitations
  # under the License.
 
-AC_INIT(uimacpp, 3.0.0)
+AC_INIT(uimacpp, 2.5.0)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/framework/engine.cpp)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -47,7 +47,7 @@ AC_ARG_ENABLE(debugtest,
 esac],[debugtest=false])
 AM_CONDITIONAL([DEBUG_TEST], [test x$debugtest = xtrue])
 
-LT_VERSION_NUMBER=3:0:0
+LT_VERSION_NUMBER=2:5:0
 
 AC_SUBST(LT_VERSION_NUMBER)
 AC_SUBST(VERSION)
@@ -349,4 +349,4 @@ AC_SUBST(UIMA_LIB)
 
 AM_CONDITIONAL(APPLE, test x$build_vendor = xapple)
 
-AC_OUTPUT(Makefile src/Makefile src/framework/Makefile src/utils/Makefile src/test/Makefile)
+AC_OUTPUT(Makefile src/Makefile src/framework/Makefile src/utils/Makefile src/test/Makefile uima.pc)
