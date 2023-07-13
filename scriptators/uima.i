@@ -165,9 +165,11 @@ static bool ConvertUnicodeStringRef(const UnicodeStringRef &ref,
   argvi++;
 }
 
-%insert(perl) {
+  
+%insert(perl) %{
 # these are default methods that the user overrides, they
 # are here to prevent errors if they are not defined
+ 
 package main;
 sub initialize {};
 sub typeSystemInit {};
@@ -176,7 +178,7 @@ sub process {};
 sub reconfigure {};
 sub batchProcessComplete {};
 sub collectionProcessComplete {};
-}
+%}
 #endif
 
 #ifdef SWIGTCL

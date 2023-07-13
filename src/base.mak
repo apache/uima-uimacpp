@@ -32,8 +32,6 @@
 #
 # Variables which must have been previously set:
 #
-# UIMACPP_HOME           for the base of the UIMA C++ tree
-#
 # TARGET_FILE=foo   to create foo.$(DLL_SUFFIX) (shared lib)
 #                   or foo (application)
 # DEBUG=1           to build for debug
@@ -46,13 +44,11 @@
 # USER_LINKFLAGS    to specify additional linker parameters
 # USER_XTARGET      to specify extra user target to build
 #
-# Mac OS X users must modify this file, changing the CC, includes and
-# libraries. Follow the README for more instructions.
 #
 #############################################################################
 
 ifeq ($(UIMACPP_HOME),)
-  $(error UIMACPP_HOME not set)
+  UIMACPP_HOME=/usr/local/uimacpp
 endif
 
 ifeq ($(TARGET_FILE),)
@@ -90,7 +86,7 @@ endif
 endif
 
 # include directory for compile
-INCLUDES=-I$(UIMACPP_HOME)/include -I$(UIMACPP_HOME)/include/apr-1
+INCLUDES=-I$(UIMACPP_HOME)/include -I `apr-config --includedir`
 
 # compiler flags:
 CFLAGS=-Wall -x c++ $(BUILD_CFLAGS) $(INCLUDES) $(USER_CFLAGS) \

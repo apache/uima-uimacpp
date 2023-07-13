@@ -19,8 +19,10 @@ ifeq ($(UIMACPP_HOME),)
   $(error UIMACPP_HOME not set)
 endif
 
-SWIGVERSION:=$(shell swig -version  | grep SWIG | sed "s/SWIG Version //" )
-#SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version $(SWIGMAJORMINOR).% ,$(shell swig -version 2>&1)))
+SWIG=swig4.0
+
+SWIGVERSION:=$(shell $(SWIG) -version  | grep SWIG | sed "s/SWIG Version //" )
+#SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version $(SWIGMAJORMINOR).% ,$(shell $(SWIG) -version 2>&1)))
 
 ifeq ($(SWIGVERSION),)
   $(error unable to determine SWIGVERSION looking for $(SWIGMAJOR).$(MAJOR)) Rerun passing in SWIGMAJOR and SWIGMINOR)
@@ -29,7 +31,7 @@ endif
 SWIGDEPS=uimapywrap.h
 SWIGFLAGS=-DSWIG$(subst .,_,$(SWIGVERSION))
 
-PYTHONVERSION:=$(subst ., ,$(subst Python ,,$(shell python -V 2>&1)))
+PYTHONVERSION:=$(subst ., ,$(subst Python ,,$(shell python3 -V 2>&1)))
 ifeq ($(PYTHONVERSION),)
   $(error PYTHONVERSION could not be determined)
 endif
@@ -70,10 +72,10 @@ include $(UIMACPP_HOME)/lib/base.mak
 ###################################
 
 pythonnator.py uima_wrap.cxx: ../uima.i
-	swig -o uima_wrap.cxx -outdir . -c++ -python ../uima.i
+	$(SWIG) -o uima_wrap.cxx -outdir . -c++ -python ../uima.i
 
 uimapywrap.h:
-	swig -outdir . -c++ -python -external-runtime $@
+	$(SWIG) -outdir . -c++ -python -external-runtime $@
 
 pythonnator.o: $(SWIGDEPS)
 
