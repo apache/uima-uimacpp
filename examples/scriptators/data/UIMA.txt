@@ -1,0 +1,384 @@
+   #alternate Edit this page Wikipedia (en) Wikipedia Atom feed
+
+   Jump to content
+
+   [ ] Main menu
+   Main menu
+   (BUTTON) move to sidebar (BUTTON) hide
+   Navigation
+     * Main page
+     * Contents
+     * Current events
+     * Random article
+     * About Wikipedia
+     * Contact us
+     * Donate
+
+   Contribute
+     * Help
+     * Learn to edit
+     * Community portal
+     * Recent changes
+     * Upload file
+
+   Languages
+   Language links are at the top of the page across from the title.
+   Wikipedia The Free Encyclopedia
+   Search
+   ____________________
+   (BUTTON) Search
+
+     * Create account
+     * Log in
+
+   [ ] Personal tools
+     * Create account
+     * Log in
+
+   Pages for logged out editors learn more
+     * Contributions
+     * Talk
+
+   [ ]
+
+Contents
+
+   (BUTTON) move to sidebar (BUTTON) hide
+     * (Top)
+     * 1Structure
+     * 2Implementations and uses
+     * 3See also
+     * 4References
+     * 5External links
+
+   Toggle the table of contents
+
+   [ ] Toggle the table of contents
+
+UIMA
+
+   [ ] 4 languages
+     * Deutsch
+     * Español
+     * Italiano
+     * 中文
+
+   Edit links
+
+     * Article
+     * Talk
+
+   [ ] English
+
+     * Read
+     * Edit
+     * View history
+
+   [ ] Tools
+   Tools
+   (BUTTON) move to sidebar (BUTTON) hide
+   Actions
+     * Read
+     * Edit
+     * View history
+
+   General
+     * What links here
+     * Related changes
+     * Upload file
+     * Special pages
+     * Permanent link
+     * Page information
+     * Cite this page
+     * Wikidata item
+
+   Print/export
+     * Download as PDF
+     * Printable version
+
+   In other projects
+     * Wikimedia Commons
+
+   From Wikipedia, the free encyclopedia
+
+   UIMA (/juˈiːmə/ yoo-EE-mə),^[1] short for Unstructured Information
+   Management Architecture, is an OASIS standard^[2] for content
+   analytics, originally developed at IBM. It provides a component
+   software architecture for the development, discovery, composition, and
+   deployment of multi-modal analytics for the analysis of unstructured
+   information and integration with search technologies.
+
+Structure[edit]
+
+   The UIMA architecture can be thought of in four dimensions:
+    1. It specifies component interfaces in an analytics pipeline.
+    2. It describes a set of design patterns.
+    3. It suggests two data representations: an in-memory representation
+       of annotations for high-performance analytics and an XML
+       representation of annotations for integration with remote web
+       services.
+    4. It suggests development roles allowing tools to be used by users
+       with diverse skills.
+
+Implementations and uses[edit]
+
+   CAPTION: Apache UIMA
+
+   [120px-Apache_UIMA_logo.svg.png]
+   Developer(s) IBM, Apache Software Foundation (since October 2006)
+   Stable release
+   3.1.1 / November 8, 2019; 3 years ago (2019-11-08)^[3]
+   Repository
+     * svn.apache.org/repos/asf/uima/ Edit this at Wikidata
+
+   Written in Java with C++ enablement
+   Operating system cross-platform
+   Type text mining, information extraction
+   License Apache License 2.0
+   Website uima.apache.org
+
+   Apache UIMA, a reference implementation of UIMA, is maintained by the
+   Apache Software Foundation.
+
+   UIMA is used in a number of software projects:
+     * IBM Research's Watson uses UIMA for analyzing unstructured
+       data.^[4]
+     * The Clinical Text Analysis and Knowledge Extraction System (Apache
+       cTAKES) is a UIMA-based system for information extraction from
+       medical records.
+     * DKPro Core is a collection of reusable UIMA components for
+       general-purpose natural language processing.
+
+See also[edit]
+
+     * Data Discovery and Query Builder
+     * Entity extraction
+     * General Architecture for Text Engineering (GATE)
+     * IBM Omnifind
+     * LanguageWare
+
+References[edit]
+
+    1. ^ UIMA Frequently Asked Questions (FAQ's) The Apache Software
+       Foundation
+    2. ^ UIMA Specification The Apache Software Foundation.
+    3. ^ "Apache UIMA - News". uima.apache.org. Retrieved 11 December
+       2019.
+    4. ^ "Apache Innovation Bolsters IBM's "Smartest Machine on Earth" in
+       First-ever Man vs. Machine Competition on Jeopardy! Quiz Show : The
+       Apache Software Foundation Blog". blogs.apache.org. Retrieved 23
+       April 2018.
+
+External links[edit]
+
+     * Apache UIMA home page
+
+     * v
+     * t
+     * e
+
+   The Apache Software Foundation
+
+   Top-level
+   projects
+
+     * Accumulo
+     * ActiveMQ
+     * AGE
+     * Airflow
+     * Ambari
+     * Ant
+     * Aries
+     * Arrow
+     * Apache HTTP Server
+     * APR
+     * Avro
+     * Axis
+     * Axis2
+     * Beam
+     * Bloodhound
+     * Brooklyn
+     * Buildr
+     * Calcite
+     * Camel
+     * CarbonData
+     * Cassandra
+     * Cayenne
+     * Chemistry
+     * CloudStack
+     * Cocoon
+     * Cordova
+     * CouchDB
+     * cTAKES
+     * CXF
+     * Derby
+     * Directory
+     * Drill
+     * Druid
+     * Empire-db
+     * Felix
+     * Flex
+     * Flink
+     * Flume
+     * FreeMarker
+     * Geronimo
+     * Giraph
+     * Gump
+     * Hadoop
+     * HBase
+     * Helix
+     * Hive
+     * Impala
+     * Jackrabbit
+     * James
+     * Jena
+     * Jini
+     * JMeter
+     * Kafka
+     * Kudu
+     * Kylin
+     * Lucene
+     * Mahout
+     * Maven
+     * MINA
+     * mod_perl
+     * MyFaces
+     * NiFi
+     * NetBeans
+     * Nutch
+     * OFBiz
+     * Oozie
+     * OpenEJB
+     * OpenJPA
+     * OpenNLP
+     * OрenOffice
+     * ORC
+     * PDFBox
+     * Parquet
+     * Phoenix
+     * POI
+     * Pig
+     * Pinot
+     * Pivot
+     * Qpid
+     * Roller
+     * RocketMQ
+     * Samza
+     * ServiceMix
+     * Shiro
+     * SINGA
+     * Sling
+     * Solr
+     * Spark
+     * Storm
+     * SpamAssassin
+     * Struts 1
+     * Struts 2
+     * Subversion
+     * Superset
+     * SystemDS
+     * Tapestry
+     * Thrift
+     * Tika
+     * Tomcat
+     * Trafodion
+     * Traffic Server
+     * UIMA
+     * Velocity
+     * Wicket
+     * Xalan
+     * Xerces
+     * XMLBeans
+     * Yetus
+     * ZooKeeper
+
+   Commons
+
+     * BCEL
+     * BSF
+     * Daemon
+     * Jelly
+     * Logging
+
+   Incubator
+
+     * MXNet
+     * NuttX
+     * Taverna
+
+   Other projects
+
+     * Batik
+     * Chainsaw
+     * FOP
+     * Ivy
+     * Log4j
+
+   Attic
+
+     * Abdera
+     * Apex
+     * AxKit
+     * Beehive
+     * Bluesky
+     * iBATIS
+     * C++ Standard Library
+     * Cactus
+     * Click
+     * Continuum
+     * Deltacloud
+     * Etch
+     * Excalibur
+     * Forrest
+     * Hama
+     * Harmony
+     * HiveMind
+     * Jakarta
+     * Lenya
+     * Marmotta
+     * ODE
+     * Shale
+     * Shindig
+     * Slide
+     * Sqoop
+     * Stanbol
+     * Tuscany
+     * Wave
+     * Wink
+     * XML
+
+   Licenses
+
+     * Apache License
+
+     * Category
+
+   Retrieved from
+   "https://en.wikipedia.org/w/index.php?title=UIMA&oldid=1085866372"
+
+   Categories:
+     * Apache Software Foundation projects
+     * Software architecture
+     * Data mining and machine learning software
+
+     * This page was last edited on 2 May 2022, at 21:46 (UTC).
+     * Text is available under the Creative Commons Attribution-ShareAlike
+       License 4.0; additional terms may apply. By using this site, you
+       agree to the Terms of Use and Privacy Policy. Wikipedia® is a
+       registered trademark of the Wikimedia Foundation, Inc., a
+       non-profit organization.
+
+     * Privacy policy
+     * About Wikipedia
+     * Disclaimers
+     * Contact Wikipedia
+     * Code of Conduct
+     * Mobile view
+     * Developers
+     * Statistics
+     * Cookie statement
+
+     * Wikimedia Foundation
+     * Powered by MediaWiki
+
+   (BUTTON) Toggle limited content width

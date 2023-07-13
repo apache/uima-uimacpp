@@ -16,7 +16,7 @@
  # specific language governing permissions and limitations
  # under the License.
 
-AC_INIT(uimacpp, 3.0.0)
+AC_INIT(uimacpp, 2.5.0)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR(src/framework/engine.cpp)
 AM_INIT_AUTOMAKE([subdir-objects])
@@ -47,7 +47,7 @@ AC_ARG_ENABLE(debugtest,
 esac],[debugtest=false])
 AM_CONDITIONAL([DEBUG_TEST], [test x$debugtest = xtrue])
 
-LT_VERSION_NUMBER=3:0:0
+LT_VERSION_NUMBER=2:5:0
 
 AC_SUBST(LT_VERSION_NUMBER)
 AC_SUBST(VERSION)
@@ -119,8 +119,7 @@ if test $apr_found = "no"; then
 fi
 
 # check APR version number agains regex
-#APR_VER_REGEXES=["1\.3\.[0-9] 1\.3\.1[0-9] 1\.4\.[0-9]"]
-APR_VER_REGEXES=["1\.4\.[0-9] 1\.5\.[0-9] 1\.6\.[0-9]"]
+APR_VER_REGEXES=["1\.4\.[0-9] 1\.5\.[0-9] 1\.6\.[0-9] 1\.7\.[0-9]"]
 
 AC_MSG_CHECKING([APR version])
 apr_version="`$apr_config --version`"
@@ -321,9 +320,14 @@ AC_SUBST(UIMACPP_HOME_LIB)
 AC_ARG_WITH([jdk], AC_HELP_STRING([--with-jdk],
                                       [use local JDK (uses /opt/IBMJava2-142/include by default)]),
                [UIMA_JDK_INCLUDE="-I$withval"
+                list="`find "$withval" -type d -print`"
+                for dir in $list; do
+                    UIMA_JDK_INCLUDE="$UIMA_JDK_INCLUDE -I$dir"
+                done
                 JDK_TEST_INCLUDE="$UIMA_JDK_INCLUDE"],
                     [UIMA_JDK_INCLUDE="-I/opt/IBMJava2-142/include"
                      JDK_TEST_INCLUDE="-I/opt/IBMJava2-142/include"])
+
 
 CPPFLAGS_save="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $JDK_TEST_INCLUDE"
@@ -345,4 +349,4 @@ AC_SUBST(UIMA_LIB)
 
 AM_CONDITIONAL(APPLE, test x$build_vendor = xapple)
 
-AC_OUTPUT(Makefile src/Makefile src/framework/Makefile src/utils/Makefile src/test/Makefile)
+AC_OUTPUT(Makefile src/Makefile src/framework/Makefile src/utils/Makefile src/test/Makefile uima.pc)

@@ -19,6 +19,7 @@
 
 #include "uima/api.hpp"
 using namespace std;
+using namespace icu_72;
 using namespace uima;
 
 

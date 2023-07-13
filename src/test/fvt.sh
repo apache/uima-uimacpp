@@ -17,7 +17,7 @@
 
 if [ ! $UIMACPP_HOME ]
 then
-   export UIMACPP_HOME=../..
+   export UIMACPP_HOME=/usr/local/uimacpp
 fi
 
  Testlib=.libs:../framework/.libs

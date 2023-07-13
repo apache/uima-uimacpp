@@ -66,22 +66,7 @@ static bool PyUnicodeConvert(PyObject *obj, UnicodeString &rv) {
 
 // convert using default codepage
 static bool PyStringConvert(PyObject *obj, UnicodeString &rv) {
-  char *src;
-  #ifdef PY_VERSION_HEX
-  #if (PY_VERSION_HEX >= 0x02050000)
-    /* Python version was greater than 2.5 */
-    Py_ssize_t len;
-     PyString_AsStringAndSize(obj, &src,  ( Py_ssize_t*)&len);
-  #else
-    /* Python version was less than 2.5 */
-     int len;
-     PyString_AsStringAndSize(obj, &src, &len);
-  #endif
-  #else
-    /* Could not determine version */ 
-    PyString_AsStringAndSize(obj, &src, &len);
-  #endif
-  rv = UnicodeString((const char *) src, (int32_t) len);
+  rv = UnicodeString((const char *)PyUnicode_AsUTF8(obj));
   return true;
 }
 
@@ -121,9 +106,8 @@ static bool ConvertUnicodeStringRef(const UnicodeStringRef &ref,
 }
 
 %typemap(in) const UnicodeString & (UnicodeString temp) {
-  if ( !( (PyUnicode_CheckExact($input) && PyUnicodeConvert($input, temp))
-	|| (PyString_CheckExact($input) && PyStringConvert($input, temp))))
-    SWIG_exception(SWIG_TypeError, "string or unicode string expected or conversion failure");
+  if ( !( (PyUnicode_CheckExact($input) && PyUnicodeConvert($input, temp))))
+    SWIG_exception(SWIG_TypeError, "unicode string expected or conversion failure");
   $1 = &temp;
 }
 
@@ -181,9 +165,11 @@ static bool ConvertUnicodeStringRef(const UnicodeStringRef &ref,
   argvi++;
 }
 
-%insert(perl) {
+  
+%insert(perl) %{
 # these are default methods that the user overrides, they
 # are here to prevent errors if they are not defined
+ 
 package main;
 sub initialize {};
 sub typeSystemInit {};
@@ -192,7 +178,7 @@ sub process {};
 sub reconfigure {};
 sub batchProcessComplete {};
 sub collectionProcessComplete {};
-}
+%}
 #endif
 
 #ifdef SWIGTCL

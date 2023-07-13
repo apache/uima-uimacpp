@@ -214,6 +214,8 @@ namespace uima {
    taf_stl_find_sorted(container.begin(), container.end(), element, compare)
 
 
+// binary_function is deprecated
+#if (0)
 
   /**
     STL tool function
@@ -325,16 +327,21 @@ namespace uima {
     }
   };
 
+#endif
+  
   /**
     STL tool function
   */
   template <class T>
-  struct it_second_greater : public std::binary_function<T, T, bool> {
+  struct it_second_greater {
+    using result_type = bool;
+    using first_argument_type = T;
+    using second_argument_type = T;
+    
     bool operator()(const T x, const T y) const {
       return (*x).second > (*y).second;
     }
   };
-
 
   /**
     STL tool class
@@ -430,6 +437,9 @@ public:
   }
   ;  //lint !e1509: base class destructor for class 'map' is not virtual
 
+// binary_function is deprecated
+#if (0)
+  
   /**
    * STL Tool class with semantics of "less"
    * applied to elements which are pointers and require dereferencing
@@ -443,6 +453,7 @@ public:
   }
   ;  //lint !e1905: implicit default constructor generated for class 'less_derefptr'
 
+#endif
 
   /**
     Prints all elements in a STL container to stream.

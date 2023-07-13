@@ -40,7 +40,7 @@
         <configurationParameters>
             <configurationParameter>
                 <name>DebugLevel</name>
-                <description>Sets the perl annotators debug level</description>
+                <description>Sets the python annotator debug level</description>
                 <type>Integer</type>
                 <multiValued>false</multiValued>
                 <mandatory>false</mandatory>

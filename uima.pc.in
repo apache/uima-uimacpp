@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@prefix@/bin
+libdir=@libdir@
+includedir=@includedir@
+
+Name: uima
+Description: Apache UIMA C++ framework
+Version: @VERSION@
+Conflicts:
+Libs: -L${libdir} -luima
+Cflags: -I${includedir}

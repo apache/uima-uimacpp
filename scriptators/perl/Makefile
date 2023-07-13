@@ -19,8 +19,10 @@ ifeq ($(UIMACPP_HOME),)
   $(error UIMACPP_HOME not set)
 endif
 
-SWIGVERSION:=$(shell swig -version  | grep SWIG | sed "s/SWIG Version //" )
-#SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell swig -version 2>&1)))
+SWIG=swig4.0
+
+SWIGVERSION:=$(shell $(SWIG) -version  | grep SWIG | sed "s/SWIG Version //" )
+#SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version 1.3.%,$(shell $(SWIG) -version 2>&1)))
 
 ifeq ($(SWIGVERSION),)
   $(error unable to determine SWIGVERSION)
@@ -59,10 +61,10 @@ test:
 	echo done
 
 perltator.pm uima_wrap.cxx: ../uima.i
-	swig -o uima_wrap.cxx -outdir . -c++ -perl ../uima.i
+	$(SWIG) -o uima_wrap.cxx -outdir . -c++ -perl ../uima.i
 
 uimaperlwrap.h:
-	swig -outdir . -c++ -perl -external-runtime $@
+	$(SWIG) -outdir . -c++ -perl -external-runtime $@
 
 Perltator.o: $(SWIGDEPS) ../ThreadAnnotator.h
 

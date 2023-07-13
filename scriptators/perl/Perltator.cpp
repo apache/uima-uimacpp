@@ -28,6 +28,7 @@
 #endif
 
 using namespace uima;
+using namespace icu;
 using namespace std;
 
 #define MODULENAME "Perltator"
@@ -119,7 +120,7 @@ public:
 
 
       // convert cas and rs to python variables (parameters) 
-      swig_module_info *module = SWIG_Perl_GetModule();
+      swig_module_info *module = SWIG_Perl_GetModule(NULL);
       if (!module) {
         cerr << MODULENAME ": could not get Perl swig module" << endl;
         return UIMA_ERR_USER_ANNOTATOR_COULD_NOT_INIT;

@@ -35,6 +35,7 @@
 #include "uima/envvars.h"
 #include "unicode/ucnv.h"
 using namespace std;
+using namespace icu_72;
 using namespace uima;
 
 /* ----------------------------------------------------------------------- */

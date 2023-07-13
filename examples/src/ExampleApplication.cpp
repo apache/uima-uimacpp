@@ -24,6 +24,7 @@
 
 #include <sys/stat.h>
 using namespace std;
+using namespace icu_72;
 using namespace uima;
 /**
  * An example application that reads documents from files, sends them

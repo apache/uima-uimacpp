@@ -21,6 +21,7 @@
 #include "uima/dirwalk.hpp"
 #include "uima/xmlwriter.hpp"
 using namespace std;
+using namespace icu_72;
 using namespace uima;
 
 

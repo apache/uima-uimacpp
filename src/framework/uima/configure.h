@@ -62,8 +62,8 @@
 #  error Code requires port to host OS!
 #endif
 
-#define UIMA_THROW0()           throw()
-#define UIMA_THROW(x1)          throw(x1)
+#define UIMA_THROW0()           noexcept(true)
+#define UIMA_THROW(x1)          noexcept(false)
 
 
 #ifdef __cplusplus

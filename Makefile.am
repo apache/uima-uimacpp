@@ -19,7 +19,7 @@
 AUTOMAKE_OPTIONS = foreign
 SUBDIRS = src
 ACLOCAL_AMFLAGS = -I m4
-EXTRA_DIST = docs/builddocs.sh docs/doxyheader.html docs/overview_and_setup.html docs/uimacppdocs.mak docs/uimacpp.dox data examples scriptators LICENSE buildsdk.sh README.4src README.4bin NOTICE NOTICE.4bin RELEASE_NOTES.html autogen.sh
+EXTRA_DIST = docs/builddocs.sh docs/doxyheader.html docs/overview_and_setup.html docs/uimacppdocs.mak docs/uimacpp.dox data examples scriptators LICENSE buildsdk.sh README.4src README.4bin NOTICE NOTICE.4bin RELEASE_NOTES.html autogen.sh uima.pc
 
 
 dist-hook:
@@ -29,7 +29,8 @@ dist-hook:
 	rm -rf `find $(distdir) -name .svn`
 
 install-data-local:
-	$(INSTALL) src/base.mak $(DESTDIR)$(prefix)/lib/base.mak
+	$(INSTALL) -m 0644 src/base.mak $(DESTDIR)$(prefix)/lib/base.mak
+	$(INSTALL) -m 0644 uima.pc $(DESTDIR)$(prefix)/uima.pc
 	rm -f $(DESTDIR)$(prefix)/include/*.hpp
 
 docs: 	docs/html/index.html

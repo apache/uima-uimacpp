@@ -1,5 +1,3 @@
-#!/usr/bin/python 
-
  # Licensed to the Apache Software Foundation (ASF) under one
  # or more contributor license agreements.  See the NOTICE file
  # distributed with this work for additional information
@@ -32,7 +30,7 @@ def initialize(annotContext):
   source = ac.extractValue("SourceFile")
   debug = ac.extractIntegerValue("DebugLevel")
   if debug > 0:
-    print source + ": initialize with matchString =" + ac.extractValue("matchString")
+    print(source + ": initialize with matchString =" + ac.extractValue("matchString"))
 
 
 def typeSystemInit(ts):
@@ -40,13 +38,13 @@ def typeSystemInit(ts):
   global debug
   global ac
   if debug > 10:
-    print source + ": Type sytem init called"
+    print(source + ": Type sytem init called")
   global keywordtype
   keywordtype =ts.getType('com.ibm.uima.examples.keyword')
   if not keywordtype.isValid():
     error = source + ": com.ibm.uima.examples.keyword is NOT found in type system!"
     ac.logError(error)
-    raise Exception, error 
+    raise Exception(error)
 
 #
 # the process method is passed two parameters, the CAS and
@@ -57,7 +55,7 @@ def process(tcas, rs):
   global debug
   global ac
   if debug > 10:
-    print source + ": This is a process function"
+    print(source + ": This is a process function")
     ac.logMessage("process called")
   text = tcas.getDocumentText()
   index = tcas.getIndexRepository()
@@ -68,11 +66,11 @@ def process(tcas, rs):
     index.addFS(fs)
     annotCount += 1
   if debug > 0:
-    print source + ": created " + str(annotCount) + " annotations"
+    print(source + ": created " + str(annotCount) + " annotations")
   if debug > 20:
     annots = 0
     iterator = tcas.getAnnotationIndex(keywordtype).iterator()
     while iterator.isValid():
       annots += 1
       iterator.moveToNext()
-    print source + ": found " + str(annots) + " annotations"
+    print(source + ": found " + str(annots) + " annotations")

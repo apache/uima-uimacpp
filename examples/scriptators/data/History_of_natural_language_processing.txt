@@ -1,0 +1,333 @@
+   #alternate Edit this page Wikipedia (en) Wikipedia Atom feed
+
+   Jump to content
+
+   [ ] Main menu
+   Main menu
+   (BUTTON) move to sidebar (BUTTON) hide
+   Navigation
+     * Main page
+     * Contents
+     * Current events
+     * Random article
+     * About Wikipedia
+     * Contact us
+     * Donate
+
+   Contribute
+     * Help
+     * Learn to edit
+     * Community portal
+     * Recent changes
+     * Upload file
+
+   Languages
+   Language links are at the top of the page across from the title.
+   Wikipedia The Free Encyclopedia
+   Search
+   ____________________
+   (BUTTON) Search
+
+     * Create account
+     * Log in
+
+   [ ] Personal tools
+     * Create account
+     * Log in
+
+   Pages for logged out editors learn more
+     * Contributions
+     * Talk
+
+   [ ]
+
+Contents
+
+   (BUTTON) move to sidebar (BUTTON) hide
+     * (Top)
+     * 1Research and development
+     * 2Software
+     * 3References
+     * 4Bibliography
+
+   Toggle the table of contents
+
+   [ ] Toggle the table of contents
+
+History of natural language processing
+
+   [ ] 2 languages
+     * العربية
+     * فارسی
+
+   Edit links
+
+     * Article
+     * Talk
+
+   [ ] English
+
+     * Read
+     * Edit
+     * View history
+
+   [ ] Tools
+   Tools
+   (BUTTON) move to sidebar (BUTTON) hide
+   Actions
+     * Read
+     * Edit
+     * View history
+
+   General
+     * What links here
+     * Related changes
+     * Upload file
+     * Special pages
+     * Permanent link
+     * Page information
+     * Cite this page
+     * Wikidata item
+
+   Print/export
+     * Download as PDF
+     * Printable version
+
+   From Wikipedia, the free encyclopedia
+   This article needs to be updated. Please help update this article to
+   reflect recent events or newly available information. (April 2023)
+   Aspect of history
+
+   The history of natural language processing describes the advances of
+   natural language processing (Outline of natural language processing).
+   There is some overlap with the history of machine translation, the
+   history of speech recognition, and the history of artificial
+   intelligence.
+
+Research and development[edit]
+
+   The history of machine translation dates back to the seventeenth
+   century, when philosophers such as Leibniz and Descartes put forward
+   proposals for codes which would relate words between languages. All of
+   these proposals remained theoretical, and none resulted in the
+   development of an actual machine.
+
+   The first patents for "translating machines" were applied for in the
+   mid-1930s. One proposal, by Georges Artsrouni was simply an automatic
+   bilingual dictionary using paper tape. The other proposal, by Peter
+   Troyanskii, a Russian, was more detailed. It included both the
+   bilingual dictionary, and a method for dealing with grammatical roles
+   between languages, based on Esperanto.
+
+   In 1950, Alan Turing published his famous article "Computing Machinery
+   and Intelligence" which proposed what is now called the Turing test as
+   a criterion of intelligence. This criterion depends on the ability of a
+   computer program to impersonate a human in a real-time written
+   conversation with a human judge, sufficiently well that the judge is
+   unable to distinguish reliably — on the basis of the conversational
+   content alone — between the program and a real human.
+
+   In 1957, Noam Chomsky’s Syntactic Structures revolutionized Linguistics
+   with 'universal grammar', a rule based system of syntactic
+   structures.^[1]
+
+   The Georgetown experiment in 1954 involved fully automatic translation
+   of more than sixty Russian sentences into English. The authors claimed
+   that within three or five years, machine translation would be a solved
+   problem.^[2] However, real progress was much slower, and after the
+   ALPAC report in 1966, which found that ten years long research had
+   failed to fulfill the expectations, funding for machine translation was
+   dramatically reduced. Little further research in machine translation
+   was conducted until the late 1980s, when the first statistical machine
+   translation systems were developed.
+
+   Some notably successful NLP systems developed in the 1960s were SHRDLU,
+   a natural language system working in restricted "blocks worlds" with
+   restricted vocabularies.
+
+   In 1969 Roger Schank introduced the conceptual dependency theory for
+   natural language understanding.^[3] This model, partially influenced by
+   the work of Sydney Lamb, was extensively used by Schank's students at
+   Yale University, such as Robert Wilensky, Wendy Lehnert, and Janet
+   Kolodner.
+
+   In 1970, William A. Woods introduced the augmented transition network
+   (ATN) to represent natural language input.^[4] Instead of phrase
+   structure rules ATNs used an equivalent set of finite state automata
+   that were called recursively. ATNs and their more general format called
+   "generalized ATNs" continued to be used for a number of years. During
+   the 1970s many programmers began to write 'conceptual ontologies',
+   which structured real-world information into computer-understandable
+   data. Examples are MARGIE (Schank, 1975), SAM (Cullingford, 1978), PAM
+   (Wilensky, 1978), TaleSpin (Meehan, 1976), QUALM (Lehnert, 1977),
+   Politics (Carbonell, 1979), and Plot Units (Lehnert 1981). During this
+   time, many chatterbots were written including PARRY, Racter, and
+   Jabberwacky.
+
+   Up to the 1980s, most NLP systems were based on complex sets of
+   hand-written rules. Starting in the late 1980s, however, there was a
+   revolution in NLP with the introduction of machine learning algorithms
+   for language processing. This was due both to the steady increase in
+   computational power resulting from Moore's Law and the gradual
+   lessening of the dominance of Chomskyan theories of linguistics (e.g.
+   transformational grammar), whose theoretical underpinnings discouraged
+   the sort of corpus linguistics that underlies the machine-learning
+   approach to language processing.^[5] Some of the earliest-used machine
+   learning algorithms, such as decision trees, produced systems of hard
+   if-then rules similar to existing hand-written rules. Increasingly,
+   however, research has focused on statistical models, which make soft,
+   probabilistic decisions based on attaching real-valued weights to the
+   features making up the input data. The cache language models upon which
+   many speech recognition systems now rely are examples of such
+   statistical models. Such models are generally more robust when given
+   unfamiliar input, especially input that contains errors (as is very
+   common for real-world data), and produce more reliable results when
+   integrated into a larger system comprising multiple subtasks.
+
+   Many of the notable early successes occurred in the field of machine
+   translation, due especially to work at IBM Research, where successively
+   more complicated statistical models were developed. These systems were
+   able to take advantage of existing multilingual textual corpora that
+   had been produced by the Parliament of Canada and the European Union as
+   a result of laws calling for the translation of all governmental
+   proceedings into all official languages of the corresponding systems of
+   government. However, most other systems depended on corpora
+   specifically developed for the tasks implemented by these systems,
+   which was (and often continues to be) a major limitation in the success
+   of these systems. As a result, a great deal of research has gone into
+   methods of more effectively learning from limited amounts of data.
+
+   Recent research has increasingly focused on unsupervised and
+   semi-supervised learning algorithms. Such algorithms are able to learn
+   from data that has not been hand-annotated with the desired answers, or
+   using a combination of annotated and non-annotated data. Generally,
+   this task is much more difficult than supervised learning, and
+   typically produces less accurate results for a given amount of input
+   data. However, there is an enormous amount of non-annotated data
+   available (including, among other things, the entire content of the
+   World Wide Web), which can often make up for the inferior results.
+
+Software[edit]
+
+   Software Year Creator Description Reference
+   Georgetown experiment 1954 Georgetown University and IBM involved fully
+   automatic translation of more than sixty Russian sentences into
+   English.
+   STUDENT 1964 Daniel Bobrow could solve high school algebra word
+   problems.^[6]
+   ELIZA 1964 Joseph Weizenbaum a simulation of a Rogerian
+   psychotherapist, rephrasing her response with a few grammar rules.^[7]
+   SHRDLU 1970 Terry Winograd a natural language system working in
+   restricted "blocks worlds" with restricted vocabularies, worked
+   extremely well
+   PARRY 1972 Kenneth Colby A chatterbot
+   KL-ONE 1974 Sondheimer et al. a knowledge representation system in the
+   tradition of semantic networks and frames; it is a frame language.
+   MARGIE 1975 Roger Schank
+   TaleSpin (software) 1976 Meehan
+   QUALM Lehnert
+   LIFER/LADDER 1978 Hendrix a natural language interface to a database of
+   information about US Navy ships.
+   SAM (software) 1978 Cullingford
+   PAM (software) 1978 Robert Wilensky
+   Politics (software) 1979 Carbonell
+   Plot Units (software) 1981 Lehnert
+   Jabberwacky 1982 Rollo Carpenter chatterbot with stated aim to
+   "simulate natural human chat in an interesting, entertaining and
+   humorous manner".
+   MUMBLE (software) 1982 McDonald
+   Racter 1983 William Chamberlain and Thomas Etter chatterbot that
+   generated English language prose at random.
+   MOPTRANS ^[8] 1984 Lytinen
+   KODIAK (software) 1986 Wilensky
+   Absity (software) 1987 Hirst
+   Dr. Sbaitso 1991 Creative Labs
+   Watson (artificial intelligence software) 2006 IBM A question answering
+   system that won the Jeopardy! contest, defeating the best human players
+   in February 2011.
+   Siri 2011 Apple A virtual assistant developed by Apple.
+   Cortana 2014 Microsoft A virtual assistant developed by Microsoft.
+   Amazon Alexa 2014 Amazon A virtual assistant developed by Amazon.
+   Google Assistant 2016 Google A virtual assistant developed by Google.
+
+References[edit]
+
+    1. ^ "SEM1A5 - Part 1 - A brief history of NLP". Retrieved 2010-06-25.
+    2. ^ Hutchins, J. (2005)
+    3. ^ Roger Schank, 1969, A conceptual dependency parser for natural
+       language Proceedings of the 1969 conference on Computational
+       linguistics, Sång-Säby, Sweden, pages 1-3
+    4. ^ Woods, William A (1970). "Transition Network Grammars for Natural
+       Language Analysis". Communications of the ACM 13 (10): 591–606 [1]
+    5. ^ Chomskyan linguistics encourages the investigation of "corner
+       cases" that stress the limits of its theoretical models (comparable
+       to pathological phenomena in mathematics), typically created using
+       thought experiments, rather than the systematic investigation of
+       typical phenomena that occur in real-world data, as is the case in
+       corpus linguistics. The creation and use of such corpora of
+       real-world data is a fundamental part of machine-learning
+       algorithms for NLP. In addition, theoretical underpinnings of
+       Chomskyan linguistics such as the so-called "poverty of the
+       stimulus" argument entail that general learning algorithms, as are
+       typically used in machine learning, cannot be successful in
+       language processing. As a result, the Chomskyan paradigm
+       discouraged the application of such models to language processing.
+    6. ^ McCorduck 2004, p. 286, Crevier 1993, pp. 76−79, Russell & Norvig
+       2003, p. 19
+    7. ^ McCorduck 2004, pp. 291–296, Crevier 1993, pp. 134−139
+    8. ^ Janet L. Kolodner, Christopher K. Riesbeck; Experience, Memory,
+       and Reasoning; Psychology Press; 2014 reprint
+
+Bibliography[edit]
+
+     *
+
+   Crevier, Daniel (1993). AI: The Tumultuous Search for Artificial
+   Intelligence. New York, NY: BasicBooks. ISBN 0-465-02997-3.
+
+     McCorduck, Pamela (2004), Machines Who Think (2nd ed.), Natick, MA:
+   A. K. Peters, Ltd., ISBN 978-1-56881-205-2, OCLC 52197627.
+
+
+
+   Russell, Stuart J.; Norvig, Peter (2003), Artificial Intelligence: A
+   Modern Approach (2nd ed.), Upper Saddle River, New Jersey: Prentice
+   Hall, ISBN 0-13-790395-2.
+
+   Retrieved from
+   "https://en.wikipedia.org/w/index.php?title=History_of_natural_language
+   _processing&oldid=1152004616"
+
+   Categories:
+     * History of artificial intelligence
+     * Natural language processing
+     * History of linguistics
+     * History of software
+
+   Hidden categories:
+     * Wikipedia articles in need of updating from April 2023
+     * All Wikipedia articles in need of updating
+     * Articles with short description
+     * Short description matches Wikidata
+
+     * This page was last edited on 27 April 2023, at 15:39 (UTC).
+     * Text is available under the Creative Commons Attribution-ShareAlike
+       License 4.0; additional terms may apply. By using this site, you
+       agree to the Terms of Use and Privacy Policy. Wikipedia® is a
+       registered trademark of the Wikimedia Foundation, Inc., a
+       non-profit organization.
+
+     * Privacy policy
+     * About Wikipedia
+     * Disclaimers
+     * Contact Wikipedia
+     * Code of Conduct
+     * Mobile view
+     * Developers
+     * Statistics
+     * Cookie statement
+
+     * Wikimedia Foundation
+     * Powered by MediaWiki
+
+   (BUTTON) Toggle limited content width
