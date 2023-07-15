@@ -35,7 +35,6 @@
 #include "uima/envvars.h"
 #include "unicode/ucnv.h"
 using namespace std;
-using namespace icu_72;
 using namespace uima;
 
 /* ----------------------------------------------------------------------- */
@@ -90,7 +89,7 @@ int main(int argc, char * argv[]) {
     CheckError(errorInfo);
 
     // Construct a Unicode input string out of our single-byte string.
-    UnicodeString ustrInputText("This is a text document for analysis");
+    icu::UnicodeString ustrInputText("This is a text document for analysis");
 
     if (!runQuiet)
       cout << "SofaExampleApplication.cpp: document length= " << ustrInputText.length() << endl;

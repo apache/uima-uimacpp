@@ -77,7 +77,7 @@ pythonnator.py uima_wrap.cxx: ../uima.i
 uimapywrap.h:
 	$(SWIG) -outdir . -c++ -python -external-runtime $@
 
-pythonnator.o: $(SWIGDEPS)
+pythonnator.o: $(SWIGDEPS) pythonnator.cpp
 
 $(USER_XTARGET): $(TARGET_FILE).$(DLL_SUFFIX)
 	ln -s $(TARGET_FILE).$(DLL_SUFFIX) $(USER_XTARGET)

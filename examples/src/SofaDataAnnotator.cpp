@@ -19,7 +19,6 @@
 
 #include "uima/api.hpp"
 using namespace std;
-using namespace icu_72;
 using namespace uima;
 
 
@@ -94,10 +93,10 @@ public:
     cout << endl;
 
     /** convert to unicode */
-    UnicodeString ustrInputText(pBuffer, streamSize+1, "utf-8");
+    icu::UnicodeString ustrInputText(pBuffer, streamSize+1, "utf-8");
 
     /** find tokens and annotate */
-    UnicodeString delim(" ");
+    icu::UnicodeString delim(" ");
     UChar *myLocalSaveState;
     UChar * pInputText = (UChar*) ustrInputText.getBuffer();
     const UChar * pToken = pInputText;

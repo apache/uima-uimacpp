@@ -21,14 +21,13 @@
 #include "uima/dirwalk.hpp"
 #include "uima/xmlwriter.hpp"
 using namespace std;
-using namespace icu_72;
 using namespace uima;
 
 
 class XCasWriterCasConsumer : public Annotator {
 private:
-  UnicodeString usOutDir;
-  std::string   strOutDir;
+  icu::UnicodeString usOutDir;
+  string   strOutDir;
   bool writeFile;
   int docnum;
 

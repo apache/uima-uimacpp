@@ -19,7 +19,7 @@
 
 #include "uima/api.hpp"
 using namespace std;
-using namespace icu_72;
+using namespace icu;
 using namespace uima;
 
 const UChar * translate(UChar *);
@@ -28,7 +28,7 @@ class SofaExampleAnnotator : public Annotator {
 private:
   Type cross, annot;
   Feature other;
-  icu::UnicodeString us_SofaString;
+  UnicodeString us_SofaString;
   AnnotatorContext * pAnc;
 
 public:

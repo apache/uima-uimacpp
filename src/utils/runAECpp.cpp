@@ -356,16 +356,15 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
   try {
     if (xcasInput != textFormat) {
       /* initialize from an xcas or xmicas */
-      //cout << "runAECpp::processing xml file " << in << endl;
-	  XMLCh* native = XMLString::transcode(in.c_str());
-	  LocalFileInputSource fileIS(native);
-	  XMLString::release(&native);
-	  if (xcasInput == xcasFormat) {
-	    XCASDeserializer::deserialize(fileIS, *cas);
-	  }
-	  else {
-		XmiDeserializer::deserialize(fileIS, *cas, lenient);
-	  }
+      // cout << "runAECpp::processing xml file " << in << endl;
+      XMLCh* native = XMLString::transcode(in.c_str());
+      LocalFileInputSource fileIS(native);
+      XMLString::release(&native);
+      if (xcasInput == xcasFormat) {
+          XCASDeserializer::deserialize(fileIS, *cas);
+      } else {
+          XmiDeserializer::deserialize(fileIS, *cas, lenient);
+      }
     } else {
       /* read as text file and set document text of default view */
       FILE * pFile = fopen(in.c_str(),"rb");

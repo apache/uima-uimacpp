@@ -24,7 +24,6 @@
 
 #include <sys/stat.h>
 using namespace std;
-using namespace icu_72;
 using namespace uima;
 /**
  * An example application that reads documents from files, sends them
@@ -209,7 +208,7 @@ void processFile (std::string filename, AnalysisEngine * pEngine, CAS * tcas ) {
     fclose(pFile);
 
     /* convert to unicode and set tcas document text*/
-    UnicodeString ustrInputText(pBuffer, filesize, "utf-8");
+    icu::UnicodeString ustrInputText(pBuffer, filesize, "utf-8");
 
     tcas->setDocumentText(ustrInputText.getBuffer(), ustrInputText.length(), true);
 
