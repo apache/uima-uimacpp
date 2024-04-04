@@ -19,7 +19,8 @@ ifeq ($(UIMACPP_HOME),)
   $(error UIMACPP_HOME not set)
 endif
 
-SWIG=swig4.0
+#changed from swig4.0 to accomodate all swig versions
+SWIG=swig
 
 SWIGVERSION:=$(shell $(SWIG) -version  | grep SWIG | sed "s/SWIG Version //" )
 #SWIGVERSION:=$(subst SWIG Version ,,$(filter SWIG Version $(SWIGMAJORMINOR).% ,$(shell $(SWIG) -version 2>&1)))
@@ -67,7 +68,9 @@ ifeq ($(UNAME), Darwin)
   USER_XTARGET=$(TARGET_FILE).so
 endif
 
-# include file with generic compiler instructions
+# include file with generic compiler instructions,
+#if you get the no such file or directory error even though you have set UIMACPP_HOME as the correct environment variable,
+#try inputting the path to lib/base.mak or src/base.mak as it is and include the entire path inside the bracket 
 include $(UIMACPP_HOME)/lib/base.mak
 ###################################
 
@@ -84,7 +87,8 @@ $(USER_XTARGET): $(TARGET_FILE).$(DLL_SUFFIX)
 
 uima_wrap.o: uima_wrap.cxx 
 	$(CC) $(CFLAGS) -c $<
-
-distclean: clean
+	
+#removed the clean target as it was not defined bringing a "*** No rule to make target" error
+distclean: 
 	rm -f uima_wrap.cxx _pythonnator.so pythonnator.py \
 		pythonnator.pyc uimapywrap.h
