@@ -40,4 +40,6 @@ clean :
 	$(RD) $(HTMLDIR)
 	@echo deleting tags file
 	$(DEL) uimadoxytags.tag
+	@echo deleting log files
+	$(DEL) doxygen.log
 
