@@ -26,7 +26,7 @@ dist-hook:
 
 
 
-TST_LIB=libtoknz.la libdump.la libSofaStreamHandlerFile.la libSimpleTextSegmenter.la libTextSegmentConsumer.la libMeetingAnnotator.la
+TST_LIB=libtoknz.la libdump.la libSofaStreamHandlerFile.la libSimpleTextSegmenter.la libTextSegmentConsumer.la libMeetingAnnotator.la DaveDetector.la
 
 TST_BIN=test_cas test_engine test_typepriority test_language  \
  test_iterators test_casserializer test_sofa test_primitivetypes test_xcasdeserialization test_xmideserialization
@@ -122,3 +122,7 @@ libTextSegmentConsumer_la_LDFLAGS = $(LT_FLAGS)
 libMeetingAnnotator_la_SOURCES = src/MeetingAnnotator.cpp
 libMeetingAnnotator_la_LIBADD = $(LIBADD)
 libMeetingAnnotator_la_LDFLAGS = $(LT_FLAGS)
+
+DaveDetector_la_SOURCES = src/DaveDetector.cpp
+DaveDetector_la_LIBADD = $(LIBADD)
+DaveDetector_la_LDFLAGS = $(LT_FLAGS)

@@ -519,6 +519,53 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
 }
 
 
+/* For now, aggregate engines do not handle CAS Multipliers correctly.
+   This test will fail if ran.
+   TODO: Implement CAS Multiplier for Aggregate
+ */
+void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
+{
+  rclConsole.info("Test Aggregate CAS Multiplier start.");
+  const icu::UnicodeString descriptor("AggregateCASMultiplier.xml");
+  // const icu::UnicodeString descriptor("DaveDetector.xml");
+  const icu::UnicodeString fileName = ResourceManager::resolveFilename(descriptor, descriptor);
+  cout << UnicodeStringRef(fileName).asUTF8().c_str() << endl;
+  ErrorInfo err;
+  auto pEngine = TextAnalysisEngine::createTextAnalysisEngine(UnicodeStringRef(fileName).asUTF8().c_str(), err);
+
+  failIfNotTrue(err.getErrorId() == UIMA_ERR_NONE);
+  failIfNotTrue(pEngine != nullptr);
+
+  //test operational properties settings
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getOutputsNewCASes() == true);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getModifiesCas() == false);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->isMultipleDeploymentAllowed() == true);
+
+  auto const cas = pEngine->newCAS();
+  cas->setDocumentText(icu::UnicodeString(
+    "This is a sentence with Dave. This is the second sentence with Dave. This is the third Dave sentence."));
+  Type dave = cas->getTypeSystem().getType("org.apache.uima.examples.David");
+
+  CASIterator iter = pEngine->processAndOutputNewCASes(*cas);
+  failIfNotTrue(iter.hasNext());
+  int numSegments = 0;
+
+  while (iter.hasNext()) {
+    ++numSegments;
+    CAS &rcas = iter.next();
+    ANIndex anIndex = rcas.getAnnotationIndex(dave);
+
+    // There should be one Dave in each segment
+    failIfNotTrue(anIndex.getSize() == 1);
+    pEngine->getAnnotatorContext().releaseCAS(rcas);
+  }
+
+  failIfNotTrue(numSegments == 3);
+  delete cas;
+  delete pEngine;
+
+  rclConsole.info("Test Aggregate CAS Multiplier end.");
+}
 
 
 
@@ -536,6 +583,9 @@ void mainTest(uima::util::ConsoleUI & rclConsole,
     testCallingSequence3(rclConsole, cpszConfigFilename);
   }
   testCasMultiplier(rclConsole);
+#if 0
+  testAggregateCASMultiplier(rclConsole);
+#endif
 }
 
 int main(int argc, char * argv[]) /*
