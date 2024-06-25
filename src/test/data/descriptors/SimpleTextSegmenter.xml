@@ -52,7 +52,11 @@
 		</nameValuePair>
 	</configurationParameterSettings>
 
-	<typeSystemDescription/>
+	<typeSystemDescription>
+		<imports>
+			<import location="tt_typesystem.xml"/>
+		</imports>
+	</typeSystemDescription>
 
 	<fsIndexCollection>
 	 <fsIndexes>
@@ -67,7 +71,10 @@
 		
 	<capabilities>
 		<capability>
-			<outputs/>
+			<outputs>
+				<type>uima.tt.SourceDocumentInformation</type>
+				<feature>uima.tt.SourceDocumentInformation:lastSegment</feature>
+			</outputs>
 		</capability>
 	</capabilities>
 	
