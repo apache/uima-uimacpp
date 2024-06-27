@@ -566,6 +566,61 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 }
 
 
+/*
+ * This will also not work
+ */
+void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
+{
+  rclConsole.info("Test Aggregate CAS Combiner start.");
+  const icu::UnicodeString descriptor("SegmentAnnotateMerge.xml");
+  const icu::UnicodeString fileName = ResourceManager::resolveFilename(descriptor, descriptor);
+  ErrorInfo err;
+  auto pEngine = TextAnalysisEngine::createTextAnalysisEngine(UnicodeStringRef(fileName).asUTF8().c_str(), err);
+
+  failIfNotTrue(err.getErrorId() == UIMA_ERR_NONE);
+  failIfNotTrue(pEngine != nullptr);
+
+  //test operational properties settings
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getOutputsNewCASes() == true);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->getModifiesCas() == true);
+  failIfNotTrue(pEngine->getAnalysisEngineMetaData().getOperationalProperties()->isMultipleDeploymentAllowed() == true);
+
+  auto const cas = pEngine->newCAS();
+  cas->setDocumentText(icu::UnicodeString(
+    "First segment. Second segment. Third segment. Fourth segment."));
+  Type token = cas->getTypeSystem().getType("uima.tt.TokenAnnotation");
+  Type srcDocInfo = cas->getTypeSystem().getType("uima.tt.SourceDocumentInformation");
+  Feature lastSegment = srcDocInfo.getFeatureByBaseName("lastSegment");
+
+  CASIterator iter = pEngine->processAndOutputNewCASes(*cas);
+  failIfNotTrue(iter.hasNext());
+  int numOutputs = 0;
+
+  while (iter.hasNext()) {
+    ++numOutputs;
+    CAS &rcas = iter.next();
+    ANIndex tokenIdx = rcas.getAnnotationIndex(token);
+    // There should be three tokens in each segment, including the delimiter (.)
+    failIfNotTrue(tokenIdx.getSize() == 6);
+
+    // CAS should have a single SourceDocumentInformation whose lastSegment is true
+    ANIterator srcDocIt = rcas.getAnnotationIndex(srcDocInfo).iterator();
+    failIfNotTrue(srcDocIt.isValid());
+    AnnotationFS info = srcDocIt.get();
+    failIfNotTrue(info.getBooleanValue(lastSegment));
+    srcDocIt.moveToNext();
+    failIfNotTrue(srcDocIt.isValid());
+
+    pEngine->getAnnotatorContext().releaseCAS(rcas);
+  }
+
+  failIfNotTrue(numOutputs == 2);
+  delete cas;
+  delete pEngine;
+
+  rclConsole.info("Test Aggregate CAS Combiner end.");
+}
+
 
 void mainTest(uima::util::ConsoleUI & rclConsole,
               const char  * cpszCCSID,
@@ -583,6 +638,7 @@ void mainTest(uima::util::ConsoleUI & rclConsole,
   testCasMultiplier(rclConsole);
 #if 0
   testAggregateCASMultiplier(rclConsole);
+  testAggregateCASCombiner(rclConsole);
 #endif
 }
 

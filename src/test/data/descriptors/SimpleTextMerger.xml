@@ -41,7 +41,10 @@
         <configurationParameters>
             <configurationParameter>
                 <name>AnnotationTypesToCopy</name>
-                <description>Names of annotation types to be copied from source CASes into the merged CAS.</description>
+                <description>
+                    Names of annotation types to be copied from source CASes into the merged CAS.
+                    Type uima.tt.SourceDocumentInformation will specifically be ignored.
+                </description>
                 <type>String</type>
                 <multiValued>true</multiValued>
                 <mandatory>true</mandatory>

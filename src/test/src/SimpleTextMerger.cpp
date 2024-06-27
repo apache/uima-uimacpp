@@ -92,6 +92,9 @@ public:
 
     for (const auto & copiedType : usAnnotationT) {
       Type type = pCas->getTypeSystem().getType(copiedType);
+      if (type == srcDocInfo)
+        continue;
+
       ANIterator iter = cas.getAnnotationIndex(type).iterator();
 
       while (iter.isValid()) {
