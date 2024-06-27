@@ -527,9 +527,7 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 {
   rclConsole.info("Test Aggregate CAS Multiplier start.");
   const icu::UnicodeString descriptor("AggregateCASMultiplier.xml");
-  // const icu::UnicodeString descriptor("DaveDetector.xml");
   const icu::UnicodeString fileName = ResourceManager::resolveFilename(descriptor, descriptor);
-  cout << UnicodeStringRef(fileName).asUTF8().c_str() << endl;
   ErrorInfo err;
   auto pEngine = TextAnalysisEngine::createTextAnalysisEngine(UnicodeStringRef(fileName).asUTF8().c_str(), err);
 
