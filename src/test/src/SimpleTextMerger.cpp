@@ -58,7 +58,7 @@ public:
     if (rclAnnotatorContext.isParameterDefined("AnnotationTypesToCopy") &&
       rclAnnotatorContext.extractValue("AnnotationTypesToCopy", usAnnotationT) == UIMA_ERR_NONE) {
 
-      cout << "Copying types: ";
+      cout << "Copying types: " << endl;
       for (auto const & type : usAnnotationT) {
         cout << '\t' << type << endl;
       }

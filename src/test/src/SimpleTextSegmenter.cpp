@@ -44,7 +44,8 @@ private:
 
   AnnotatorContext * pAnc;
 
-  int segmentNum;
+  int segmentNum{0};
+  int lastSegmentFreq{0};
   Type srcDocInfo;
   Feature lastSegment;
 
@@ -95,7 +96,10 @@ public:
     cout << "initialize() using segment delimiter " << delimUS << " with length " << delimLen << endl;
 
     pAnc->getLogger().logMessage("initialize() Using Segment Delimiter '" + delimUS + "'");
-    segmentNum=0;
+
+    if (rclAnnotatorContext.isParameterDefined("LastSegmentFrequency")) {
+      rclAnnotatorContext.extractValue("LastSegmentFrequency", lastSegmentFreq);
+    }
     return (TyErrorId)UIMA_ERR_NONE;
   }
 
@@ -156,14 +160,18 @@ public:
 
     //create a sofa for the segment
     if (segEndP) {
-      const AnnotationFS srcFS = cas.createAnnotation(srcDocInfo,
+      AnnotationFS srcFS = cas.createAnnotation(srcDocInfo,
         remainingTextP - docTextBeginP, segEndP + delimLen - docTextBeginP);
-      cas.getIndexRepository().addFS(srcFS);
 
       UnicodeStringRef segStr(remainingTextP, segLen+delimLen);
       remainingTextP = segEndP + delimLen;
       remainingLen = remainingLen-(segLen+delimLen);
       cas.setDocumentText(segStr.getBuffer(), segStr.length());
+
+      if ((lastSegmentFreq && ++segmentNum % lastSegmentFreq == 0) || remainingLen == 0){
+        srcFS.setBooleanValue(lastSegment, true);
+      }
+      cas.getIndexRepository().addFS(srcFS);
 
     } else {
       if (remainingLen > 0) {   //when delim not found, create Sofa with remaining
@@ -173,7 +181,10 @@ public:
 
         UnicodeStringRef segStr(remainingTextP, remainingLen);
         cas.setDocumentText(segStr.getBuffer(), segStr.length());
-      } else assert(false);
+        ++segmentNum;
+      } else {
+        *(char*) 0 = 0;    // HT: I don't believe this branch is possible, so we'll segfault in this example
+      }
       remainingLen=0;
       remainingTextP = NULL;
     }
