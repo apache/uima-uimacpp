@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?> 
+﻿<?xml version="1.0" encoding="UTF-8" ?> 
 
    <!--
     ***************************************************************
@@ -30,7 +30,11 @@
  
 <analysisEngineMetaData>
 	<name>Simple Text Segmenter</name>
-	<description>Splits a text document into pieces. The point at which the text is split is determined by SegmentDelimiter configuration parameter which defaults to new line ('\n')</description>
+	<description>
+		Splits a text document into pieces. The point at which the text is split is determined by
+		SegmentDelimiter configuration parameter which defaults to new line ('\n').
+		The last segment in the document will have lastSegment set to true.
+	</description>
 	<version>1.0</version>
 	<vendor>IBM</vendor>
 	
@@ -43,6 +47,7 @@
 			<mandatory>false</mandatory>
 		</configurationParameter>
 	</configurationParameters>
+
 	<configurationParameterSettings>
 		<nameValuePair>
 			<name>SegmentDelimiter</name>
@@ -52,7 +57,11 @@
 		</nameValuePair>
 	</configurationParameterSettings>
 
-	<typeSystemDescription/>
+	<typeSystemDescription>
+		<imports>
+			<import location="tt_typesystem.xml"/>
+		</imports>
+	</typeSystemDescription>
 
 	<fsIndexCollection>
 	 <fsIndexes>
@@ -67,7 +76,10 @@
 		
 	<capabilities>
 		<capability>
-			<outputs/>
+			<outputs>
+				<type>uima.tt.SourceDocumentInformation</type>
+				<feature>uima.tt.SourceDocumentInformation:lastSegment</feature>
+			</outputs>
 		</capability>
 	</capabilities>
 	
