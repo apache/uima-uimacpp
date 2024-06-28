@@ -49,6 +49,20 @@
                 <multiValued>true</multiValued>
                 <mandatory>true</mandatory>
             </configurationParameter>
+
+
+            <configurationParameter>
+                <name>OutputFrequency</name>
+                <description>
+                    How frequent this merger will output a new CAS. If no value or (0) is specified, it
+                    will only ouput a CAS at the end.
+                    For example: if there are a total of 5 inputs and OutputFrequency is set to 2, this merger will
+                    produce 3 CASes: (1 + 2), (3 + 4), (5)
+                </description>
+                <type>Integer</type>
+                <multiValued>false</multiValued>
+                <mandatory>false</mandatory>
+            </configurationParameter>
         </configurationParameters>
         <configurationParameterSettings>
             <nameValuePair>

@@ -44,8 +44,6 @@ private:
 
   AnnotatorContext * pAnc;
 
-  int segmentNum{0};
-  int lastSegmentFreq{0};
   Type srcDocInfo;
   Feature lastSegment;
 
@@ -97,10 +95,7 @@ public:
 
     pAnc->getLogger().logMessage("initialize() Using Segment Delimiter '" + delimUS + "'");
 
-    if (rclAnnotatorContext.isParameterDefined("LastSegmentFrequency")) {
-      rclAnnotatorContext.extractValue("LastSegmentFrequency", lastSegmentFreq);
-    }
-    return (TyErrorId)UIMA_ERR_NONE;
+    return UIMA_ERR_NONE;
   }
 
   // Segment the input text.
@@ -168,7 +163,7 @@ public:
       remainingLen = remainingLen-(segLen+delimLen);
       cas.setDocumentText(segStr.getBuffer(), segStr.length());
 
-      if ((lastSegmentFreq && ++segmentNum % lastSegmentFreq == 0) || remainingLen == 0){
+      if (remainingLen == 0){
         srcFS.setBooleanValue(lastSegment, true);
       }
       cas.getIndexRepository().addFS(srcFS);
@@ -181,9 +176,6 @@ public:
 
         UnicodeStringRef segStr(remainingTextP, remainingLen);
         cas.setDocumentText(segStr.getBuffer(), segStr.length());
-        ++segmentNum;
-      } else {
-        *(char*) 0 = 0;    // HT: I don't believe this branch is possible, so we'll segfault in this example
       }
       remainingLen=0;
       remainingTextP = NULL;

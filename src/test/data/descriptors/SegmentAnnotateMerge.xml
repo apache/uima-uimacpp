@@ -58,12 +58,12 @@
                 </overrides>
             </configurationParameter>
             <configurationParameter>
-                <name>SegmentFrequency</name>
+                <name>CASOutputFreq</name>
                 <type>Integer</type>
                 <multiValued>false</multiValued>
                 <mandatory>false</mandatory>
                 <overrides>
-                    <parameter>Segmenter/LastSegmentFrequency</parameter>
+                    <parameter>Merger/OutputFrequency</parameter>
                 </overrides>
             </configurationParameter>
         </configurationParameters>
@@ -78,7 +78,7 @@
                 </value>
             </nameValuePair>
             <nameValuePair>
-                <name>SegmentFrequency</name>
+                <name>CASOutputFreq</name>
                 <value>
                     <integer>2</integer>
                 </value>

@@ -38,6 +38,9 @@ class SimpleTextMerger : public Annotator {
   Type srcDocInfo;
   Feature lastSegment;
 
+  int outputFreq{0};
+  int numSegments{0};
+
   TyErrorId getConfigValues() {
     return UIMA_ERR_NONE;
   }
@@ -69,6 +72,9 @@ public:
                    UIMA_MSG_ID_EXCON_CONFIG_VALUE_EXTRACT,
                    ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Invalid value for AnnotationTypesToCopy"),
                    ErrorInfo::unrecoverable);
+    }
+    if (rclAnnotatorContext.isParameterDefined("OutputFrequency")) {
+      rclAnnotatorContext.extractValue("OutputFrequency", outputFreq);
     }
 
     return UIMA_ERR_NONE;
@@ -119,7 +125,9 @@ public:
     }
 
     AnnotationFS info = it.get();
-    if (info.getBooleanValue(lastSegment)) {
+    if (info.getBooleanValue(lastSegment) ||
+      (outputFreq && ++numSegments % outputFreq == 0))
+    {
       pCas->setDocumentText(usMergedDoc);
       AnnotationFS sdi = pCas->createAnnotation(srcDocInfo, 0, usMergedDoc.length());
       sdi.setBooleanValue(lastSegment, true);
