@@ -26,7 +26,7 @@ dist-hook:
 
 
 
-TST_LIB=libtoknz.la libdump.la libSofaStreamHandlerFile.la libSimpleTextSegmenter.la libTextSegmentConsumer.la libMeetingAnnotator.la
+TST_LIB=libtoknz.la libdump.la libSofaStreamHandlerFile.la libSimpleTextSegmenter.la libTextSegmentConsumer.la libMeetingAnnotator.la libDaveDetector.la libSimpleTextMerger.la
 
 TST_BIN=test_cas test_engine test_typepriority test_language  \
  test_iterators test_casserializer test_sofa test_primitivetypes test_xcasdeserialization test_xmideserialization
@@ -34,8 +34,10 @@ TST_BIN=test_cas test_engine test_typepriority test_language  \
 test_tgt: $(TST_BIN) $(TST_LIB)
 
 clean:
-	rm -f $(TST_BIN) $(test_engine_OBJECTS) $(test_typepriority_OBJECTS) $(test_sofa_OBJECTS) $(test_language_OBJECTS) $(test_cas_OBJECTS)  $(test_iterators_OBJECTS) $(test_casserializer_OBJECTS) $(test_primitivetypes_OBJECTS) $(test_xcasdeserialization_OBJECTS) $(test_xmideserialization_OBJECTS)
-	rm -f $(TST_LIB) $(libtoknz_la_OBJECTS) $(libdump_la_OBJECTS) $(libSofaStreamHandlerFile_la_OBJECTS) $(libSimpleTextSegmenter_la_OBJECTS) $(libTextSegmentConsumer_la_OBJECTS) $(libMeetingAnnotator_la_OBJECTS)
+	rm -f $(TST_BIN) $(test_engine_OBJECTS) $(test_typepriority_OBJECTS) $(test_sofa_OBJECTS) $(test_language_OBJECTS) \
+		$(test_cas_OBJECTS)  $(test_iterators_OBJECTS) $(test_casserializer_OBJECTS) $(test_primitivetypes_OBJECTS) $(test_xcasdeserialization_OBJECTS) $(test_xmideserialization_OBJECTS)
+	rm -f $(TST_LIB) $(libtoknz_la_OBJECTS) $(libdump_la_OBJECTS) $(libSofaStreamHandlerFile_la_OBJECTS) $(libSimpleTextSegmenter_la_OBJECTS) \
+		$(libTextSegmentConsumer_la_OBJECTS) $(libMeetingAnnotator_la_OBJECTS) $(libDaveDetector_la_OBJECTS) $(libSimpleTextMerger_la_OBJECTS)
 
 AM_CPPFLAGS  = -Isrc
 AM_CPPFLAGS += -I../cas
@@ -122,3 +124,11 @@ libTextSegmentConsumer_la_LDFLAGS = $(LT_FLAGS)
 libMeetingAnnotator_la_SOURCES = src/MeetingAnnotator.cpp
 libMeetingAnnotator_la_LIBADD = $(LIBADD)
 libMeetingAnnotator_la_LDFLAGS = $(LT_FLAGS)
+
+libDaveDetector_la_SOURCES = src/DaveDetector.cpp
+libDaveDetector_la_LIBADD = $(LIBADD)
+libDaveDetector_la_LDFLAGS = $(LT_FLAGS)
+
+libSimpleTextMerger_la_SOURCES = src/SimpleTextMerger.cpp
+libSimpleTextMerger_la_LIBADD = $(LIBADD)
+libSimpleTextMerger_la_LDFLAGS = $(LT_FLAGS)
