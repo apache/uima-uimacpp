@@ -573,7 +573,6 @@ namespace uima {
       unique_ptr<Flow> flow{};
       while (true) {
         CAS* currentCas = nullptr;
-        AnnotatorContext* annContext = nullptr;                 // The AnnotatorContext that manages the produced CAS
         Step nextStep;
         flow = nullptr;
 
@@ -584,7 +583,6 @@ namespace uima {
           try {
             if (frame.casMultiplier && frame.casMultiplier->hasNext()) {
               currentCas = &frame.casMultiplier->next();
-              annContext = &frame.casMultiplier->getAnnotatorContext();
               flow = frame.originalFlow->newCasProduced(*currentCas, frame.lastEngineKey);
             }
           } catch (Exception& exception) {
@@ -594,7 +592,6 @@ namespace uima {
 
           if (!currentCas) {
             currentCas = frame.originalCas;
-            annContext = frame.casMultiplier ? &frame.casMultiplier->getAnnotatorContext() : nullptr;
             flow = std::move(frame.originalFlow);
             currentCas->setCurrentComponentInfo(nullptr);
             casIterStack.pop();
@@ -607,20 +604,10 @@ namespace uima {
           while (nextStep.getType() != Step::StepType::FINALSTEP) {
             if (nextStep.getType() == Step::StepType::SIMPLESTEP) {
               const icu::UnicodeString& nextAEName = nextStep.getSimpleStep()->getEngineName();
-              auto z = DYNAMIC_CAST(FixedFlowController*, iv_pFlowController)->getDelegateSpecifierMap().at(nextAEName);
-              // auto it = std::find_if(iv_vecEntries.begin(), iv_vecEntries.end(),
-              //                     [nextAEName](const EngineEntry &entry) {
-              //                       return entry.iv_pEngine->getAnalysisEngineMetaData().getName() == nextAEName;
-              //                     });
-              // std::cout << "Engine name: " << nextAEName << std::endl;
-              auto it = iv_vecEntries.begin();
-              for (; it != iv_vecEntries.end(); ++it) {
-                auto &x = it->iv_pEngine->getAnalysisEngineMetaData().getName();
-                auto &y = it->iv_pEngine->getAnnotatorContext();
-                // std::cout << x << std::endl;
-                if ( &y == z)
-                  break;
-              }
+              auto it = std::find_if(iv_vecEntries.begin(), iv_vecEntries.end(),
+                                  [&, nextAEName](const EngineEntry &entry) {
+                                    return entry.iv_pEngine->getAnnotatorContext().iv_AnCKey == nextAEName;
+                                  });
 
               if (it != iv_vecEntries.end()) {
                 AnalysisEngine* nextAE = it->iv_pEngine;
@@ -639,7 +626,6 @@ namespace uima {
                   casIterStack.push({nextAE, currentCas, std::move(flow), nextAEName});
                   flow = std::move(nextFlow);
                   currentCas = outputCas;
-                  annContext = &nextAE->getAnnotatorContext();
                 } else {
                   currentCas->setCurrentComponentInfo(nullptr);
                 }
@@ -665,8 +651,7 @@ namespace uima {
 
           if (iv_bOutputNewCases && !finalStep->getForceDropCAS())
             return currentCas;
-            // annContext->releaseCAS(*currentCas);
-              currentCas->release();
+          currentCas->release();
         }
       }
     }
