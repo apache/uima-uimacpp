@@ -772,6 +772,9 @@ namespace uima {
     icu::UnicodeString getAnnotationIndexID() const {
       return CAS::INDEXID_ANNOTATION;
     }
+
+    void release();
+
     /** @} */
 
     /** @defgroup PreDefTypes Predefined Types

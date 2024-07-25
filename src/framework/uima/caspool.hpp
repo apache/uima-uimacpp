@@ -67,7 +67,7 @@ namespace uima {
     std::vector<CAS *> iv_vecFreeInstances;
     size_t    iv_numInstances;
     uima::internal::CASDefinition * iv_pCasDef;
-
+    AnnotatorContext* iv_pComponentInfo;
   public:
 
     /** Constructor
@@ -76,6 +76,7 @@ namespace uima {
     */
     CASPool(const AnalysisEngineDescription & taeSpec, size_t numInstances);
 
+    CASPool(AnnotatorContext* anContext, const AnalysisEngineDescription & taeSpec, size_t numInstances);
     /** Destructor */
     ~CASPool(void);
 

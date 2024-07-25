@@ -809,6 +809,13 @@ namespace uima {
     }
   }
 
+  void CAS::release() {
+    if (iv_componentInfo) {
+      iv_componentInfo->releaseCAS(*this);
+    } else
+      std::cerr << "No AnnotatorContext" << "\n\n";
+  }
+
   ANIndex CAS::getAnnotationIndex(Type const & crType) {
     if (isbaseCas) {
       assertWithMsg(false, "Annotation Index does not exist in Base CAS!");

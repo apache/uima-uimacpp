@@ -555,7 +555,7 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 
     // There should be one Dave in each segment
     failIfNotTrue(anIndex.getSize() == 1);
-    pEngine->getAnnotatorContext().releaseCAS(rcas);
+    rcas.release();
   }
 
   failIfNotTrue(numSegments == 3);
@@ -635,9 +635,9 @@ void mainTest(uima::util::ConsoleUI & rclConsole,
     testCallingSequence2(rclConsole, cpszConfigFilename);
     testCallingSequence3(rclConsole, cpszConfigFilename);
   }
-  testCasMultiplier(rclConsole);
+  testCasMultiplier(rclConsole);  testAggregateCASMultiplier(rclConsole);
+
 #if 0
-  testAggregateCASMultiplier(rclConsole);
   testAggregateCASCombiner(rclConsole);
 #endif
 }

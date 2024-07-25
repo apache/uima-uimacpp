@@ -31,6 +31,8 @@
 
 
 #include "uima/caspool.hpp"
+
+#include "uima/annotator_context.hpp"
 #include "uima/err_ids.h"
 #include "uima/msg.h"
 
@@ -45,13 +47,13 @@ namespace uima {
   //
   //------------------------------------------------------------
 
-  CASPool::CASPool(const AnalysisEngineDescription & taeSpec,
+  CASPool::CASPool(const AnalysisEngineDescription &taeSpec,
                    size_t numInstances)
-      :iv_vecAllInstances(),
+    : iv_vecAllInstances(),
       iv_vecFreeInstances(),
       iv_pCasDef(NULL),
-      iv_numInstances(numInstances) {
-
+      iv_numInstances(numInstances),
+      iv_pComponentInfo(nullptr) {
     iv_pCasDef = uima::internal::CASDefinition::createCASDefinition(taeSpec);
 
     if (iv_pCasDef == NULL) {
@@ -73,6 +75,38 @@ namespace uima {
       }
       iv_vecAllInstances.push_back((CAS *)pCas->getInitialView());
       iv_vecFreeInstances.push_back((CAS *)pCas->getInitialView());
+    }
+  }
+
+
+  CASPool::CASPool(AnnotatorContext *anContext, const AnalysisEngineDescription &taeSpec,
+                   size_t numInstances) : iv_vecAllInstances(),
+                                          iv_vecFreeInstances(),
+                                          iv_numInstances(numInstances),
+                                          iv_pCasDef(nullptr),
+                                          iv_pComponentInfo(anContext) {
+    iv_pCasDef = internal::CASDefinition::createCASDefinition(taeSpec);
+    if (iv_pCasDef == nullptr) {
+      UIMA_EXC_THROW_NEW(CASPoolException,
+                         UIMA_ERR_CASPOOL_CREATE_CASDEFINITION,
+                         UIMA_MSG_ID_EXC_CREATE_CASPOOL,
+                         UIMA_MSG_ID_EXC_CREATE_CASPOOL,
+                         ErrorInfo::unrecoverable);
+    }
+
+    for (size_t i = 0; i < numInstances; i++) {
+      CAS *pCas = uima::internal::CASImpl::createCASImpl(*iv_pCasDef, false);
+      if (pCas == nullptr) {
+        UIMA_EXC_THROW_NEW(CASPoolException,
+                           UIMA_ERR_CASPOOL_CREATE_CAS,
+                           UIMA_MSG_ID_EXC_CREATE_CASPOOL,
+                           UIMA_MSG_ID_EXC_CREATE_CASPOOL,
+                           ErrorInfo::unrecoverable);
+      }
+      if (iv_pComponentInfo)
+        pCas->setCurrentComponentInfo(iv_pComponentInfo);
+      iv_vecAllInstances.push_back((CAS *) pCas->getInitialView());
+      iv_vecFreeInstances.push_back((CAS *) pCas->getInitialView());
     }
   }
 
@@ -114,6 +148,8 @@ namespace uima {
   void CASPool::releaseCAS(CAS & aCas) {
 
     aCas.reset();
+    if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) == iv_vecAllInstances.end())
+      std::cerr << "False: " << iv_pComponentInfo->getTaeSpecifier().getAnnotatorImpName() << std::endl;
     iv_vecFreeInstances.push_back(&aCas);
     return;
   }

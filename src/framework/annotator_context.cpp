@@ -165,7 +165,11 @@ namespace uima {
   }
 
   TyErrorId AnnotatorContext::defineCASPool(size_t numInstances) {
-    iv_pCasPool = new CASPool(getTaeSpecifier(),numInstances);
+    if (iv_pParentAnC) {            // If this is a delegate
+      iv_pCasPool = new CASPool(this, iv_pParentAnC->getTaeSpecifier(),numInstances);
+    } else {
+      iv_pCasPool = new CASPool(this, getTaeSpecifier(), numInstances);
+    }
     if (iv_pCasPool == NULL) {
       return UIMA_ERR_USER_ANNOTATOR_OUT_OF_MEMORY;
     }
@@ -500,7 +504,7 @@ namespace uima {
   NameValuePair const * AnnotatorContext::findNameValuePair(const icu::UnicodeString & paramName,
       const icu::UnicodeString & ancKey) const {
     /*       return findNameValuePair(getGroupNameWhenNotSpec(), paramName, iv_pTaeSpecifier->getSearchStrategy()); */
-    NameValuePair const * pValueLocal = pValueLocal = iv_pTaeSpecifier->getNameValuePair(paramName, ancKey);
+    NameValuePair const * pValueLocal = iv_pTaeSpecifier->getNameValuePair(paramName, ancKey);
 
     // the request was invalid we got an exception we leave to others to catch
 
