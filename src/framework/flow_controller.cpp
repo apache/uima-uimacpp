@@ -86,7 +86,7 @@ namespace uima {
       initialize(*annotatorContext);
   }
 
-  std::unique_ptr<Flow> FixedFlowController::computeFlow(const CAS&) {
+  std::unique_ptr<Flow> FixedFlowController::computeFlow(CAS&) {
     return std::make_unique<FixedFlowObject>(this, 0);
   }
 

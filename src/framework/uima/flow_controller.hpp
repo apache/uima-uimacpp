@@ -43,6 +43,11 @@ namespace uima {
 
   /**
    * A <TT>FlowController</TT> dictates how CASes are routed within Aggregate Analysis Engines.
+   * <p>
+   * For each new CAS that is passed to the Aggregate Analysis Engine containing the FlowController,
+   * FlowController::computeFlow will be called. This method must return a Flow object that is responsible for
+   * routing that CAS through the components of the Aggregate Analysis Engine.
+   * <p>
    */
   class UIMA_LINK_IMPORTSPEC FlowController {
   public:
@@ -54,11 +59,29 @@ namespace uima {
      *    Description of the AnalysisEngine that this Flow Controller belongs to.
      */
     virtual void initialize(const AnnotatorContext& anContext)=0;
+
+    /** Deinitialize this Flow Controller     */
     virtual void destroy()=0;
+
+    /** Reconfigure this Flow Controller      */
     virtual void reconfigure()=0;
-    virtual std::unique_ptr<Flow> computeFlow(const CAS&)=0;
+
+    /**
+     * Computes and returns a Flow object will the input CAS through the Aggregate. The
+     * <code>Flow</code> object should be given a handle to the CAS, so that it can use information in
+     * the CAS to make routing decisions.
+     * FlowController implementations can define their own class that implements Flow.
+     * @param cas A CAS that this FlowController should process.
+     * @return a Flow object that has responsibility for routing <code>cas</code> through the
+     *         Aggregate Analysis Engine.
+     */
+    virtual std::unique_ptr<Flow> computeFlow(CAS &cas)=0;
   };
 
+
+  /**
+   * This class represents the Flow object used in a Fixed Flow Controller
+   */
   class UIMA_LINK_IMPORTSPEC FixedFlowObject : public Flow {
   public:
     FixedFlowObject(FixedFlowController *const flowController, int startStep,
@@ -74,10 +97,19 @@ namespace uima {
     std::unique_ptr<Flow> newCasProduced(const CAS& cas, const icu::UnicodeString& producedBy) override;
 
   private:
+    /** The Flow Controller that defines this Flow */
     FixedFlowController* flowController;
+
+    /** Index of the delegate sequence this Flow is at*/
     int currentStep;
+
+    /** Whether this flow's CAS was passed to a CAS Multiplier*/
     bool wasPassedToCASMultiplier;
+
+    /** Whether this flow's CAS has produced a new CAS */
     bool newCASProduced;
+
+    /** Whether this flow's CAS was produced internally by a CAS Multiplier */
     bool internallyCreatedCAS;
   };
 
@@ -86,7 +118,9 @@ namespace uima {
   public:
     enum class ActionAfterCasMultiplier { CONTINUE, STOP, DROP, DROP_IF_NEW_CAS_PRODUCED };
 
-    FixedFlowController() = default;
+    FixedFlowController() : delegateSpecifierMap(), flowContraints(), annotatorContext(),
+                            action(ActionAfterCasMultiplier::DROP_IF_NEW_CAS_PRODUCED) {
+    }
 
     void initialize(const AnnotatorContext &anContext) override;
 
@@ -94,7 +128,7 @@ namespace uima {
 
     void reconfigure() override;
 
-    std::unique_ptr<Flow> computeFlow(const CAS&) override;
+    std::unique_ptr<Flow> computeFlow(CAS &) override;
 
     const std::vector<icu::UnicodeString>& getDelegateKeys() const;
 
@@ -103,11 +137,24 @@ namespace uima {
     ActionAfterCasMultiplier getAction() const;
 
   private:
-    // FIXME: Use std::map<icu::UnicodeString, AnalysisEngineDescription*> instead??
-    const std::map<icu::UnicodeString, AnnotatorContext*>* delegateSpecifierMap{};
-    const FixedFlow* flowContraints{};
-    const AnnotatorContext* annotatorContext{};
-    ActionAfterCasMultiplier action{ActionAfterCasMultiplier::DROP_IF_NEW_CAS_PRODUCED};
+    /** Maps from delegate engine keys (not names) to their corresponding AnnotatorContexts */
+    const std::map<icu::UnicodeString, AnnotatorContext*>* delegateSpecifierMap;
+
+    /** The FlowContraints object that defines this FlowController*/
+    const FixedFlow* flowContraints;
+
+    /** The AnnotatorContext of the aggregate engine that owns this FlowController */
+    const AnnotatorContext* annotatorContext;
+
+    /** The action to be taken after a CAS has been input to a CAS Multiplier. For now this cannot be overridden yet.\n
+     * Values include:\n
+     * - CONTINUE: the CAS will continue with the flow\n
+     * - STOP: the CAS will not continue with the flow and be returned\n
+     * - DROP: the CAS will not continue and be dropped\n
+     * - DROP_IF_NEW_CAS_PRODUCED (default): If the CAS Multiplier produced a new CAS from this input CAS then this CAS will
+     * be dropped, otherwise it will continue.
+     */
+    ActionAfterCasMultiplier action;
   };
 
 }

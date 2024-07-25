@@ -773,6 +773,9 @@ namespace uima {
       return CAS::INDEXID_ANNOTATION;
     }
 
+    /**
+     * When called this CAS will release itself by calling releaseCas on the AnnotatorContext that owns it.
+     */
     void release();
 
     /** @} */

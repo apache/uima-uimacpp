@@ -257,12 +257,18 @@ namespace uima {
                                        Language const &,
                                        std::vector<TypeOrFeature>&) ;
 
+      /** Helper method that handles the input CAS for Capability Language Flow       */
       TyErrorId processCapabilityLanguageFlow(CAS &cas, ResultSpecification const &crResultSpec);
 
+      /** This runs the aggregate engine from the current state until a new CAS is output */
       CAS* processUntilNextOutputCas();
 
+      /** Called by Aggregate Engine's hasNext */
       bool hasNext();
+
+      /** Called by Aggregate Engine's next */
       CAS& next();
+
       /* COPY CONSTRUCTOR NOT SUPPORTED */
       AnnotatorManager(const AnnotatorManager & ); //lint !e1704
       /* ASSIGNMENT OPERATOR NOT SUPPORTED */

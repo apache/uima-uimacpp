@@ -30,25 +30,25 @@
 #include "uima/flow.hpp"
 
 namespace uima {
-  Step::Step(const internal::SimpleStep &simpleStep): step(simpleStep),
+  Step::Step(const internal::SimpleStep &simpleStep): uStep(simpleStep),
                                                       type(StepType::SIMPLESTEP) {
   }
 
-  Step::Step(const internal::ParallelStep &parallelStep): step(parallelStep),
+  Step::Step(const internal::ParallelStep &parallelStep): uStep(parallelStep),
                                                           type(StepType::PARALLELSTEP) {
   }
 
-  Step::Step(const internal::FinalStep &finalStep): step(finalStep),
+  Step::Step(const internal::FinalStep &finalStep): uStep(finalStep),
                                                     type(StepType::FINALSTEP) {
   }
 
   Step::Step(const Step& other) :type(other.type){
     switch (other.type) {
       case StepType::SIMPLESTEP:
-        step.simpleStep = other.step.simpleStep;
+        uStep.simpleStep = other.uStep.simpleStep;
         break;
       case StepType::FINALSTEP:
-        step.finalStep = other.step.finalStep;
+        uStep.finalStep = other.uStep.finalStep;
         break;
       default:
         break;
@@ -63,10 +63,10 @@ namespace uima {
     type = other.type;
     switch (other.type) {
       case StepType::SIMPLESTEP:
-        step.simpleStep = other.step.simpleStep;
+        uStep.simpleStep = other.uStep.simpleStep;
         break;
       case StepType::FINALSTEP:
-        step.finalStep = other.step.finalStep;
+        uStep.finalStep = other.uStep.finalStep;
         break;
       default:
         break;
@@ -77,13 +77,13 @@ namespace uima {
   Step::~Step() {
     switch (type) {
       case StepType::SIMPLESTEP:
-        step.simpleStep.~SimpleStep();
+        uStep.simpleStep.~SimpleStep();
       break;
       case StepType::FINALSTEP:
-        step.finalStep.~FinalStep();
+        uStep.finalStep.~FinalStep();
       break;
       case StepType::PARALLELSTEP:
-        step.parallelStep.~ParallelStep();
+        uStep.parallelStep.~ParallelStep();
       break;
       default:
         break;
@@ -92,17 +92,17 @@ namespace uima {
 
   const internal::SimpleStep * Step::getSimpleStep() const {
     if (type != StepType::SIMPLESTEP) return nullptr;
-    return &step.simpleStep;
+    return &uStep.simpleStep;
   }
 
   const internal::ParallelStep * Step::getParallelStep() const {
     if (type != StepType::PARALLELSTEP) return nullptr;
-    return &step.parallelStep;
+    return &uStep.parallelStep;
   }
 
   const internal::FinalStep * Step::getFinalStep() const {
     if (type != StepType::FINALSTEP) return nullptr;
-    return &step.finalStep;
+    return &uStep.finalStep;
   }
 
   Step::StepType Step::getType() const {
