@@ -52,8 +52,8 @@ namespace uima {
     const icu::UnicodeString &engineName = delegateKeys[currentStep];
     const AnnotatorContext* engineContext = flowController->getDelegateSpecifierMap().at(engineName);
     const AnalysisEngineMetaData* engineMetadata = engineContext->getTaeSpecifier().getAnalysisEngineMetaData();
-
-    if (engineMetadata->getOperationalProperties()->getOutputsNewCASes())
+    const OperationalProperties* operationalProps = engineMetadata->getOperationalProperties();
+    if ( operationalProps && operationalProps->getOutputsNewCASes())
       wasPassedToCASMultiplier = true;
 
     return Step(internal::SimpleStep(delegateKeys[currentStep++]));
@@ -64,10 +64,8 @@ namespace uima {
     const std::vector<icu::UnicodeString>& delegateKeys = flowController->getDelegateKeys();
 
     int i = 0;
-    for (; i < delegateKeys.size(); ++i) {
-      if (producedBy == delegateKeys[i]) break;
-    }
-
+    while (producedBy != delegateKeys.at(i))
+      ++i;
     return std::make_unique<FixedFlowObject>(flowController, i+1, true);
   }
 

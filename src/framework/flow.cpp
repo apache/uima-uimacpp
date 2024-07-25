@@ -42,6 +42,38 @@ namespace uima {
                                                     type(StepType::FINALSTEP) {
   }
 
+  Step::Step(const Step& other) :type(other.type){
+    switch (other.type) {
+      case StepType::SIMPLESTEP:
+        step.simpleStep = other.step.simpleStep;
+        break;
+      case StepType::FINALSTEP:
+        step.finalStep = other.step.finalStep;
+        break;
+      default:
+        break;
+    }
+
+  }
+
+  Step & Step::operator=(const Step &other) {
+    if (this == &other) {
+      return *this;
+    }
+    type = other.type;
+    switch (other.type) {
+      case StepType::SIMPLESTEP:
+        step.simpleStep = other.step.simpleStep;
+        break;
+      case StepType::FINALSTEP:
+        step.finalStep = other.step.finalStep;
+        break;
+      default:
+        break;
+    }
+    return *this;
+  }
+
   Step::~Step() {
     switch (type) {
       case StepType::SIMPLESTEP:
@@ -53,6 +85,8 @@ namespace uima {
       case StepType::PARALLELSTEP:
         step.parallelStep.~ParallelStep();
       break;
+      default:
+        break;
     }
   }
 

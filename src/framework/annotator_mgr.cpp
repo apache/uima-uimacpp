@@ -86,12 +86,13 @@ namespace uima {
     /*       Implementation                                                    */
     /* ----------------------------------------------------------------------- */
 
-    AnnotatorManager::AnnotatorManager(internal::AggregateEngine & rEngine) :
-        iv_pEngine(& rEngine),
-        iv_vecEntries(),
-        iv_bIsInitialized(false),
-        iv_uiNbrOfDocsProcessed(0)
-        /* ----------------------------------------------------------------------- */{
+    AnnotatorManager::AnnotatorManager(internal::AggregateEngine & rEngine) : iv_pEngine(&rEngine),
+                                                                              iv_vecEntries(),
+                                                                              iv_uiNbrOfDocsProcessed(0),
+                                                                              iv_pFlowController(nullptr),
+                                                                              iv_bIsInitialized(false),
+                                                                              iv_bOutputNewCases(false)
+    /* ----------------------------------------------------------------------- */ {
       ;
     }
 
@@ -152,12 +153,21 @@ namespace uima {
       assert(iv_vecEntries.empty());
 
       AnnotatorContext & rANC = iv_pEngine->getAnnotatorContext();
-
       AnalysisEngineDescription const & crTAESpecifier = rANC.getTaeSpecifier(); // this method must be added
-
+      const AnalysisEngineMetaData* pEngineMetadata = crTAESpecifier.getAnalysisEngineMetaData();
       assert( ! crTAESpecifier.isPrimitive() );
-      //BSIvector < icu::UnicodeString > const & crVecEngineNames = crTAESpecifier.getAnalysisEngineMetaData()->getFixedFlow()->getNodes();
-      vector < icu::UnicodeString > const & crVecEngineNames = crTAESpecifier.getAnalysisEngineMetaData()->getFlowConstraints()->getNodes();
+
+      // FIXME: This shouldn't have been necessary since FlowContrainst::getFlowContraintsType
+      // should have been const in the first place
+      auto flowContraints = CONST_CAST(FlowConstraints *, pEngineMetadata->getFlowConstraints());
+      if (flowContraints->getFlowConstraintsType() == FlowConstraints::FIXED) {
+        iv_pFlowController = new FixedFlowController;
+        iv_pFlowController->initialize(rANC);
+      }
+
+      if (const OperationalProperties* operationalProps = pEngineMetadata->getOperationalProperties())
+        iv_bOutputNewCases = operationalProps->getOutputsNewCASes();
+      vector < icu::UnicodeString > const & crVecEngineNames = flowContraints->getNodes();
 
       // for all engines in the flow
       size_t ui;
@@ -379,10 +389,10 @@ namespace uima {
 
 
     bool AnnotatorManager::shouldEngineBeCalled(uima::internal::CapabilityContainer const & crCapContainer,
-        ResultSpecification const & rResultSpec,
-        Language const & crLanguage,
-        vector<TypeOrFeature> & rTOFSToBeRemoved) {
-      util::Trace                 clTrace(util::enTraceDetailHigh, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
+                                                ResultSpecification const &rResultSpec,
+                                                Language const &crLanguage,
+                                                vector<TypeOrFeature> &rTOFSToBeRemoved) {
+      util::Trace clTrace(util::enTraceDetailHigh, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
 
 #ifdef DEBUG_VERBOSE
       UIMA_TPRINT("CapContainer:");
@@ -403,39 +413,31 @@ namespace uima {
 #endif
 
       // treat dump-like annotators for this language specially
-      if (crCapContainer.hasEmptyOutputTypeOrFeatures( crLanguage )) {
+      if (crCapContainer.hasEmptyOutputTypeOrFeatures(crLanguage)) {
         return true;
       }
 
-      ResultSpecification::TyTypeOrFeatureSTLSet const & crTOFSet = rResultSpec.getTypeOrFeatureSTLSet();
+      ResultSpecification::TyTypeOrFeatureSTLSet const &crTOFSet = rResultSpec.getTypeOrFeatureSTLSet();
       bool bHasTOF = false;
-      ResultSpecification::TyTypeOrFeatureSTLSet::const_iterator cit;
-      for (cit = crTOFSet.begin(); cit != crTOFSet.end(); ++cit) {
-        TypeOrFeature const & crTOF = (*cit);
-        assert( (*cit).isValid() );
-        assert( crTOF.isValid() );
-        assert( rResultSpec.contains( crTOF ) );
-
+      for (const auto & crTOF : crTOFSet) {
+        assert(crTOF.isValid());
+        assert(rResultSpec.contains( crTOF ));
         UIMA_TPRINT("  TOF Name: " << crTOF.getName());
 
         if (crCapContainer.hasOutputTypeOrFeature(crTOF, crLanguage)) {
-          assert( containsTOF(crTOF, crLanguage, crCapContainer) );
-          UIMA_TPRINT( "    in capability" );
+          assert(containsTOF(crTOF, crLanguage, crCapContainer));
+          UIMA_TPRINT("    in capability");
           bHasTOF = true;
           rTOFSToBeRemoved.push_back(crTOF);
         } else {
-          assert( ! containsTOF(crTOF, crLanguage, crCapContainer) );
+          assert(! containsTOF(crTOF, crLanguage, crCapContainer));
           UIMA_TPRINT("     not in capability");
         }
       }
       return bHasTOF;
     }
 
-
-
-
-
-    TyErrorId AnnotatorManager::launchProcessDocument(CAS & cas, ResultSpecification const & crResultSpec) {
+    TyErrorId AnnotatorManager::processCapabilityLanguageFlow(CAS &cas, ResultSpecification const &crResultSpec) {
       /*
       This works as follows:
       The passes result spec is copied and for each delegate AE, it is determined
@@ -449,14 +451,14 @@ namespace uima {
       it nonetheless must sepcify that it needs tokens, sentences, and paragraphs because this is what
       the summarizer needs as input.
       */
-      util::Trace                 clTrace(util::enTraceDetailLow, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
+      util::Trace clTrace(util::enTraceDetailLow, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
       UIMA_ANNOTATOR_TIMING(iv_clTimerLaunchProcess.start());
-      TyAnnotatorEntries::iterator it;
-      TyErrorId               utErrorId = UIMA_ERR_NONE;
-      TyErrorId               utRetVal = UIMA_ERR_NONE;
-      assert( EXISTS(iv_pEngine) );
-      size_t                     uiNbrOfSkippedAnnotators = 0;
-      CAS * tcas=NULL;
+
+      TyErrorId utErrorId = UIMA_ERR_NONE;
+      TyErrorId utRetVal = UIMA_ERR_NONE;
+      assert(EXISTS(iv_pEngine));
+      size_t uiNbrOfSkippedAnnotators = 0;
+      CAS *tcas = nullptr;
 
       // copy the result spec
       ResultSpecification resSpec = crResultSpec;
@@ -465,10 +467,9 @@ namespace uima {
       assert(iv_bIsInitialized);
 
       assert(!iv_vecEntries.empty());
-      for (it = iv_vecEntries.begin(); it != iv_vecEntries.end(); ++it) {
-        EngineEntry & rEntry =  (*it);
-        AnalysisEngine * pEngine = rEntry.iv_pEngine;
-        uima::internal::CapabilityContainer * pCapContainer = rEntry.iv_pCapabilityContainer;
+      for (EngineEntry &engineEntry: iv_vecEntries) {
+        AnalysisEngine *pEngine = engineEntry.iv_pEngine;
+        CapabilityContainer *pCapContainer = engineEntry.iv_pCapabilityContainer;
         assert(EXISTS(pEngine));
         assert(EXISTS(pCapContainer));
 
@@ -478,38 +479,23 @@ namespace uima {
         resSpec.print(cout);
 #endif
 
-        UIMA_TRACE_STREAM_ARG(clTrace, "ASB checks engine", pEngine->getAnalysisEngineMetaData().getName() );
+        UIMA_TRACE_STREAM_ARG(clTrace, "ASB checks engine", pEngine->getAnalysisEngineMetaData().getName());
 
         UIMA_TPRINT("--------- Checking annotator: " << pEngine->getAnalysisEngineMetaData().getName());
         vector<TypeOrFeature> tofsToBeRemoved;
-        bool callEngine=true;
-        bool requiresTCas=true;
+        bool callEngine = true;
+        bool requiresTCas = true;
 
         if (cas.isBackwardCompatibleCas()) {
-	  tcas = &cas;
-		}
-          //this populates the tofsToBeRemoved vector so always call it
-          callEngine = shouldEngineBeCalled(*pCapContainer,
-                                            resSpec,
-                                            cas.getDocumentAnnotation().getLanguage(),
-                                            tofsToBeRemoved);
-          //check the FlowConstraintType specified in the aggregate engine
-          //if CapabilityLanguageFlow whether engine is called is
-          //determined by shouldEngineBeCalled()
-          AnnotatorContext & rANC = iv_pEngine->getAnnotatorContext();
-          AnalysisEngineDescription const & crTAESpecifier = rANC.getTaeSpecifier();
-          FlowConstraints const * pFlow = crTAESpecifier.getAnalysisEngineMetaData()->getFlowConstraints();
-          FlowConstraints * flow = CONST_CAST(FlowConstraints *, pFlow);
-          FlowConstraints::EnFlowType flowType = flow->getFlowConstraintsType();
+          tcas = &cas;
+        }
+        //this populates the tofsToBeRemoved vector so always call it
+        callEngine = shouldEngineBeCalled(*pCapContainer,
+                                          resSpec,
+                                          cas.getDocumentAnnotation().getLanguage(),
+                                          tofsToBeRemoved);
 
-          //if FixedFlow specified all engines are always called so reset callEngine is true
-          if (flowType == FlowConstraints::FIXED) {
-            callEngine=true;
-          }
-        
-
-        if ( callEngine ) {
-
+        if (callEngine) {
           UIMA_TPRINT("----------- engine will be processed");
           UIMA_TRACE_STREAM(clTrace, "Engine will be called");
 
@@ -517,73 +503,214 @@ namespace uima {
           // this must be done because an annotator should only be called with the result spec
           // that its XML file indicates.
           ResultSpecification annResSpec;
-          vector<TypeOrFeature>::const_iterator citTOF;
-          for (citTOF = tofsToBeRemoved.begin(); citTOF != tofsToBeRemoved.end(); ++citTOF) {
-            assert( (*citTOF).isValid() );
-            annResSpec.add(*citTOF);
-            UIMA_TRACE_STREAM_ARG(clTrace, "    engine is called with result spec", (*citTOF).getName() );
+          for (const TypeOrFeature &tof: tofsToBeRemoved) {
+            assert(tof.isValid());
+            annResSpec.add(tof);
+            UIMA_TRACE_STREAM_ARG(clTrace, "    engine is called with result spec", tof.getName());
           }
 
           /// does engine expect a TCas
           //AEs that declare at least one input or output SofA should be sent the base CAS.
           //Otherwise they must be sent a TCAS.
-          const AnalysisEngineMetaData::TyVecpCapabilities & vecCap = pEngine->getAnalysisEngineMetaData().getCapabilites();
-          AnalysisEngineMetaData::TyVecpCapabilities::const_iterator itCap;
-          for (size_t i=0; i < vecCap.size(); i++) {
-            Capability * cap = vecCap.at(i);
-            Capability::TyVecCapabilitySofas inputSofa = cap->getCapabilitySofas(Capability::INPUTSOFA);
-            Capability::TyVecCapabilitySofas outputSofa = cap->getCapabilitySofas(Capability::OUTPUTSOFA);
-            if (inputSofa.size() > 0 || outputSofa.size() > 0) {
+          const AnalysisEngineMetaData::TyVecpCapabilities &vecCap = pEngine->getAnalysisEngineMetaData().
+              getCapabilites();
+          for (Capability *cap: vecCap) {
+            const auto &inputSofa = cap->getCapabilitySofas(Capability::INPUTSOFA);
+            const auto &outputSofa = cap->getCapabilitySofas(Capability::OUTPUTSOFA);
+            if (!inputSofa.empty() || !outputSofa.empty()) {
               requiresTCas = false;
               break;
             }
           }
 
           if (requiresTCas) {
-	    SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
-	    if (!defSofa.isValid()) {
-	      //TODO: throw exception
-	      cerr << "could not get default text sofa " << endl;
-	      return 99;
-	    }
-	    tcas = cas.getView(defSofa);
-	    utErrorId = pEngine->process(*tcas, annResSpec);
+            SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
+            if (!defSofa.isValid()) {
+              //TODO: throw exception
+              cerr << "could not get default text sofa " << endl;
+              return 99;
+            }
+            tcas = cas.getView(defSofa);
+            utErrorId = pEngine->process(*tcas, annResSpec);
           } else {
-            utErrorId = ((AnalysisEngine*) pEngine)->process(cas, annResSpec);
+            utErrorId = pEngine->process(cas, annResSpec);
           }
 
           if (utErrorId != UIMA_ERR_NONE) {
             clTrace.dump(_TEXT("Error"), (long) utErrorId);
-            utRetVal = utErrorId;                  /* I know, this overwrites a previous error */
+            utRetVal = utErrorId; /* I know, this overwrites a previous error */
           } else {
             // now remove TOFs from ResultSpec
-            vector<TypeOrFeature>::const_iterator citTOF;
-            for (citTOF = tofsToBeRemoved.begin(); citTOF != tofsToBeRemoved.end(); ++citTOF) {
-              assert( (*citTOF).isValid() );
-              resSpec.remove(*citTOF);
+            for (const auto &crTof: tofsToBeRemoved) {
+              assert(crTof.isValid());
+              resSpec.remove(crTof);
             }
           }
         } else {
-          assert( tofsToBeRemoved.empty() );
+          assert(tofsToBeRemoved.empty());
           UIMA_TPRINT("----------- engine will *not* be processed");
           ++uiNbrOfSkippedAnnotators;
         }
-      }                                               /* e-o-for */
+      } /* e-o-for */
       /* in case there was no error but not any annotator which generates a target type
          has been caled for process, we have an error */
       UIMA_TPRINT("Annotators skipped due to unsupport lang: " << uiNbrOfSkippedAnnotators);
-      UIMA_TPRINT("Overall number of annotators: " << iv_vecEntries.size() );
+      UIMA_TPRINT("Overall number of annotators: " << iv_vecEntries.size());
 
-      if (   (utRetVal == UIMA_ERR_NONE)
-             && (uiNbrOfSkippedAnnotators > 0)
-             && (uiNbrOfSkippedAnnotators == iv_vecEntries.size())
-             && (crResultSpec.getSize() > 0) ) {
+      if ((utRetVal == UIMA_ERR_NONE)
+          && (uiNbrOfSkippedAnnotators > 0)
+          && (uiNbrOfSkippedAnnotators == iv_vecEntries.size())
+          && (crResultSpec.getSize() > 0)) {
         // utRetVal = UIMA_ERR_ANNOTATOR_MGR_LANG_NOT_SUPPORTED_FOR_ANNOTATOR;
         iv_pEngine->getAnnotatorContext().getLogger().logWarning("All annotators skipped (maybe unsupported language)");
       }
 
       UIMA_ANNOTATOR_TIMING(iv_clTimerLaunchProcess.stop());
-      return(utRetVal);
+      return utRetVal;
+    }
+
+    CAS* AnnotatorManager::processUntilNextOutputCas() {
+      unique_ptr<Flow> flow{};
+      while (true) {
+        CAS* currentCas = nullptr;
+        AnnotatorContext* annContext = nullptr;                 // The AnnotatorContext that manages the produced CAS
+        Step nextStep;
+        flow = nullptr;
+
+        while (!currentCas) {
+          if (casIterStack.empty()) return nullptr;
+
+          StackFrame &frame = casIterStack.top();
+          try {
+            if (frame.casMultiplier && frame.casMultiplier->hasNext()) {
+              currentCas = &frame.casMultiplier->next();
+              annContext = &frame.casMultiplier->getAnnotatorContext();
+              flow = frame.originalFlow->newCasProduced(*currentCas, frame.lastEngineKey);
+            }
+          } catch (Exception& exception) {
+            // TODO:
+            throw;
+          }
+
+          if (!currentCas) {
+            currentCas = frame.originalCas;
+            annContext = frame.casMultiplier ? &frame.casMultiplier->getAnnotatorContext() : nullptr;
+            flow = std::move(frame.originalFlow);
+            currentCas->setCurrentComponentInfo(nullptr);
+            casIterStack.pop();
+          }
+
+          if (nextStep.getType() == Step::StepType::UNSPECIFIED) {
+            nextStep = flow->next();
+          }
+
+          while (nextStep.getType() != Step::StepType::FINALSTEP) {
+            if (nextStep.getType() == Step::StepType::SIMPLESTEP) {
+              const icu::UnicodeString& nextAEName = nextStep.getSimpleStep()->getEngineName();
+              auto z = DYNAMIC_CAST(FixedFlowController*, iv_pFlowController)->getDelegateSpecifierMap().at(nextAEName);
+              // auto it = std::find_if(iv_vecEntries.begin(), iv_vecEntries.end(),
+              //                     [nextAEName](const EngineEntry &entry) {
+              //                       return entry.iv_pEngine->getAnalysisEngineMetaData().getName() == nextAEName;
+              //                     });
+              // std::cout << "Engine name: " << nextAEName << std::endl;
+              auto it = iv_vecEntries.begin();
+              for (; it != iv_vecEntries.end(); ++it) {
+                auto &x = it->iv_pEngine->getAnalysisEngineMetaData().getName();
+                auto &y = it->iv_pEngine->getAnnotatorContext();
+                // std::cout << x << std::endl;
+                if ( &y == z)
+                  break;
+              }
+
+              if (it != iv_vecEntries.end()) {
+                AnalysisEngine* nextAE = it->iv_pEngine;
+                CAS* outputCas = nullptr;
+
+                try {
+                  CASIterator casIter = nextAE->processAndOutputNewCASes(*currentCas);
+                  if (casIter.hasNext())
+                    outputCas = &casIter.next();
+                } catch (Exception& e) {
+                  // TODO: Handle exception by checking if we're allowed to continue on failure
+                }
+
+                if (outputCas) {
+                  std::unique_ptr<Flow> nextFlow = flow->newCasProduced(*outputCas, nextAEName);
+                  casIterStack.push({nextAE, currentCas, std::move(flow), nextAEName});
+                  flow = std::move(nextFlow);
+                  currentCas = outputCas;
+                  annContext = &nextAE->getAnnotatorContext();
+                } else {
+                  currentCas->setCurrentComponentInfo(nullptr);
+                }
+              } else {
+                // TODO: Throw invalid key exception
+              }
+            } else if (nextStep.getType() == Step::StepType::PARALLELSTEP) {
+              // TODO: ParallelStep not supported yet
+            } else {
+              // TODO: Throw unsupported step type
+            }
+
+            nextStep = flow->next();
+          }
+
+          const FinalStep* finalStep = nextStep.getFinalStep();
+          if (currentCas == inputCas) {
+            if (finalStep->getForceDropCAS()) {
+              // TODO: Throw excetion (not allowed to drop input CAS)
+            }
+            return nullptr;
+          }
+
+          if (iv_bOutputNewCases && !finalStep->getForceDropCAS())
+            return currentCas;
+            // annContext->releaseCAS(*currentCas);
+              currentCas->release();
+        }
+      }
+    }
+
+    bool AnnotatorManager::hasNext() {
+      if (!nextCas)
+        nextCas = processUntilNextOutputCas();
+      return nextCas != nullptr;
+    }
+
+    CAS & AnnotatorManager::next() {
+      CAS* result = nextCas;
+      if (!result)
+        result = processUntilNextOutputCas();
+      if (!result) {
+        UIMA_EXC_THROW_NEW(Exception,
+                   UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS,
+                   UIMA_MSG_ID_EXCON_PROCESSING_CAS,
+                   ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "There is not next() available."),
+                   ErrorInfo::unrecoverable);
+      }
+      nextCas = nullptr;
+      return *result;
+    }
+
+
+    TyErrorId AnnotatorManager::launchProcessDocument(CAS &cas, ResultSpecification const &crResultSpec) {
+      //if engine uses Capability Language Flow
+      // TODO: Turn this logic and processCapabilityLanguageFlow into a separate CapabilityLanguageFlowController class that inherits from FlowController
+      AnnotatorContext &rANC = iv_pEngine->getAnnotatorContext();
+      AnalysisEngineDescription const &crTAESpecifier = rANC.getTaeSpecifier();
+      FlowConstraints const *pFlow = crTAESpecifier.getAnalysisEngineMetaData()->getFlowConstraints();
+      FlowConstraints *flow = CONST_CAST(FlowConstraints *, pFlow);
+
+      // Process according to capability language specifications
+      if (flow->getFlowConstraintsType() == FlowConstraints::CAPABILITYLANGUAGE)
+        return processCapabilityLanguageFlow(cas, crResultSpec);
+
+      inputCas = &cas;
+
+      casIterStack.push({nullptr, inputCas, iv_pFlowController->computeFlow(*inputCas), {}});
+      nextCas = processUntilNextOutputCas();
+
+      return UIMA_ERR_NONE;
     }
 
 #ifdef UIMA_DEBUG_ANNOTATOR_TIMING

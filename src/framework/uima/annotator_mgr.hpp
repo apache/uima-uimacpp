@@ -43,12 +43,14 @@
 
 #include "uima/pragmas.hpp" //must be included first to disable warnings
 #include <vector>
+#include <stack>
 
 #include "uima/annotator_timing.hpp"
 #include "uima/exceptions.hpp"
 #include "uima/timedatetools.hpp"
 
 #include "uima/result_specification.hpp"
+#include "uima/flow_controller.hpp"
 //#include "uima/internal_capability_container.hpp"
 
 /* ----------------------------------------------------------------------- */
@@ -204,6 +206,8 @@ namespace uima {
     protected:
       /* --- functions --- */
     private:
+      friend class PrimitiveEngine;
+      friend class AggregateEngine;
 #ifdef UIMA_COMP_REQ_PUBLIC_TYPES
     public:
 #endif
@@ -212,17 +216,27 @@ namespace uima {
         internal::CapabilityContainer * iv_pCapabilityContainer;
       }
       EngineEntry;
+
+      struct StackFrame {
+        AnalysisEngine*                 casMultiplier;
+        CAS*                            originalCas;
+        std::unique_ptr<Flow>           originalFlow;
+        icu::UnicodeString              lastEngineKey;
+      };
       /* --- types --- */
       typedef std::vector < EngineEntry > TyAnnotatorEntries;
-    private:
-      friend class uima::internal::PrimitiveEngine;
-      // the engine whic howns this annotator manager
-      internal::AggregateEngine * iv_pEngine;
+      // the engine which owns this annotator manager
+      AggregateEngine * iv_pEngine;
       /* --- variables --- */
-      TyAnnotatorEntries            iv_vecEntries;
-      bool                       iv_bIsInitialized;
-      size_t                     iv_uiNbrOfDocsProcessed; // for timing statistics
+      TyAnnotatorEntries          iv_vecEntries;
+      std::stack<StackFrame>      casIterStack;
 
+      size_t                      iv_uiNbrOfDocsProcessed; // for timing statistics
+      FlowController*             iv_pFlowController;
+      CAS* inputCas{};
+      CAS* nextCas{};
+      bool                        iv_bIsInitialized;
+      bool                        iv_bOutputNewCases;
       /* --- functions --- */
 #ifdef UIMA_DEBUG_ANNOTATOR_TIMING
       Timer                      iv_clTimerLaunchInit;
@@ -243,6 +257,12 @@ namespace uima {
                                        Language const &,
                                        std::vector<TypeOrFeature>&) ;
 
+      TyErrorId processCapabilityLanguageFlow(CAS &cas, ResultSpecification const &crResultSpec);
+
+      CAS* processUntilNextOutputCas();
+
+      bool hasNext();
+      CAS& next();
       /* COPY CONSTRUCTOR NOT SUPPORTED */
       AnnotatorManager(const AnnotatorManager & ); //lint !e1704
       /* ASSIGNMENT OPERATOR NOT SUPPORTED */

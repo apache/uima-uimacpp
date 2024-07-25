@@ -97,13 +97,20 @@ namespace uima {
    */
   class UIMA_LINK_IMPORTSPEC Step {
   public:
-    enum class StepType { SIMPLESTEP, FINALSTEP, PARALLELSTEP };
+    enum class StepType { SIMPLESTEP, FINALSTEP, PARALLELSTEP, UNSPECIFIED };
+
+    Step() : type(StepType::UNSPECIFIED) {
+    }
 
     explicit Step(const internal::SimpleStep &simpleStep);
 
     explicit Step(const internal::ParallelStep &parallelStep);
 
     explicit Step(const internal::FinalStep &finalStep);
+
+    Step(const Step &other);
+
+    Step& operator=(const Step& other);
 
     ~Step();
 
@@ -128,10 +135,11 @@ namespace uima {
 
       step_type(const internal::FinalStep &finalStep) : finalStep(finalStep) {
       }
+      step_type() { }
       ~step_type() { }
     } step;
 
-    const StepType type;
+    StepType type;
   };
 
   /**
