@@ -569,90 +569,117 @@ namespace uima {
       return utRetVal;
     }
 
-    CAS* AnnotatorManager::processUntilNextOutputCas() {
+    CAS *AnnotatorManager::processUntilNextOutputCas() {
       unique_ptr<Flow> flow{};
       while (true) {
-        CAS* currentCas = nullptr;
+        CAS *currentCas = nullptr;
         Step nextStep;
         flow = nullptr;
 
-        while (!currentCas) {
-          if (casIterStack.empty()) return nullptr;
+        // get a cas from the stack
+        if (casIterStack.empty())
+          return nullptr;
 
-          StackFrame &frame = casIterStack.top();
-          try {
-            if (frame.casMultiplier && frame.casMultiplier->hasNext()) {
-              currentCas = &frame.casMultiplier->next();
-              flow = frame.originalFlow->newCasProduced(*currentCas, frame.lastEngineKey);
-            }
-          } catch (Exception& exception) {
-            // TODO:
+        StackFrame &frame = casIterStack.top();
+        try {
+          if (frame.casMultiplier && frame.casMultiplier->hasNext()) {
+            currentCas = &frame.casMultiplier->next();
+            // compute flow for newly produced CAS
+            flow = frame.originalFlow->newCasProduced(*currentCas, frame.lastEngineKey);
+          }
+        } catch (Exception &exception) {
+          if (!frame.originalFlow->continueOnFailure(frame.lastEngineKey /* ,exception */))
             throw;
-          }
-
-          if (!currentCas) {
-            currentCas = frame.originalCas;
-            flow = std::move(frame.originalFlow);
-            currentCas->setCurrentComponentInfo(nullptr);
-            casIterStack.pop();
-          }
-
-          if (nextStep.getType() == Step::StepType::UNSPECIFIED) {
-            nextStep = flow->next();
-          }
-
-          while (nextStep.getType() != Step::StepType::FINALSTEP) {
-            if (nextStep.getType() == Step::StepType::SIMPLESTEP) {
-              const icu::UnicodeString& nextAEName = nextStep.getSimpleStep()->getEngineName();
-              auto it = std::find_if(iv_vecEntries.begin(), iv_vecEntries.end(),
-                                  [&, nextAEName](const EngineEntry &entry) {
-                                    return entry.iv_pEngine->getAnnotatorContext().iv_AnCKey == nextAEName;
-                                  });
-
-              if (it != iv_vecEntries.end()) {
-                AnalysisEngine* nextAE = it->iv_pEngine;
-                CAS* outputCas = nullptr;
-
-                try {
-                  CASIterator casIter = nextAE->processAndOutputNewCASes(*currentCas);
-                  if (casIter.hasNext())
-                    outputCas = &casIter.next();
-                } catch (Exception& e) {
-                  // TODO: Handle exception by checking if we're allowed to continue on failure
-                }
-
-                if (outputCas) {
-                  std::unique_ptr<Flow> nextFlow = flow->newCasProduced(*outputCas, nextAEName);
-                  casIterStack.push({nextAE, currentCas, std::move(flow), nextAEName});
-                  flow = std::move(nextFlow);
-                  currentCas = outputCas;
-                } else {
-                  currentCas->setCurrentComponentInfo(nullptr);
-                }
-              } else {
-                // TODO: Throw invalid key exception
-              }
-            } else if (nextStep.getType() == Step::StepType::PARALLELSTEP) {
-              // TODO: ParallelStep not supported yet
-            } else {
-              // TODO: Throw unsupported step type
-            }
-
-            nextStep = flow->next();
-          }
-
-          const FinalStep* finalStep = nextStep.getFinalStep();
-          if (currentCas == inputCas) {
-            if (finalStep->getForceDropCAS()) {
-              // TODO: Throw excetion (not allowed to drop input CAS)
-            }
-            return nullptr;
-          }
-
-          if (iv_bOutputNewCases && !finalStep->getForceDropCAS())
-            return currentCas;
-          currentCas->release();
         }
+
+        if (!currentCas) {
+          // if there is no more output CASes from the stack, take the original CAS that was processed by
+          // the CAS Multiplier and continue with its flow
+          currentCas = frame.originalCas;
+          flow = std::move(frame.originalFlow);
+          currentCas->setCurrentComponentInfo(nullptr); // is this necessary?
+          casIterStack.pop();
+        }
+
+        if (nextStep.getType() == Step::StepType::UNSPECIFIED) {
+          nextStep = flow->next(); // get the next step for the current flow
+        }
+
+        while (nextStep.getType() != Step::StepType::FINALSTEP) {
+          if (nextStep.getType() == Step::StepType::SIMPLESTEP) {
+            // find the AE specified by the step
+            const icu::UnicodeString &nextAEKey = nextStep.getSimpleStep()->getEngineName();
+            auto it = std::find_if(iv_vecEntries.begin(), iv_vecEntries.end(),
+                                   [&, nextAEKey](const EngineEntry &entry) {
+                                     return entry.iv_pEngine->getAnnotatorContext().iv_AnCKey == nextAEKey;
+                                   });
+
+            if (it != iv_vecEntries.end()) {
+              AnalysisEngine *nextAE = it->iv_pEngine;
+              CAS *outputCas = nullptr;
+
+              // call process one the AE and see if it has produced a new CAS
+              try {
+                CASIterator casIter = nextAE->processAndOutputNewCASes(*currentCas);
+                if (casIter.hasNext())
+                  outputCas = &casIter.next();
+              } catch (Exception &e) {
+                if (!flow->continueOnFailure(nextAEKey))
+                  throw;
+              }
+
+              if (outputCas) {
+                // new CAS is output so put the current components on the stack so we can process
+                // the other output CASes and original CASes later
+                std::unique_ptr<Flow> nextFlow = flow->newCasProduced(*outputCas, nextAEKey);
+                casIterStack.push({nextAE, currentCas, std::move(flow), nextAEKey});
+                flow = std::move(nextFlow);
+                currentCas = outputCas;
+              } else {
+                currentCas->setCurrentComponentInfo(nullptr); // is this necessary?
+              }
+            } else {
+              UIMA_EXC_THROW_NEW(EngineProcessingException,
+                                 UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS,
+                                 UIMA_MSG_ID_EXCON_PROCESSING_CAS,
+                                 ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Unknown Delegate Key"),
+                                 ErrorInfo::unrecoverable);
+            }
+          } else if (nextStep.getType() == Step::StepType::PARALLELSTEP) {
+            // TODO: ParallelStep not supported yet
+            UIMA_EXC_THROW_NEW(NotYetImplementedException,
+                               UIMA_ERR_NOT_YET_IMPLEMENTED,
+                               UIMA_MSG_ID_EXC_NOT_YET_IMPLEMENTED,
+                               ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Parallel Step not supported yet"),
+                               ErrorInfo::unrecoverable
+            );
+          } else {
+            UIMA_EXC_THROW_NEW(EngineProcessingException,
+                               UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS,
+                               UIMA_MSG_ID_EXCON_PROCESSING_CAS,
+                               ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Unknown Step Type"),
+                               ErrorInfo::unrecoverable);
+          }
+
+          nextStep = flow->next();
+        }
+
+        const FinalStep *finalStep = nextStep.getFinalStep();
+        if (currentCas == inputCas) {
+          if (finalStep->getForceDropCAS()) {
+            // Not allowed to drop the input CAS so something must have gone wrong
+            UIMA_EXC_THROW_NEW(EngineProcessingException,
+                               UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS,
+                               UIMA_MSG_ID_EXCON_PROCESSING_CAS,
+                               ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Illegal CAS drop"),
+                               ErrorInfo::unrecoverable);
+          }
+          return nullptr;
+        }
+
+        if (iv_bOutputNewCases && !finalStep->getForceDropCAS())
+          return currentCas;
+        currentCas->release();
       }
     }
 
@@ -677,6 +704,20 @@ namespace uima {
       return *result;
     }
 
+    void AnnotatorManager::release() {
+      while (!casIterStack.empty()) {
+        StackFrame& frame = casIterStack.top();
+        frame.originalFlow->aborted();
+        casIterStack.pop();
+      }
+      for (CAS *cas : activeCASes) {
+        if (cas != inputCas)
+          cas->release();
+      }
+
+      activeCASes.clear();
+    }
+
 
     TyErrorId AnnotatorManager::launchProcessDocument(CAS &cas, ResultSpecification const &crResultSpec) {
       //if engine uses Capability Language Flow
@@ -693,8 +734,12 @@ namespace uima {
       inputCas = &cas;
 
       casIterStack.push({nullptr, inputCas, iv_pFlowController->computeFlow(*inputCas), {}});
-      nextCas = processUntilNextOutputCas();
-
+      try {
+        nextCas = processUntilNextOutputCas();
+      } catch (...) {
+        release();
+        throw;
+      }
       return UIMA_ERR_NONE;
     }
 

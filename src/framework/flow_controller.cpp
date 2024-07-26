@@ -29,6 +29,7 @@
 
 namespace uima {
   Step FixedFlowObject::next() {
+    // if this CAS had been passed to a CAS Multiplier in the previous step
     if (wasPassedToCASMultiplier) {
       switch (flowController->getAction()) {
         case FixedFlowController::ActionAfterCasMultiplier::CONTINUE:
@@ -46,23 +47,25 @@ namespace uima {
     }
 
     const std::vector<icu::UnicodeString>& delegateKeys = flowController->getDelegateKeys();
-    if (currentStep >= delegateKeys.size())
+    if (currentStep >= delegateKeys.size())                       // this CAS has finished the sequence
       return Step(internal::FinalStep());
 
+    // if the engine is a CAS Multiplier, set flag
     const icu::UnicodeString &engineName = delegateKeys[currentStep];
     const AnnotatorContext* engineContext = flowController->getDelegateSpecifierMap().at(engineName);
     const AnalysisEngineMetaData* engineMetadata = engineContext->getTaeSpecifier().getAnalysisEngineMetaData();
     const OperationalProperties* operationalProps = engineMetadata->getOperationalProperties();
-    if ( operationalProps && operationalProps->getOutputsNewCASes())
+    if ( operationalProps && operationalProps->getOutputsNewCASes() )
       wasPassedToCASMultiplier = true;
 
     return Step(internal::SimpleStep(delegateKeys[currentStep++]));
   }
 
   std::unique_ptr<Flow> FixedFlowObject::newCasProduced(const CAS &cas, const icu::UnicodeString &producedBy) {
-    newCASProduced = true;
-    const std::vector<icu::UnicodeString>& delegateKeys = flowController->getDelegateKeys();
+    newCASProduced = true;                //input CAS has been processed by a CAS Multiplier
 
+    // start the new output CAS from the next node after the CAS Multiplier that produced it
+    const std::vector<icu::UnicodeString>& delegateKeys = flowController->getDelegateKeys();
     int i = 0;
     while (producedBy != delegateKeys.at(i))
       ++i;

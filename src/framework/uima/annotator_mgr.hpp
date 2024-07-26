@@ -44,6 +44,7 @@
 #include "uima/pragmas.hpp" //must be included first to disable warnings
 #include <vector>
 #include <stack>
+#include <unordered_set>
 
 #include "uima/annotator_timing.hpp"
 #include "uima/exceptions.hpp"
@@ -231,6 +232,9 @@ namespace uima {
       TyAnnotatorEntries          iv_vecEntries;
       std::stack<StackFrame>      casIterStack;
 
+      /** Active CASes during processing, released during exception handling*/
+      std::unordered_set<CAS*>    activeCASes;
+
       size_t                      iv_uiNbrOfDocsProcessed; // for timing statistics
       FlowController*             iv_pFlowController;
       CAS* inputCas{};
@@ -268,6 +272,9 @@ namespace uima {
 
       /** Called by Aggregate Engine's next */
       CAS& next();
+
+      /** Release all CASes currently in use by this */
+      void release();
 
       /* COPY CONSTRUCTOR NOT SUPPORTED */
       AnnotatorManager(const AnnotatorManager & ); //lint !e1704
