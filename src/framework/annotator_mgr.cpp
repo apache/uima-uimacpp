@@ -104,6 +104,8 @@ namespace uima {
         launchDeInit();
       }
       assert( iv_vecEntries.empty() );
+      if (iv_pFlowController)
+        delete iv_pFlowController;
 
     }
 
