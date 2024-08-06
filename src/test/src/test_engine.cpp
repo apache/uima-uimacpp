@@ -510,7 +510,8 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
     num++;
     CAS & seg = iter.next();
     failIfNotTrue(seg.getDocumentText().length() > 0);
-    pEngine->getAnnotatorContext().releaseCAS(seg);
+    // pEngine->getAnnotatorContext().releaseCAS(seg);
+    seg.release();
   }
   failIfNotTrue(num==3);
   delete pEngine;

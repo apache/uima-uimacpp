@@ -63,7 +63,7 @@ namespace uima {
     type = other.type;
     switch (other.type) {
       case StepType::SIMPLESTEP:
-        uStep.simpleStep = other.uStep.simpleStep;
+        new (&uStep.simpleStep) auto( other.uStep.simpleStep);
         break;
       case StepType::FINALSTEP:
         uStep.finalStep = other.uStep.finalStep;
