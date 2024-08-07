@@ -43,13 +43,16 @@ namespace uima {
   }
 
   Step::Step(const Step& other) :type(other.type){
+    // properly initialize union value that was not constructed (invalid)
     switch (other.type) {
       case StepType::SIMPLESTEP:
-        uStep.simpleStep = other.uStep.simpleStep;
+        new (&uStep.simpleStep) auto(other.uStep.simpleStep);
         break;
       case StepType::FINALSTEP:
-        uStep.finalStep = other.uStep.finalStep;
+        new (&uStep.finalStep) auto(other.uStep.finalStep);
         break;
+      case StepType::PARALLELSTEP:
+        new (&uStep.parallelStep) auto(other.uStep.parallelStep);
       default:
         break;
     }
@@ -60,13 +63,31 @@ namespace uima {
     if (this == &other) {
       return *this;
     }
+    // destroy the current type in the union and reinitialize it with other
+    switch (this->type) {
+      case StepType::SIMPLESTEP:
+        uStep.simpleStep.~SimpleStep();
+        break;
+      case StepType::FINALSTEP:
+        uStep.finalStep.~FinalStep();
+        break;
+      case StepType::PARALLELSTEP:
+        uStep.parallelStep.~ParallelStep();
+        break;
+      default:
+        break;
+    }
+
     type = other.type;
     switch (other.type) {
       case StepType::SIMPLESTEP:
-        new (&uStep.simpleStep) auto( other.uStep.simpleStep);
+        new (&uStep.simpleStep) auto(other.uStep.simpleStep);
         break;
       case StepType::FINALSTEP:
-        uStep.finalStep = other.uStep.finalStep;
+        new (&uStep.finalStep) auto(other.uStep.finalStep);
+        break;
+      case StepType::PARALLELSTEP:
+        new (&uStep.parallelStep) auto(other.uStep.parallelStep);
         break;
       default:
         break;
@@ -78,13 +99,13 @@ namespace uima {
     switch (type) {
       case StepType::SIMPLESTEP:
         uStep.simpleStep.~SimpleStep();
-      break;
+        break;
       case StepType::FINALSTEP:
         uStep.finalStep.~FinalStep();
-      break;
+        break;
       case StepType::PARALLELSTEP:
         uStep.parallelStep.~ParallelStep();
-      break;
+        break;
       default:
         break;
     }
