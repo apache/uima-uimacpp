@@ -231,6 +231,7 @@ namespace uima {
     bool initialSofaCreated;
     bool isDeletingViews;  //set this flag to true when destroying CAS
     AnnotatorContext *iv_componentInfo;
+    AnnotatorContext *iv_owner;
 
     uima::lowlevel::TyFSType     iv_utDocumentType;
     uima::lowlevel::TyFSFeature  iv_utDocumentLangAsIntFeat;
@@ -775,6 +776,7 @@ namespace uima {
 
     /**
      * When called this CAS will release itself by calling releaseCas on the AnnotatorContext that owns it.
+     * NOTE: This only works for CASes that have an owner, ie. belong to a CASPool.
      */
     void release();
 

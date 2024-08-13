@@ -67,7 +67,7 @@ namespace uima {
     std::vector<CAS *> iv_vecFreeInstances;
     size_t    iv_numInstances;
     uima::internal::CASDefinition * iv_pCasDef;
-    AnnotatorContext* iv_pComponentInfo;
+    AnnotatorContext* iv_pOwner;
   public:
 
     /** Constructor

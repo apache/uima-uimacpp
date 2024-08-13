@@ -422,7 +422,7 @@ void process (AnalysisEngine * pEngine, CAS * cas, std::string in, std::string o
         }
 
         //release the CAS
-        pEngine->getAnnotatorContext().releaseCAS(outCas);
+        outCas.release();
 
         cout << "runAECpp::processing new Cas " << i << endl;
       }

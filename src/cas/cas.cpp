@@ -179,6 +179,7 @@ namespace uima {
       iv_indexRepository(NULL),
       iv_filterBuilder(NULL),
       iv_componentInfo(NULL),
+      iv_owner(NULL),
       iv_utDocumentType(uima::lowlevel::TypeSystem::INVALID_TYPE),
       iv_utDocumentLangAsIntFeat(uima::lowlevel::TypeSystem::INVALID_FEATURE),
       iv_utDocumentLangAsStrFeat(uima::lowlevel::TypeSystem::INVALID_FEATURE),
@@ -216,6 +217,7 @@ namespace uima {
       iv_cpDocument(NULL),
       iv_uiDocumentLength(0),
       iv_copyOfDocument(NULL),
+      iv_owner(NULL),
       iv_tyDocumentAnnotation(uima::lowlevel::FSHeap::INVALID_FS) {
     iv_casDefinition = inCas->iv_casDefinition;
     iv_typeSystem = inCas->iv_typeSystem;
@@ -262,6 +264,7 @@ namespace uima {
       iv_sofaCount(0),
       initialSofaCreated(false),
       iv_initialView(NULL),
+      iv_owner(NULL),
       iv_indexRepository(NULL),
       iv_filterBuilder(NULL),
       iv_componentInfo(NULL),
@@ -296,7 +299,7 @@ namespace uima {
   }
 
   CAS::~CAS() {
-    
+
     //always delete index repository
     if (this->iv_indexRepository != NULL) {
       delete iv_indexRepository;
@@ -309,7 +312,7 @@ namespace uima {
     //initial call to delete object
     if (this->isbaseCas) {
       this->iv_baseCas->isDeletingViews = true;
-      
+
       if (this->iv_baseCas->iv_heap != NULL) {
         delete this->iv_baseCas->iv_heap;
         this->iv_baseCas->iv_heap = NULL;
@@ -319,7 +322,7 @@ namespace uima {
         iv_baseCas->iv_filterBuilder = NULL;
       }
       if (this->iv_baseCas->bOwnsCASDefinition ) {
-		    if (this->iv_baseCas->iv_casDefinition != NULL) { 
+		    if (this->iv_baseCas->iv_casDefinition != NULL) {
                delete this->iv_baseCas->iv_casDefinition;
 			    this->iv_baseCas->iv_casDefinition = NULL;
 		    }
@@ -334,7 +337,7 @@ namespace uima {
         }
       //this->iv_baseCas->iv_sofa2tcasMap.clear( );
       //this->iv_baseCas->iv_sofa2indexMap.clear();
-      } 
+      }
     } else {
       if (!this->iv_baseCas->isDeletingViews) {
         dropView(this->getSofaNum());
@@ -810,8 +813,8 @@ namespace uima {
   }
 
   void CAS::release() {
-    if (iv_componentInfo) {
-      iv_componentInfo->releaseCAS(*this);
+    if (iv_owner) {
+      iv_owner->releaseCAS(*this);
     } else
       std::cerr << "No AnnotatorContext" << "\n\n";
   }

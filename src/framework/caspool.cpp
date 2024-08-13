@@ -53,7 +53,7 @@ namespace uima {
       iv_vecFreeInstances(),
       iv_pCasDef(NULL),
       iv_numInstances(numInstances),
-      iv_pComponentInfo(nullptr) {
+      iv_pOwner(nullptr) {
     iv_pCasDef = uima::internal::CASDefinition::createCASDefinition(taeSpec);
 
     if (iv_pCasDef == NULL) {
@@ -84,7 +84,7 @@ namespace uima {
                                           iv_vecFreeInstances(),
                                           iv_numInstances(numInstances),
                                           iv_pCasDef(nullptr),
-                                          iv_pComponentInfo(anContext) {
+                                          iv_pOwner(anContext) {
     iv_pCasDef = internal::CASDefinition::createCASDefinition(taeSpec);
     if (iv_pCasDef == nullptr) {
       UIMA_EXC_THROW_NEW(CASPoolException,
@@ -103,10 +103,10 @@ namespace uima {
                            UIMA_MSG_ID_EXC_CREATE_CASPOOL,
                            ErrorInfo::unrecoverable);
       }
-      if (iv_pComponentInfo)
-        pCas->setCurrentComponentInfo(iv_pComponentInfo);
-      iv_vecAllInstances.push_back((CAS *) pCas->getInitialView());
-      iv_vecFreeInstances.push_back((CAS *) pCas->getInitialView());
+      CAS *initialView = pCas->getInitialView();
+      initialView->iv_owner = iv_pOwner;
+      iv_vecAllInstances.push_back(initialView);
+      iv_vecFreeInstances.push_back(initialView);
     }
   }
 
@@ -149,9 +149,8 @@ namespace uima {
 
     aCas.reset();
     if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) == iv_vecAllInstances.end())
-      std::cerr << "False: " << iv_pComponentInfo->getTaeSpecifier().getAnnotatorImpName() << std::endl;
+      std::cerr << "False: " << iv_pOwner->getTaeSpecifier().getAnnotatorImpName() << std::endl;
     iv_vecFreeInstances.push_back(&aCas);
-    return;
   }
 
 } //namespace

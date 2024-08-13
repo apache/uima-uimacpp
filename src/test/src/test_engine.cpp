@@ -612,7 +612,7 @@ void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
     srcDocIt.moveToNext();
     failIfNotTrue(srcDocIt.isValid());
 
-    pEngine->getAnnotatorContext().releaseCAS(rcas);
+    rcas.release();
   }
 
   failIfNotTrue(numOutputs == 2);
