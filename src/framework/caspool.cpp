@@ -148,8 +148,6 @@ namespace uima {
   void CASPool::releaseCAS(CAS & aCas) {
 
     aCas.reset();
-    if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) == iv_vecAllInstances.end())
-      std::cerr << "False: " << iv_pOwner->getTaeSpecifier().getAnnotatorImpName() << std::endl;
     iv_vecFreeInstances.push_back(&aCas);
   }
 

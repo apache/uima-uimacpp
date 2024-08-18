@@ -815,8 +815,7 @@ namespace uima {
   void CAS::release() {
     if (iv_owner) {
       iv_owner->releaseCAS(*this);
-    } else
-      std::cerr << "No AnnotatorContext" << "\n\n";
+    }
   }
 
   ANIndex CAS::getAnnotationIndex(Type const & crType) {

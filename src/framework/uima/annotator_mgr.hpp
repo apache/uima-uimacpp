@@ -219,9 +219,13 @@ namespace uima {
       EngineEntry;
 
       struct StackFrame {
+        /* The delegate engine that produced new CASes */
         AnalysisEngine*                 casMultiplier;
+        /* The CAS that was input to the CAS Multiplier */
         CAS*                            originalCas;
+        /* The Flow object for this CAS */
         std::unique_ptr<Flow>           originalFlow;
+        /* The delegate key of the engine that produced new CASes */
         icu::UnicodeString              lastEngineKey;
       };
       /* --- types --- */

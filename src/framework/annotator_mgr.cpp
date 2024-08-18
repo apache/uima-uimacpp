@@ -599,9 +599,11 @@ namespace uima {
           // the CAS Multiplier and continue with its flow
           currentCas = frame.originalCas;
           flow = std::move(frame.originalFlow);
-          currentCas->setCurrentComponentInfo(nullptr); // is this necessary?
+          currentCas->setCurrentComponentInfo(nullptr);
           casIterStack.pop();
         }
+
+        activeCASes.insert(currentCas);
 
         if (nextStep.getType() == Step::StepType::UNSPECIFIED) {
           nextStep = flow->next(); // get the next step for the current flow
@@ -637,8 +639,10 @@ namespace uima {
                 casIterStack.push({nextAE, currentCas, std::move(flow), nextAEKey});
                 flow = std::move(nextFlow);
                 currentCas = outputCas;
+                activeCASes.insert(currentCas);
               } else {
-                currentCas->setCurrentComponentInfo(nullptr); // is this necessary?
+                // No new CASes are output, this CAS is done being processed by the current engine.
+                currentCas->setCurrentComponentInfo(nullptr);
               }
             } else {
               UIMA_EXC_THROW_NEW(EngineProcessingException,
