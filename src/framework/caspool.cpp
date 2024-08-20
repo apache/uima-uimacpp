@@ -146,7 +146,7 @@ namespace uima {
   }
 
   void CASPool::releaseCAS(CAS & aCas) {
-    if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) != iv_vecAllInstances.end()) {
+    if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) == iv_vecAllInstances.end()) {
       ErrorMessage msg(UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE);
       msg.addParam("This CAS does not belong to this CAS Pool");
       UIMA_EXC_THROW_NEW(CASPoolException,
