@@ -86,13 +86,12 @@ namespace uima {
     /*       Implementation                                                    */
     /* ----------------------------------------------------------------------- */
 
-    AnnotatorManager::AnnotatorManager(internal::AggregateEngine & rEngine) : iv_pEngine(&rEngine),
-                                                                              iv_vecEntries(),
-                                                                              iv_uiNbrOfDocsProcessed(0),
-                                                                              iv_pFlowController(nullptr),
-                                                                              iv_bIsInitialized(false),
-                                                                              iv_bOutputNewCases(false)
-    /* ----------------------------------------------------------------------- */ {
+    AnnotatorManager::AnnotatorManager(internal::AggregateEngine & rEngine) :
+        iv_pEngine(& rEngine),
+        iv_vecEntries(),
+        iv_bIsInitialized(false),
+        iv_uiNbrOfDocsProcessed(0)
+        /* ----------------------------------------------------------------------- */{
       ;
     }
 
@@ -391,10 +390,10 @@ namespace uima {
 
 
     bool AnnotatorManager::shouldEngineBeCalled(uima::internal::CapabilityContainer const & crCapContainer,
-                                                ResultSpecification const &rResultSpec,
-                                                Language const &crLanguage,
-                                                vector<TypeOrFeature> &rTOFSToBeRemoved) {
-      util::Trace clTrace(util::enTraceDetailHigh, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
+        ResultSpecification const & rResultSpec,
+        Language const & crLanguage,
+        vector<TypeOrFeature> & rTOFSToBeRemoved) {
+      util::Trace                 clTrace(util::enTraceDetailHigh, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
 
 #ifdef DEBUG_VERBOSE
       UIMA_TPRINT("CapContainer:");
@@ -415,24 +414,28 @@ namespace uima {
 #endif
 
       // treat dump-like annotators for this language specially
-      if (crCapContainer.hasEmptyOutputTypeOrFeatures(crLanguage)) {
+      if (crCapContainer.hasEmptyOutputTypeOrFeatures( crLanguage )) {
         return true;
       }
 
-      ResultSpecification::TyTypeOrFeatureSTLSet const &crTOFSet = rResultSpec.getTypeOrFeatureSTLSet();
+      ResultSpecification::TyTypeOrFeatureSTLSet const & crTOFSet = rResultSpec.getTypeOrFeatureSTLSet();
       bool bHasTOF = false;
-      for (const auto & crTOF : crTOFSet) {
-        assert(crTOF.isValid());
-        assert(rResultSpec.contains( crTOF ));
+      ResultSpecification::TyTypeOrFeatureSTLSet::const_iterator cit;
+      for (cit = crTOFSet.begin(); cit != crTOFSet.end(); ++cit) {
+        TypeOrFeature const & crTOF = (*cit);
+        assert( (*cit).isValid() );
+        assert( crTOF.isValid() );
+        assert( rResultSpec.contains( crTOF ) );
+
         UIMA_TPRINT("  TOF Name: " << crTOF.getName());
 
         if (crCapContainer.hasOutputTypeOrFeature(crTOF, crLanguage)) {
-          assert(containsTOF(crTOF, crLanguage, crCapContainer));
-          UIMA_TPRINT("    in capability");
+          assert( containsTOF(crTOF, crLanguage, crCapContainer) );
+          UIMA_TPRINT( "    in capability" );
           bHasTOF = true;
           rTOFSToBeRemoved.push_back(crTOF);
         } else {
-          assert(! containsTOF(crTOF, crLanguage, crCapContainer));
+          assert( ! containsTOF(crTOF, crLanguage, crCapContainer) );
           UIMA_TPRINT("     not in capability");
         }
       }
@@ -453,14 +456,14 @@ namespace uima {
       it nonetheless must sepcify that it needs tokens, sentences, and paragraphs because this is what
       the summarizer needs as input.
       */
-      util::Trace clTrace(util::enTraceDetailLow, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
+      util::Trace                 clTrace(util::enTraceDetailLow, UIMA_TRACE_ORIGIN, UIMA_TRACE_COMPID_ANNOTATOR_MGR);
       UIMA_ANNOTATOR_TIMING(iv_clTimerLaunchProcess.start());
-
-      TyErrorId utErrorId = UIMA_ERR_NONE;
-      TyErrorId utRetVal = UIMA_ERR_NONE;
-      assert(EXISTS(iv_pEngine));
-      size_t uiNbrOfSkippedAnnotators = 0;
-      CAS *tcas = nullptr;
+      TyAnnotatorEntries::iterator it;
+      TyErrorId               utErrorId = UIMA_ERR_NONE;
+      TyErrorId               utRetVal = UIMA_ERR_NONE;
+      assert( EXISTS(iv_pEngine) );
+      size_t                     uiNbrOfSkippedAnnotators = 0;
+      CAS * tcas=NULL;
 
       // copy the result spec
       ResultSpecification resSpec = crResultSpec;
@@ -469,9 +472,10 @@ namespace uima {
       assert(iv_bIsInitialized);
 
       assert(!iv_vecEntries.empty());
-      for (EngineEntry &engineEntry: iv_vecEntries) {
-        AnalysisEngine *pEngine = engineEntry.iv_pEngine;
-        CapabilityContainer *pCapContainer = engineEntry.iv_pCapabilityContainer;
+      for (it = iv_vecEntries.begin(); it != iv_vecEntries.end(); ++it) {
+        EngineEntry & rEntry =  (*it);
+        AnalysisEngine * pEngine = rEntry.iv_pEngine;
+        uima::internal::CapabilityContainer * pCapContainer = rEntry.iv_pCapabilityContainer;
         assert(EXISTS(pEngine));
         assert(EXISTS(pCapContainer));
 
@@ -481,12 +485,12 @@ namespace uima {
         resSpec.print(cout);
 #endif
 
-        UIMA_TRACE_STREAM_ARG(clTrace, "ASB checks engine", pEngine->getAnalysisEngineMetaData().getName());
+        UIMA_TRACE_STREAM_ARG(clTrace, "ASB checks engine", pEngine->getAnalysisEngineMetaData().getName() );
 
         UIMA_TPRINT("--------- Checking annotator: " << pEngine->getAnalysisEngineMetaData().getName());
         vector<TypeOrFeature> tofsToBeRemoved;
-        bool callEngine = true;
-        bool requiresTCas = true;
+        bool callEngine=true;
+        bool requiresTCas=true;
 
         if (cas.isBackwardCompatibleCas()) {
           tcas = &cas;
@@ -497,7 +501,8 @@ namespace uima {
                                           cas.getDocumentAnnotation().getLanguage(),
                                           tofsToBeRemoved);
 
-        if (callEngine) {
+        if ( callEngine ) {
+
           UIMA_TPRINT("----------- engine will be processed");
           UIMA_TRACE_STREAM(clTrace, "Engine will be called");
 
@@ -505,64 +510,67 @@ namespace uima {
           // this must be done because an annotator should only be called with the result spec
           // that its XML file indicates.
           ResultSpecification annResSpec;
-          for (const TypeOrFeature &tof: tofsToBeRemoved) {
-            assert(tof.isValid());
-            annResSpec.add(tof);
-            UIMA_TRACE_STREAM_ARG(clTrace, "    engine is called with result spec", tof.getName());
+          vector<TypeOrFeature>::const_iterator citTOF;
+          for (citTOF = tofsToBeRemoved.begin(); citTOF != tofsToBeRemoved.end(); ++citTOF) {
+            assert( (*citTOF).isValid() );
+            annResSpec.add(*citTOF);
+            UIMA_TRACE_STREAM_ARG(clTrace, "    engine is called with result spec", (*citTOF).getName() );
           }
 
           /// does engine expect a TCas
           //AEs that declare at least one input or output SofA should be sent the base CAS.
           //Otherwise they must be sent a TCAS.
-          const AnalysisEngineMetaData::TyVecpCapabilities &vecCap = pEngine->getAnalysisEngineMetaData().
-              getCapabilites();
-          for (Capability *cap: vecCap) {
-            const auto &inputSofa = cap->getCapabilitySofas(Capability::INPUTSOFA);
-            const auto &outputSofa = cap->getCapabilitySofas(Capability::OUTPUTSOFA);
-            if (!inputSofa.empty() || !outputSofa.empty()) {
+          const AnalysisEngineMetaData::TyVecpCapabilities & vecCap = pEngine->getAnalysisEngineMetaData().getCapabilites();
+          AnalysisEngineMetaData::TyVecpCapabilities::const_iterator itCap;
+          for (size_t i=0; i < vecCap.size(); i++) {
+            Capability * cap = vecCap.at(i);
+            Capability::TyVecCapabilitySofas inputSofa = cap->getCapabilitySofas(Capability::INPUTSOFA);
+            Capability::TyVecCapabilitySofas outputSofa = cap->getCapabilitySofas(Capability::OUTPUTSOFA);
+            if (inputSofa.size() > 0 || outputSofa.size() > 0) {
               requiresTCas = false;
               break;
             }
           }
 
           if (requiresTCas) {
-            SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
-            if (!defSofa.isValid()) {
-              //TODO: throw exception
-              cerr << "could not get default text sofa " << endl;
-              return 99;
-            }
-            tcas = cas.getView(defSofa);
-            utErrorId = pEngine->process(*tcas, annResSpec);
+	    SofaFS defSofa = cas.getSofa(pEngine->getAnnotatorContext().mapToSofaID(CAS::NAME_DEFAULT_TEXT_SOFA));
+	    if (!defSofa.isValid()) {
+	      //TODO: throw exception
+	      cerr << "could not get default text sofa " << endl;
+	      return 99;
+	    }
+	    tcas = cas.getView(defSofa);
+	    utErrorId = pEngine->process(*tcas, annResSpec);
           } else {
-            utErrorId = pEngine->process(cas, annResSpec);
+            utErrorId = ((AnalysisEngine*) pEngine)->process(cas, annResSpec);
           }
 
           if (utErrorId != UIMA_ERR_NONE) {
             clTrace.dump(_TEXT("Error"), (long) utErrorId);
-            utRetVal = utErrorId; /* I know, this overwrites a previous error */
+            utRetVal = utErrorId;                  /* I know, this overwrites a previous error */
           } else {
             // now remove TOFs from ResultSpec
-            for (const auto &crTof: tofsToBeRemoved) {
-              assert(crTof.isValid());
-              resSpec.remove(crTof);
+            vector<TypeOrFeature>::const_iterator citTOF;
+            for (citTOF = tofsToBeRemoved.begin(); citTOF != tofsToBeRemoved.end(); ++citTOF) {
+              assert( (*citTOF).isValid() );
+              resSpec.remove(*citTOF);
             }
           }
         } else {
-          assert(tofsToBeRemoved.empty());
+          assert( tofsToBeRemoved.empty() );
           UIMA_TPRINT("----------- engine will *not* be processed");
           ++uiNbrOfSkippedAnnotators;
         }
-      } /* e-o-for */
+      }                                               /* e-o-for */
       /* in case there was no error but not any annotator which generates a target type
          has been caled for process, we have an error */
       UIMA_TPRINT("Annotators skipped due to unsupport lang: " << uiNbrOfSkippedAnnotators);
-      UIMA_TPRINT("Overall number of annotators: " << iv_vecEntries.size());
+      UIMA_TPRINT("Overall number of annotators: " << iv_vecEntries.size() );
 
-      if ((utRetVal == UIMA_ERR_NONE)
-          && (uiNbrOfSkippedAnnotators > 0)
-          && (uiNbrOfSkippedAnnotators == iv_vecEntries.size())
-          && (crResultSpec.getSize() > 0)) {
+      if (   (utRetVal == UIMA_ERR_NONE)
+             && (uiNbrOfSkippedAnnotators > 0)
+             && (uiNbrOfSkippedAnnotators == iv_vecEntries.size())
+             && (crResultSpec.getSize() > 0) ) {
         // utRetVal = UIMA_ERR_ANNOTATOR_MGR_LANG_NOT_SUPPORTED_FOR_ANNOTATOR;
         iv_pEngine->getAnnotatorContext().getLogger().logWarning("All annotators skipped (maybe unsupported language)");
       }

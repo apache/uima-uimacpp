@@ -299,7 +299,7 @@ namespace uima {
   }
 
   CAS::~CAS() {
-
+    
     //always delete index repository
     if (this->iv_indexRepository != NULL) {
       delete iv_indexRepository;
@@ -312,7 +312,7 @@ namespace uima {
     //initial call to delete object
     if (this->isbaseCas) {
       this->iv_baseCas->isDeletingViews = true;
-
+      
       if (this->iv_baseCas->iv_heap != NULL) {
         delete this->iv_baseCas->iv_heap;
         this->iv_baseCas->iv_heap = NULL;
@@ -322,7 +322,7 @@ namespace uima {
         iv_baseCas->iv_filterBuilder = NULL;
       }
       if (this->iv_baseCas->bOwnsCASDefinition ) {
-		    if (this->iv_baseCas->iv_casDefinition != NULL) {
+		    if (this->iv_baseCas->iv_casDefinition != NULL) { 
                delete this->iv_baseCas->iv_casDefinition;
 			    this->iv_baseCas->iv_casDefinition = NULL;
 		    }
@@ -337,7 +337,7 @@ namespace uima {
         }
       //this->iv_baseCas->iv_sofa2tcasMap.clear( );
       //this->iv_baseCas->iv_sofa2indexMap.clear();
-      }
+      } 
     } else {
       if (!this->iv_baseCas->isDeletingViews) {
         dropView(this->getSofaNum());

@@ -26,11 +26,12 @@
 
 -----------------------------------------------------------------------------
 
-   Description:
+   Description: This file contains the FlowController class and Flow interface
+   that control the flow of CASes inside an Aggregate Analysis Engine
 
 -----------------------------------------------------------------------------
 
-
+   7/18/2024: created
 -------------------------------------------------------------------------- */
 
 #include "uima/annotator_context.hpp"

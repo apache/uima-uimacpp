@@ -31,7 +31,7 @@
 
    4/26/1999   Initial creation
    1/17/2000   Autom. priorisation of annotators added
-
+   8/20/2024   CAS Multiplier capabilites added
 -------------------------------------------------------------------------- */
 
 #ifndef UIMA_ANNOTATOR_MGR_HPP

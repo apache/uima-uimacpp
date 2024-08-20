@@ -42,7 +42,7 @@ namespace uima {
                                                     type(StepType::FINALSTEP) {
   }
 
-  Step::Step(const Step& other) :type(other.type){
+  Step::Step(const Step& other) :type(other.type) {
     // properly initialize union value that was not constructed (invalid)
     switch (other.type) {
       case StepType::SIMPLESTEP:
