@@ -77,12 +77,12 @@
                     </array>
                 </value>
             </nameValuePair>
-            <nameValuePair>
-                <name>CASOutputFreq</name>
-                <value>
-                    <integer>2</integer>
-                </value>
-            </nameValuePair>
+<!--            <nameValuePair>-->
+<!--                <name>CASOutputFreq</name>-->
+<!--                <value>-->
+<!--                    <integer>2</integer>-->
+<!--                </value>-->
+<!--            </nameValuePair>-->
         </configurationParameterSettings>
 
         <flowConstraints>

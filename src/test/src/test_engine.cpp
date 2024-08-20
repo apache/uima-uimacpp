@@ -520,9 +520,7 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
 }
 
 
-/* For now, aggregate engines do not handle CAS Multipliers correctly.
-   This test will fail if ran.
-   TODO: Implement CAS Multiplier for Aggregate
+/* Test the ability to handle CAS Multipliers within an aggregate engine
  */
 void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 {
@@ -568,7 +566,9 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 
 
 /*
- * This will also not work
+ * Test CAS Multiplier that combines input CASes.
+ * Note that the default action for input CASes is to drop if there is an output, which means
+ * if they will continue on with the flow. For now this default behavior cannot be overridden yet.
  */
 void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
 {
@@ -601,21 +601,29 @@ void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
     ++numOutputs;
     CAS &rcas = iter.next();
     ANIndex tokenIdx = rcas.getAnnotationIndex(token);
-    // There should be three tokens in each segment, including the delimiter (.)
-    failIfNotTrue(tokenIdx.getSize() == 6);
+    size_t numToken = tokenIdx.getSize();
 
-    // CAS should have a single SourceDocumentInformation whose lastSegment is true
-    ANIterator srcDocIt = rcas.getAnnotationIndex(srcDocInfo).iterator();
-    failIfNotTrue(srcDocIt.isValid());
-    AnnotationFS info = srcDocIt.get();
-    failIfNotTrue(info.getBooleanValue(lastSegment));
-    srcDocIt.moveToNext();
-    failIfNotTrue(srcDocIt.isValid());
+    // CAS should have a single SourceDocumentInformation.
+    // lastSegment should be false for intermediate CASes and true for the last CAS.
+    ANIterator srcDocIter = rcas.getAnnotationIndex(srcDocInfo).iterator();
+    failIfNotTrue(srcDocIter.isValid());
+    AnnotationFS info = srcDocIter.get();
+
+    // If we're at the final CAS
+    if (numOutputs == 4) {
+      failIfNotTrue(numToken == 12);
+      failIfNotTrue(info.getBooleanValue(lastSegment));
+    } else {
+      failIfNotTrue(numToken == 3);
+      failIfNotTrue(!info.getBooleanValue(lastSegment));
+    }
+    srcDocIter.moveToNext();
+    failIfNotTrue(!srcDocIter.isValid());
 
     rcas.release();
   }
 
-  failIfNotTrue(numOutputs == 2);
+  failIfNotTrue(numOutputs == 4);
   delete cas;
   delete pEngine;
 
@@ -636,11 +644,9 @@ void mainTest(uima::util::ConsoleUI & rclConsole,
     testCallingSequence2(rclConsole, cpszConfigFilename);
     testCallingSequence3(rclConsole, cpszConfigFilename);
   }
-  testCasMultiplier(rclConsole);  testAggregateCASMultiplier(rclConsole);
-
-#if 0
+  testCasMultiplier(rclConsole);
+  testAggregateCASMultiplier(rclConsole);
   testAggregateCASCombiner(rclConsole);
-#endif
 }
 
 int main(int argc, char * argv[]) /*
