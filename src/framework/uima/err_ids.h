@@ -993,6 +993,11 @@ namespace uima {
     { UIMA_ERR_CODEPAGE , _TEXT("UIMA_ERR_CASPOOL_GET_CAS") },
 #endif
 
+    /** CAS release errors */
+#define UIMA_ERR_CAS_RELEASE ((uima::TyErrorId)( 71 + UIMA_ERR_ENGINE_OFFSET ))
+#ifdef UIMA_ENGINE_MAIN_CPP
+    { UIMA_ERR_CODEPAGE , _TEXT("UIMA_ERR_CAS_RELEASE") },
+#endif
 
     /*@}*/
 

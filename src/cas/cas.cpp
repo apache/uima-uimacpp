@@ -815,6 +815,15 @@ namespace uima {
   void CAS::release() {
     if (iv_owner) {
       iv_owner->releaseCAS(*this);
+    } else {
+      ErrorMessage msg(UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE);
+      msg.addParam("This CAS does not have any owner");
+      UIMA_EXC_THROW_NEW(CASException,
+                         UIMA_ERR_CAS_RELEASE,
+                         msg,
+                         ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
+                         ErrorInfo::recoverable
+                        );
     }
   }
 
