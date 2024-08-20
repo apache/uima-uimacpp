@@ -217,12 +217,12 @@ namespace uima {
       iv_cpDocument(NULL),
       iv_uiDocumentLength(0),
       iv_copyOfDocument(NULL),
-      iv_owner(NULL),
       iv_tyDocumentAnnotation(uima::lowlevel::FSHeap::INVALID_FS) {
     iv_casDefinition = inCas->iv_casDefinition;
     iv_typeSystem = inCas->iv_typeSystem;
     iv_heap = inCas->iv_heap;
     iv_componentInfo = inCas->iv_componentInfo;
+    iv_owner = inCas->iv_owner;
     iv_utDocumentLangAsIntFeat = uima::lowlevel::TypeSystem::INVALID_FEATURE;
     iv_utDocumentLangAsStrFeat = uima::lowlevel::TypeSystem::INVALID_FEATURE;
     refreshCachedTypes();
@@ -679,6 +679,10 @@ namespace uima {
                       );
   }
 
+  void CAS::setOwner(AnnotatorContext *owner) {
+    iv_baseCas->iv_owner = owner;
+  }
+
   // deprecated version
   void CAS::setDocumentText(UChar const * cpDocument, size_t uiLength, bool bCopyToCAS ) {
     if (cpDocument == NULL) {
@@ -813,8 +817,8 @@ namespace uima {
   }
 
   void CAS::release() {
-    if (iv_owner) {
-      iv_owner->releaseCAS(*this);
+    if (iv_baseCas->iv_owner) {
+      iv_baseCas->iv_owner->releaseCAS(*this);
     } else {
       ErrorMessage msg(UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE);
       msg.addParam("This CAS does not have any owner");

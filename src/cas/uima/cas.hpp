@@ -191,6 +191,8 @@ namespace uima {
     void bumpSofaCount();	
     void invalidBaseCasMethod();
 
+    /** Set the owner of the base CAS */
+    void setOwner(AnnotatorContext* owner);
     void registerView(SofaFS);
     void updateDocumentAnnotation( );
     void copyDocumentString(UnicodeStringRef);

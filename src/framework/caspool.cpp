@@ -103,8 +103,8 @@ namespace uima {
                            UIMA_MSG_ID_EXC_CREATE_CASPOOL,
                            ErrorInfo::unrecoverable);
       }
+      pCas->setOwner(iv_pOwner);
       CAS *initialView = pCas->getInitialView();
-      initialView->iv_owner = iv_pOwner;
       iv_vecAllInstances.push_back(initialView);
       iv_vecFreeInstances.push_back(initialView);
     }
@@ -146,7 +146,15 @@ namespace uima {
   }
 
   void CASPool::releaseCAS(CAS & aCas) {
-
+    if (std::find(iv_vecAllInstances.begin(), iv_vecAllInstances.end(), &aCas) != iv_vecAllInstances.end()) {
+      ErrorMessage msg(UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE);
+      msg.addParam("This CAS does not belong to this CAS Pool");
+      UIMA_EXC_THROW_NEW(CASPoolException,
+                         UIMA_ERR_CAS_RELEASE,
+                         msg,
+                         ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
+                         ErrorInfo::recoverable);
+    }
     aCas.reset();
     iv_vecFreeInstances.push_back(&aCas);
   }
