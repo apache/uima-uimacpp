@@ -656,7 +656,7 @@ namespace uima {
               UIMA_EXC_THROW_NEW(EngineProcessingException,
                                  UIMA_ERR_USER_ANNOTATOR_COULD_NOT_PROCESS,
                                  UIMA_MSG_ID_EXCON_PROCESSING_CAS,
-                                 ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Unknown Delegate Key"),
+                                 ErrorMessage(UIMA_MSG_ID_LITERAL_STRING, "Unknown Delegate Key " + nextAEKey),
                                  ErrorInfo::unrecoverable);
             }
           } else if (nextStep.getType() == Step::StepType::PARALLELSTEP) {
