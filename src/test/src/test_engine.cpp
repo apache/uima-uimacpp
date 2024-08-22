@@ -718,7 +718,7 @@ int main(int argc, char * argv[]) /*
 
   /* before we init the res mgr, we test for the correct error */
   testMissingResMgr(clConsole);
-
+  testStep(clConsole);
   try {
     /* create a UIMA resource */
     (void) uima::ResourceManager::createInstance(MAIN_TITLE);
