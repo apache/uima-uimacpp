@@ -510,7 +510,6 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
     num++;
     CAS & seg = iter.next();
     failIfNotTrue(seg.getDocumentText().length() > 0);
-    // pEngine->getAnnotatorContext().releaseCAS(seg);
     seg.release();
   }
   failIfNotTrue(num==3);
@@ -628,6 +627,44 @@ void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
   delete pEngine;
 
   rclConsole.info("Test Aggregate CAS Combiner end.");
+}
+
+
+/** Test for correctness in the <code>Step</code> type, which contains a tagged union */
+void testStep(const util::ConsoleUI &rclConsole) {
+  rclConsole.info("Test Step class starts");
+  const icu::UnicodeString dummyName("This is a test string.");
+
+  Step emptyStep;
+  Step stepWithName{internal::SimpleStep(dummyName)};
+  Step stepWithFinal{internal::FinalStep(false)};
+
+  failIfNotTrue(stepWithName.getType() == Step::StepType::SIMPLESTEP);
+  failIfNotTrue(stepWithName.getSimpleStep()->getEngineName() == dummyName);
+
+  failIfNotTrue(stepWithFinal.getType() == Step::StepType::FINALSTEP);
+  failIfNotTrue(stepWithFinal.getFinalStep()->getForceDropCAS() == false);
+
+
+  failIfNotTrue(emptyStep.getType() == Step::StepType::UNSPECIFIED);
+  // Getting concrete types on empty Step will return nullptr
+  failIfNotTrue((emptyStep.getFinalStep() || emptyStep.getSimpleStep() || emptyStep.getFinalStep()) == false);
+
+  // Test assignment operator on empty step
+  emptyStep = stepWithName;
+  failIfNotTrue(emptyStep.getSimpleStep()->getEngineName() == dummyName);
+
+  // Test copy constructor
+  Step copiedStep(stepWithName);
+  failIfNotTrue(copiedStep.getType() == Step::StepType::SIMPLESTEP);
+  failIfNotTrue(copiedStep.getSimpleStep()->getEngineName() == dummyName);
+
+  // Test assignment operator on Step containing SimpleStep
+  copiedStep = stepWithFinal;
+  failIfNotTrue(copiedStep.getType() == Step::StepType::FINALSTEP);
+  failIfNotTrue(copiedStep.getFinalStep()->getForceDropCAS() == false);
+
+  // ParallelStep is not supported yet.
 }
 
 
