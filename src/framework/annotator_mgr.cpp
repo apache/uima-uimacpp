@@ -679,6 +679,7 @@ namespace uima {
         }
 
         const FinalStep *finalStep = nextStep.getFinalStep();
+        activeCASes.erase(currentCas);
         if (currentCas == inputCas) {
           if (finalStep->getForceDropCAS()) {
             // Not allowed to drop the input CAS so something must have gone wrong
