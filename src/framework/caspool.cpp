@@ -47,38 +47,6 @@ namespace uima {
   //
   //------------------------------------------------------------
 
-  CASPool::CASPool(const AnalysisEngineDescription &taeSpec,
-                   size_t numInstances)
-    : iv_vecAllInstances(),
-      iv_vecFreeInstances(),
-      iv_pCasDef(NULL),
-      iv_numInstances(numInstances),
-      iv_pOwner(nullptr) {
-    iv_pCasDef = uima::internal::CASDefinition::createCASDefinition(taeSpec);
-
-    if (iv_pCasDef == NULL) {
-      UIMA_EXC_THROW_NEW(CASPoolException,
-                         UIMA_ERR_CASPOOL_CREATE_CASDEFINITION,
-                         UIMA_MSG_ID_EXC_CREATE_CASPOOL,
-                         UIMA_MSG_ID_EXC_CREATE_CASPOOL,
-                         ErrorInfo::unrecoverable);
-    }
-
-    for (size_t i=0; i < numInstances; i++) {
-      CAS  * pCas = uima::internal::CASImpl::createCASImpl(*iv_pCasDef,false);
-      if (pCas == NULL) {
-        UIMA_EXC_THROW_NEW(CASPoolException,
-                           UIMA_ERR_CASPOOL_CREATE_CAS,
-                           UIMA_MSG_ID_EXC_CREATE_CASPOOL,
-                           UIMA_MSG_ID_EXC_CREATE_CASPOOL,
-                           ErrorInfo::unrecoverable);
-      }
-      iv_vecAllInstances.push_back((CAS *)pCas->getInitialView());
-      iv_vecFreeInstances.push_back((CAS *)pCas->getInitialView());
-    }
-  }
-
-
   CASPool::CASPool(AnnotatorContext *anContext, const AnalysisEngineDescription &taeSpec,
                    size_t numInstances) : iv_vecAllInstances(),
                                           iv_vecFreeInstances(),
