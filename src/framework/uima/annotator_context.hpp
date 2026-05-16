@@ -383,6 +383,8 @@ namespace uima {
     //AnnotatorContext(void);
   private:
     friend class uima::internal::EngineBase;
+    friend class CAS;
+    friend class internal::AnnotatorManager;
 
     AnalysisEngineDescription * getTAESpec() {
       return iv_pTaeSpecifier;

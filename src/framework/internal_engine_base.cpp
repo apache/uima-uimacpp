@@ -63,6 +63,8 @@
 /*       Implementation                                                    */
 /* ----------------------------------------------------------------------- */
 namespace uima {
+  UIMA_EXC_CLASSIMPLEMENT(EngineProcessingException, uima::Exception);
+
   namespace internal {
 
     uima::internal::EngineBase & EngineBase::promoteEngine( uima::AnalysisEngine & engine) {

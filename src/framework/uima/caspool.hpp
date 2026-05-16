@@ -67,15 +67,15 @@ namespace uima {
     std::vector<CAS *> iv_vecFreeInstances;
     size_t    iv_numInstances;
     uima::internal::CASDefinition * iv_pCasDef;
-
+    AnnotatorContext* iv_pOwner;
   public:
 
     /** Constructor
-    * Creates the specified number of CAS instances based on CAS definition
-    * as specified in the TAE specifier.
+    * @param anContext The AnnotatorContext that owns this CASPool
+    * @param taeSpec The AnalysisEngineDescription that specifies CAS Definition for this Pool
+    * @param numInstances Number of CASes in this Pool
     */
-    CASPool(const AnalysisEngineDescription & taeSpec, size_t numInstances);
-
+    CASPool(AnnotatorContext* anContext, const AnalysisEngineDescription & taeSpec, size_t numInstances);
     /** Destructor */
     ~CASPool(void);
 

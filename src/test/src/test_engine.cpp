@@ -510,7 +510,7 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
     num++;
     CAS & seg = iter.next();
     failIfNotTrue(seg.getDocumentText().length() > 0);
-    pEngine->getAnnotatorContext().releaseCAS(seg);
+    seg.release();
   }
   failIfNotTrue(num==3);
   delete pEngine;
@@ -519,9 +519,7 @@ void testCasMultiplier(uima::util::ConsoleUI & rclConsole)
 }
 
 
-/* For now, aggregate engines do not handle CAS Multipliers correctly.
-   This test will fail if ran.
-   TODO: Implement CAS Multiplier for Aggregate
+/* Test the ability to handle CAS Multipliers within an aggregate engine
  */
 void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 {
@@ -555,7 +553,7 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 
     // There should be one Dave in each segment
     failIfNotTrue(anIndex.getSize() == 1);
-    pEngine->getAnnotatorContext().releaseCAS(rcas);
+    rcas.release();
   }
 
   failIfNotTrue(numSegments == 3);
@@ -567,7 +565,9 @@ void testAggregateCASMultiplier(const util::ConsoleUI &rclConsole)
 
 
 /*
- * This will also not work
+ * Test CAS Multiplier that combines input CASes.
+ * Note that the default action for input CASes is to drop if there is an output, which means
+ * if they will continue on with the flow. For now this default behavior cannot be overridden yet.
  */
 void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
 {
@@ -600,25 +600,71 @@ void testAggregateCASCombiner(const util::ConsoleUI &rclConsole)
     ++numOutputs;
     CAS &rcas = iter.next();
     ANIndex tokenIdx = rcas.getAnnotationIndex(token);
-    // There should be three tokens in each segment, including the delimiter (.)
-    failIfNotTrue(tokenIdx.getSize() == 6);
+    size_t numToken = tokenIdx.getSize();
 
-    // CAS should have a single SourceDocumentInformation whose lastSegment is true
-    ANIterator srcDocIt = rcas.getAnnotationIndex(srcDocInfo).iterator();
-    failIfNotTrue(srcDocIt.isValid());
-    AnnotationFS info = srcDocIt.get();
-    failIfNotTrue(info.getBooleanValue(lastSegment));
-    srcDocIt.moveToNext();
-    failIfNotTrue(srcDocIt.isValid());
+    // CAS should have a single SourceDocumentInformation.
+    // lastSegment should be false for intermediate CASes and true for the last CAS.
+    ANIterator srcDocIter = rcas.getAnnotationIndex(srcDocInfo).iterator();
+    failIfNotTrue(srcDocIter.isValid());
+    AnnotationFS info = srcDocIter.get();
 
-    pEngine->getAnnotatorContext().releaseCAS(rcas);
+    // If we're at the final CAS
+    if (numOutputs == 4) {
+      failIfNotTrue(numToken == 12);
+      failIfNotTrue(info.getBooleanValue(lastSegment));
+    } else {
+      failIfNotTrue(numToken == 3);
+      failIfNotTrue(!info.getBooleanValue(lastSegment));
+    }
+    srcDocIter.moveToNext();
+    failIfNotTrue(!srcDocIter.isValid());
+
+    rcas.release();
   }
 
-  failIfNotTrue(numOutputs == 2);
+  failIfNotTrue(numOutputs == 4);
   delete cas;
   delete pEngine;
 
   rclConsole.info("Test Aggregate CAS Combiner end.");
+}
+
+
+/** Test for correctness in the <code>Step</code> type, which contains a tagged union */
+void testStep(const util::ConsoleUI &rclConsole) {
+  rclConsole.info("Test Step class starts");
+  const icu::UnicodeString dummyName("This is a test string.");
+
+  Step emptyStep;
+  Step stepWithName{internal::SimpleStep(dummyName)};
+  Step stepWithFinal{internal::FinalStep(false)};
+
+  failIfNotTrue(stepWithName.getType() == Step::StepType::SIMPLESTEP);
+  failIfNotTrue(stepWithName.getSimpleStep()->getEngineName() == dummyName);
+
+  failIfNotTrue(stepWithFinal.getType() == Step::StepType::FINALSTEP);
+  failIfNotTrue(stepWithFinal.getFinalStep()->getForceDropCAS() == false);
+
+
+  failIfNotTrue(emptyStep.getType() == Step::StepType::UNSPECIFIED);
+  // Getting concrete types on empty Step will return nullptr
+  failIfNotTrue((emptyStep.getFinalStep() || emptyStep.getSimpleStep() || emptyStep.getFinalStep()) == false);
+
+  // Test assignment operator on empty step
+  emptyStep = stepWithName;
+  failIfNotTrue(emptyStep.getSimpleStep()->getEngineName() == dummyName);
+
+  // Test copy constructor
+  Step copiedStep(stepWithName);
+  failIfNotTrue(copiedStep.getType() == Step::StepType::SIMPLESTEP);
+  failIfNotTrue(copiedStep.getSimpleStep()->getEngineName() == dummyName);
+
+  // Test assignment operator on Step containing SimpleStep
+  copiedStep = stepWithFinal;
+  failIfNotTrue(copiedStep.getType() == Step::StepType::FINALSTEP);
+  failIfNotTrue(copiedStep.getFinalStep()->getForceDropCAS() == false);
+
+  // ParallelStep is not supported yet.
 }
 
 
@@ -636,10 +682,8 @@ void mainTest(uima::util::ConsoleUI & rclConsole,
     testCallingSequence3(rclConsole, cpszConfigFilename);
   }
   testCasMultiplier(rclConsole);
-#if 0
   testAggregateCASMultiplier(rclConsole);
   testAggregateCASCombiner(rclConsole);
-#endif
 }
 
 int main(int argc, char * argv[]) /*
@@ -674,7 +718,7 @@ int main(int argc, char * argv[]) /*
 
   /* before we init the res mgr, we test for the correct error */
   testMissingResMgr(clConsole);
-
+  testStep(clConsole);
   try {
     /* create a UIMA resource */
     (void) uima::ResourceManager::createInstance(MAIN_TITLE);

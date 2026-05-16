@@ -24,7 +24,7 @@
 <taeDescription xmlns="http://uima.apache.org/resourceSpecifier">
   <frameworkImplementation>org.apache.uima.cpp</frameworkImplementation>
   <primitive>true</primitive>
-<annotatorImplementationName>DaveDetector</annotatorImplementationName>
+<annotatorImplementationName>libDaveDetector</annotatorImplementationName>
 
 
 <analysisEngineMetaData>

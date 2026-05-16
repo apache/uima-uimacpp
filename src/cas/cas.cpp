@@ -179,6 +179,7 @@ namespace uima {
       iv_indexRepository(NULL),
       iv_filterBuilder(NULL),
       iv_componentInfo(NULL),
+      iv_owner(NULL),
       iv_utDocumentType(uima::lowlevel::TypeSystem::INVALID_TYPE),
       iv_utDocumentLangAsIntFeat(uima::lowlevel::TypeSystem::INVALID_FEATURE),
       iv_utDocumentLangAsStrFeat(uima::lowlevel::TypeSystem::INVALID_FEATURE),
@@ -221,6 +222,7 @@ namespace uima {
     iv_typeSystem = inCas->iv_typeSystem;
     iv_heap = inCas->iv_heap;
     iv_componentInfo = inCas->iv_componentInfo;
+    iv_owner = inCas->iv_owner;
     iv_utDocumentLangAsIntFeat = uima::lowlevel::TypeSystem::INVALID_FEATURE;
     iv_utDocumentLangAsStrFeat = uima::lowlevel::TypeSystem::INVALID_FEATURE;
     refreshCachedTypes();
@@ -262,6 +264,7 @@ namespace uima {
       iv_sofaCount(0),
       initialSofaCreated(false),
       iv_initialView(NULL),
+      iv_owner(NULL),
       iv_indexRepository(NULL),
       iv_filterBuilder(NULL),
       iv_componentInfo(NULL),
@@ -676,6 +679,10 @@ namespace uima {
                       );
   }
 
+  void CAS::setOwner(AnnotatorContext *owner) {
+    iv_baseCas->iv_owner = owner;
+  }
+
   // deprecated version
   void CAS::setDocumentText(UChar const * cpDocument, size_t uiLength, bool bCopyToCAS ) {
     if (cpDocument == NULL) {
@@ -806,6 +813,21 @@ namespace uima {
     } catch ( WrongFSTypeForIndexException & ) {
       assertWithMsg(false, "Annotation Index exists with wrong type!");
       return ANIndex();
+    }
+  }
+
+  void CAS::release() {
+    if (iv_baseCas->iv_owner) {
+      iv_baseCas->iv_owner->releaseCAS(*this);
+    } else {
+      ErrorMessage msg(UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE);
+      msg.addParam("This CAS does not have any owner");
+      UIMA_EXC_THROW_NEW(CASException,
+                         UIMA_ERR_CAS_RELEASE,
+                         msg,
+                         ErrorMessage(UIMA_MSG_ID_EXCON_UNKNOWN_CONTEXT),
+                         ErrorInfo::recoverable
+                        );
     }
   }
 

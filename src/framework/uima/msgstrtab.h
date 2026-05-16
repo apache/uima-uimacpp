@@ -702,6 +702,8 @@ static const TCHAR * gs_aszMessageStringTable[] = {
       "Invalid call to next(). ",
       /*  331 - UIMA_MSG_ID_SIGNATURE_END: */
       "[UIMA-LIBRARY]",
+      /*  332 - UIMA_MSG_ID_EXC_INVALID_CAS_RELEASE */
+      "Invalid release of CAS."
     } ;
 
 #endif /* UIMA_MSGSTRTAB_H */

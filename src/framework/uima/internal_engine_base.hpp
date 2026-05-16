@@ -64,6 +64,10 @@ namespace uima {
 /*       Types / Classes                                                   */
 /* ----------------------------------------------------------------------- */
 namespace uima {
+
+  /** Represents an exception relating to an engine's processing */
+  UIMA_EXC_CLASSDECLARE(EngineProcessingException, uima::Exception);
+
   namespace internal {
 
     /**

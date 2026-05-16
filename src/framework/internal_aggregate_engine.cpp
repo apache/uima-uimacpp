@@ -220,15 +220,11 @@ namespace uima {
     }
 
     bool AggregateEngine::hasNextImpl() {
-      return false;
+      return iv_annotatorMgr.hasNext();
     }
 
     CAS & AggregateEngine::nextImpl() {
-      UIMA_EXC_THROW_NEW(ExcInvalidRequest,
-                         UIMA_ERR_NOT_YET_IMPLEMENTED,
-                         UIMA_MSG_ID_EXC_INVALID_CALL_TO_NEXT,
-                         UIMA_MSG_ID_EXC_INVALID_CALL_TO_NEXT,
-                         ErrorInfo::unrecoverable);
+      return iv_annotatorMgr.next();
     }
 
     int AggregateEngine::getCasInstancesRequiredImpl() {
